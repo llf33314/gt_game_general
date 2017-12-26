@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.game.core.dao.demolition.DemolitiongiftboxGiftboxDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.game.core.entity.demolition.DemolitiongiftboxGiftbox">
+		<id column="id" property="id" />
+		<result column="gift_name" property="giftName" />
+		<result column="gift_img" property="giftImg" />
+		<result column="gift_sound" property="giftSound" />
+		<result column="act_id" property="actId" />
+		<result column="Award" property="Award" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, gift_name, gift_img, gift_sound, act_id, Award AS Award
+    </sql>
+
+</mapper>
