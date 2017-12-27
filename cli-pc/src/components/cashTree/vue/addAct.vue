@@ -25,20 +25,21 @@
                     <el-input class="w_demo" v-model="ruleForm1.name"></el-input>
                 </el-form-item>
                 <el-form-item label="游戏时间：" prop="name1">
-                    <el-date-picker class="w_demo" v-model="ruleForm1.name1"  type="datetimerange"  placeholder="选择时间范围">
+                    <el-date-picker class="w_demo" v-model="ruleForm1.name1"   type="datetimerange"  placeholder="选择时间范围">
                     </el-date-picker>
                 </el-form-item>  
             <h1 class="mt30 mb20 pb10 bbtom">模块设置</h1> 
             <el-button type="primary" class="mb20" @click="addlinks()">新增</el-button>  
+            <span class="ml10 el-upload__tip grey">1.仅支持多粉与一点揩油的链接    2.广告图格式：1000*300px</span>
             <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark">
-                <el-table-column label="奖品类型">
-                  <template slot-scope="scope">
+                <el-table-column label="广告链接">
+                  <template slot-scope="scope" >
                         <el-input v-model="scope.row.url">
                           <template slot="prepend">Http://</template>
                         </el-input>
                   </template>
                 </el-table-column> 
-                <el-table-column label="奖品类型">
+                <el-table-column label="选择图片">
                   <template slot-scope="scope">
                       <gt-material prop="url" :url="scope.row.img" v-on:getChangeUrl="getChangeUrl(scope.row.id, $event)" width="60" height="60"></gt-material>
                   </template>
@@ -97,7 +98,7 @@
                   </el-select> 
                 </el-form-item> 
                 <el-form-item label="活动规则：" prop="desc">
-                    <el-input class="w_demo" :maxlength="300"  type="textarea" v-model="ruleForm2.desc" :rows="5" placeholder="请填写活动规则"></el-input>
+                    <el-input class="w_demo" :maxlength="300"  type="textarea" v-model="ruleForm2.desc" :rows="3" placeholder="请填写活动规则"></el-input>
                     <span class="el-upload__tip grey ml10">300个字以内</span>   
                 </el-form-item>   
             </el-form> 
@@ -228,17 +229,18 @@ export default {
        const time = window.parseInt(value) 
        if (!time) {
         callback(new Error("游戏时长不能为空"));
-       } else if (time<10 && time>30) {
+       } else if (time<10 || time>30) {
         callback(new Error("游戏时长有误，请重填"));
       } else {
         callback();
       }
     }; 
     return {
-      active: 0,
+      active: 0 ,
       ruleForm1: {
         name: "",
         name1: "",
+        name4:"",
         links:[
           {id:0,url:"www.duofriend.com",img:""},
           {id:1,url:"",img:""}
@@ -246,7 +248,7 @@ export default {
       },
       rules1: {
         name: [{ required: true, message: "活动名称不能为空", trigger: "blur" }],
-        name1: [{required: true, type: "array",message: "游戏时间不能为空", trigger: "blur" }], 
+        name1: [{required: true, type: "array",message: "游戏时间不能为空", trigger: "blur" }] 
       },
       ruleForm2: {
         code: "",
@@ -319,7 +321,7 @@ export default {
         }],  
     };
   },
-  methods: {   
+  methods: {    
     addrPass(rule, value, callback) {
       if (!value) {
         callback(new Error("不能为空"));

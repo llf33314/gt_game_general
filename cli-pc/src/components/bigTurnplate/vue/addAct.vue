@@ -70,10 +70,10 @@
         <div v-if="this.active==1" class="mt40">
             <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="120px" class="mt40 demo-ruleForm">
                 <el-form-item label="抽奖次数：" prop="cishu">
-                    <el-input class="w_demo" v-model="ruleForm2.cishu" placeholder="请输入每人/每天抽奖次数"></el-input>
+                    <el-input class="w_demo" type="number" v-model="ruleForm2.cishu" placeholder="请输入每人/每天抽奖次数"></el-input>
                 </el-form-item>
                 <el-form-item label="抽奖总数：" prop="zongshu">
-                    <el-input class="w_demo" v-model="ruleForm2.zongshu" placeholder="请输入每人抽奖总数"></el-input>
+                    <el-input class="w_demo" type="number" v-model="ruleForm2.zongshu" placeholder="请输入每人抽奖总数"></el-input>
                 </el-form-item> 
                 <el-form-item label="结束规则：">
                     <el-input class="w_demo"  type="textarea" v-model="ruleForm2.desc" :rows="5" placeholder="请输入活动规则"></el-input>
@@ -84,7 +84,7 @@
         <div v-if="this.active==2" class="mt40">
             <el-form :model="ruleForm3" :rules="rules3" ref="ruleForm3" label-width="120px" class="mt40 demo-ruleForm">
                 <el-form-item label="兑奖期限：" prop="days">
-                    <el-input class="w_demo mr10" v-model="ruleForm3.days" placeholder="请输入兑奖期限"></el-input>天
+                    <el-input class="w_demo mr10" type="number" v-model="ruleForm3.days" placeholder="请输入兑奖期限"></el-input>天
                     <span class="el-upload__tip grey">
                         从活动结束后开始计算
                     </span>
