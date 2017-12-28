@@ -6,7 +6,7 @@
 <div class="hd-common turnPlate">
     <el-breadcrumb separator="/" class="gt-crumbs">
       <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
-      <el-breadcrumb-item  :to="{ path:'/christmasGift/index' }">圣诞大礼包</el-breadcrumb-item>  
+      <el-breadcrumb-item  :to="{ path:'/eggSmash/index' }">砸金蛋</el-breadcrumb-item>  
       <el-breadcrumb-item>创建活动</el-breadcrumb-item>   
     </el-breadcrumb>  
     <div class="gt-content">
@@ -19,18 +19,19 @@
         </el-steps>
         <!-- 基础设置 -->
         <div v-if="this.active==0" class="mt40">
-            <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="145px" class="demo-ruleForm">
+            <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="145px" class="demo-ruleForm"> 
                 <el-form-item label="活动名称：" prop="name">
-                    <el-input class="w_demo" v-model="ruleForm1.name"></el-input>
+                    <el-input class="w_demo"  placeholder="请输入活动名称"  v-model="ruleForm1.name"></el-input>
                 </el-form-item>
                 <el-form-item label="开始时间：" prop="starTime">
-                    <el-date-picker  class="w_demo"  v-model="ruleForm1.starTime"  type="date"  placeholder="选择日期" >
+                    <el-date-picker  class="w_demo"  v-model="ruleForm1.starTime"  type="date"  placeholder="请选择开始时间" >
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="结束时间：" prop="endTime">
-                    <el-date-picker  class="w_demo"  v-model="ruleForm1.endTime"  type="date"  placeholder="选择日期" >
+                    <el-date-picker  class="w_demo"  v-model="ruleForm1.endTime"  type="date"  placeholder="请选择结束时间" >
                     </el-date-picker>
-                </el-form-item>
+                </el-form-item>  
+                
                 <el-form-item label="参与人员：">
                     <el-radio-group v-model="ruleForm1.resource">
                     <el-radio :label="1">所有粉丝</el-radio>
@@ -48,15 +49,19 @@
                           </el-radio-group> 
                     </el-form-item>
                 </div> 
-                
+
                 <el-form-item label="活动说明：" prop="desc">
-                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.desc1" :rows="3" placeholder="活动说明限制在150个字数以内"></el-input>
-                    
+                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.desc1" :rows="3" placeholder="请输入活动说明"></el-input>
+                    <span class="el-upload__tip grey" >
+                        描述活动详情，能让粉丝了解此次活动
+                    </span>
                 </el-form-item> 
 
                  <el-form-item label="活动未开始提示：" prop="desc">
-                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.desc2" :rows="3" placeholder="活动未开始提示限制在100个字数以内"></el-input>
-                    
+                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.desc2" :rows="3" placeholder="如：活动尚未开始，敬请期待!"></el-input>
+                    <span class="el-upload__tip grey" >
+                        活动未开始提示限制在100个字数以内
+                    </span>
                 </el-form-item>  
 
                 <el-form-item label="背景音乐：">
@@ -72,13 +77,13 @@
         </div>
         <!-- 规则设置 -->
         <div v-if="this.active==1" class="mt40">
-            <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="120px" class="mt40 demo-ruleForm">
-                <el-form-item label="抽奖次数：" prop="cishu">
-                    <el-input class="w_demo mr10" v-model="ruleForm2.cishu" placeholder="请输入每人抽奖总次数"></el-input> 次/人
-                </el-form-item>
-                <el-form-item label="抽奖总数：" prop="zongshu">
-                    <el-input class="w_demo mr10" v-model="ruleForm2.zongshu" placeholder="请输入每人/每天抽奖总数"></el-input>次/人
-                </el-form-item>    
+            <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="120px" class="mt40 demo-ruleForm">  
+                    <el-form-item label="抽奖次数：" prop="cishu">
+                        <el-input class="w_demo mr10" v-model="ruleForm2.cishu" placeholder="请输入每人抽奖总次数"></el-input> 次/人
+                    </el-form-item>
+                    <el-form-item label="抽奖总数：" prop="zongshu">
+                        <el-input class="w_demo mr10" v-model="ruleForm2.zongshu" placeholder="请输入每人/每天抽奖总数"></el-input>次/人
+                    </el-form-item>   
             </el-form> 
         </div> 
         <!-- 兑奖设置 -->
@@ -91,18 +96,23 @@
                     </span>
                 </el-form-item> 
                 <el-form-item label="兑奖地址：" prop="dizhi">
-                    <el-input class="w_demo"  type="textarea" v-model="ruleForm3.dizhi" :rows="5" placeholder="请输入活动规则"></el-input>
-                </el-form-item>
-                <el-form-item label="转赠：">
-                  <el-switch on-text="开启" off-text="关闭" v-model="ruleForm3.transfer"></el-switch>
-                   <div class="el-upload__tip grey">
-                        开启转增中奖人可将手机流量/话费等转赠给他人
-                    </div>
-                </el-form-item>
+                    <el-input class="w_demo"  type="textarea" v-model="ruleForm3.dizhi" :rows="5" placeholder="请输入兑奖地址"></el-input>
+                </el-form-item> 
+
+                <el-form-item label="兑奖方式：">
+                    <el-select v-model="ruleForm3.ticketWay" placeholder="请选择"> 
+                      <el-option label="自动发放"   :value="1"></el-option>
+                      <el-option label="手动兑奖"   :value="2"></el-option> 
+                    </el-select> 
+                </el-form-item>  
 
                 <el-form-item label="兑奖提示：">
                     <el-input class="w_demo" :maxlength="100" type="textarea" v-model="ruleForm3.tishi" :rows="5" 
                     placeholder="兑奖提示限制在100个字以内"></el-input>
+                </el-form-item>  
+                 <el-form-item label="中奖须知：">
+                    <el-input class="w_demo" :maxlength="100" type="textarea" v-model="ruleForm3.tishi" :rows="13" 
+                    placeholder="1、如果是实物的奖品，要填写中奖人的手机号码，如不是现场兑奖的还要填写速递地址。2、如中奖是流量的则要填写手机号码，流量将在12小时内到充值中奖人的手机号码上同时运营商会有流量到帐短信通知。3、如中奖是粉币或积分、优惠券的， 则中奖数额会即时自动累计到会员中心对应的类目上， 中奖人可到会员中心查看粉币或积分的增加数量。4、如果是转赠的，则要输入受赠人的手机号，同时受赠人要关注我们的微信公众号。5、中奖人须在规定的时间内完成兑奖，逾期则奖品自动作废。"></el-input>
                 </el-form-item>    
             </el-form> 
         </div>
@@ -112,12 +122,12 @@
                 <p>奖品数额：奖品的数量或内容；奖项数量：该奖品的可领取次数；中奖概率：每种奖项在转盘中的中奖概率</p>
                 <p>如：奖品类型：粉币；奖品数额：2；奖项名称：粉币；奖项数量：3；中奖概率：12</p>
                 <p>此次游戏活动设置了六个奖项：其中一个奖项为粉币(奖项名称)，该奖项出现3次(中奖数量)，中了该奖项会得到2个(奖品数额)粉币（奖品类型）。</p>
-            </div> 
+            </div>  
             <div class="mt20 mb20">
                 <el-button   @click="addForm4()" :disabled='ruleForm4.length>4'  type="primary">新增奖品</el-button> 
-                <span class="el-upload__tip grey ml10">下列奖品根据排名由上至下顺序分配</span> 
+                <span class="el-upload__tip grey ml10">最多设置五个奖项</span> 
             </div> 
-            <el-table ref="multipleTable" :data="ruleForm4" tooltip-effect="dark">
+             <el-table ref="multipleTable" :data="ruleForm4" tooltip-effect="dark">
                 <el-table-column label="奖品类型">
                   <template slot-scope="scope">
                       <el-select v-model="scope.row.name0" placeholder="请选择"> 
@@ -150,6 +160,11 @@
                       <el-input class="w20_demo"  v-model="scope.row.name4" placeholder="0-100且保留两位小数"></el-input>
                   </template>
                 </el-table-column>
+                <el-table-column label="中奖人"> 
+                     <template slot-scope="scope">
+                      {{scope.row.winners}}
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作">
                   <template slot-scope="scope">
                       <el-button class="gt-button-normal blue" @click="test(scope.row.id)">指定中奖人</el-button>
@@ -157,6 +172,7 @@
                   </template>
                 </el-table-column>
             </el-table>  
+            
         </div>       
         <!-- 新建完成 -->
         <div v-if="active==5" class="gt-content complete"> 
@@ -184,8 +200,9 @@
 export default {
   data() {
     return {
-      active: 0,
+      active:3,
       ruleForm1: {
+          type:1,
         name: "",
         starTime: "",
         endTime: "",
@@ -206,59 +223,57 @@ export default {
           { required: true, type: "date", message: "结束时间不能为空", trigger: "blur" }
         ]
       },
-      ruleForm2: {
+      ruleForm2: { 
         cishu: "",
-        zongshu: ""  
+        zongshu: "" ,
+       
       },
-      rules2: {
-        cishu: [{ required: true, message: "抽奖次数不能为空", trigger: "blur" }],
+      rules2: { 
+        cishu: [{ required: true, message: "每天抽奖次数不能为空", trigger: "blur" }],
         zongshu: [{ required: true, message: "抽奖总数不能为空", trigger: "blur" }]
       },
       ruleForm3: {
         days:"",
         dizhi: "",
         tishi: "",
-        transfer: ""
-      },
+        ticketWay:2,
+      }, 
       rules3: {
         days: [{ required: true,  message: "兑奖期限不能为空", trigger: "blur" }],
         dizhi: [{ required: true, message: "兑奖地址不能为空", trigger: "blur" }]
-      }, 
+      },  
       ruleForm4:[
-        {
-          id:0,
+        { 
+          name0: 1,
+          name1: "",
+          name2: "",
+          name3: "",
+          name4: "",
+          winners:"(大大，小小)",
+        },
+        { 
+          name0: 1,
+          name1: "",
+          name2: "",
+          name3: "",
+          name4: "",
+          winners:"",
+        },
+        { 
           name0: 1,
           name1: "",
           name2: "",
           name3: "",
           name4: ""
         },
-        {
-          id:1,
+        { 
           name0: 1,
           name1: "",
           name2: "",
           name3: "",
           name4: ""
         },
-        {
-          id:2,
-          name0: 1,
-          name1: "",
-          name2: "",
-          name3: "",
-          name4: ""
-        },
-        {
-          id:3,
-          name0: 1,
-          name1: "",
-          name2: "",
-          name3: "",
-          name4: ""
-        },
-        {
-          id:4,
+        { 
           name0: 1,
           name1: "",
           name2: "",
@@ -285,8 +300,7 @@ export default {
     },
     next(formName) {
       this.$refs[formName].validate(valid => {
-        if (valid) {
-          alert("submit!");
+        if (valid) { 
           this.active++;
         } else {
           console.log("error submit!!");
@@ -310,7 +324,7 @@ export default {
             this.submit();
         }  
       }
-    }, 
+    },
     //表单提交--------------------------------------star
     submit(){
         var newarr=[];
@@ -318,9 +332,7 @@ export default {
             var arr={
                 name0:this.ruleForm4[i].name0,
                 name1:this.ruleForm4[i].name1,
-                name1:this.ruleForm4[i].name1,
-                name3:this.ruleForm4[i].name3,
-                name4:this.ruleForm4[i].name4  
+                name2:this.ruleForm4[i].name2, 
             }
             newarr.push(arr)
         } 
@@ -354,6 +366,26 @@ export default {
     },
   },
   mounted() { 
+  },
+  filters: {
+    prizeStatus(val) {
+        if (val == 0) {
+          val = "一等奖";
+        }else if(val == 1){
+          val = "二等奖";
+        }else if(val == 2){
+          val = "三等奖";
+        }else if(val == 3){
+          val = "四等奖";
+        }else if(val == 4){
+          val = "五等奖";
+        }else if(val == 5){
+          val = "六等奖";
+        }  
+        return val;
+    },
+     
+
   }
 };
 </script>

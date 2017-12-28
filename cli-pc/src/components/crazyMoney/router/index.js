@@ -1,6 +1,9 @@
 const index = ()=>import( '@/components/crazyMoney/vue/index')
 const prizeRecord = ()=>import( '@/components/crazyMoney/vue/prizeRecord')
 
+const addAct = ()=>import( '@/components/crazyMoney/vue/addAct')
+const cancelOut = ()=>import( '@/components/crazyMoney/vue/cancelOut')
+
 export const crazyMoney = [
     {
         path:'/crazyMoney/index',
@@ -8,8 +11,14 @@ export const crazyMoney = [
         name:'crazyMoney_index'
     },
     {
-        path:'/crazyMoney/prizeRecord',
-        component: prizeRecord,
-        name:'crazyMoney_prizeRecord'
+        path:'/crazyMoney/addAct',
+        component: addAct,
+        name:'crazyMoney_addAct'
+    }
+    ,
+    {
+        path:'/crazyMoney/cancelOut',
+        component: cancelOut,
+        name:'crazyMoney_cancelOut'
     }
 ]

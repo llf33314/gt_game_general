@@ -174,7 +174,7 @@
         console.log(val)
       },
       addActive(){
-        this.$router.push('/cashTree/addAct')
+        this.$router.push('/crazyMoney/addAct')
       },
       test(){
         console.log(123)
