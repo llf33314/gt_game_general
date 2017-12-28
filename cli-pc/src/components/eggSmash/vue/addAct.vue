@@ -168,7 +168,7 @@
                 <el-table-column label="操作">
                   <template slot-scope="scope">
                       <el-button class="gt-button-normal blue" @click="test(scope.row.id)">指定中奖人</el-button>
-                      <el-button class="gt-button-normal" v-if="scope.row.id!=0" @click="delForm4(scope.$index)">删除</el-button>
+                      <el-button class="gt-button-normal"  v-if="scope.$index!=0"  @click="delForm4(scope.$index)">删除</el-button>
                   </template>
                 </el-table-column>
             </el-table>  
@@ -249,7 +249,7 @@ export default {
           name2: "",
           name3: "",
           name4: "",
-          winners:"(大大，小小)",
+          winners:"大大，小小",
         },
         { 
           name0: 1,

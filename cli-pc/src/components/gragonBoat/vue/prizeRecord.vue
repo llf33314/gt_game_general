@@ -6,7 +6,7 @@
 <div class="hd-common turnPlate">
     <el-breadcrumb separator="/" class="gt-crumbs">
       <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
-      <el-breadcrumb-item :to="{ path:'/crazyMoney/index' }">疯狂数钱</el-breadcrumb-item>  
+      <el-breadcrumb-item :to="{ path:'/gragonBoat/index' }">端午赛龙舟</el-breadcrumb-item>  
       <el-breadcrumb-item>中奖纪录</el-breadcrumb-item>   
     </el-breadcrumb> 
     <div class="gt-gray-region mb20">  
@@ -30,7 +30,7 @@
                 </el-select>
         </span> 
         <span class="padding-left-md ml10 mb10">
-            <el-input placeholder="请输入兑奖码" icon="search" v-model="keyWord" style="width:250px" :on-icon-click="test" @blur="test($event)"> 
+            <el-input placeholder="请输入兑奖码" icon="search" v-model="keyWord" style="width:250px"  :on-icon-click="test" @blur="test($event)"> 
             </el-input>
         </span> 
         <div class="h10"></div>
