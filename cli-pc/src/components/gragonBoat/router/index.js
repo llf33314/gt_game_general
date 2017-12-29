@@ -14,14 +14,14 @@ export const gragonBoat = [
         name:'gragonBoat_prizeRecord'
     }  ,
     {
-        path:'/crazyMoney/cancelOut',
+        path:'/gragonBoat/cancelOut',
         component: cancelOut,
-        name:'crazyMoney_cancelOut'
+        name:'gragonBoat_cancelOut'
     }
     ,
     {
-        path:'/crazyMoney/addAct',
+        path:'/gragonBoat/addAct',
         component: addAct,
-        name:'crazyMoney_addAct'
+        name:'gragonBoat_addAct'
     }
 ]

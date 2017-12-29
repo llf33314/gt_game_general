@@ -1,12 +1,9 @@
-<style lang="less">
-
-</style>
 <template>
 <section>
 <div class="hd-common">
     <el-breadcrumb separator="/" class="gt-crumbs">
       <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
-      <el-breadcrumb-item :to="{ path:'/cashTree/index' }">摇钱树</el-breadcrumb-item>  
+      <el-breadcrumb-item :to="{ path:'/lanternFestival/index' }">元宵点灯</el-breadcrumb-item>  
       <el-breadcrumb-item>创建活动</el-breadcrumb-item>   
     </el-breadcrumb> 
 
@@ -23,11 +20,18 @@
           <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="120px" class="demo-ruleForm">
                 <el-form-item label="活动名称：" prop="name">
                     <el-input class="w_demo" v-model="ruleForm1.name"></el-input>
-                </el-form-item> 
+                </el-form-item>
                 <el-form-item label="游戏时间：" prop="name1">
-                    <el-date-picker class="w_demo" v-model="ruleForm1.name1"   type="datetimerange"  placeholder="选择时间范围">
+                    <el-date-picker class="w_demo" v-model="ruleForm1.name1"   type="datetimerange"  placeholder="请选择游戏时间范围">
                     </el-date-picker>
                 </el-form-item>  
+                <el-form-item label="商家LOGO：">
+                    <gt-material prop="url" :url="ruleForm2.name2" v-on:getChangeUrl="getChangeUrl2" width="72" height="72"></gt-material>
+                    <span class="el-upload__tip grey ml10">上传1:1二维码，将会在活动规则中显示商家二维码</span>   
+                </el-form-item>
+                  <el-form-item label="商家名称：">
+                    <el-input class="w_demo" v-model="ruleForm1.name3"></el-input>
+                </el-form-item> 
             <h1 class="mt30 mb20 pb10 bbtom">广告设置</h1> 
             <el-button type="primary" class="mb20" @click="addlinks()">新增</el-button>  
             <span class="ml10 el-upload__tip grey">1.仅支持多粉与一点揩油的链接    2.广告图格式：1000*300px</span>
@@ -58,45 +62,13 @@
                 <el-form-item label="关注二维码：" prop="code">
                   <gt-material prop="url" :url="ruleForm2.code" v-on:getChangeUrl="getChangeUrl2" width="72" height="72"></gt-material>
                   <span class="el-upload__tip grey ml10">上传1:1二维码，将会在活动规则中显示商家二维码</span>  
-                </el-form-item>
-                <el-form-item label="游戏时长：" prop="time">
-                    <el-input class="w_demo" v-model="ruleForm2.time" type="number" placeholder="请输入游戏时长"></el-input>
-                    <span class="el-upload__tip grey ml10">设置时间为10~30秒</span>  
                 </el-form-item> 
-                <el-form-item label="一元宝兑换：" prop="duihuan">
-                    <el-input class="w_demo" v-model="ruleForm2.duihuan" placeholder="请输入元宝兑换金币比例"></el-input>
-                </el-form-item>
-                <el-form-item label="免费游戏：" prop="freePeople">
-                    <el-input class="w25_demo mr10" v-model="ruleForm2.freePeople"></el-input>次/人
+                <el-form-item label="游戏总数：" prop="freePeople">
+                    <el-input class="w25_demo mr10" type="number" placeholder="请输入游戏总数" v-model="ruleForm2.freePeople"></el-input>次/人
                 </el-form-item> 
-                <el-form-item label="免费次数：" prop="freeNum">
-                    <el-input class="w25_demo mr10" v-model="ruleForm2.freeNum"></el-input>次/人
-                </el-form-item>
-                <el-form-item label="游戏消耗：" prop="fenbi">
-                    <el-input class="w25_demo mr10" v-model="ruleForm2.fenbi"></el-input>粉币
-                    <span class="ml20 mr20"> 或</span>
-                    <el-input class="w25_demo ml10 mr10" v-model="ruleForm2.jifen"></el-input>积分
+                <el-form-item label="每天次数：" prop="freeNum">
+                    <el-input class="w25_demo mr10" type="number"   placeholder="请输入每天游戏次数" v-model="ruleForm2.freeNum"></el-input>次/人
                 </el-form-item>  
-                <el-form-item label="中奖消息：" prop="msg">
-                  <el-switch on-text="开启" :on-value="0" off-text="关闭" :off-value="1" v-model="ruleForm2.msg"></el-switch>
-                  <span class="el-upload__tip grey">
-                        <el-tooltip placement="right" effect="light">
-                        <div slot="content">
-                            1.开通消息模块功能;2.公众号平台添加消
-                            <br/>息模块;3.同步模块到多粉平台;4.选取相
-                            <br/>应的消息模块；如有问题,请联系客服！
-                        </div>
-                        <span class="el-icon-warning  ml10" style="font-size:16px;position: absolute;top: 11px;"></span> 
-                        </el-tooltip> 
-                    </span> 
-                </el-form-item> 
-                <el-form-item label="消息模块：" prop="msgModel">
-                  <el-select v-model="ruleForm2.msgModel" placeholder="请选择">
-                    <el-option label="模块一"  value="0"></el-option>
-                    <el-option label="模块二"  value="1"></el-option>
-                    <el-option label="模块三"  value="2"></el-option>
-                  </el-select> 
-                </el-form-item> 
                 <el-form-item label="活动规则：" prop="desc">
                     <el-input class="w_demo" :maxlength="300"  type="textarea" v-model="ruleForm2.desc" :rows="3" placeholder="请填写活动规则"></el-input>
                     <span class="el-upload__tip grey ml10">300个字以内</span>   
@@ -134,20 +106,14 @@
             </el-form> 
         </div>
         <!-- 奖项设置 -->
-        <div v-if="this.active==3" class="mt40">
-            <div>
-                <span style="color: #333; position:absolute;margin-top:0px;" >设置奖品说明：</span>
-                <el-input type="textarea" class="bw ml120"  :maxlength="300"  :rows="3" placeholder="请输入兑奖说明" v-model="explain">
-                </el-input>
-                <span class="el-upload__tip grey ml10">300字以内</span>
-            </div> 
+        <div v-if="this.active==3" class="mt40">  
             <div class="gt-gray-region mt20" style="color:#666;line-height:20px">
                 <p>奖品类型：奖品的内容;奖品单位：奖品的数量货内容；奖项数量:该奖品的可领取次数</p>
                 <p>如：奖品类型：粉币；奖品数额：2；奖项名称：粉币；奖项数量：3；中奖概率：12</p> 
             </div> 
             <div class="mt20 mb20">
-                <el-button   @click="addForm4()"  type="primary">新增奖品</el-button> 
-                <span class="el-upload__tip grey ml10">下列奖品根据排名由上至下顺序分配</span> 
+                <el-button   @click="addForm4()" :disabled="ruleForm4.length>8"  type="primary">新增奖品</el-button> 
+                <span class="el-upload__tip grey ml10">最多设置9个奖项</span> 
             </div> 
             <el-table ref="multipleTable" :data="ruleForm4" tooltip-effect="dark">
                 <el-table-column label="奖品类型">
@@ -177,10 +143,15 @@
                     <el-input class="w20_demo"  type="number"  v-model="scope.row.name3" placeholder="数值应大于0"></el-input>
                 </template>
                 </el-table-column>
+                <el-table-column label="中奖概率(%)">
+                  <template slot-scope="scope">
+                      <el-input class="w20_demo"  v-model="scope.row.name4" placeholder="0-100且保留两位小数"></el-input>
+                  </template>
+                </el-table-column>
                 <el-table-column label="奖品图片">
                     <template slot-scope="scope"> 
                         <div  v-if="scope.row.name0==4" >
-                            <gt-material prop="url" :url="scope.row.name4" v-on:getChangeUrl="getChangeUrl4(scope.$index, $event)" width="72" height="72"></gt-material>
+                            <gt-material prop="url" :url="scope.row.name5" v-on:getChangeUrl="getChangeUrl4(scope.$index, $event)" width="72" height="72"></gt-material>
                         </div>
                     </template>
                 </el-table-column>
@@ -207,7 +178,7 @@
             <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
             <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>   
-            <el-button type="primary" @click="submit()">打印</el-button>   
+            <el-button type="primary" @click="checkGL()">打印</el-button>   
         </div> 
     </div>   
 </div>
@@ -230,18 +201,19 @@ export default {
        const time = window.parseInt(value) 
        if (!time) {
         callback(new Error("游戏时长不能为空"));
-       } else if (time<10 || time>30) {
+       } else if (time<60 || time>100) {
         callback(new Error("游戏时长有误，请重填"));
       } else {
         callback();
       }
     }; 
     return {
-      active: 0 ,
+      active: 0,
       ruleForm1: {
         name: "",
         name1: "",
-        name4:"",
+        name2: "",
+        name3:"", 
         links:[
           {id:0,url:"www.duofriend.com",img:""},
           {id:1,url:"",img:""}
@@ -311,14 +283,16 @@ export default {
           name1: "",
           name2: "",
           name3: "",
-          name4: ""
+          name4: "",
+          name5:"" 
         },
         { 
           name0: 1,
           name1: "",
           name2: "",
           name3: "",
-          name4: ""
+          name4: "" ,
+          name5:"" 
         }],  
     };
   },
@@ -364,10 +338,10 @@ export default {
       this.ruleForm2.code=e.url
     }, 
     getChangeUrl4(i,e) {   
-      this.ruleForm4[i].name4=e.url
+      this.ruleForm4[i].name5=e.url
     }, 
     addForm4(){ 
-        this.ruleForm4.push({ name0: 1, name1: "", name2: "", name3: "", name4: ""},)
+        this.ruleForm4.push({ name0: 1, name1: "", name2: "", name3: "", name4: "", name5: ""},)
     },
     delForm4(val){
         this.ruleForm4.splice(val, 1); 
@@ -380,8 +354,31 @@ export default {
          console.log("error submit!!");
         }
       });
+    }, 
+    //校验概率
+    checkGL(){
+        var arr1=[]; 
+        for(let i=0;i<this.ruleForm4.length;i++){
+           var  arr2={
+                id: parseFloat(this.ruleForm4[i].name4).toFixed(2)
+            }
+            arr1.push(arr2.id) 
+        } 
+        var getSum=function(ar){
+            var arr=ar;   
+            var s=eval(arr.join("+")) 
+                return  s; 
+        };  
+       var sum = getSum(arr1)
+       console.log(sum,998);
+       if(sum!=100){
+            this.$message.error("中奖概率之和必须等于100%");
+        }else{
+            this.submit();
+        }
     },
     lastStep() {
+        console.log(this.ruleForm4,1243)
       for (let i = 0; i < this.ruleForm4.length; i++) { 
         var regu =/^[1-9]\d*$/;
         if(!this.ruleForm4[i].name1||!this.ruleForm4[i].name2||!this.ruleForm4[i].name3||!this.ruleForm4[i].name4){
@@ -393,8 +390,12 @@ export default {
         }else if (!regu.test(this.ruleForm4[i].name3)) {
             this.$message.error("奖项数量填写有误，请重新填写~");
             return false
+        }else if (this.ruleForm4[i].name0==4&&this.ruleForm4[i].name5.length==0) { 
+                this.$message.error("当奖品为实物时，请上传实物图片~");
+                return false 
         }else{
-            this.submit();
+            this.ruleForm4[i].name4 = parseFloat(this.ruleForm4[i].name4).toFixed(2); 
+            this.checkGL(); 
         }  
       }
     }, 

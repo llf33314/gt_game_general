@@ -6,7 +6,7 @@
 <div class="hd-common turnPlate">
     <el-breadcrumb separator="/" class="gt-crumbs">
       <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
-      <el-breadcrumb-item  :to="{ path:'/eggSmash/index' }">砸金蛋</el-breadcrumb-item>  
+      <el-breadcrumb-item  :to="{ path:'/luckTranslate/index' }">好运翻翻看</el-breadcrumb-item>  
       <el-breadcrumb-item>创建活动</el-breadcrumb-item>   
     </el-breadcrumb>  
     <div class="gt-content">
@@ -74,10 +74,10 @@
         <!-- 规则设置 -->
         <div v-if="this.active==1" class="mt40">
             <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="120px" class="mt40 demo-ruleForm">  
-                    <el-form-item label="抽奖次数：" prop="cishu">
+                    <el-form-item label="游戏总数：" prop="cishu">
                         <el-input class="w_demo mr10" v-model="ruleForm2.cishu" placeholder="请输入每人抽奖总次数"></el-input> 次/人
                     </el-form-item>
-                    <el-form-item label="抽奖总数：" prop="zongshu">
+                    <el-form-item label="每天次数：" prop="zongshu">
                         <el-input class="w_demo mr10" v-model="ruleForm2.zongshu" placeholder="请输入每人/每天抽奖总数"></el-input>次/人
                     </el-form-item>   
             </el-form> 
@@ -93,23 +93,7 @@
                 </el-form-item> 
                 <el-form-item label="兑奖地址：" prop="dizhi">
                     <el-input class="w_demo"  type="textarea" v-model="ruleForm3.dizhi" :rows="5" placeholder="请输入兑奖地址"></el-input>
-                </el-form-item> 
-
-                <el-form-item label="兑奖方式：">
-                    <el-select v-model="ruleForm3.ticketWay" placeholder="请选择"> 
-                      <el-option label="自动发放"   :value="1"></el-option>
-                      <el-option label="手动兑奖"   :value="2"></el-option> 
-                    </el-select> 
                 </el-form-item>  
-
-                <el-form-item label="兑奖提示：">
-                    <el-input class="w_demo" :maxlength="100" type="textarea" v-model="ruleForm3.tishi" :rows="5" 
-                    placeholder="兑奖提示限制在100个字以内"></el-input>
-                </el-form-item>  
-                 <el-form-item label="中奖须知：">
-                    <el-input class="w_demo" :maxlength="100" type="textarea" v-model="ruleForm3.tishi" :rows="13" 
-                    placeholder="1、如果是实物的奖品，要填写中奖人的手机号码，如不是现场兑奖的还要填写速递地址。2、如中奖是流量的则要填写手机号码，流量将在12小时内到充值中奖人的手机号码上同时运营商会有流量到帐短信通知。3、如中奖是粉币或积分、优惠券的， 则中奖数额会即时自动累计到会员中心对应的类目上， 中奖人可到会员中心查看粉币或积分的增加数量。4、如果是转赠的，则要输入受赠人的手机号，同时受赠人要关注我们的微信公众号。5、中奖人须在规定的时间内完成兑奖，逾期则奖品自动作废。"></el-input>
-                </el-form-item>    
             </el-form> 
         </div>
         <!-- 奖项设置 -->
@@ -246,35 +230,6 @@ export default {
           name3: "",
           name4: "",
           winners:"大大，小小",
-        },
-        { 
-          name0: 1,
-          name1: "",
-          name2: "",
-          name3: "",
-          name4: "",
-          winners:"",
-        },
-        { 
-          name0: 1,
-          name1: "",
-          name2: "",
-          name3: "",
-          name4: ""
-        },
-        { 
-          name0: 1,
-          name1: "",
-          name2: "",
-          name3: "",
-          name4: ""
-        },
-        { 
-          name0: 1,
-          name1: "",
-          name2: "",
-          name3: "",
-          name4: ""
         }
       ],
     };
