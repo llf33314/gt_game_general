@@ -6,7 +6,7 @@
 <div class="hd-common turnPlate">
     <el-breadcrumb separator="/" class="gt-crumbs">
       <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
-      <el-breadcrumb-item :to="{ path:'/crazyMoney/index' }">疯狂数钱</el-breadcrumb-item>  
+      <el-breadcrumb-item :to="{ path:'/eggSmash/index' }">砸金蛋</el-breadcrumb-item>  
       <el-breadcrumb-item>中奖纪录</el-breadcrumb-item>   
     </el-breadcrumb> 
     <div class="gt-gray-region mb20">  

@@ -23,14 +23,10 @@
                 <el-form-item label="活动名称：" prop="name">
                     <el-input class="w_demo"  placeholder="请输入活动名称"  v-model="ruleForm1.name"></el-input>
                 </el-form-item>
-                <el-form-item label="开始时间：" prop="starTime">
-                    <el-date-picker  class="w_demo"  v-model="ruleForm1.starTime"  type="date"  placeholder="请选择开始时间" >
+                 <el-form-item label="游戏时间：" prop="name1">
+                    <el-date-picker class="w_demo" v-model="ruleForm1.name1"   type="datetimerange"  placeholder="选择时间范围">
                     </el-date-picker>
-                </el-form-item>
-                <el-form-item label="结束时间：" prop="endTime">
-                    <el-date-picker  class="w_demo"  v-model="ruleForm1.endTime"  type="date"  placeholder="请选择结束时间" >
-                    </el-date-picker>
-                </el-form-item>  
+                </el-form-item>   
                 
                 <el-form-item label="参与人员：">
                     <el-radio-group v-model="ruleForm1.resource">
@@ -204,7 +200,7 @@ export default {
       ruleForm1: {
           type:1,
         name: "",
-        starTime: "",
+        name1: "",
         endTime: "",
         resource: 1,
         desc1: "",
@@ -216,7 +212,7 @@ export default {
       },
       rules1: {
         name: [{ required: true, message: "活动名称不能为空", trigger: "blur" }],
-        starTime: [
+        name1: [
           { required: true, type: "date", message: "开始时间不能为空", trigger: "blur" }
         ],
         endTime: [
@@ -311,7 +307,7 @@ export default {
       for (let i = 0; i < this.ruleForm4.length; i++) { 
         var regu =/^[1-9]\d*$/;
         if(!this.ruleForm4[i].name1||!this.ruleForm4[i].name2||!this.ruleForm4[i].name3||!this.ruleForm4[i].name4){
-            this.$message.error("表单不能不能为空，请填写完整~");
+            this.$message.error("表单不能留空，请填写完整~");
             return false
         }else if (!regu.test(this.ruleForm4[i].name1)) {
             this.$message.error("奖品数额填写有误，请重新填写~");
@@ -339,7 +335,7 @@ export default {
         const data = {
             //基础设置 
             name1 : this.ruleForm1.name, 
-            name2 : this.ruleForm1.starTime, 
+            name2 : this.ruleForm1.name1, 
             name3 : this.ruleForm1.endTime, 
             name4 : this.ruleForm1.resource, 
             name51 : this.ruleForm1.desc1, 

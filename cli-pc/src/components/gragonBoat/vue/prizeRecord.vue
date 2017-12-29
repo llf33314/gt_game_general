@@ -11,8 +11,7 @@
     </el-breadcrumb> 
     <div class="gt-gray-region mb20">  
         <span class="padding-left-md ml30 mb10">
-            <el-select v-model="prizeType"  @change="test()"> 
-                <el-option label="请选择奖品类型"       value=""></el-option>
+            <el-select v-model="prizeType"  placeholder="请选择奖品类型" @change="test()"> 
                 <el-option label="粉币"       :value="1"></el-option>
                 <el-option label="手机流量"   :value="2"></el-option>
                 <el-option label="手机话费"   :value="3"></el-option>
@@ -22,8 +21,7 @@
             </el-select>
         </span> 
         <span class="padding-left-md ml10 mb10">
-                <el-select v-model="prizeState"  @change="test()"> 
-                    <el-option label="请选择状态"       value=""></el-option>
+                <el-select v-model="prizeState" placeholder="请选择状态"  @change="test()"> 
                     <el-option label="已提交"   :value="1"></el-option>
                     <el-option label="未兑奖"   :value="2"></el-option>
                     <el-option label="已兑奖"   :value="3"></el-option> 

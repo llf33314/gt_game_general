@@ -9,26 +9,26 @@
 ├─src
 │  ├─assets
 │  ├─components
-│  │  └─openBox          // 拆礼盒 
-│  │  └─seaRich          // 大海捞金 
+│  │  └─lanternFestival  // 元宵点灯
+│  │  └─eggSmash         // 砸金蛋
 │  │  └─bigTurnplate     // 大转盘 
 │  │  └─gragonBoat       // 端午赛龙舟
+│  │  └─luckyNine        // 幸运九宫格  
+│  │  └─christmasGift    // 圣诞大礼包
 │  │  └─crazyMoney       // 疯狂数钱  
+│  │  └─cashTree         // 摇钱树
+│  │  └─luckSake         // 摇手气 
 │  │  └─scrapeHappy      // 刮刮乐
 │  │  └─luckTranslate    // 好运翻翻看 
 │  │  └─robIngots        // 欢乐抢元宝 
 │  │  └─romanceValentine // 浪漫七夕
 │  │  └─redpachetFly     // 让红包飞
 │  │  └─nationalFlag     // 升国旗
-│  │  └─christmasGift    // 圣诞大礼包
-│  │  └─luckyNine        // 幸运九宫格 
-│  │  └─cashTree         // 摇钱树
-│  │  └─luckSake         // 摇手气 
 │  │  └─throughHeart     // 一箭穿心
 │  │  └─standStill       // 一站到底
-│  │  └─newYear          // 元旦跨年跳跃
-│  │  └─lanternFestival  // 元宵点灯
-│  │  └─eggSmash         // 砸金蛋
+│  │  └─newYear          // 元旦跨年跳跃 
+│  │  └─openBox          // 拆礼盒 
+│  │  └─seaRich          // 大海捞金 
 │  ├─http
 │  │   └─index.js    // 统一初始化各个项目的axios请求方法
 │  └─router

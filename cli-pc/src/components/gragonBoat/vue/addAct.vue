@@ -28,7 +28,16 @@
                     <el-date-picker class="w_demo" v-model="ruleForm1.name1"   type="datetimerange"  placeholder="选择时间范围">
                     </el-date-picker>
                 </el-form-item>  
-            <h1 class="mt30 mb20 pb10 bbtom">模块设置</h1> 
+                 <el-form-item label="背景音乐：">
+                    <div class="pd20 bb bw">
+                        <el-button size="small" type="primary">点击上传</el-button>
+                        <span class="el-upload__tip grey ml20">{{ruleForm1.music}}</span> 
+                        <div class="el-upload__tip grey" style="line-height:25px">
+                            音频文件的格式为mp3、wma、wav,大小不超过3M
+                        </div>
+                    </div>
+                </el-form-item>
+            <h1 class="mt30 mb20 pb10 bbtom">广告设置</h1> 
             <el-button type="primary" class="mb20" @click="addlinks()">新增</el-button>  
             <span class="ml10 el-upload__tip grey">1.仅支持多粉与一点揩油的链接    2.广告图格式：1000*300px</span>
             <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark">
@@ -59,44 +68,14 @@
                   <gt-material prop="url" :url="ruleForm2.code" v-on:getChangeUrl="getChangeUrl2" width="72" height="72"></gt-material>
                   <span class="el-upload__tip grey ml10">上传1:1二维码，将会在活动规则中显示商家二维码</span>  
                 </el-form-item>
-                <el-form-item label="游戏时长：" prop="time">
-                    <el-input class="w_demo" v-model="ruleForm2.time" type="number" placeholder="请输入游戏时长"></el-input>
-                    <span class="el-upload__tip grey ml10">设置时间为10~30秒</span>  
-                </el-form-item> 
-                <el-form-item label="一元宝兑换：" prop="duihuan">
-                    <el-input class="w_demo" v-model="ruleForm2.duihuan" placeholder="请输入元宝兑换金币比例"></el-input>
-                </el-form-item>
+                
                 <el-form-item label="免费游戏：" prop="freePeople">
                     <el-input class="w25_demo mr10" v-model="ruleForm2.freePeople"></el-input>次/人
                 </el-form-item> 
                 <el-form-item label="免费次数：" prop="freeNum">
                     <el-input class="w25_demo mr10" v-model="ruleForm2.freeNum"></el-input>次/人
-                </el-form-item>
-                <el-form-item label="游戏消耗：" prop="fenbi">
-                    <el-input class="w25_demo mr10" v-model="ruleForm2.fenbi"></el-input>粉币
-                    <span class="ml20 mr20"> 或</span>
-                    <el-input class="w25_demo ml10 mr10" v-model="ruleForm2.jifen"></el-input>积分
-                </el-form-item>  
-                <el-form-item label="中奖消息：" prop="msg">
-                  <el-switch on-text="开启" :on-value="0" off-text="关闭" :off-value="1" v-model="ruleForm2.msg"></el-switch>
-                  <span class="el-upload__tip grey">
-                        <el-tooltip placement="right" effect="light">
-                        <div slot="content">
-                            1.开通消息模块功能;2.公众号平台添加消
-                            <br/>息模块;3.同步模块到多粉平台;4.选取相
-                            <br/>应的消息模块；如有问题,请联系客服！
-                        </div>
-                        <span class="el-icon-warning  ml10" style="font-size:16px;position: absolute;top: 11px;"></span> 
-                        </el-tooltip> 
-                    </span> 
                 </el-form-item> 
-                <el-form-item label="消息模块：" prop="msgModel">
-                  <el-select v-model="ruleForm2.msgModel" placeholder="请选择">
-                    <el-option label="模块一"  value="0"></el-option>
-                    <el-option label="模块二"  value="1"></el-option>
-                    <el-option label="模块三"  value="2"></el-option>
-                  </el-select> 
-                </el-form-item> 
+    
                 <el-form-item label="活动规则：" prop="desc">
                     <el-input class="w_demo" :maxlength="300"  type="textarea" v-model="ruleForm2.desc" :rows="3" placeholder="请填写活动规则"></el-input>
                     <span class="el-upload__tip grey ml10">300个字以内</span>   
@@ -134,19 +113,13 @@
             </el-form> 
         </div>
         <!-- 奖项设置 -->
-        <div v-if="this.active==3" class="mt40">
-            <div>
-                <span style="color: #333; position:absolute;margin-top:0px;" >设置奖品说明：</span>
-                <el-input type="textarea" class="bw ml120"  :maxlength="300"  :rows="2" placeholder="请输入兑奖说明" v-model="explain">
-                </el-input>
-                <span class="el-upload__tip grey ml10">300字以内</span>
-            </div> 
+        <div v-if="this.active==3" class="mt40"> 
             <div class="gt-gray-region mt20" style="color:#666;line-height:20px">
                 <p>奖品类型：奖品的内容;奖品单位：奖品的数量货内容；奖项数量:该奖品的可领取次数</p>
                 <p>如：奖品类型：粉币；奖品数额：2；奖项名称：粉币；奖项数量：3；中奖概率：12</p> 
             </div> 
             <div class="mt20 mb20">
-                <el-button   @click="addForm4()"  type="primary">新增奖品</el-button> 
+                <el-button   @click="addForm4()" :disabled="ruleForm4.length>8"  type="primary">新增奖品</el-button> 
                 <span class="el-upload__tip grey ml10">下列奖品根据排名由上至下顺序分配</span> 
             </div> 
             <el-table ref="multipleTable" :data="ruleForm4" tooltip-effect="dark">
@@ -186,7 +159,7 @@
                 </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
-                        <el-button class="gt-button-normal blue" @click="delForm4(scope.$index)">删除</el-button>
+                        <el-button class="gt-button-normal" @click="delForm4(scope.$index)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>  
@@ -200,6 +173,7 @@
             </div> 
         </div>
         <!-- 按钮 -->
+        <div class="h80"></div> 
         <div class="btnRow"  v-if="this.active!=5">
             <el-button   @click="upStep()" v-if="this.active!=0">上一步</el-button>
             <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步1</el-button> 
@@ -236,11 +210,12 @@ export default {
       }
     }; 
     return {
-      active: 0 ,
+      active: 3,
       ruleForm1: {
         name: "",
         name1: "",
         name4:"",
+        music:"暂无上传音乐",
         links:[
           {id:0,url:"www.duofriend.com",img:""},
           {id:1,url:"",img:""}
@@ -270,7 +245,7 @@ export default {
           { required: true,  message: "请填写元宝兑换金币比例", trigger: "blur" } 
         ], 
         freePeople: [
-          { required: true,  message: "请填写没人免费游戏次数", trigger: "blur" } 
+          { required: true,  message: "请填写每人免费游戏次数", trigger: "blur" } 
         ], 
         freeNum: [
           { required: true,  message: "请填写每人每天免费游戏次数", trigger: "blur" } 
@@ -384,7 +359,7 @@ export default {
       for (let i = 0; i < this.ruleForm4.length; i++) { 
         var regu =/^[1-9]\d*$/;
         if(!this.ruleForm4[i].name1||!this.ruleForm4[i].name2||!this.ruleForm4[i].name3||!this.ruleForm4[i].name4){
-            this.$message.error("表单不能不能为空，请填写完整~");
+            this.$message.error("表单不能留空，请填写完整~");
             return false
         }else if (!regu.test(this.ruleForm4[i].name1)) {
             this.$message.error("奖品单位填写有误，请重新填写~");
