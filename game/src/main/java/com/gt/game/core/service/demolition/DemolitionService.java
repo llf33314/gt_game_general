@@ -4,10 +4,7 @@ package com.gt.game.core.service.demolition;
 import com.gt.axis.bean.wxmp.bus.BusUser;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.core.bean.demolition.req.*;
-import com.gt.game.core.bean.demolition.res.DemolitionApplyListRes;
-import com.gt.game.core.bean.demolition.res.DemolitionAuthorityListRes;
-import com.gt.game.core.bean.demolition.res.DemolitionListRes;
-import com.gt.game.core.bean.demolition.res.DemolitionRes;
+import com.gt.game.core.bean.demolition.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 
@@ -45,4 +42,7 @@ public interface DemolitionService {
     ResponseDTO removeDemolitionAuthority(BusUser busUser, DemolitionAuthorityIdsReq demolitionAuthorityIdsReq);
 
     ResponseDTO<MobileUrlRes> getAuthorityUrl(BusUser busUser, MobileUrlReq mobileUrlReq);
+
+    ResponseDTO<DemolitionCountRes> getDemolitionCount(BusUser busUser);
+
 }

@@ -5,10 +5,7 @@ import com.gt.axis.bean.wxmp.bus.BusUser;
 import com.gt.game.common.base.BaseController;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.core.bean.demolition.req.*;
-import com.gt.game.core.bean.demolition.res.DemolitionApplyListRes;
-import com.gt.game.core.bean.demolition.res.DemolitionAuthorityListRes;
-import com.gt.game.core.bean.demolition.res.DemolitionListRes;
-import com.gt.game.core.bean.demolition.res.DemolitionRes;
+import com.gt.game.core.bean.demolition.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 import com.gt.game.core.exception.demolition.DemolitionException;
@@ -85,8 +82,26 @@ public class DemolitiongiftboxController  extends BaseController {
             return ResponseDTO.createByError();
         }
     }
-
-
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+            @ApiResponse(code = 1, message = "响应对象", response = DemolitionCountRes.class),
+    })
+    @ApiOperation(value = "获取活动数量", notes = "获取活动数量")
+    @RequestMapping(value = "/getDemolitionCount", method = RequestMethod.POST)
+    protected ResponseDTO getDemolitionCount(
+            HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO<DemolitionCountRes> responseDTO = demolitionService.getDemolitionCount(busUser);
+            return responseDTO;
+        } catch (DemolitionException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
             @ApiResponse(code = 1, message = "响应对象", response = DemolitionListRes.class),

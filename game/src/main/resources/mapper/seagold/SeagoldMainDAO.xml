@@ -25,9 +25,33 @@
 		<result column="game_time" property="gameTime" />
 	</resultMap>
 
+	<resultMap id="BaseResultMap1" type="com.gt.game.core.bean.seagold.res.SeagoldListRes">
+		<id column="id" property="id" />
+		<result column="activity_begin_time" property="activityBeginTime" />
+		<result column="activity_end_time" property="activityEndTime" />
+		<result column="name" property="name" />
+	</resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, createtime, activity_begin_time, activity_end_time, cash_prize_begin_time, cash_prize_end_time, act_rule, name, follow_qr_code, man_day_chance, man_total_chance, cash_prize_instruction, receive_type, phone, cash_address, bus_id, music_url, bgm_sp, game_time
     </sql>
-
+	<select id="getSeagoldList" resultMap="BaseResultMap1" parameterType="Map">
+		SELECT  id,activity_begin_time, activity_end_time, name
+		FROM t_wx_activity_seagold_main
+		WHERE bus_id = #{busId,jdbcType=INTEGER}
+		<if test="status == 0">
+			and UNIX_TIMESTAMP(activity_begin_time) > UNIX_TIMESTAMP(#{nowTime})
+		</if>
+		<if  test="status == 1">
+			and UNIX_TIMESTAMP(activity_begin_time) &lt;= UNIX_TIMESTAMP(#{nowTime}) and  UNIX_TIMESTAMP(activity_end_time) >= UNIX_TIMESTAMP(#{nowTime})
+		</if>
+		<if test="status == 2">
+			and UNIX_TIMESTAMP(activity_end_time) &lt; UNIX_TIMESTAMP(#{nowTime})
+		</if>
+		<if test="name != null and name != ''">
+			and name LIKE #{name}
+		</if>
+		order BY  id DESC
+	</select>
 </mapper>

@@ -17,10 +17,7 @@ import com.gt.game.common.dto.PageDTO;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.common.enums.ResponseEnums;
 import com.gt.game.core.bean.demolition.req.*;
-import com.gt.game.core.bean.demolition.res.DemolitionApplyListRes;
-import com.gt.game.core.bean.demolition.res.DemolitionAuthorityListRes;
-import com.gt.game.core.bean.demolition.res.DemolitionListRes;
-import com.gt.game.core.bean.demolition.res.DemolitionRes;
+import com.gt.game.core.bean.demolition.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 import com.gt.game.core.dao.demolition.DemolitiongiftboxCashPrizeApplyDAO;
@@ -114,6 +111,25 @@ public class DemolitionServiceImpl implements DemolitionService {
         String url = applyProperties.getMobileBaseUrl() + "demolitionGiftBoxMobile/"+ mobileUrlReq.getMainId() + "/79B4DE7C/saveAuthorizer.do";
         return ResponseDTO.createBySuccess("获取新增授权链接成功",new MobileUrlRes(url));
     }
+    /**
+     * 获取活动数量
+     * @return
+     */
+    @Override
+    public ResponseDTO<DemolitionCountRes> getDemolitionCount(BusUser busUser) {
+        DemolitionCountRes demolitionCountRes = new DemolitionCountRes();
+        Date date = new Date();
+        Map<String,Object> params = new HashMap<>();
+        params.put("nowTime",date);
+        params.put("busId",busUser.getId());
+        Map<String,Object> countMap = demolitiongiftboxMainDAO.getCount(params);
+        demolitionCountRes.setCount2(CommonUtil.isNotEmpty(countMap.get("count2"))?CommonUtil.toInteger(countMap.get("count2")):0);
+        demolitionCountRes.setCount3(CommonUtil.isNotEmpty(countMap.get("count3"))?CommonUtil.toInteger(countMap.get("count3")):0);
+        demolitionCountRes.setCount4(CommonUtil.isNotEmpty(countMap.get("count4"))?CommonUtil.toInteger(countMap.get("count4")):0);
+        demolitionCountRes.setCount1(demolitionCountRes.getCount2()+demolitionCountRes.getCount3()+demolitionCountRes.getCount4());
+        return ResponseDTO.createBySuccess("获取成功",demolitionCountRes);
+    }
+
     /**
      * 分页获取活动列表
      *
