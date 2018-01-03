@@ -150,8 +150,8 @@ public class DemolitionServiceImpl implements DemolitionService {
         if(CommonUtil.isNotEmpty(axisResult) && CommonUtil.isNotEmpty(axisResult.getData())){
             for(DictApiRes dictApiRes : axisResult.getData()){
                 DemolitionPrizeTypeListRes demolitionPrizeTypeListRes = new DemolitionPrizeTypeListRes();
-                demolitionPrizeTypeListRes.setName(dictApiRes.getItemKey());
-                demolitionPrizeTypeListRes.setValue(dictApiRes.getItemValue());
+                demolitionPrizeTypeListRes.setName(dictApiRes.getItemValue());
+                demolitionPrizeTypeListRes.setValue(dictApiRes.getItemKey());
                 demolitionPrizeTypeListResList.add(demolitionPrizeTypeListRes);
             }
         }
@@ -679,7 +679,9 @@ public class DemolitionServiceImpl implements DemolitionService {
         }else {
             throw new DemolitionException(ResponseEnums.DEMOLITION_HAS5);
         }
-        demolitiongiftboxAuthorityService.delete(new EntityWrapper<DemolitiongiftboxAuthority>().in("id",demolitionAuthorityIdsReq.getIds()));
+        DemolitiongiftboxAuthority demolitiongiftboxAuthority = new DemolitiongiftboxAuthority();
+        demolitiongiftboxAuthority.setDeleteStatus(1);
+        demolitiongiftboxAuthorityService.update(demolitiongiftboxAuthority,new EntityWrapper<DemolitiongiftboxAuthority>().in("id",demolitionAuthorityIdsReq.getIds()));
         return ResponseDTO.createBySuccess("删除成功");
     }
 

@@ -314,8 +314,6 @@ public class DemolitiongiftboxController  extends BaseController {
             return ResponseDTO.createByError();
         }
     }
-
-
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
     })

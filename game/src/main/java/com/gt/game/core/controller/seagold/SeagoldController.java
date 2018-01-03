@@ -4,12 +4,8 @@ package com.gt.game.core.controller.seagold;
 import com.gt.axis.bean.wxmp.bus.BusUser;
 import com.gt.game.common.base.BaseController;
 import com.gt.game.common.dto.ResponseDTO;
-import com.gt.game.core.bean.seagold.req.SeagoldApplyIdReq;
-import com.gt.game.core.bean.seagold.req.SeagoldApplyListPageReq;
-import com.gt.game.core.bean.seagold.req.SeagoldListPageReq;
-import com.gt.game.core.bean.seagold.res.SeagoldApplyListRes;
-import com.gt.game.core.bean.seagold.res.SeagoldCountRes;
-import com.gt.game.core.bean.seagold.res.SeagoldListRes;
+import com.gt.game.core.bean.seagold.req.*;
+import com.gt.game.core.bean.seagold.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 import com.gt.game.core.exception.seagold.SeagoldException;
@@ -145,7 +141,6 @@ public class SeagoldController   extends BaseController {
             return ResponseDTO.createByError();
         }
     }
-
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
     })
@@ -166,5 +161,65 @@ public class SeagoldController   extends BaseController {
             return ResponseDTO.createByError();
         }
     }
-
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+            @ApiResponse(code = 1, message = "响应对象", response = SeagoldPrizeTypeListRes.class),
+    })
+    @ApiOperation(value = "获取奖品类型列表", notes = "获取奖品类型列表")
+    @RequestMapping(value = "/getDemolitionPrizeType", method = RequestMethod.POST)
+    protected ResponseDTO getDemolitionPrizeType(
+            HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO<List<SeagoldPrizeTypeListRes>> responseDTO = seagoldService.getDemolitionPrizeType(busUser);
+            return responseDTO;
+        } catch (SeagoldException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+    })
+    @ApiOperation(value = "删除核销授权", notes = "删除核销授权")
+    @RequestMapping(value = "/removeSeagoldAuthority", method = RequestMethod.POST)
+    protected ResponseDTO removeSeagoldAuthority(
+            @RequestBody @ApiParam("请求参数") SeagoldAuthorityIdsReq seagoldAuthorityIdsReq,
+            HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO responseDTO = seagoldService.removeSeagoldAuthority(busUser, seagoldAuthorityIdsReq);
+            return responseDTO;
+        } catch (SeagoldException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+            @ApiResponse(code = 1, message = "响应对象", response = SeagoldAuthorityListRes.class),
+    })
+    @ApiOperation(value = "分页获取核销授权列表", notes = "分页获取核销授权列表")
+    @RequestMapping(value = "/getSeagoldAuthorityList", method = RequestMethod.POST)
+    protected ResponseDTO getSeagoldAuthorityList(
+            @RequestBody @ApiParam("请求参数") SeagoldAuthorityListPageReq seagoldAuthorityListPageReq,
+            HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO<List<SeagoldAuthorityListRes>> responseDTO = seagoldService.getSeagoldAuthorityList(busUser, seagoldAuthorityListPageReq);
+            return responseDTO;
+        } catch (SeagoldException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
 }

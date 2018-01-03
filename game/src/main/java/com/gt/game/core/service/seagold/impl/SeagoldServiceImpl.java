@@ -1,37 +1,36 @@
 package com.gt.game.core.service.seagold.impl;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.gt.axis.bean.member.member.MemberReq;
 import com.gt.axis.bean.member.member.MemberRes;
 import com.gt.axis.bean.wxmp.bus.BusUser;
+import com.gt.axis.bean.wxmp.dict.DictApiReq;
+import com.gt.axis.bean.wxmp.dict.DictApiRes;
 import com.gt.axis.content.AxisResult;
 import com.gt.axis.server.member.MemberServer;
+import com.gt.axis.server.wxmp.DictServer;
 import com.gt.game.common.config.ApplyProperties;
 import com.gt.game.common.dto.PageDTO;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.common.enums.ResponseEnums;
 import com.gt.game.core.bean.demolition.res.DemolitionListRes;
-import com.gt.game.core.bean.seagold.req.SeagoldApplyIdReq;
-import com.gt.game.core.bean.seagold.req.SeagoldApplyListPageReq;
-import com.gt.game.core.bean.seagold.req.SeagoldListPageReq;
-import com.gt.game.core.bean.seagold.res.SeagoldApplyListRes;
-import com.gt.game.core.bean.seagold.res.SeagoldCountRes;
-import com.gt.game.core.bean.seagold.res.SeagoldListRes;
+import com.gt.game.core.bean.seagold.req.*;
+import com.gt.game.core.bean.seagold.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 import com.gt.game.core.dao.seagold.SeagoldCashPrizeApplyDAO;
 import com.gt.game.core.dao.seagold.SeagoldMainDAO;
+import com.gt.game.core.entity.seagold.SeagoldAuthority;
 import com.gt.game.core.entity.seagold.SeagoldCashPrizeApply;
 import com.gt.game.core.entity.seagold.SeagoldMain;
 import com.gt.game.core.entity.seagold.SeagoldPrize;
 import com.gt.game.core.exception.seagold.SeagoldException;
-import com.gt.game.core.service.seagold.SeagoldCashPrizeApplyService;
-import com.gt.game.core.service.seagold.SeagoldMainService;
-import com.gt.game.core.service.seagold.SeagoldPrizeService;
-import com.gt.game.core.service.seagold.SeagoldService;
+import com.gt.game.core.service.seagold.*;
 import com.gt.game.core.util.CommonUtil;
 import com.gt.game.core.util.DateTimeKit;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,6 +55,9 @@ public class SeagoldServiceImpl implements SeagoldService {
 
     @Autowired
     SeagoldPrizeService seagoldPrizeService;
+
+    @Autowired
+    SeagoldAuthorityService seagoldAuthorityService;
 
     @Autowired
     SeagoldCashPrizeApplyDAO seagoldCashPrizeApplyDAO;
@@ -216,5 +218,71 @@ public class SeagoldServiceImpl implements SeagoldService {
             }
         }
         return ResponseDTO.createBySuccess("发放成功");
+    }
+    /**
+     * 获取奖品类型列表
+     *
+     * @return
+     */
+    @Override
+    public ResponseDTO<List<SeagoldPrizeTypeListRes>> getDemolitionPrizeType(BusUser busUser) {
+        DictApiReq dictApiReq = new DictApiReq();
+        dictApiReq.setStyle("1062");
+        AxisResult<List<DictApiRes>> axisResult = null;
+        try {
+            axisResult =  DictServer.getDictApi(dictApiReq);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        List<SeagoldPrizeTypeListRes> seagoldPrizeTypeListResList = new ArrayList<>();
+        if(CommonUtil.isNotEmpty(axisResult) && CommonUtil.isNotEmpty(axisResult.getData())){
+            for(DictApiRes dictApiRes : axisResult.getData()){
+                SeagoldPrizeTypeListRes seagoldPrizeTypeListRes = new SeagoldPrizeTypeListRes();
+                seagoldPrizeTypeListRes.setName(dictApiRes.getItemValue());
+                seagoldPrizeTypeListRes.setValue(dictApiRes.getItemKey());
+                seagoldPrizeTypeListResList.add(seagoldPrizeTypeListRes);
+            }
+        }
+        return ResponseDTO.createBySuccess("获取成功",seagoldPrizeTypeListResList);
+    }
+    /**
+     * 删除核销授权
+     *
+     * @return
+     */
+    @Override
+    public ResponseDTO removeSeagoldAuthority(BusUser busUser, SeagoldAuthorityIdsReq seagoldAuthorityIdsReq) {
+        SeagoldMain seagoldMain = seagoldMainService.selectById(seagoldAuthorityIdsReq.getActId());
+        if(CommonUtil.isNotEmpty(seagoldMain)) {
+            if (seagoldMain.getBusId().intValue() != busUser.getId().intValue()) {
+                throw new SeagoldException(ResponseEnums.DIFF_USER);
+            }
+        }else {
+            throw new SeagoldException(ResponseEnums.DEMOLITION_HAS5);
+        }
+        SeagoldAuthority seagoldAuthority = new SeagoldAuthority();
+        seagoldAuthority.setDeleteStatus(1);
+        seagoldAuthorityService.update(seagoldAuthority,new EntityWrapper<SeagoldAuthority>().in("id",seagoldAuthorityIdsReq.getIds()));
+        return ResponseDTO.createBySuccess("删除成功");
+    }
+    /**
+     * 分页获取核销授权列表
+     *
+     * @return
+     */
+    @Override
+    public ResponseDTO<List<SeagoldAuthorityListRes>> getSeagoldAuthorityList(BusUser busUser, SeagoldAuthorityListPageReq seagoldAuthorityListPageReq) {
+        Page<SeagoldAuthority> page = new Page<>(seagoldAuthorityListPageReq.getCurrent(),seagoldAuthorityListPageReq.getSize());
+        List<SeagoldAuthority> seagoldAuthorityList = seagoldAuthorityService.selectPage(page,
+                new EntityWrapper<SeagoldAuthority>().eq("act_id",seagoldAuthorityListPageReq.getActId())
+                        .eq("delete_status",0)).getRecords();
+        List<SeagoldAuthorityListRes> seagoldAuthorityListResList = new ArrayList<>();
+        for (SeagoldAuthority seagoldAuthority : seagoldAuthorityList){
+            SeagoldAuthorityListRes seagoldAuthorityListRes = new SeagoldAuthorityListRes();
+            BeanUtils.copyProperties(seagoldAuthority,seagoldAuthorityListRes);
+            seagoldAuthorityListResList.add(seagoldAuthorityListRes);
+        }
+        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        return ResponseDTO.createBySuccessPage("获取成功",seagoldAuthorityListResList,pageDTO);
     }
 }
