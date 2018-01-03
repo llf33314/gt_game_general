@@ -39,6 +39,17 @@ public class DemolitionListRes {
 	@ApiModelProperty("活动状态  0 未开始 1 进行中 2 已结束")
 	private Integer status;
 
+	@ApiModelProperty("是否可以编辑  0 不可以 1 可以")
+	private Integer isEdit;
+
+	public Integer getIsEdit() {
+		return isEdit;
+	}
+
+	public void setIsEdit(Integer isEdit) {
+		this.isEdit = isEdit;
+	}
+
 	public String getName() {
 		return name;
 	}
