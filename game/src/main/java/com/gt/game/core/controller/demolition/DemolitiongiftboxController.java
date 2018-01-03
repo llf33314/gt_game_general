@@ -293,6 +293,29 @@ public class DemolitiongiftboxController  extends BaseController {
         }
     }
 
+
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+            @ApiResponse(code = 1, message = "响应对象", response = DemolitionPrizeTypeListRes.class),
+    })
+    @ApiOperation(value = "获取奖品类型列表", notes = "获取奖品类型列表")
+    @RequestMapping(value = "/getDemolitionPrizeType", method = RequestMethod.POST)
+    protected ResponseDTO getDemolitionPrizeType(
+            HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO<List<DemolitionPrizeTypeListRes>> responseDTO = demolitionService.getDemolitionPrizeType(busUser);
+            return responseDTO;
+        } catch (DemolitionException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+
+
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
     })

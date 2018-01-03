@@ -50,8 +50,21 @@
 			and UNIX_TIMESTAMP(activity_end_time) &lt; UNIX_TIMESTAMP(#{nowTime})
 		</if>
 		<if test="name != null and name != ''">
-			and name LIKE #{name}
+			and name LIKE CONCAT('%','${name}','%' )
 		</if>
 		order BY  id DESC
 	</select>
+
+	<select id="getCount" resultType="map" parameterType="map">
+		SELECT  t1.count2 ,t2.count3 , t3.count4
+		FROM (SELECT  count(m1.id) AS count2 FROM  t_wx_activity_seagold_main m1
+		WHERE m1.bus_id = #{busId,jdbcType=INTEGER} AND UNIX_TIMESTAMP(m1.activity_begin_time) > UNIX_TIMESTAMP(#{nowTime})) t1
+		JOIN
+		(SELECT count(m2.id) AS count3 FROM  t_wx_activity_seagold_main m2
+		WHERE m2.bus_id = #{busId,jdbcType=INTEGER} 	and UNIX_TIMESTAMP(m2.activity_begin_time) &lt;= UNIX_TIMESTAMP(#{nowTime}) and  UNIX_TIMESTAMP(m2.activity_end_time) >= UNIX_TIMESTAMP(#{nowTime})) t2
+		JOIN
+		(SELECT count(m3.id) AS count4 FROM  t_wx_activity_seagold_main m3
+		WHERE m3.bus_id = #{busId,jdbcType=INTEGER} AND UNIX_TIMESTAMP(m3.activity_end_time) &lt; UNIX_TIMESTAMP(#{nowTime})) t3
+	</select>
+
 </mapper>

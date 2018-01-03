@@ -5,12 +5,15 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.axis.bean.member.member.MemberReq;
 import com.gt.axis.bean.member.member.MemberRes;
 import com.gt.axis.bean.wxmp.bus.BusUser;
+import com.gt.axis.bean.wxmp.dict.DictApiReq;
+import com.gt.axis.bean.wxmp.dict.DictApiRes;
 import com.gt.axis.bean.wxmp.fenbiflow.FenbiFlowRecord;
 import com.gt.axis.bean.wxmp.fenbiflow.FenbiFlowRecordReq;
 import com.gt.axis.bean.wxmp.fenbiflow.FenbiSurplus;
 import com.gt.axis.bean.wxmp.fenbiflow.UpdateFenbiReduceReq;
 import com.gt.axis.content.AxisResult;
 import com.gt.axis.server.member.MemberServer;
+import com.gt.axis.server.wxmp.DictServer;
 import com.gt.axis.server.wxmp.FenbiflowServer;
 import com.gt.game.common.config.ApplyProperties;
 import com.gt.game.common.dto.PageDTO;
@@ -128,6 +131,31 @@ public class DemolitionServiceImpl implements DemolitionService {
         demolitionCountRes.setCount4(CommonUtil.isNotEmpty(countMap.get("count4"))?CommonUtil.toInteger(countMap.get("count4")):0);
         demolitionCountRes.setCount1(demolitionCountRes.getCount2()+demolitionCountRes.getCount3()+demolitionCountRes.getCount4());
         return ResponseDTO.createBySuccess("获取成功",demolitionCountRes);
+    }
+    /**
+     * 获取奖品类型列表
+     *
+     */
+    @Override
+    public ResponseDTO<List<DemolitionPrizeTypeListRes>> getDemolitionPrizeType(BusUser busUser) {
+        DictApiReq dictApiReq = new DictApiReq();
+        dictApiReq.setStyle("1062");
+        AxisResult<List<DictApiRes>> axisResult = null;
+        try {
+            axisResult =  DictServer.getDictApi(dictApiReq);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        List<DemolitionPrizeTypeListRes> demolitionPrizeTypeListResList = new ArrayList<>();
+        if(CommonUtil.isNotEmpty(axisResult) && CommonUtil.isNotEmpty(axisResult.getData())){
+            for(DictApiRes dictApiRes : axisResult.getData()){
+                DemolitionPrizeTypeListRes demolitionPrizeTypeListRes = new DemolitionPrizeTypeListRes();
+                demolitionPrizeTypeListRes.setName(dictApiRes.getItemKey());
+                demolitionPrizeTypeListRes.setValue(dictApiRes.getItemValue());
+                demolitionPrizeTypeListResList.add(demolitionPrizeTypeListRes);
+            }
+        }
+        return ResponseDTO.createBySuccess("获取成功",demolitionPrizeTypeListResList);
     }
 
     /**

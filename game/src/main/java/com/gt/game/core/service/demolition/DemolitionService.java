@@ -45,4 +45,5 @@ public interface DemolitionService {
 
     ResponseDTO<DemolitionCountRes> getDemolitionCount(BusUser busUser);
 
+    ResponseDTO<List<DemolitionPrizeTypeListRes>> getDemolitionPrizeType(BusUser busUser);
 }

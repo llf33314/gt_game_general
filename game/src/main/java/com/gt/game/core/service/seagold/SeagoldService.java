@@ -3,9 +3,11 @@ package com.gt.game.core.service.seagold;
 import com.baomidou.mybatisplus.service.IService;
 import com.gt.axis.bean.wxmp.bus.BusUser;
 import com.gt.game.common.dto.ResponseDTO;
+import com.gt.game.core.bean.seagold.req.SeagoldApplyIdReq;
 import com.gt.game.core.bean.seagold.req.SeagoldApplyListPageReq;
 import com.gt.game.core.bean.seagold.req.SeagoldListPageReq;
 import com.gt.game.core.bean.seagold.res.SeagoldApplyListRes;
+import com.gt.game.core.bean.seagold.res.SeagoldCountRes;
 import com.gt.game.core.bean.seagold.res.SeagoldListRes;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
@@ -30,4 +32,8 @@ public interface SeagoldService{
     ResponseDTO<List<SeagoldListRes>> getSeagoldList(BusUser busUser, SeagoldListPageReq seagoldListPageReq);
 
     ResponseDTO<List<SeagoldApplyListRes>> getSeagoldApplyList(BusUser busUser, SeagoldApplyListPageReq seagoldApplyListPageReq);
+
+    ResponseDTO<SeagoldCountRes> getSeagoldCount(BusUser busUser);
+
+    ResponseDTO editSeagoldApply(BusUser busUser, SeagoldApplyIdReq seagoldApplyIdReq);
 }

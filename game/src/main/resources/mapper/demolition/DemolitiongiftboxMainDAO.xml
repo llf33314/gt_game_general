@@ -53,7 +53,7 @@
 				and UNIX_TIMESTAMP(activity_end_time) &lt; UNIX_TIMESTAMP(#{nowTime})
 			</if>
 			<if test="name != null and name != ''">
-				and name LIKE #{name}
+				and name LIKE CONCAT('%','${name}','%' )
 			</if>
 			order BY  id DESC
 	</select>

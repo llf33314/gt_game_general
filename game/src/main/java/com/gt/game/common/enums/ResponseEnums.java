@@ -30,6 +30,19 @@ public enum ResponseEnums {
     DEMOLITION_HAS12(412,"未过活动兑换期限，不允许删除"),
     DEMOLITION_HAS13(413,"回滚粉币失败，删除失败"),
 
+    //大海捞金响应
+    SEAGOLD_HAS1(401,"该奖品已发放!"),
+    SEAGOLD_HAS2(402,"手动发放只能选择[已提交]状态的数据！!"),
+    SEAGOLD_HAS5(405,"活动为空!"),
+    SEAGOLD_HAS6(406,"活动已经开始，不允许操作!"),
+    SEAGOLD_HAS7(407,"粉币不足，保存失败"),
+    SEAGOLD_HAS8(408,"冻结粉币失败，保存失败"),
+    SEAGOLD_HAS9(409,"输入的粉币数量过少"),
+    SEAGOLD_HAS10(410,"活动正在进行，不允许删除"),
+    SEAGOLD_HAS11(411,"奖品未发放完毕，不允许操作"),
+    SEAGOLD_HAS12(412,"未过活动兑换期限，不允许删除"),
+    SEAGOLD_HAS13(413,"回滚粉币失败，删除失败"),
+
     ;
 
 

@@ -19,4 +19,6 @@ import java.util.Map;
 public interface SeagoldMainDAO extends BaseMapper<SeagoldMain> {
 
     List<SeagoldListRes> getSeagoldList(Page<SeagoldListRes> page, Map<String, Object> map);
+
+    Map<String,Object> getCount(Map<String, Object> params);
 }

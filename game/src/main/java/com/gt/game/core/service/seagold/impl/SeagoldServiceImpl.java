@@ -10,10 +10,13 @@ import com.gt.axis.server.member.MemberServer;
 import com.gt.game.common.config.ApplyProperties;
 import com.gt.game.common.dto.PageDTO;
 import com.gt.game.common.dto.ResponseDTO;
+import com.gt.game.common.enums.ResponseEnums;
 import com.gt.game.core.bean.demolition.res.DemolitionListRes;
+import com.gt.game.core.bean.seagold.req.SeagoldApplyIdReq;
 import com.gt.game.core.bean.seagold.req.SeagoldApplyListPageReq;
 import com.gt.game.core.bean.seagold.req.SeagoldListPageReq;
 import com.gt.game.core.bean.seagold.res.SeagoldApplyListRes;
+import com.gt.game.core.bean.seagold.res.SeagoldCountRes;
 import com.gt.game.core.bean.seagold.res.SeagoldListRes;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
@@ -21,10 +24,14 @@ import com.gt.game.core.dao.seagold.SeagoldCashPrizeApplyDAO;
 import com.gt.game.core.dao.seagold.SeagoldMainDAO;
 import com.gt.game.core.entity.seagold.SeagoldCashPrizeApply;
 import com.gt.game.core.entity.seagold.SeagoldMain;
+import com.gt.game.core.entity.seagold.SeagoldPrize;
+import com.gt.game.core.exception.seagold.SeagoldException;
 import com.gt.game.core.service.seagold.SeagoldCashPrizeApplyService;
 import com.gt.game.core.service.seagold.SeagoldMainService;
+import com.gt.game.core.service.seagold.SeagoldPrizeService;
 import com.gt.game.core.service.seagold.SeagoldService;
 import com.gt.game.core.util.CommonUtil;
+import com.gt.game.core.util.DateTimeKit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +53,9 @@ public class SeagoldServiceImpl implements SeagoldService {
 
     @Autowired
     SeagoldCashPrizeApplyService seagoldCashPrizeApplyService;
+
+    @Autowired
+    SeagoldPrizeService seagoldPrizeService;
 
     @Autowired
     SeagoldCashPrizeApplyDAO seagoldCashPrizeApplyDAO;
@@ -155,5 +165,56 @@ public class SeagoldServiceImpl implements SeagoldService {
         }
         PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",seagoldApplyListResList,pageDTO);
+    }
+    /**
+     * 获取活动数量
+     *
+     */
+    @Override
+    public ResponseDTO<SeagoldCountRes> getSeagoldCount(BusUser busUser) {
+        SeagoldCountRes seagoldCountRes = new SeagoldCountRes();
+        Date date = new Date();
+        Map<String,Object> params = new HashMap<>();
+        params.put("nowTime",date);
+        params.put("busId",busUser.getId());
+        Map<String,Object> countMap = seagoldMainDAO.getCount(params);
+        seagoldCountRes.setCount2(CommonUtil.isNotEmpty(countMap.get("count2"))?CommonUtil.toInteger(countMap.get("count2")):0);
+        seagoldCountRes.setCount3(CommonUtil.isNotEmpty(countMap.get("count3"))?CommonUtil.toInteger(countMap.get("count3")):0);
+        seagoldCountRes.setCount4(CommonUtil.isNotEmpty(countMap.get("count4"))?CommonUtil.toInteger(countMap.get("count4")):0);
+        seagoldCountRes.setCount1(seagoldCountRes.getCount2()+seagoldCountRes.getCount3()+seagoldCountRes.getCount4());
+        return ResponseDTO.createBySuccess("获取成功",seagoldCountRes);
+    }
+    /**
+     * 发放奖品
+     *
+     * @return
+     */
+    @Override
+    public ResponseDTO editSeagoldApply(BusUser busUser, SeagoldApplyIdReq seagoldApplyIdReq) {
+        SeagoldCashPrizeApply seagoldCashPrizeApply = seagoldCashPrizeApplyService.selectById(seagoldApplyIdReq.getId());
+        if(CommonUtil.isNotEmpty(seagoldCashPrizeApply)){
+            SeagoldMain seagoldMain = seagoldMainService.selectById(seagoldCashPrizeApply.getActId());
+            SeagoldPrize seagoldPrize = seagoldPrizeService.selectById(seagoldCashPrizeApply.getPrizeId());
+            if(seagoldPrize.getType() != 4){//非兑奖
+                if (DateTimeKit.laterThanNow(seagoldMain.getCashPrizeBeginTime())) {
+                    //"未到兑奖时间！"
+                    throw  new SeagoldException(ResponseEnums.DEMOLITION_HAS1);
+                } else if (!DateTimeKit.laterThanNow(seagoldMain.getCashPrizeEndTime())) {
+                    //""已过兑奖时间！";
+                    throw  new SeagoldException(ResponseEnums.DEMOLITION_HAS1);
+                }
+            }
+            if (seagoldCashPrizeApply.getStatus() == 3) {
+                // 更改记录状态
+                seagoldCashPrizeApply.setStatus(2);
+                seagoldCashPrizeApply.setCashTime(new Date());
+                seagoldCashPrizeApplyService.updateById(seagoldCashPrizeApply);
+            } else if (seagoldCashPrizeApply.getStatus() == 2){//已兑奖
+                throw  new SeagoldException(ResponseEnums.DEMOLITION_HAS1);
+            }else{//还未提交
+                throw  new SeagoldException(ResponseEnums.DEMOLITION_HAS2);
+            }
+        }
+        return ResponseDTO.createBySuccess("发放成功");
     }
 }

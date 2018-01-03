@@ -4,9 +4,11 @@ package com.gt.game.core.controller.seagold;
 import com.gt.axis.bean.wxmp.bus.BusUser;
 import com.gt.game.common.base.BaseController;
 import com.gt.game.common.dto.ResponseDTO;
+import com.gt.game.core.bean.seagold.req.SeagoldApplyIdReq;
 import com.gt.game.core.bean.seagold.req.SeagoldApplyListPageReq;
 import com.gt.game.core.bean.seagold.req.SeagoldListPageReq;
 import com.gt.game.core.bean.seagold.res.SeagoldApplyListRes;
+import com.gt.game.core.bean.seagold.res.SeagoldCountRes;
 import com.gt.game.core.bean.seagold.res.SeagoldListRes;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
@@ -101,6 +103,26 @@ public class SeagoldController   extends BaseController {
             return ResponseDTO.createByError();
         }
     }
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+            @ApiResponse(code = 1, message = "响应对象", response = SeagoldCountRes.class),
+    })
+    @ApiOperation(value = "获取活动数量", notes = "获取活动数量")
+    @RequestMapping(value = "/getSeagoldCount", method = RequestMethod.POST)
+    protected ResponseDTO getSeagoldCount(
+            HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO<SeagoldCountRes> responseDTO = seagoldService.getSeagoldCount(busUser);
+            return responseDTO;
+        } catch (SeagoldException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
 
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
@@ -114,6 +136,27 @@ public class SeagoldController   extends BaseController {
         try {
             BusUser busUser = CommonUtil.getLoginUser(request);
             ResponseDTO<List<SeagoldApplyListRes>> responseDTO = seagoldService.getSeagoldApplyList(busUser, seagoldApplyListPageReq);
+            return responseDTO;
+        } catch (SeagoldException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+    })
+    @ApiOperation(value = "中奖记录发放奖品", notes = "中奖记录发放奖品")
+    @RequestMapping(value = "/editSeagoldApply", method = RequestMethod.POST)
+    protected ResponseDTO editSeagoldApply(
+            @RequestBody @ApiParam("请求参数") SeagoldApplyIdReq seagoldApplyIdReq,
+            HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO responseDTO = seagoldService.editSeagoldApply(busUser, seagoldApplyIdReq);
             return responseDTO;
         } catch (SeagoldException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
