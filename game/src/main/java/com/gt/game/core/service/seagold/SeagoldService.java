@@ -10,6 +10,7 @@ import com.gt.game.core.bean.url.MobileUrlRes;
 import com.gt.game.core.entity.seagold.SeagoldMain;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -39,4 +40,11 @@ public interface SeagoldService{
 
     ResponseDTO<List<SeagoldAuthorityListRes>> getSeagoldAuthorityList(BusUser busUser, SeagoldAuthorityListPageReq seagoldAuthorityListPageReq);
 
+    ResponseDTO saveSeagold(BusUser busUser, SeagoldSaveReq seagoldSaveReq);
+
+    ResponseDTO removeSeagold(BusUser busUser, SeagoldIdReq seagoldIdReq);
+
+    ResponseDTO<SeagoldRes> getSeagoldRes(BusUser busUser, Integer id);
+
+    Map<String,Object> exports(Map<String, Object> params);
 }

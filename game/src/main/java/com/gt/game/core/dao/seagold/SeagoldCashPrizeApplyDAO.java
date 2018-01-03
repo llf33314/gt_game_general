@@ -7,6 +7,7 @@ import com.gt.game.core.entity.seagold.SeagoldCashPrizeApply;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -19,4 +20,6 @@ import java.util.List;
 public interface SeagoldCashPrizeApplyDAO extends BaseMapper<SeagoldCashPrizeApply> {
 
     List<SeagoldApplyListRes> queryRecodList(Page<SeagoldApplyListRes> page, SeagoldApplyListPageReq seagoldApplyListPageReq);
+
+    List<Map<String,Object>> findExports(Map<String, Object> params);
 }

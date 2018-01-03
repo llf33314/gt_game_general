@@ -197,8 +197,8 @@ public class DemolitionServiceImpl implements DemolitionService {
     @Override
     public ResponseDTO<DemolitionRes> getDemolition(BusUser busUser, Integer id) {
         DemolitiongiftboxMain demolitiongiftboxMain = demolitiongiftboxMainService.selectById(id);
+        DemolitionRes demolitionRes = new DemolitionRes();
         if (CommonUtil.isNotEmpty(demolitiongiftboxMain)) {
-            DemolitionRes demolitionRes = new DemolitionRes();
             BeanUtils.copyProperties(demolitiongiftboxMain, demolitionRes);
             //奖品
             List<DemolitiongiftboxPrize> demolitiongiftboxPrizes = demolitiongiftboxPrizeService.selectList(new EntityWrapper<DemolitiongiftboxPrize>().eq("act_id", id));
@@ -267,10 +267,8 @@ public class DemolitionServiceImpl implements DemolitionService {
                 }
             }
             demolitionRes.setDemolitionAdReqs(demolitionAdReqs);
-            return ResponseDTO.createBySuccess("获取成功",demolitionRes);
         }
-
-        return ResponseDTO.createBySuccess("获取成功",null);
+        return ResponseDTO.createBySuccess("获取成功",demolitionRes);
     }
     /**
      * 分页获取中奖记录列表
@@ -491,42 +489,6 @@ public class DemolitionServiceImpl implements DemolitionService {
                 }
             }
         }
-        if(fenbi > 0){//冻结粉币
-            if( f > 0){
-                if((fenbi-num) <= (0-num)){
-                    throw new DemolitionException(ResponseEnums.DEMOLITION_HAS9);
-                }
-                // 判断账户中的粉币是否足够
-                if (CommonUtil.toDouble(busUser.getFansCurrency()).intValue() < (fenbi-num)) {
-                    throw new DemolitionException(ResponseEnums.DEMOLITION_HAS7);
-                }
-                UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
-                updateFenbiReduceReq.setBusId(busUser.getId());
-                updateFenbiReduceReq.setFkId(demolitiongiftboxMain.getId());
-                updateFenbiReduceReq.setFreType(99);
-                updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi-num));
-                AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
-                if(axisResult.getCode() != 0){
-                    throw new DemolitionException(ResponseEnums.DEMOLITION_HAS8);
-                }
-            }else {
-                // 判断账户中的粉币是否足够
-                if(busUser.getFansCurrency().intValue() < fenbi.intValue()){
-                    throw new DemolitionException(ResponseEnums.DEMOLITION_HAS7);
-                }
-                //构建冻结信息
-                FenbiFlowRecord ffr=bulidFenFlow(busUser.getId(), fenbi, demolitiongiftboxMain.getId(), 99, 1, "拆礼盒活动支出", 0);
-                // 保存冻结信息
-                if(ffr!=null){
-                    FenbiFlowRecordReq fenbiFlowRecordReq = new FenbiFlowRecordReq();
-                    BeanUtils.copyProperties(ffr,fenbiFlowRecordReq);
-                    AxisResult axisResult = FenbiflowServer.saveFenbiFlowRecord(fenbiFlowRecordReq);
-                    if(axisResult.getCode() != 0){
-                        throw new DemolitionException(ResponseEnums.DEMOLITION_HAS8);
-                    }
-                }
-            }
-        }
         //礼盒
         if(CommonUtil.isNotEmpty(demolitionSaveReq.getDemolitionGiftBoxReqs())){
             for(DemolitionGiftBoxReq demolitionGiftBoxReq :demolitionSaveReq.getDemolitionGiftBoxReqs()){
@@ -565,6 +527,42 @@ public class DemolitionServiceImpl implements DemolitionService {
                 demolitiongiftboxAd.setUrl(demolitiongiftboxAd.getUrl().split("upload/").length>1?
                         demolitiongiftboxAd.getUrl().split("upload/")[1]:demolitiongiftboxAd.getUrl());
                 demolitionGiftBoxAdService.insert(demolitiongiftboxAd);
+            }
+        }
+        if(fenbi > 0){//冻结粉币
+            if( f > 0){
+                if((fenbi-num) <= (0-num)){
+                    throw new DemolitionException(ResponseEnums.DEMOLITION_HAS9);
+                }
+                // 判断账户中的粉币是否足够
+                if (busUser.getFansCurrency().doubleValue() < (fenbi-num)) {
+                    throw new DemolitionException(ResponseEnums.DEMOLITION_HAS7);
+                }
+                UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
+                updateFenbiReduceReq.setBusId(busUser.getId());
+                updateFenbiReduceReq.setFkId(demolitiongiftboxMain.getId());
+                updateFenbiReduceReq.setFreType(99);
+                updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi-num));
+                AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
+                if(axisResult.getCode() != 0){
+                    throw new DemolitionException(ResponseEnums.DEMOLITION_HAS8);
+                }
+            }else {
+                // 判断账户中的粉币是否足够
+                if(busUser.getFansCurrency().doubleValue() < fenbi.doubleValue()){
+                    throw new DemolitionException(ResponseEnums.DEMOLITION_HAS7);
+                }
+                //构建冻结信息
+                FenbiFlowRecord ffr=bulidFenFlow(busUser.getId(), fenbi, demolitiongiftboxMain.getId(), 99, 1, "拆礼盒活动支出", 0);
+                // 保存冻结信息
+                if(ffr!=null){
+                    FenbiFlowRecordReq fenbiFlowRecordReq = new FenbiFlowRecordReq();
+                    BeanUtils.copyProperties(ffr,fenbiFlowRecordReq);
+                    AxisResult axisResult = FenbiflowServer.saveFenbiFlowRecord(fenbiFlowRecordReq);
+                    if(axisResult.getCode() != 0){
+                        throw new DemolitionException(ResponseEnums.DEMOLITION_HAS8);
+                    }
+                }
             }
         }
         return ResponseDTO.createBySuccess("保存成功");
