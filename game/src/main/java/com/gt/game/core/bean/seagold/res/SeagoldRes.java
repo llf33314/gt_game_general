@@ -1,9 +1,7 @@
-package com.gt.game.core.bean.demolition.res;
+package com.gt.game.core.bean.seagold.res;
 
-import com.gt.game.core.bean.demolition.req.DemolitionAdReq;
-import com.gt.game.core.bean.demolition.req.DemolitionAddressReq;
-import com.gt.game.core.bean.demolition.req.DemolitionGiftBoxReq;
-import com.gt.game.core.bean.demolition.req.DemolitionPrizeReq;
+import com.gt.game.core.bean.seagold.req.SeagoldAddressReq;
+import com.gt.game.core.bean.seagold.req.SeagoldPrizeReq;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -12,15 +10,14 @@ import java.util.List;
 
 /**
  * <p>
- * 拆礼盒主表
+ * 大海捞金
  * </p>
  *
  * @author zwq
  * @since 2017-12-25
  */
-@ApiModel("拆礼盒查询活动返回对象")
-public class DemolitionRes {
-
+@ApiModel("大海捞金查询活动返回对象")
+public class SeagoldRes {
 
     /**
      * 主键
@@ -44,9 +41,6 @@ public class DemolitionRes {
 	@ApiModelProperty("背景音乐")
 	private String musicUrl;
 
-	@ApiModelProperty("礼盒")
-	private List<DemolitionGiftBoxReq> demolitionGiftBoxReqs;
-
 	@ApiModelProperty("关注二维码")
 	private String followQrCode;
 
@@ -55,6 +49,9 @@ public class DemolitionRes {
 
 	@ApiModelProperty("每天次数")
 	private Integer manDayChance;
+
+	@ApiModelProperty("每天时长")
+	private Integer gameTime;
 
 	@ApiModelProperty("活动规则")
 	private String actRule;
@@ -69,7 +66,7 @@ public class DemolitionRes {
 	private String receiveType;
 
 	@ApiModelProperty("兑奖地址")
-	private List<DemolitionAddressReq> demolitionAddressReqs;
+	private List<SeagoldAddressReq> seagoldAddressReqs;
 
 	@ApiModelProperty("联系电话")
 	private String phone;
@@ -80,11 +77,8 @@ public class DemolitionRes {
 	@ApiModelProperty("奖品说明")
 	private String prizeSetInstruction;
 
-	@ApiModelProperty("广告轮播图")
-	private List<DemolitionAdReq> demolitionAdReqs;
-
 	@ApiModelProperty("奖品")
-	private List<DemolitionPrizeReq> demolitionPrizeReqs;
+	private List<SeagoldPrizeReq> seagoldPrizeReqs;
 
 	public Integer getId() {
 		return id;
@@ -124,14 +118,6 @@ public class DemolitionRes {
 
 	public void setMusicUrl(String musicUrl) {
 		this.musicUrl = musicUrl;
-	}
-
-	public List<DemolitionGiftBoxReq> getDemolitionGiftBoxReqs() {
-		return demolitionGiftBoxReqs;
-	}
-
-	public void setDemolitionGiftBoxReqs(List<DemolitionGiftBoxReq> demolitionGiftBoxReqs) {
-		this.demolitionGiftBoxReqs = demolitionGiftBoxReqs;
 	}
 
 	public String getFollowQrCode() {
@@ -190,14 +176,6 @@ public class DemolitionRes {
 		this.receiveType = receiveType;
 	}
 
-	public List<DemolitionAddressReq> getDemolitionAddressReqs() {
-		return demolitionAddressReqs;
-	}
-
-	public void setDemolitionAddressReqs(List<DemolitionAddressReq> demolitionAddressReqs) {
-		this.demolitionAddressReqs = demolitionAddressReqs;
-	}
-
 	public String getPhone() {
 		return phone;
 	}
@@ -222,19 +200,27 @@ public class DemolitionRes {
 		this.prizeSetInstruction = prizeSetInstruction;
 	}
 
-	public List<DemolitionAdReq> getDemolitionAdReqs() {
-		return demolitionAdReqs;
+	public Integer getGameTime() {
+		return gameTime;
 	}
 
-	public void setDemolitionAdReqs(List<DemolitionAdReq> demolitionAdReqs) {
-		this.demolitionAdReqs = demolitionAdReqs;
+	public void setGameTime(Integer gameTime) {
+		this.gameTime = gameTime;
 	}
 
-	public List<DemolitionPrizeReq> getDemolitionPrizeReqs() {
-		return demolitionPrizeReqs;
+	public List<SeagoldAddressReq> getSeagoldAddressReqs() {
+		return seagoldAddressReqs;
 	}
 
-	public void setDemolitionPrizeReqs(List<DemolitionPrizeReq> demolitionPrizeReqs) {
-		this.demolitionPrizeReqs = demolitionPrizeReqs;
+	public void setSeagoldAddressReqs(List<SeagoldAddressReq> seagoldAddressReqs) {
+		this.seagoldAddressReqs = seagoldAddressReqs;
+	}
+
+	public List<SeagoldPrizeReq> getSeagoldPrizeReqs() {
+		return seagoldPrizeReqs;
+	}
+
+	public void setSeagoldPrizeReqs(List<SeagoldPrizeReq> seagoldPrizeReqs) {
+		this.seagoldPrizeReqs = seagoldPrizeReqs;
 	}
 }

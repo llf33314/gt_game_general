@@ -17,26 +17,32 @@ public enum ResponseEnums {
     DIFF_NUM(501, "已达到本版本最多新增个数，请升级版本"),
     DIFF_PayRefund(601, "退款失败"),
 
-    //360全景响应
-    PANORAMA_HAS(401,"没有找到订单!"),
-    PANORAMA_HAS1(402,"没有找到活动!"),
+    //拆礼盒响应
+    DEMOLITION_HAS1(401,"该奖品已发放!"),
+    DEMOLITION_HAS2(402,"手动发放只能选择[已提交]状态的数据！!"),
+    DEMOLITION_HAS5(405,"活动为空!"),
+    DEMOLITION_HAS6(406,"活动已经开始，不允许操作!"),
+    DEMOLITION_HAS7(407,"粉币不足，保存失败"),
+    DEMOLITION_HAS8(408,"冻结粉币失败，保存失败"),
+    DEMOLITION_HAS9(409,"输入的粉币数量过少"),
+    DEMOLITION_HAS10(410,"活动正在进行，不允许删除"),
+    DEMOLITION_HAS11(411,"奖品未发放完毕，不允许操作"),
+    DEMOLITION_HAS12(412,"未过活动兑换期限，不允许删除"),
+    DEMOLITION_HAS13(413,"回滚粉币失败，删除失败"),
 
-    //推广海报响应
-    POSTER_HAS(401,"没有找到对象!"),
+    //大海捞金响应
+    SEAGOLD_HAS1(401,"该奖品已发放!"),
+    SEAGOLD_HAS2(402,"手动发放只能选择[已提交]状态的数据！!"),
+    SEAGOLD_HAS5(405,"活动为空!"),
+    SEAGOLD_HAS6(406,"活动已经开始，不允许操作!"),
+    SEAGOLD_HAS7(407,"粉币不足，保存失败"),
+    SEAGOLD_HAS8(408,"冻结粉币失败，保存失败"),
+    SEAGOLD_HAS9(409,"输入的粉币数量过少"),
+    SEAGOLD_HAS10(410,"活动正在进行，不允许删除"),
+    SEAGOLD_HAS11(411,"奖品未发放完毕，不允许操作"),
+    SEAGOLD_HAS12(412,"未过活动兑换期限，不允许删除"),
+    SEAGOLD_HAS13(413,"回滚粉币失败，删除失败"),
 
-    //微名片响应
-    MICROCARD_HAS(401,"没有找到对象!"),
-
-    //邀请函响应
-    INVITE_HAS(401,"没有找到对象"),
-    INVITE_HAS1(402,"调用接口失败"),
-    INVITE_HAS2(403,"本版本没有背景音乐权限"),
-    INVITE_HAS3(404,"本版本没有开启红包权限"),
-    INVITE_HAS4(405,"入场编码已存在，请重新设置或由系统生成"),
-    INVITE_HAS5(406,"活动已结束，无法核销"),
-    INVITE_HAS6(407,"该入场码不存在，无法核销"),
-    INVITE_HAS7(408,"该入场码已核销"),
-    INVITE_HAS8(409,"该入场码已失效"),
     ;
 
 

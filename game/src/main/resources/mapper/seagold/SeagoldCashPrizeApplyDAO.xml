@@ -20,10 +20,59 @@
 		<result column="record_id" property="recordId" />
 		<result column="au_id" property="auId" />
 	</resultMap>
+	<resultMap id="BaseResultMap1" type="com.gt.game.core.bean.seagold.res.SeagoldApplyListRes">
+		<id column="id" property="id" />
+		<result column="prize_name" property="prizeName" />
+		<result column="type" property="type" />
+		<result column="prize_unit" property="prizeUnit" />
+		<result column="cash_time" property="cashTime" />
+		<result column="member_phone" property="memberPhone" />
+		<result column="member_id" property="memberId" />
+		<result column="status" property="status" />
+		<result column="sn_code" property="snCode" />
+		<result column="receive_type" property="receiveType" />
+		<result column="address" property="address" />
+		<result column="addressName" property="addressName" />
+	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, createtime, act_id, prize_id, member_id, receive_type, member_name, member_phone, address_id, address, sn_code, status, cash_time, record_id, au_id
     </sql>
+	<select id="queryRecodList" resultMap="BaseResultMap1" parameterType="com.gt.game.core.bean.seagold.req.SeagoldApplyListPageReq" >
+		SELECT t1.id,t4.prize_name,t4.type,t4.prize_unit,t1.cash_time as cashTime,t1.member_phone,t1.status,t1.sn_code,t1.member_id,t5.address AS  addressName ,t1.address,t1.receive_type
+		from t_wx_activity_seagold_cash_prize_apply t1
+		LEFT JOIN t_wx_activity_seagold_play_record t3 on t1.record_id = t3.id
+		LEFT JOIN t_wx_activity_seagold_prize t4 on t1.prize_id = t4.id
+		LEFT JOIN t_wx_activity_seagold_address t5 ON t1.address_id = t5.id
+		WHERE t1.act_id = #{actId}
+		<if test="snCode != null and snCode != '' ">
+			and t1.sn_code = #{snCode}
+		</if>
+		<if test="type != -1">
+			and t4.type = #{type}
+		</if>
+		<if test="status != -1">
+			and t1.status = #{status}
+		</if>
+		ORDER BY  t3.createtime asc
+	</select>
 
+	<select id="findExports" resultType="map" parameterType="map" >
+		SELECT t1.id,t4.prize_name,t4.type,t4.prize_unit,t1.cash_time as cashTime,t1.member_phone,t1.status,t1.sn_code,t1.member_id
+		from t_wx_activity_seagold_cash_prize_apply t1
+		LEFT JOIN t_wx_activity_seagold_play_record t3 on t1.record_id = t3.id
+		LEFT JOIN t_wx_activity_seagold_prize t4 on t1.prize_id = t4.id
+		WHERE t1.act_id = #{actId}
+		<if test="snCode != null and snCode != ''">
+			and t1.sn_code = #{snCode}
+		</if>
+		<if test="type != -1 ">
+			and t4.type = #{type}
+		</if>
+		<if test="status != -1">
+			and t1.status = #{status}
+		</if>
+		ORDER BY t3.createtime asc
+	</select>
 </mapper>

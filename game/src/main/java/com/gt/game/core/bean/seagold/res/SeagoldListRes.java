@@ -1,4 +1,4 @@
-package com.gt.game.core.bean.demolition.res;
+package com.gt.game.core.bean.seagold.res;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -7,14 +7,14 @@ import java.util.Date;
 
 /**
  * <p>
- * 拆礼盒主表
+ * 大海捞金
  * </p>
  *
  * @author zwq
  * @since 2017-12-25
  */
-@ApiModel("拆礼盒分页查询活动返回对象")
-public class DemolitionListRes {
+@ApiModel("大海捞金分页查询活动返回对象")
+public class SeagoldListRes {
 
 
     /**

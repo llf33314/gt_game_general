@@ -1,9 +1,5 @@
-package com.gt.game.core.bean.demolition.res;
+package com.gt.game.core.bean.demolition.req;
 
-import com.gt.game.core.bean.demolition.req.DemolitionAdReq;
-import com.gt.game.core.bean.demolition.req.DemolitionAddressReq;
-import com.gt.game.core.bean.demolition.req.DemolitionGiftBoxReq;
-import com.gt.game.core.bean.demolition.req.DemolitionPrizeReq;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -18,26 +14,26 @@ import java.util.List;
  * @author zwq
  * @since 2017-12-25
  */
-@ApiModel("拆礼盒查询活动返回对象")
-public class DemolitionRes {
+@ApiModel("拆礼盒查询活动保存对象")
+public class DemolitionSaveReq {
 
 
     /**
      * 主键
      */
-	@ApiModelProperty("id")
+	@ApiModelProperty("id 新增 id=0")
 	private Integer id;
 
 	@ApiModelProperty("活动名称")
 	private String name;
-	/**
-	 * 活动开始时间
-	 */
+    /**
+     * 活动开始时间
+     */
 	@ApiModelProperty("活动开始时间")
 	private Date activityBeginTime;
-	/**
-	 * 活动结束时间
-	 */
+    /**
+     * 活动结束时间
+     */
 	@ApiModelProperty("活动结束时间")
 	private Date activityEndTime;
 
