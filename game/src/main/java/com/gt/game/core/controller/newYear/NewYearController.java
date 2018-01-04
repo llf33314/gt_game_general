@@ -1,21 +1,20 @@
-package com.gt.game.core.controller.demolition;
+package com.gt.game.core.controller.newYear;
 
 
 import com.gt.axis.bean.wxmp.bus.BusUser;
 import com.gt.game.common.base.BaseController;
 import com.gt.game.common.dto.ResponseDTO;
-import com.gt.game.core.bean.demolition.req.*;
-import com.gt.game.core.bean.demolition.res.*;
+import com.gt.game.core.bean.newYear.req.*;
+import com.gt.game.core.bean.newYear.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
-import com.gt.game.core.exception.demolition.DemolitionException;
-import com.gt.game.core.service.demolition.DemolitionService;
+import com.gt.game.core.exception.newYear.NewYearException;
+import com.gt.game.core.service.newYear.NewYearService;
 import com.gt.game.core.util.CommonUtil;
 import io.swagger.annotations.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,21 +26,20 @@ import java.util.Map;
 
 /**
  * <p>
- * 拆礼盒 前端控制器
+ * 元旦跨年跳跃 前端控制器
  * </p>
  *
  * @author zwq
- * @since 2017-12-25
+ * @since 2018-01-04
  */
-@Api(value = "/app/demolition", description = "拆礼盒商家后台")
+@Api(value = "/app/newYear", description = "元旦跨年跳跃商家后台")
 @RestController
-@RequestMapping(value = "/app/demolition")
-public class DemolitiongiftboxController  extends BaseController {
+@RequestMapping(value = "/app/newYear")
+public class NewYearController extends BaseController {
 
 
     @Autowired
-    DemolitionService demolitionService;
-
+    NewYearService newYearService;
 
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
@@ -52,9 +50,9 @@ public class DemolitiongiftboxController  extends BaseController {
     protected ResponseDTO getMobileUrl(@RequestBody @ApiParam(value = "请求参数") MobileUrlReq mobileUrlReq, HttpServletRequest request) {
         try {
             BusUser busUser = CommonUtil.getLoginUser(request);
-            MobileUrlRes mobileUrlRes = demolitionService.getMobileUrl(busUser, mobileUrlReq);
+            MobileUrlRes mobileUrlRes = newYearService.getMobileUrl(busUser, mobileUrlReq);
             return ResponseDTO.createBySuccess("获取手机端链接成功", mobileUrlRes);
-        } catch (DemolitionException e){
+        } catch (NewYearException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
         } catch (Exception e){
@@ -72,9 +70,9 @@ public class DemolitiongiftboxController  extends BaseController {
     protected ResponseDTO getAuthorityUrl(@RequestBody @ApiParam(value = "请求参数") MobileUrlReq mobileUrlReq, HttpServletRequest request) {
         try {
             BusUser busUser = CommonUtil.getLoginUser(request);
-            ResponseDTO<MobileUrlRes> mobileUrlRes = demolitionService.getAuthorityUrl(busUser, mobileUrlReq);
+            ResponseDTO<MobileUrlRes> mobileUrlRes = newYearService.getAuthorityUrl(busUser, mobileUrlReq);
             return mobileUrlRes;
-        } catch (DemolitionException e){
+        } catch (NewYearException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
         } catch (Exception e){
@@ -82,19 +80,20 @@ public class DemolitiongiftboxController  extends BaseController {
             return ResponseDTO.createByError();
         }
     }
+
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-            @ApiResponse(code = 1, message = "响应对象", response = DemolitionCountRes.class),
+            @ApiResponse(code = 1, message = "响应对象", response = NewYearCountRes.class),
     })
     @ApiOperation(value = "获取活动数量", notes = "获取活动数量")
-    @RequestMapping(value = "/getDemolitionCount", method = RequestMethod.POST)
-    protected ResponseDTO getDemolitionCount(
+    @RequestMapping(value = "/getNewYearCount", method = RequestMethod.POST)
+    protected ResponseDTO getNewYearCount(
             HttpServletRequest request) {
         try {
             BusUser busUser = CommonUtil.getLoginUser(request);
-            ResponseDTO<DemolitionCountRes> responseDTO = demolitionService.getDemolitionCount(busUser);
+            ResponseDTO<NewYearCountRes> responseDTO = newYearService.getNewYearCount(busUser);
             return responseDTO;
-        } catch (DemolitionException e){
+        } catch (NewYearException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
         } catch (Exception e){
@@ -102,20 +101,21 @@ public class DemolitiongiftboxController  extends BaseController {
             return ResponseDTO.createByError();
         }
     }
+
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-            @ApiResponse(code = 1, message = "响应对象", response = DemolitionListRes.class),
+            @ApiResponse(code = 1, message = "响应对象", response = NewYearListRes.class),
     })
     @ApiOperation(value = "分页获取活动列表", notes = "分页获取活动列表")
-    @RequestMapping(value = "/getDemolitionList", method = RequestMethod.POST)
-    protected ResponseDTO getDemolitionList(
-            @RequestBody @ApiParam("请求参数") DemolitionListPageReq demolitionListPageReq,
+    @RequestMapping(value = "/getNewYearList", method = RequestMethod.POST)
+    protected ResponseDTO getNewYearList(
+            @RequestBody @ApiParam("请求参数") NewYearListPageReq newYearListPageReq,
             HttpServletRequest request) {
         try {
             BusUser busUser = CommonUtil.getLoginUser(request);
-            ResponseDTO<List<DemolitionListRes>> responseDTO = demolitionService.getDemolitionList(busUser, demolitionListPageReq);
+            ResponseDTO<List<NewYearListRes>> responseDTO = newYearService.getNewYearList(busUser, newYearListPageReq);
             return responseDTO;
-        } catch (DemolitionException e){
+        } catch (NewYearException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
         } catch (Exception e){
@@ -123,20 +123,21 @@ public class DemolitiongiftboxController  extends BaseController {
             return ResponseDTO.createByError();
         }
     }
+
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-            @ApiResponse(code = 1, message = "响应对象", response = DemolitionApplyListRes.class),
+            @ApiResponse(code = 1, message = "响应对象", response = NewYearApplyListRes.class),
     })
     @ApiOperation(value = "分页获取中奖记录列表", notes = "分页获取中奖记录列表")
-    @RequestMapping(value = "/getDemolitionApplyList", method = RequestMethod.POST)
-    protected ResponseDTO getDemolitionApplyList(
-            @RequestBody @ApiParam("请求参数") DemolitionApplyListPageReq demolitionApplyListPageReq,
+    @RequestMapping(value = "/getNewYearApplyList", method = RequestMethod.POST)
+    protected ResponseDTO getNewYearApplyList(
+            @RequestBody @ApiParam("请求参数") NewYearApplyListPageReq newYearApplyListPageReq,
             HttpServletRequest request) {
         try {
             BusUser busUser = CommonUtil.getLoginUser(request);
-            ResponseDTO<List<DemolitionApplyListRes>> responseDTO = demolitionService.getDemolitionApplyList(busUser, demolitionApplyListPageReq);
+            ResponseDTO<List<NewYearApplyListRes>> responseDTO = newYearService.getNewYearApplyList(busUser, newYearApplyListPageReq);
             return responseDTO;
-        } catch (DemolitionException e){
+        } catch (NewYearException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
         } catch (Exception e){
@@ -149,15 +150,15 @@ public class DemolitiongiftboxController  extends BaseController {
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
     })
     @ApiOperation(value = "中奖记录发放奖品", notes = "中奖记录发放奖品")
-    @RequestMapping(value = "/editDemolitionApply", method = RequestMethod.POST)
-    protected ResponseDTO editDemolitionApply(
-            @RequestBody @ApiParam("请求参数") DemolitionApplyIdReq demolitionApplyIdReq,
+    @RequestMapping(value = "/editNewYearApply", method = RequestMethod.POST)
+    protected ResponseDTO editNewYearApply(
+            @RequestBody @ApiParam("请求参数") NewYearApplyIdReq newYearApplyIdReq,
             HttpServletRequest request) {
         try {
             BusUser busUser = CommonUtil.getLoginUser(request);
-            ResponseDTO responseDTO = demolitionService.editDemolitionApply(busUser, demolitionApplyIdReq);
+            ResponseDTO responseDTO = newYearService.editNewYearApply(busUser, newYearApplyIdReq);
             return responseDTO;
-        } catch (DemolitionException e){
+        } catch (NewYearException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
         } catch (Exception e){
@@ -165,6 +166,133 @@ public class DemolitiongiftboxController  extends BaseController {
             return ResponseDTO.createByError();
         }
     }
+
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+            @ApiResponse(code = 1, message = "响应对象", response = NewYearRes.class),
+    })
+    @ApiOperation(value = "获取活动", notes = "获取活动")
+    @RequestMapping(value = "/getNewYear", method = RequestMethod.GET)
+    protected ResponseDTO getNewYear(
+            @RequestParam @ApiParam("id") Integer id,
+            HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO<NewYearRes> responseDTO = newYearService.getNewYear(busUser, id);
+            return responseDTO;
+        } catch (NewYearException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+    })
+    @ApiOperation(value = "删除活动", notes = "删除活动")
+    @RequestMapping(value = "/removeNewYear", method = RequestMethod.POST)
+    protected ResponseDTO removeNewYear( @RequestBody @ApiParam("请求参数") NewYearIdReq newYearIdReq,
+                                            HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO responseDTO = newYearService.removeNewYear(busUser, newYearIdReq);
+            return responseDTO;
+        } catch (NewYearException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+    })
+    @ApiOperation(value = "保存活动", notes = "保存活动")
+    @RequestMapping(value = "/saveNewYear", method = RequestMethod.POST)
+    protected ResponseDTO getNewYear(
+            @RequestBody @ApiParam("请求参数") NewYearSaveReq newYearSaveReq,
+            HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO responseDTO = newYearService.saveNewYear(busUser, newYearSaveReq);
+            return responseDTO;
+        } catch (NewYearException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+            @ApiResponse(code = 1, message = "响应对象", response = NewYearAuthorityListRes.class),
+    })
+    @ApiOperation(value = "分页获取核销授权列表", notes = "分页获取核销授权列表")
+    @RequestMapping(value = "/getNewYearAuthorityList", method = RequestMethod.POST)
+    protected ResponseDTO getNewYearAuthorityList(
+            @RequestBody @ApiParam("请求参数") NewYearAuthorityListPageReq newYearAuthorityListPageReq,
+            HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO<List<NewYearAuthorityListRes>> responseDTO = newYearService.getNewYearAuthorityList(busUser, newYearAuthorityListPageReq);
+            return responseDTO;
+        } catch (NewYearException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+            @ApiResponse(code = 1, message = "响应对象", response = NewYearPrizeTypeListRes.class),
+    })
+    @ApiOperation(value = "获取奖品类型列表", notes = "获取奖品类型列表")
+    @RequestMapping(value = "/getNewYearPrizeType", method = RequestMethod.POST)
+    protected ResponseDTO getNewYearPrizeType(
+            HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO<List<NewYearPrizeTypeListRes>> responseDTO = newYearService.getNewYearPrizeType(busUser);
+            return responseDTO;
+        } catch (NewYearException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+    })
+    @ApiOperation(value = "删除核销授权", notes = "删除核销授权")
+    @RequestMapping(value = "/removeNewYearAuthority", method = RequestMethod.POST)
+    protected ResponseDTO removeNewYearAuthority(
+            @RequestBody @ApiParam("请求参数") NewYearAuthorityIdsReq newYearAuthorityIdsReq,
+            HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO responseDTO = newYearService.removeNewYearAuthority(busUser, newYearAuthorityIdsReq);
+            return responseDTO;
+        } catch (NewYearException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
     })
@@ -183,7 +311,7 @@ public class DemolitiongiftboxController  extends BaseController {
             params.put("status",status);
             params.put("type",type);
             params.put("snCode",snCode);
-            Map<String, Object> msg = demolitionService.exports(params);
+            Map<String, Object> msg = newYearService.exports(params);
             if ((boolean) msg.get("result")) {
                 HSSFWorkbook wb = (HSSFWorkbook) msg.get("book");
                 String filename = msg.get("fileName").toString() + ".xls";
@@ -201,132 +329,7 @@ public class DemolitiongiftboxController  extends BaseController {
                 os.close();
             }
             return ResponseDTO.createBySuccess("导出成功");
-        } catch (DemolitionException e){
-            logger.error(e.getMessage(), e.fillInStackTrace());
-            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
-        } catch (Exception e){
-            e.printStackTrace();
-            return ResponseDTO.createByError();
-        }
-    }
-
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-            @ApiResponse(code = 1, message = "响应对象", response = DemolitionRes.class),
-    })
-    @ApiOperation(value = "获取活动", notes = "获取活动")
-    @RequestMapping(value = "/getDemolition", method = RequestMethod.GET)
-    protected ResponseDTO getDemolition(
-            @RequestParam @ApiParam("id") Integer id,
-            HttpServletRequest request) {
-        try {
-            BusUser busUser = CommonUtil.getLoginUser(request);
-            ResponseDTO<DemolitionRes> responseDTO = demolitionService.getDemolition(busUser, id);
-            return responseDTO;
-        } catch (DemolitionException e){
-            logger.error(e.getMessage(), e.fillInStackTrace());
-            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
-        } catch (Exception e){
-            e.printStackTrace();
-            return ResponseDTO.createByError();
-        }
-    }
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-    })
-    @ApiOperation(value = "删除活动", notes = "删除活动")
-    @RequestMapping(value = "/removeDemolition", method = RequestMethod.POST)
-    protected ResponseDTO removeDemolition( @RequestBody @ApiParam("请求参数") DemolitionIdReq demolitionIdReq,
-            HttpServletRequest request) {
-        try {
-            BusUser busUser = CommonUtil.getLoginUser(request);
-            ResponseDTO responseDTO = demolitionService.removeDemolition(busUser, demolitionIdReq);
-            return responseDTO;
-        } catch (DemolitionException e){
-            logger.error(e.getMessage(), e.fillInStackTrace());
-            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
-        } catch (Exception e){
-            e.printStackTrace();
-            return ResponseDTO.createByError();
-        }
-    }
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-    })
-    @ApiOperation(value = "保存活动", notes = "保存活动")
-    @RequestMapping(value = "/saveDemolition", method = RequestMethod.POST)
-    protected ResponseDTO getDemolition(
-            @RequestBody @ApiParam("请求参数") DemolitionSaveReq demolitionSaveReq,
-            HttpServletRequest request) {
-        try {
-            BusUser busUser = CommonUtil.getLoginUser(request);
-            ResponseDTO responseDTO = demolitionService.saveDemolition(busUser, demolitionSaveReq);
-            return responseDTO;
-        } catch (DemolitionException e){
-            logger.error(e.getMessage(), e.fillInStackTrace());
-            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
-        } catch (Exception e){
-            e.printStackTrace();
-            return ResponseDTO.createByError();
-        }
-    }
-
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-            @ApiResponse(code = 1, message = "响应对象", response = DemolitionAuthorityListRes.class),
-    })
-    @ApiOperation(value = "分页获取核销授权列表", notes = "分页获取核销授权列表")
-    @RequestMapping(value = "/getDemolitionAuthorityList", method = RequestMethod.POST)
-    protected ResponseDTO getDemolitionAuthorityList(
-            @RequestBody @ApiParam("请求参数") DemolitionAuthorityListPageReq demolitionAuthorityListPageReq,
-            HttpServletRequest request) {
-        try {
-            BusUser busUser = CommonUtil.getLoginUser(request);
-            ResponseDTO<List<DemolitionAuthorityListRes>> responseDTO = demolitionService.getDemolitionAuthorityList(busUser, demolitionAuthorityListPageReq);
-            return responseDTO;
-        } catch (DemolitionException e){
-            logger.error(e.getMessage(), e.fillInStackTrace());
-            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
-        } catch (Exception e){
-            e.printStackTrace();
-            return ResponseDTO.createByError();
-        }
-    }
-
-
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-            @ApiResponse(code = 1, message = "响应对象", response = DemolitionPrizeTypeListRes.class),
-    })
-    @ApiOperation(value = "获取奖品类型列表", notes = "获取奖品类型列表")
-    @RequestMapping(value = "/getDemolitionPrizeType", method = RequestMethod.POST)
-    protected ResponseDTO getDemolitionPrizeType(
-            HttpServletRequest request) {
-        try {
-            BusUser busUser = CommonUtil.getLoginUser(request);
-            ResponseDTO<List<DemolitionPrizeTypeListRes>> responseDTO = demolitionService.getDemolitionPrizeType(busUser);
-            return responseDTO;
-        } catch (DemolitionException e){
-            logger.error(e.getMessage(), e.fillInStackTrace());
-            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
-        } catch (Exception e){
-            e.printStackTrace();
-            return ResponseDTO.createByError();
-        }
-    }
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-    })
-    @ApiOperation(value = "删除核销授权", notes = "删除核销授权")
-    @RequestMapping(value = "/removeDemolitionAuthority", method = RequestMethod.POST)
-    protected ResponseDTO removeDemolitionAuthority(
-            @RequestBody @ApiParam("请求参数") DemolitionAuthorityIdsReq demolitionAuthorityIdsReq,
-            HttpServletRequest request) {
-        try {
-            BusUser busUser = CommonUtil.getLoginUser(request);
-            ResponseDTO responseDTO = demolitionService.removeDemolitionAuthority(busUser, demolitionAuthorityIdsReq);
-            return responseDTO;
-        } catch (DemolitionException e){
+        } catch (NewYearException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
         } catch (Exception e){

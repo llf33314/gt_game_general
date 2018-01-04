@@ -217,10 +217,10 @@ public class SeagoldServiceImpl implements SeagoldService {
             if(seagoldPrize.getType() != 4){//非兑奖
                 if (DateTimeKit.laterThanNow(seagoldMain.getCashPrizeBeginTime())) {
                     //"未到兑奖时间！"
-                    throw  new SeagoldException(ResponseEnums.DEMOLITION_HAS1);
+                    throw  new SeagoldException(ResponseEnums.SEAGOLD_HAS3);
                 } else if (!DateTimeKit.laterThanNow(seagoldMain.getCashPrizeEndTime())) {
                     //""已过兑奖时间！";
-                    throw  new SeagoldException(ResponseEnums.DEMOLITION_HAS1);
+                    throw  new SeagoldException(ResponseEnums.SEAGOLD_HAS4);
                 }
             }
             if (seagoldCashPrizeApply.getStatus() == 3) {
@@ -229,9 +229,9 @@ public class SeagoldServiceImpl implements SeagoldService {
                 seagoldCashPrizeApply.setCashTime(new Date());
                 seagoldCashPrizeApplyService.updateById(seagoldCashPrizeApply);
             } else if (seagoldCashPrizeApply.getStatus() == 2){//已兑奖
-                throw  new SeagoldException(ResponseEnums.DEMOLITION_HAS1);
+                throw  new SeagoldException(ResponseEnums.SEAGOLD_HAS1);
             }else{//还未提交
-                throw  new SeagoldException(ResponseEnums.DEMOLITION_HAS2);
+                throw  new SeagoldException(ResponseEnums.SEAGOLD_HAS2);
             }
         }
         return ResponseDTO.createBySuccess("发放成功");
@@ -275,7 +275,7 @@ public class SeagoldServiceImpl implements SeagoldService {
                 throw new SeagoldException(ResponseEnums.DIFF_USER);
             }
         }else {
-            throw new SeagoldException(ResponseEnums.DEMOLITION_HAS5);
+            throw new SeagoldException(ResponseEnums.SEAGOLD_HAS5);
         }
         SeagoldAuthority seagoldAuthority = new SeagoldAuthority();
         seagoldAuthority.setDeleteStatus(1);
@@ -323,10 +323,10 @@ public class SeagoldServiceImpl implements SeagoldService {
         }else{//编辑
             seagoldMain = seagoldMainService.selectById(seagoldSaveReq.getId());
             if(CommonUtil.isEmpty(seagoldMain)){
-                throw new SeagoldException(ResponseEnums.DEMOLITION_HAS5);
+                throw new SeagoldException(ResponseEnums.SEAGOLD_HAS5);
             }
             if(seagoldMain.getActivityBeginTime().getTime() < new Date().getTime()){
-                throw new SeagoldException(ResponseEnums.DEMOLITION_HAS6);
+                throw new SeagoldException(ResponseEnums.SEAGOLD_HAS6);
             }
             if(seagoldMain.getBusId().intValue() != busUser.getId().intValue()){
                 throw new SeagoldException(ResponseEnums.DIFF_USER);
@@ -379,11 +379,11 @@ public class SeagoldServiceImpl implements SeagoldService {
         if(fenbi > 0){//冻结粉币
             if( f > 0){
                 if((fenbi-num) <= (0-num)){
-                    throw new SeagoldException(ResponseEnums.DEMOLITION_HAS9);
+                    throw new SeagoldException(ResponseEnums.SEAGOLD_HAS9);
                 }
                 // 判断账户中的粉币是否足够
                 if (busUser.getFansCurrency().doubleValue() < (fenbi-num)) {
-                    throw new SeagoldException(ResponseEnums.DEMOLITION_HAS7);
+                    throw new SeagoldException(ResponseEnums.SEAGOLD_HAS7);
                 }
                 UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
                 updateFenbiReduceReq.setBusId(busUser.getId());
@@ -392,12 +392,12 @@ public class SeagoldServiceImpl implements SeagoldService {
                 updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi-num));
                 AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
                 if(axisResult.getCode() != 0){
-                    throw new SeagoldException(ResponseEnums.DEMOLITION_HAS8);
+                    throw new SeagoldException(ResponseEnums.SEAGOLD_HAS8);
                 }
             }else {
                 // 判断账户中的粉币是否足够
                 if(busUser.getFansCurrency().doubleValue() < fenbi.doubleValue()){
-                    throw new SeagoldException(ResponseEnums.DEMOLITION_HAS7);
+                    throw new SeagoldException(ResponseEnums.SEAGOLD_HAS7);
                 }
                 //构建冻结信息
                 FenbiFlowRecord ffr=bulidFenFlow(busUser.getId(), fenbi, seagoldMain.getId(), 41, 1, "大海捞金活动支出", 0);
@@ -407,7 +407,7 @@ public class SeagoldServiceImpl implements SeagoldService {
                     BeanUtils.copyProperties(ffr,fenbiFlowRecordReq);
                     AxisResult axisResult = FenbiflowServer.saveFenbiFlowRecord(fenbiFlowRecordReq);
                     if(axisResult.getCode() != 0){
-                        throw new SeagoldException(ResponseEnums.DEMOLITION_HAS8);
+                        throw new SeagoldException(ResponseEnums.SEAGOLD_HAS8);
                     }
                 }
             }
@@ -433,15 +433,15 @@ public class SeagoldServiceImpl implements SeagoldService {
         SeagoldMain seagoldMain = seagoldMainService.selectById(seagoldIdReq.getId());
         if(CommonUtil.isNotEmpty(seagoldMain)){
             if(seagoldMain.getActivityBeginTime().getTime() < new Date().getTime() && seagoldMain.getActivityEndTime().getTime() > new Date().getTime()){
-                throw new SeagoldException(ResponseEnums.DEMOLITION_HAS10);
+                throw new SeagoldException(ResponseEnums.SEAGOLD_HAS10);
             }
             if(seagoldMain.getCashPrizeBeginTime().getTime() < new Date().getTime() && seagoldMain.getCashPrizeEndTime().getTime() > new Date().getTime()){
-                throw new SeagoldException(ResponseEnums.DEMOLITION_HAS12);
+                throw new SeagoldException(ResponseEnums.SEAGOLD_HAS12);
             }
             List<SeagoldCashPrizeApply> seagoldCashPrizeApplies = seagoldCashPrizeApplyService.selectList(
                     new EntityWrapper<SeagoldCashPrizeApply>().eq("act_id",seagoldIdReq.getId()).eq("status",3));
             if(seagoldCashPrizeApplies.size() > 0 ){
-                throw new SeagoldException(ResponseEnums.DEMOLITION_HAS11);
+                throw new SeagoldException(ResponseEnums.SEAGOLD_HAS11);
 
             }
             if(seagoldMain.getBusId().intValue() != busUser.getId().intValue()){
@@ -485,7 +485,7 @@ public class SeagoldServiceImpl implements SeagoldService {
                     fenbiSurplus1.setFre_type(41);
                     AxisResult axisResult = FenbiflowServer.rollbackFenbiRecord(fenbiSurplus1);
                     if(axisResult.getCode() != 0){
-                        throw new SeagoldException(ResponseEnums.DEMOLITION_HAS13);
+                        throw new SeagoldException(ResponseEnums.SEAGOLD_HAS13);
                     }
                 }
             }
