@@ -7,6 +7,7 @@ import com.gt.game.core.entity.newYear.NewYearGameCashPrizeApply;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -19,4 +20,6 @@ import java.util.List;
 public interface NewYearGameCashPrizeApplyDAO extends BaseMapper<NewYearGameCashPrizeApply> {
 
     List<NewYearApplyListRes> queryRecodList(Page<NewYearApplyListRes> page, NewYearApplyListPageReq newYearApplyListPageReq);
+
+    List<Map<String,Object>> findExports(Map<String, Object> params);
 }

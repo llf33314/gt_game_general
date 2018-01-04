@@ -37,12 +37,6 @@ public class NewYearSaveReq {
 	@ApiModelProperty("活动结束时间")
 	private Date activityEndTime;
 
-	@ApiModelProperty("背景音乐")
-	private String musicUrl;
-
-	@ApiModelProperty("礼盒")
-	private List<NewYearGiftBoxReq> demolitionGiftBoxReqs;
-
 	@ApiModelProperty("关注二维码")
 	private String followQrCode;
 
@@ -65,7 +59,7 @@ public class NewYearSaveReq {
 	private String receiveType;
 
 	@ApiModelProperty("兑奖地址")
-	private List<NewYearAddressReq> demolitionAddressReqs;
+	private List<NewYearAddressReq> newYearAddressReqs;
 
 	@ApiModelProperty("联系电话")
 	private String phone;
@@ -77,10 +71,10 @@ public class NewYearSaveReq {
 	private String prizeSetInstruction;
 
 	@ApiModelProperty("广告轮播图")
-	private List<NewYearAdReq> demolitionAdReqs;
+	private List<NewYearAdReq> newYearAdReqs;
 
 	@ApiModelProperty("奖品")
-	private List<NewYearPrizeReq> demolitionPrizeReqs;
+	private List<NewYearPrizeReq> newYearPrizeReqs;
 
 	public Integer getId() {
 		return id;
@@ -114,21 +108,6 @@ public class NewYearSaveReq {
 		this.activityEndTime = activityEndTime;
 	}
 
-	public String getMusicUrl() {
-		return musicUrl;
-	}
-
-	public void setMusicUrl(String musicUrl) {
-		this.musicUrl = musicUrl;
-	}
-
-	public List<NewYearGiftBoxReq> getDemolitionGiftBoxReqs() {
-		return demolitionGiftBoxReqs;
-	}
-
-	public void setDemolitionGiftBoxReqs(List<NewYearGiftBoxReq> demolitionGiftBoxReqs) {
-		this.demolitionGiftBoxReqs = demolitionGiftBoxReqs;
-	}
 
 	public String getFollowQrCode() {
 		return followQrCode;
@@ -186,12 +165,12 @@ public class NewYearSaveReq {
 		this.receiveType = receiveType;
 	}
 
-	public List<NewYearAddressReq> getDemolitionAddressReqs() {
-		return demolitionAddressReqs;
+	public List<NewYearAddressReq> getNewYearAddressReqs() {
+		return newYearAddressReqs;
 	}
 
-	public void setDemolitionAddressReqs(List<NewYearAddressReq> demolitionAddressReqs) {
-		this.demolitionAddressReqs = demolitionAddressReqs;
+	public void setNewYearAddressReqs(List<NewYearAddressReq> newYearAddressReqs) {
+		this.newYearAddressReqs = newYearAddressReqs;
 	}
 
 	public String getPhone() {
@@ -218,19 +197,19 @@ public class NewYearSaveReq {
 		this.prizeSetInstruction = prizeSetInstruction;
 	}
 
-	public List<NewYearAdReq> getDemolitionAdReqs() {
-		return demolitionAdReqs;
+	public List<NewYearAdReq> getNewYearAdReqs() {
+		return newYearAdReqs;
 	}
 
-	public void setDemolitionAdReqs(List<NewYearAdReq> demolitionAdReqs) {
-		this.demolitionAdReqs = demolitionAdReqs;
+	public void setNewYearAdReqs(List<NewYearAdReq> newYearAdReqs) {
+		this.newYearAdReqs = newYearAdReqs;
 	}
 
-	public List<NewYearPrizeReq> getDemolitionPrizeReqs() {
-		return demolitionPrizeReqs;
+	public List<NewYearPrizeReq> getNewYearPrizeReqs() {
+		return newYearPrizeReqs;
 	}
 
-	public void setDemolitionPrizeReqs(List<NewYearPrizeReq> demolitionPrizeReqs) {
-		this.demolitionPrizeReqs = demolitionPrizeReqs;
+	public void setNewYearPrizeReqs(List<NewYearPrizeReq> newYearPrizeReqs) {
+		this.newYearPrizeReqs = newYearPrizeReqs;
 	}
 }

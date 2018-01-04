@@ -3,6 +3,7 @@ package com.gt.game.core.util;
 
 import com.gt.axis.bean.wxmp.bus.BusUser;
 import com.gt.axis.bean.wxmp.bus.BusUserApiReq;
+import com.gt.axis.bean.wxmp.fenbiflow.FenbiFlowRecord;
 import com.gt.axis.bean.wxmp.wxpublic.WxPublicUsers;
 import com.gt.axis.content.AxisResult;
 import com.gt.axis.server.wxmp.BusServer;
@@ -239,4 +240,43 @@ public class CommonUtil {
 			return 99;
 		}
 	}
+
+
+	/**
+	 * 构建冻结信息
+	 *
+	 *
+	 * @param busId
+	 *            用户ID
+	 * @param recCount
+	 *            总数或总数量
+	 * @param fkId
+	 *            外键
+	 * @param freeType
+	 *            冻结类型
+	 * @param recType
+	 *            1-粉币，2-流量
+	 * @param recDesc
+	 *            描述
+	 * @param flowType
+	 *            如果是流量则传，否则传入0
+	 * @return
+	 */
+	public static FenbiFlowRecord bulidFenFlow(Integer busId, Double recCount, Integer fkId, Integer freeType, Integer recType,
+										String recDesc, Integer flowType) {
+		FenbiFlowRecord fb = new FenbiFlowRecord();
+		fb.setBusUserId(busId);
+		fb.setRecCount(recCount);
+		fb.setRecFkId(fkId);
+		fb.setRecFreezeType(freeType);
+		fb.setRecType(recType);
+		fb.setRecDesc(recDesc);
+		fb.setFlowType(1);
+		fb.setFlowId(1);
+		fb.setRecUseCount(0.0);
+		fb.setRollStatus(1);
+		return fb;
+	}
+
+
 }

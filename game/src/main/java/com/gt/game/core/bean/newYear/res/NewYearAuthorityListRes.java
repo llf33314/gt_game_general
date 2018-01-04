@@ -27,7 +27,7 @@ public class NewYearAuthorityListRes {
 	 * 授权时间
 	 */
 	@ApiModelProperty("创建时间")
-	private Date createtime;
+	private Date createTime;
 	/**
 	 * 权限人员姓名
 	 */
@@ -42,12 +42,12 @@ public class NewYearAuthorityListRes {
 		this.id = id;
 	}
 
-	public Date getCreatetime() {
-		return createtime;
+	public Date getCreateTime() {
+		return createTime;
 	}
 
-	public void setCreatetime(Date createtime) {
-		this.createtime = createtime;
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 
 	public String getMemberName() {

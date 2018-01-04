@@ -40,13 +40,9 @@ public class NewYearPrizeReq {
 	 */
 	@ApiModelProperty("奖品图片说明")
 	private String imgInstruction;
-	/**
-	 */
-	@ApiModelProperty("中奖概率")
-	private Double probabiliy;
 
 	@ApiModelProperty("奖品图片")
-	private List<NewYearPrizeImgReq> demolitionPrizeImgReqs;
+	private List<NewYearPrizeImgReq> newYearPrizeImgReqs;
 
 	public String getPrizeName() {
 		return prizeName;
@@ -88,19 +84,11 @@ public class NewYearPrizeReq {
 		this.imgInstruction = imgInstruction;
 	}
 
-	public Double getProbabiliy() {
-		return probabiliy;
+	public List<NewYearPrizeImgReq> getNewYearPrizeImgReqs() {
+		return newYearPrizeImgReqs;
 	}
 
-	public void setProbabiliy(Double probabiliy) {
-		this.probabiliy = probabiliy;
-	}
-
-	public List<NewYearPrizeImgReq> getDemolitionPrizeImgReqs() {
-		return demolitionPrizeImgReqs;
-	}
-
-	public void setDemolitionPrizeImgReqs(List<NewYearPrizeImgReq> demolitionPrizeImgReqs) {
-		this.demolitionPrizeImgReqs = demolitionPrizeImgReqs;
+	public void setNewYearPrizeImgReqs(List<NewYearPrizeImgReq> newYearPrizeImgReqs) {
+		this.newYearPrizeImgReqs = newYearPrizeImgReqs;
 	}
 }

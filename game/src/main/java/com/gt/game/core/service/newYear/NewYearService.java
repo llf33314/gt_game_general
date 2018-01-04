@@ -3,17 +3,14 @@ package com.gt.game.core.service.newYear;
 import com.baomidou.mybatisplus.service.IService;
 import com.gt.axis.bean.wxmp.bus.BusUser;
 import com.gt.game.common.dto.ResponseDTO;
-import com.gt.game.core.bean.newYear.req.NewYearApplyIdReq;
-import com.gt.game.core.bean.newYear.req.NewYearApplyListPageReq;
-import com.gt.game.core.bean.newYear.req.NewYearListPageReq;
-import com.gt.game.core.bean.newYear.res.NewYearApplyListRes;
-import com.gt.game.core.bean.newYear.res.NewYearCountRes;
-import com.gt.game.core.bean.newYear.res.NewYearListRes;
+import com.gt.game.core.bean.newYear.req.*;
+import com.gt.game.core.bean.newYear.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 import com.gt.game.core.entity.newYear.NewYearGameMain;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -35,4 +32,18 @@ public interface NewYearService{
     ResponseDTO<List<NewYearApplyListRes>> getNewYearApplyList(BusUser busUser, NewYearApplyListPageReq newYearApplyListPageReq);
 
     ResponseDTO editNewYearApply(BusUser busUser, NewYearApplyIdReq newYearApplyIdReq);
+
+    ResponseDTO<NewYearRes> getNewYear(BusUser busUser, Integer id);
+
+    ResponseDTO removeNewYear(BusUser busUser, NewYearIdReq newYearIdReq);
+
+    ResponseDTO saveNewYear(BusUser busUser, NewYearSaveReq newYearSaveReq);
+
+    ResponseDTO<List<NewYearAuthorityListRes>> getNewYearAuthorityList(BusUser busUser, NewYearAuthorityListPageReq newYearAuthorityListPageReq);
+
+    ResponseDTO<List<NewYearPrizeTypeListRes>> getNewYearPrizeType(BusUser busUser);
+
+    ResponseDTO removeNewYearAuthority(BusUser busUser, NewYearAuthorityIdsReq newYearAuthorityIdsReq);
+
+    Map<String,Object> exports(Map<String, Object> params);
 }

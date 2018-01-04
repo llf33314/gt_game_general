@@ -256,7 +256,7 @@ public class DemolitiongiftboxController  extends BaseController {
     @ApiOperation(value = "保存活动", notes = "保存活动")
     @RequestMapping(value = "/saveDemolition", method = RequestMethod.POST)
     protected ResponseDTO getDemolition(
-            @RequestBody @ApiParam("id") DemolitionSaveReq demolitionSaveReq,
+            @RequestBody @ApiParam("请求参数") DemolitionSaveReq demolitionSaveReq,
             HttpServletRequest request) {
         try {
             BusUser busUser = CommonUtil.getLoginUser(request);
