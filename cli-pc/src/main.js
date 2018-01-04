@@ -36,7 +36,7 @@ Vue.config.productionTip = true
 Vue.config.devtools = true
 //挂载全局方法 
 Vue.prototype.$util = util 
-Vue.prototype.$baseURL = 'http://192.168.3.10:7073'
+Vue.prototype.$baseURL = 'http://192.168.3.10:9037'
 Vue.prototype.$baseImgURL = 'http://maint.deeptel.com.cn/upload'
 Vue.prototype.$is = isJs                         // 第三方检验方法   参考地址：https://github.com/arasatasaygin/is.js
 // 注册全局组件 

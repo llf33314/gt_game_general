@@ -29,8 +29,10 @@
                     </el-date-picker>
                 </el-form-item>  
             <h1 class="mt30 mb20 pb10 bbtom">广告设置</h1> 
-            <el-button type="primary" class="mb20" @click="addlinks()">新增</el-button>  
-            <span class="ml10 el-upload__tip grey">1.仅支持多粉与一点揩油的链接    2.广告图格式：1000*300px</span>
+            <el-button type="primary" class="mb20" @click="addlinks()" :disabled="this.ruleForm1.links.length>2">新增</el-button>  
+            <span class="ml10 el-upload__tip grey mr10">1.仅支持多粉与翼店开头的链接</span>
+            <span class="ml10 el-upload__tip grey mr10">2.广告图格式：1000*300px</span>
+            <span class="ml10 el-upload__tip grey mr10">3.最多添加3个广告</span>
             <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark">
                 <el-table-column label="广告链接">
                   <template slot-scope="scope" >
@@ -240,7 +242,7 @@ export default {
       }
     }; 
     return {
-      active: 3 ,
+      active: 0,
       ruleForm1: {
         name: "",
         name1: "",
