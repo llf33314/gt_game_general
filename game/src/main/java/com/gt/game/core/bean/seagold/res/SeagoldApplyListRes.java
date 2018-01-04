@@ -50,11 +50,47 @@ public class SeagoldApplyListRes {
 	@ApiModelProperty("兑奖码")
 	private String snCode;
 
-	@ApiModelProperty("成绩")
-	private Double score;
-
 	@ApiModelProperty("中奖人")
 	private String nickname;
+	/**
+	 * 领奖方式（1.到店领取 2.邮寄
+	 */
+	@ApiModelProperty("领奖方式（1.到店领取 2.邮寄 3 直接兑奖")
+	private Integer receiveType;
+	/**
+	 * 领奖地址ID
+	 */
+	@ApiModelProperty("到店领取地址")
+	private String addressName;
+	/**
+	 * 邮寄地址
+	 */
+	@ApiModelProperty("邮寄地址")
+	private String address;
+
+	public Integer getReceiveType() {
+		return receiveType;
+	}
+
+	public void setReceiveType(Integer receiveType) {
+		this.receiveType = receiveType;
+	}
+
+	public String getAddressName() {
+		return addressName;
+	}
+
+	public void setAddressName(String addressName) {
+		this.addressName = addressName;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
 
 	public String getNickname() {
 		return nickname;
@@ -144,11 +180,4 @@ public class SeagoldApplyListRes {
 		this.snCode = snCode;
 	}
 
-	public Double getScore() {
-		return score;
-	}
-
-	public void setScore(Double score) {
-		this.score = score;
-	}
 }

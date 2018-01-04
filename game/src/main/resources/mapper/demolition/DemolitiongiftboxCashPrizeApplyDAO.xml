@@ -32,6 +32,9 @@
 		<result column="status" property="status" />
 		<result column="sn_code" property="snCode" />
 		<result column="score" property="score" />
+		<result column="address" property="address" />
+		<result column="addressName" property="addressName" />
+		<result column="receive_type" property="receiveType" />
 	</resultMap>
 
     <!-- 通用查询结果列 -->
@@ -39,10 +42,11 @@
         id, createtime, act_id, prize_id, member_id, receive_type, member_name, member_phone, address_id, address, sn_code, status, cash_time, record_id, au_id
     </sql>
 	<select id="queryRecodList" resultMap="BaseResultMap1" parameterType="com.gt.game.core.bean.demolition.req.DemolitionApplyListPageReq" >
-		SELECT t1.id,t4.prize_name,t4.type,t4.prize_unit,t1.cash_time as cashTime,t1.member_phone,t1.status,t1.sn_code,t3.score,t1.member_id
+		SELECT t1.id,t4.prize_name,t4.type,t4.prize_unit,t1.cash_time as cashTime,t1.member_phone,t1.status,t1.sn_code,t3.score,t1.member_id,t5.address AS  addressName ,t1.address,t1.receive_type
 		from t_wx_activity_demolitiongiftbox_cash_prize_apply t1
 		LEFT JOIN t_wx_activity_demolitiongiftbox_play_record t3 on t1.record_id = t3.id
 		LEFT JOIN t_wx_activity_demolitiongiftbox_prize t4 on t1.prize_id = t4.id
+		LEFT JOIN t_wx_activity_demolitiongiftbox_address t5 on t1.address_id = t5.id
 		WHERE t1.act_id = #{actId}
 		<if test="snCode != null and snCode != '' ">
 			and t1.sn_code = #{snCode}
