@@ -718,7 +718,7 @@ public class SeagoldServiceImpl implements SeagoldService {
                     font1);
             createCell(wb, rowData, 5, delWithColumn(map.get("member_phone")), font1);
             createCell(wb, rowData, 6,
-                    CommonUtil.isEmpty(map.get("nickname")) ? "游客" : CommonUtil.Blob2String(map.get("nickname")),
+                    CommonUtil.isEmpty(map.get("nickname")) ? "游客" : map.get("nickname").toString(),
                     font1);
             if ("1".equals(delWithColumn(map.get("status")).toString())) {
                 createCell(wb, rowData, 7, "未兑奖", font1);

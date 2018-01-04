@@ -59,7 +59,7 @@
 	</select>
 
 	<select id="findExports" resultType="map" parameterType="map" >
-		SELECT t1.id,t4.prize_name,t4.type,t4.prize_unit,t1.cash_time as cashTime,t1.member_phone,t1.status,t1.sn_code,t3.score,t1.member_id
+		SELECT t1.id,t4.prize_name,t4.type,t4.prize_unit,t1.cash_time as cashTime,t1.member_phone,t1.status,t1.sn_code,t1.member_id
 		from t_wx_activity_seagold_cash_prize_apply t1
 		LEFT JOIN t_wx_activity_seagold_play_record t3 on t1.record_id = t3.id
 		LEFT JOIN t_wx_activity_seagold_prize t4 on t1.prize_id = t4.id
@@ -73,6 +73,6 @@
 		<if test="status != -1">
 			and t1.status = #{status}
 		</if>
-		ORDER BY t3.score desc,t3.createtime asc
+		ORDER BY t3.createtime asc
 	</select>
 </mapper>
