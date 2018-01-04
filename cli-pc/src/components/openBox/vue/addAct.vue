@@ -62,7 +62,7 @@
                 </el-table-column> 
                 <el-table-column label="礼盒图片">
                   <template slot-scope="scope">
-                      <gt-material prop="url" :url="scope.row.name3" v-on:getChangeUrl="getChangeUrl(scope.row.id, $event)" width="60" height="60"></gt-material>
+                      <gt-material prop="url" :url="scope.row.name3" v-on:getChangeUrl="getChangeUrlBox(scope.$index, $event)" width="60" height="60"></gt-material>
                   </template>
                 </el-table-column> 
                  <el-table-column label="礼盒音乐">
@@ -101,7 +101,7 @@
                 </el-table-column> 
                 <el-table-column label="选择图片">
                   <template slot-scope="scope">
-                      <gt-material prop="url" :url="scope.row.img" v-on:getChangeUrl="getChangeUrl(scope.row.id, $event)" width="60" height="60"></gt-material>
+                      <gt-material prop="url" :url="scope.row.img" v-on:getChangeUrl="getChangeUrl(scope.$index, $event)" width="60" height="60"></gt-material>
                   </template>
                 </el-table-column> 
                 <el-table-column label="操作">
@@ -274,15 +274,15 @@ export default {
       }
     }; 
     return {
-      active: 3,
+      active: 0,
       ruleForm1: {
         name: "",
         name1: "",
         name4:"",
          music: "暂无上传音乐",
         links:[
-          {id:0,url:"www.duofriend.com",img:""},
-          {id:1,url:"",img:""}
+          {url:"",img:""},
+          {url:"",img:""}
         ],
         boxs:[
             {
@@ -422,6 +422,9 @@ export default {
     delLinks(val) { 
           this.ruleForm1.links.splice(val, 1); 
     },
+    getChangeUrlBox(i,e) { 
+      this.ruleForm1.boxs[i].name3=e.url
+    }, 
     getChangeUrl(i,e) { 
       //console.log(i)
       this.ruleForm1.links[i].img=e.url

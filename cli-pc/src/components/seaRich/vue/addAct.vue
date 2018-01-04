@@ -1,6 +1,3 @@
-<style lang="less">
-
-</style>
 <template>
 <section>
 <div class="hd-common">
@@ -97,15 +94,12 @@
             <div class="gt-gray-region mt20" style="color:#666;line-height:20px">
                 <p>奖品类型：奖品的内容;奖品单位：奖品的数量货内容；奖项数量:该奖品的可领取次数</p>
                 <p>如：奖品类型：粉币；奖品数额：2；奖项名称：粉币；奖项数量：3；中奖概率：12</p> 
-            </div> 
-            <div class="mt20 mb20">
-                <el-button   @click="addForm4()"  type="primary">新增奖品</el-button> 
-                <span class="el-upload__tip grey ml10">下列奖品根据排名由上至下顺序分配</span> 
+                <p>当奖品为实物时，请上传实物图片，实物图片建议尺寸1160px*64px</p> 
             </div> 
             
             <div class="mt20 mb20">
-                <el-button   @click="addForm4()" :disabled='ruleForm4.length>4'  type="primary">新增奖品</el-button> 
-                <span class="el-upload__tip grey ml10">最多设置五个奖项</span> 
+                <el-button   @click="addForm4()" :disabled='ruleForm4.length>8'  type="primary">新增奖品</el-button> 
+                <span class="el-upload__tip grey ml10">最多设置9个奖项</span> 
             </div> 
                <el-tooltip placement="top" effect="light">
                 <div slot="content">
@@ -147,10 +141,14 @@
                   </template>
                 </el-table-column>
                 <el-table-column label="奖品图片">
-                    <template slot-scope="scope"> 
-                        <div  v-if="scope.row.name0==4" >
-                            <gt-material prop="url" :url="scope.row.name5" v-on:getChangeUrl="getChangeUrl4(scope.$index, $event)" width="72" height="72"></gt-material>
-                        </div>
+                    <template slot-scope="scope" v-if="scope.row.name0==4">  
+                            <span  class="imgRow" >
+                                <el-upload  action="''" list-type="picture-card" :file-list="scope.row.name5"  :on-remove="handleRemove">
+                                </el-upload>
+                            </span>
+                            <span class="uploadBtn">
+                                <gt-material :prop="''" selectType="select" btnContent="+" v-on:getChangeUrl="getContentUrl(scope.$index, $event)" width="50" height="50"></gt-material>
+                            </span>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作">
@@ -179,7 +177,9 @@
             <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>   
             <el-button type="primary" @click="submit()">打印</el-button>   
         </div> 
-    </div>   
+
+
+</div>   
 </div>
 </section>
 </template>
@@ -206,16 +206,16 @@ export default {
         callback();
       }
     }; 
-    return {
-      active: 3,
+    return { 
+      active: 0,
       ruleForm1: {
         name: "",
         name1: "",
         name4:"",
         music: "暂无上传音乐",
         links:[
-          {id:0,url:"www.duofriend.com",img:""},
-          {id:1,url:"",img:""}
+          {url:"www.duofriend.com",img:""},
+          {url:"",img:""}
         ]
       },
       rules1: {
@@ -283,7 +283,7 @@ export default {
           name2: "",
           name3: "",
           name4: "",
-          name5:"" 
+          name5:[] 
         },
         { 
           name0: 1,
@@ -291,8 +291,8 @@ export default {
           name2: "",
           name3: "",
           name4: "" ,
-          name5:"" 
-        }],  
+          name5:[]
+        }],   
     };
   },
   methods: {    
@@ -321,6 +321,23 @@ export default {
     upStep() {
       this.active--;
     },
+
+    //实物图
+    getContentUrl(x,e) {
+      if (e.url === "go_back") { return; } 
+      console.log(e.url);
+      let arr = JSON.parse(e.url); 
+      var g =[];
+      for(let i = 0; i < arr.length; i++) {
+        arr[i].url = arr[i].url;
+        g.push(arr[i])
+      } 
+      this.ruleForm4[x].name5=this.ruleForm4[x].name5.concat(g)
+    }, 
+    // 删除实物图
+    handleRemove(file, fileList) {
+         this.ruleForm4.name5 = fileList
+    },
     //广告设置的新增&删除
     addlinks(){
       this.linksId++
@@ -340,7 +357,7 @@ export default {
       this.ruleForm4[i].name5=e.url
     }, 
     addForm4(){ 
-        this.ruleForm4.push({ name0: 1, name1: "", name2: "", name3: "", name4: "", name5: ""},)
+        this.ruleForm4.push({ name0: 1, name1: "", name2: "", name3: "", name4: "", name5: []},)
     },
     delForm4(val){
         this.ruleForm4.splice(val, 1); 

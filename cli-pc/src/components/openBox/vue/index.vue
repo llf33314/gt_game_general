@@ -79,7 +79,7 @@ import {
         activeName:"-1",
         dialogTip:false, 
         // countNum:{first:"10",second:"20",third:"30",fourth:"40",fifth:"2"},
-        countNum:{all:"",nostar:"",started:"",stop:"",over:""},
+        countNum:{all:0,nostar:0,started:0,stop:0,over:0},
         tableData:{data:[], page:{}}, 
         current:1,
         //预览连接

@@ -33,7 +33,7 @@
             </el-input>
         </span> 
         <div class="h10"></div>
-        <el-button type="primary" @click="test()" class="ml30">导出</el-button> 
+        <el-button type="primary" @click="toExport()" class="ml30">导出</el-button> 
     </div> 
     <div class="gt-content"> 
         <gt-null-data v-if="this.tableData.data.length==0">还没有相关中奖纪录</gt-null-data>  
@@ -125,6 +125,15 @@ getDemolitionApplyList,editDemolitionApply
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
         }); 
       },
+    //导出---------------------------star
+    toExport(){
+      var params         = {}; 
+      params.actId  = this.$router.history.current.query.id;  
+      params.status = this.prizeState;  
+      params.type   = this.prizeType;  
+      params.snCode   = this.codeWord;  
+      window.open(window.BASEDOMAIN+'/app/demolition/exports?actId='+params.actId+'&status='+params.status+'&type='+params.type+'&snCode='+params.snCode);   
+    },
       test(){
         console.log(123)
       },
