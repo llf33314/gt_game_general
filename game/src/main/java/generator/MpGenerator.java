@@ -28,8 +28,8 @@ public class MpGenerator {
     public static final  String   outPutJavaModel    = outPutBaseDir + "src/main/java";
     // 需要生成的表----------------------------------------------------------改这里
 //	public static final  String[] generatorTableName = new String[] {"t_wx_channels_main","t_wx_channels_type"};
-    public static final  String[] generatorTableName = new String[] {"t_wx_activity_seagold_address", "t_wx_activity_seagold_authority", "t_wx_activity_seagold_cash_prize_apply",
-			"t_wx_activity_seagold_main", "t_wx_activity_seagold_play_record", "t_wx_activity_seagold_prize", "t_wx_activity_seagold_prize_img", "t_wx_activity_seagold_report"};
+    public static final  String[] generatorTableName = new String[] {"t_wx_activity_new_year_game_ad", "t_wx_activity_new_year_game_address", "t_wx_activity_new_year_game_authority",
+			"t_wx_activity_new_year_game_cash_prize_apply", "t_wx_activity_new_year_game_main", "t_wx_activity_new_year_game_play_record", "t_wx_activity_new_year_game_prize", "t_wx_activity_new_year_game_prize_img","t_wx_activity_new_year_game_reportcard"};
 //    public static final  String[] generatorTableName = new String[] {"t_wx_activity_vote_award_img", "t_wx_activity_vote_banner", "t_wx_activity_vote_detil",
 //			"t_wx_activity_vote_group", "t_wx_activity_vote_main", "t_wx_activity_vote_main_img", "t_wx_activity_vote_rank", "t_wx_activity_vote_rank_record",
 //			"t_wx_activity_vote_report", "t_wx_activity_vote_sign", "t_wx_activity_vote_sign_image", "t_wx_activity_vote_sign_music", "t_wx_activity_vote_sign_pic",
