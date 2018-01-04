@@ -37,10 +37,61 @@
                         </div>
                     </div>
                 </el-form-item>
-            <h1 class="mt30 mb20 pb10 bbtom">广告设置</h1> 
+
+
+
+            <h1 class="mt30 mb20 pb10 bbtom" style="width:80%">礼盒设置</h1> 
+            <el-button type="primary" class="mb20" @click="addboxs()">新增</el-button>  
+            <span class="ml10 el-upload__tip grey">至少添加3-5个礼盒，礼盒图片建议尺寸270*270px</span>
+            <el-table ref="multipleTable" :data="ruleForm1.boxs" tooltip-effect="dark" style="width:80%">
+                <el-table-column label="礼盒类型">
+                    <template slot-scope="scope">
+                        <el-select  class="w20_demo"  v-model="scope.row.name1" placeholder="请选择"> 
+                            <el-option label="自定义"     :value="0"></el-option> 
+                            <el-option label="默认"       :value="1"></el-option>                             
+                        </el-select>
+                    </template>
+                </el-table-column> 
+                <el-table-column label="礼盒名称">
+                    <template slot-scope="scope"> 
+                        <el-input class="w20_demo"    v-model="scope.row.name2" v-if="scope.row.name1==0"></el-input>
+                        <el-select  class="w20_demo"  v-model="scope.row.name2" placeholder="请选择" v-if="scope.row.name1==1"> 
+                            <el-option label="矮方盒"  :value="1"></el-option>      
+                        </el-select>
+                    </template>
+                </el-table-column> 
+                <el-table-column label="礼盒图片">
+                  <template slot-scope="scope">
+                      <gt-material prop="url" :url="scope.row.name3" v-on:getChangeUrl="getChangeUrl(scope.row.id, $event)" width="60" height="60"></gt-material>
+                  </template>
+                </el-table-column> 
+                 <el-table-column label="礼盒音乐">
+                  <template slot-scope="scope">
+                       <el-select  class="w100_demo"  v-model="scope.row.name4" placeholder="请选择"> 
+                            <el-option label="音乐1"     :value="0"></el-option> 
+                            <el-option label="音乐2"     :value="1"></el-option>                             
+                        </el-select>
+                        <el-button size="small" type="primary">播放</el-button>
+                        <el-button size="small" type="primary">暂停</el-button>
+                  </template>
+                </el-table-column> 
+                 <el-table-column label="放置礼品">
+                  <template slot-scope="scope">
+                    <el-switch v-model="scope.row.name5" on-text="开启" off-text="关闭" :on-value="0" :off-value="1">
+                    </el-switch>
+                  </template>
+                </el-table-column> 
+                <el-table-column label="操作">
+                  <template slot-scope="scope">
+                        <el-button class="gt-button-normal" v-show="scope.$index>2" @click="delboxs(scope.$index)">删除</el-button>
+                  </template>
+                </el-table-column> 
+             </el-table> 
+
+            <h1 class="mt30 mb20 pb10 bbtom" style="width:80%">广告设置</h1> 
             <el-button type="primary" class="mb20" @click="addlinks()">新增</el-button>  
             <span class="ml10 el-upload__tip grey">1.仅支持多粉与一点揩油的链接    2.广告图格式：1000*300px</span>
-            <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark">
+            <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark" style="width:80%">
                 <el-table-column label="广告链接">
                   <template slot-scope="scope" >
                         <el-input v-model="scope.row.url">
@@ -121,6 +172,8 @@
             <div class="gt-gray-region mt20" style="color:#666;line-height:20px">
                 <p>奖品类型：奖品的内容;奖品单位：奖品的数量货内容；奖项数量:该奖品的可领取次数</p>
                 <p>如：奖品类型：粉币；奖品数额：2；奖项名称：粉币；奖项数量：3；中奖概率：12</p> 
+                <p>当奖品为实物时，请上传实物图片</p> 
+                <p>当奖品为实物时，请上传实物图片</p> 
             </div> 
             <div class="mt20 mb20">
                 <el-button   @click="addForm4()"  type="primary">新增奖品</el-button> 
@@ -160,15 +213,16 @@
                     <el-input class="w20_demo"  type="number"  v-model="scope.row.name3" placeholder="数值应大于0"></el-input>
                 </template>
                 </el-table-column>
-                <el-table-column label="奖品图片">
+                <!-- <el-table-column label="奖品图片">
                     <template slot-scope="scope"> 
                         <div  v-if="scope.row.name0==4" >
                             <gt-material prop="url" :url="scope.row.name4" v-on:getChangeUrl="getChangeUrl4(scope.$index, $event)" width="72" height="72"></gt-material>
                         </div>
                     </template>
-                </el-table-column>
+                </el-table-column> -->
                 <el-table-column label="操作">
                     <template slot-scope="scope">
+                         <el-button class="gt-button-normal blue" v-if="scope.row.name0==4"  @click="delForm4(scope.$index)">上传实物</el-button>
                         <el-button class="gt-button-normal" v-if="scope.$index!=0"  @click="delForm4(scope.$index)">删除</el-button>
                     </template>
                 </el-table-column>
@@ -220,7 +274,7 @@ export default {
       }
     }; 
     return {
-      active: 0,
+      active: 3,
       ruleForm1: {
         name: "",
         name1: "",
@@ -229,7 +283,29 @@ export default {
         links:[
           {id:0,url:"www.duofriend.com",img:""},
           {id:1,url:"",img:""}
-        ]
+        ],
+        boxs:[
+            {
+            name1:0,
+            name2:"",
+            name3:"",
+            name4:"",
+            name5:"",
+            }, {
+            name1:0,
+            name2:"",
+            name3:"",
+            name4:"",
+            name5:"",
+            }, {
+            name1:0,
+            name2:"",
+            name3:"",
+            name4:"",
+            name5:"",
+            },
+            
+        ],
       },
       rules1: {
         name: [{ required: true, message: "活动名称不能为空", trigger: "blur" }],
@@ -332,10 +408,16 @@ export default {
     upStep() {
       this.active--;
     },
+    //礼盒设置的新增&删除
+    addboxs(){ 
+      this.ruleForm1.boxs.push({ name1:0, name2:"", name3:"", name4:"", name5:"",})
+    },
+    delboxs(val) { 
+          this.ruleForm1.boxs.splice(val, 1); 
+    },
     //广告设置的新增&删除
     addlinks(){
-      this.linksId++
-      this.ruleForm1.links.push({id:this.linksId,url:"",img:""},)
+      this.ruleForm1.links.push({url:"",img:""},)
     },
     delLinks(val) { 
           this.ruleForm1.links.splice(val, 1); 
