@@ -46,7 +46,7 @@
 		LEFT JOIN t_wx_activity_new_year_game_play_record t3 on t1.record_id = t3.id
 		LEFT JOIN t_wx_activity_new_year_game_prize t4 on t1.prize_id = t4.id
 		LEFT JOIN t_wx_activity_new_year_game_address t5 on t1.address_id = t5.id
-		WHERE t1.act_id = #{actId}
+		WHERE t1.main_id = #{actId}
 		<if test="snCode != null and snCode != '' ">
 			and t1.sn_code = #{snCode}
 		</if>
@@ -60,18 +60,18 @@
 	</select>
 
 	<select id="findExports" resultType="map" parameterType="map" >
-		SELECT t1.id,t4.prize_name,t4.type,t4.prize_unit,t1.cash_time as cashTime,t1.member_phone,t1.status,t1.sn_code,t3.score,t1.member_id
+		SELECT t1.id,t4.prize_name,t4.type,t4.prize_unit,t1.cash_time as cashTime,t1.member_phone,t1.member_id,t1.status,t1.sn_code,t3.score
 		from t_wx_activity_new_year_game_cash_prize_apply t1
 		LEFT JOIN t_wx_activity_new_year_game_play_record t3 on t1.record_id = t3.id
 		LEFT JOIN t_wx_activity_new_year_game_prize t4 on t1.prize_id = t4.id
-		WHERE t1.act_id = #{actId}
-		<if test="snCode != null and snCode != ''">
+		WHERE t1.main_id = #{actId}
+		<if test="snCode != null and snCode != '' ">
 			and t1.sn_code = #{snCode}
 		</if>
 		<if test="type != -1 ">
 			and t4.type = #{type}
 		</if>
-		<if test="status != -1">
+		<if test="status != -1 ">
 			and t1.status = #{status}
 		</if>
 		ORDER BY t3.score desc,t3.createtime asc

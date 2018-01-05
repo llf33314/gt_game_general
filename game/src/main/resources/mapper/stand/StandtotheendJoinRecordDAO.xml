@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.game.core.dao.stand.StandtotheendJoinRecordDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.game.core.entity.stand.StandtotheendJoinRecord">
+		<id column="id" property="id" />
+		<result column="act_id" property="actId" />
+		<result column="member_id" property="memberId" />
+		<result column="createtime" property="createtime" />
+		<result column="member_name" property="memberName" />
+		<result column="receive_type" property="receiveType" />
+		<result column="member_phone" property="memberPhone" />
+		<result column="total_score" property="totalScore" />
+		<result column="is_complete" property="isComplete" />
+		<result column="right_count" property="rightCount" />
+		<result column="false_count" property="falseCount" />
+		<result column="total_time" property="totalTime" />
+		<result column="nick_name" property="nickName" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, act_id, member_id, createtime, member_name, receive_type, member_phone, total_score, is_complete, right_count, false_count, total_time, nick_name
+    </sql>
+
+</mapper>

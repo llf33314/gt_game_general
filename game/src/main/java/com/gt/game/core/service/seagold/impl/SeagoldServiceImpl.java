@@ -317,8 +317,8 @@ public class SeagoldServiceImpl implements SeagoldService {
             BeanUtils.copyProperties(seagoldSaveReq,seagoldMain);
             seagoldMain.setBusId(busUser.getId());
             seagoldMain.setCreatetime(new Date());
-            seagoldMain.setFollowQrCode(seagoldMain.getFollowQrCode().split("upload/").length > 1
-                    ?seagoldMain.getFollowQrCode().split("upload/")[1]:seagoldMain.getFollowQrCode());
+            seagoldMain.setFollowQrCode(seagoldMain.getFollowQrCode().split("/upload").length > 1
+                    ?seagoldMain.getFollowQrCode().split("/upload")[1]:seagoldMain.getFollowQrCode());
             seagoldMainService.insert(seagoldMain);
         }else{//编辑
             seagoldMain = seagoldMainService.selectById(seagoldSaveReq.getId());
@@ -332,8 +332,8 @@ public class SeagoldServiceImpl implements SeagoldService {
                 throw new SeagoldException(ResponseEnums.DIFF_USER);
             }
             BeanUtils.copyProperties(seagoldSaveReq,seagoldMain);
-            seagoldMain.setFollowQrCode(seagoldMain.getFollowQrCode().split("upload/").length > 1
-                    ?seagoldMain.getFollowQrCode().split("upload/")[1]:seagoldMain.getFollowQrCode());
+            seagoldMain.setFollowQrCode(seagoldMain.getFollowQrCode().split("/upload").length > 1
+                    ?seagoldMain.getFollowQrCode().split("/upload")[1]:seagoldMain.getFollowQrCode());
             seagoldMainService.updateById(seagoldMain);
             //删除
             //兑奖地址
@@ -358,6 +358,9 @@ public class SeagoldServiceImpl implements SeagoldService {
         if(CommonUtil.isNotEmpty(seagoldSaveReq.getSeagoldPrizeReqs())){
             for(SeagoldPrizeReq seagoldPrizeReq :seagoldSaveReq.getSeagoldPrizeReqs()){
                 if(seagoldPrizeReq.getType()==1){
+                    if(seagoldPrizeReq.getNum() < 0){
+                        throw new SeagoldException(ResponseEnums.SEAGOLD_HAS14);
+                    }
                     fenbi += seagoldPrizeReq.getNum();
                 }
                 SeagoldPrize seagoldPrize = new SeagoldPrize();
@@ -369,8 +372,8 @@ public class SeagoldServiceImpl implements SeagoldService {
                         SeagoldPrizeImg seagoldPrizeImg = new SeagoldPrizeImg();
                         BeanUtils.copyProperties(seagoldPrizeImgReq,seagoldPrizeImg);
                         seagoldPrizeImg.setPrizeId(seagoldPrize.getId());
-                        seagoldPrizeImg.setImgUrl(seagoldPrizeImg.getImgUrl().split("upload/").length>1?
-                                seagoldPrizeImg.getImgUrl().split("upload/")[1]:seagoldPrizeImg.getImgUrl());
+                        seagoldPrizeImg.setImgUrl(seagoldPrizeImg.getImgUrl().split("/upload").length>1?
+                                seagoldPrizeImg.getImgUrl().split("/upload")[1]:seagoldPrizeImg.getImgUrl());
                         seagoldPrizeImgService.insert(seagoldPrizeImg);
                     }
                 }
@@ -388,11 +391,11 @@ public class SeagoldServiceImpl implements SeagoldService {
                 UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
                 updateFenbiReduceReq.setBusId(busUser.getId());
                 updateFenbiReduceReq.setFkId(seagoldMain.getId());
-                updateFenbiReduceReq.setFreType(99);
+                updateFenbiReduceReq.setFreType(41);
                 updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi-num));
                 AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
                 if(axisResult.getCode() != 0){
-                    throw new SeagoldException(ResponseEnums.SEAGOLD_HAS8);
+                    throw new SeagoldException(ResponseEnums.SEAGOLD_HAS15);
                 }
             }else {
                 // 判断账户中的粉币是否足够

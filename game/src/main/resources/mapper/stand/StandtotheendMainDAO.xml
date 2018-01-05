@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.game.core.dao.stand.StandtotheendMainDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.game.core.entity.stand.StandtotheendMain">
+		<id column="id" property="id" />
+		<result column="bus_Id" property="busId" />
+		<result column="bus_logo" property="busLogo" />
+		<result column="bus_name" property="busName" />
+		<result column="createtime" property="createtime" />
+		<result column="activity_begintime" property="activityBegintime" />
+		<result column="activity_endtime" property="activityEndtime" />
+		<result column="act_rule" property="actRule" />
+		<result column="act_name" property="actName" />
+		<result column="follow_qr_code" property="followQrCode" />
+		<result column="man_day_chance" property="manDayChance" />
+		<result column="man_day_total_Ques_Chance" property="manDayTotalQuesChance" />
+		<result column="right_count" property="rightCount" />
+		<result column="answer_time" property="answerTime" />
+		<result column="end_tips" property="endTips" />
+		<result column="bank_id" property="bankId" />
+		<result column="banner" property="banner" />
+		<result column="cash_prize_instruction" property="cashPrizeInstruction" />
+		<result column="receive_type" property="receiveType" />
+		<result column="phone" property="phone" />
+		<result column="stand_before_text" property="standBeforeText" />
+		<result column="rf_statue" property="rfStatue" />
+		<result column="stand_cash_day" property="standCashDay" />
+		<result column="nick_name" property="nickName" />
+		<result column="music_url" property="musicUrl" />
+		<result column="bgm_sp" property="bgmSp" />
+		<result column="authority_code" property="authorityCode" />
+	</resultMap>
+	<resultMap id="BaseResultMap1" type="com.gt.game.core.bean.stand.res.StandListRes">
+		<id column="id" property="id" />
+		<result column="activity_begintime" property="activityBegintime" />
+		<result column="activity_endtime" property="activityEndtime" />
+		<result column="act_name" property="actName" />
+	</resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, bus_Id AS busId, bus_logo, bus_name, createtime, activity_begintime, activity_endtime, act_rule, act_name, follow_qr_code, man_day_chance, man_day_total_Ques_Chance AS manDayTotalQuesChance, right_count, answer_time, end_tips, bank_id, banner, cash_prize_instruction, receive_type, phone, stand_before_text, rf_statue, stand_cash_day, nick_name, music_url, bgm_sp, authority_code
+    </sql>
+	<select id="getCount" resultType="map" parameterType="map">
+		SELECT  t1.count2 ,t2.count3 , t3.count4
+		FROM (SELECT  count(m1.id) AS count2 FROM  t_wx_activity_standtotheend_main m1
+		WHERE m1.bus_id = #{busId,jdbcType=INTEGER} AND UNIX_TIMESTAMP(m1.activity_begintime) > UNIX_TIMESTAMP(#{nowTime})) t1
+		JOIN
+		(SELECT count(m2.id) AS count3 FROM  t_wx_activity_standtotheend_main m2
+		WHERE m2.bus_id = #{busId,jdbcType=INTEGER} 	and UNIX_TIMESTAMP(m2.activity_begintime) &lt;= UNIX_TIMESTAMP(#{nowTime}) and  UNIX_TIMESTAMP(m2.activity_endtime) >= UNIX_TIMESTAMP(#{nowTime})) t2
+		JOIN
+		(SELECT count(m3.id) AS count4 FROM  t_wx_activity_standtotheend_main m3
+		WHERE m3.bus_id = #{busId,jdbcType=INTEGER} AND UNIX_TIMESTAMP(m3.activity_endtime) &lt; UNIX_TIMESTAMP(#{nowTime})) t3
+	</select>
+
+	<select id="getStandList" resultMap="BaseResultMap1" parameterType="Map">
+		SELECT  id,activity_begintime, activity_endtime, act_name
+		FROM t_wx_activity_standtotheend_main
+		WHERE bus_id = #{busId,jdbcType=INTEGER}
+		<if test="status == 0">
+			and UNIX_TIMESTAMP(activity_begintime) > UNIX_TIMESTAMP(#{nowTime})
+		</if>
+		<if test="status == 1">
+			and UNIX_TIMESTAMP(activity_begintime) &lt;= UNIX_TIMESTAMP(#{nowTime}) and  UNIX_TIMESTAMP(activity_endtime) >= UNIX_TIMESTAMP(#{nowTime})
+		</if>
+		<if test="status == 2">
+			and UNIX_TIMESTAMP(activity_endtime) &lt; UNIX_TIMESTAMP(#{nowTime})
+		</if>
+		<if test="name != null and name != ''">
+			and act_name LIKE CONCAT('%','${name}','%' )
+		</if>
+		order BY  id DESC
+	</select>
+</mapper>

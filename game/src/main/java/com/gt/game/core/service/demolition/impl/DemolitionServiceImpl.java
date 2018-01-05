@@ -330,10 +330,10 @@ public class DemolitionServiceImpl implements DemolitionService {
             if(demolitiongiftboxPrize.getType() != 4){//非兑奖
                 if (DateTimeKit.laterThanNow(demolitiongiftboxMain.getCashPrizeBeginTime())) {
                     //"未到兑奖时间！"
-                    throw  new DemolitionException(ResponseEnums.DEMOLITION_HAS1);
+                    throw  new DemolitionException(ResponseEnums.DEMOLITION_HAS3);
                 } else if (!DateTimeKit.laterThanNow(demolitiongiftboxMain.getCashPrizeEndTime())) {
                     //""已过兑奖时间！";
-                    throw  new DemolitionException(ResponseEnums.DEMOLITION_HAS1);
+                    throw  new DemolitionException(ResponseEnums.DEMOLITION_HAS4);
                 }
             }
             if (demolitiongiftboxCashPrizeApply.getStatus() == 3) {
@@ -426,8 +426,8 @@ public class DemolitionServiceImpl implements DemolitionService {
             BeanUtils.copyProperties(demolitionSaveReq,demolitiongiftboxMain);
             demolitiongiftboxMain.setBusId(busUser.getId());
             demolitiongiftboxMain.setCreatetime(new Date());
-            demolitiongiftboxMain.setFollowQrCode(demolitiongiftboxMain.getFollowQrCode().split("upload/").length > 1
-                                                            ?demolitiongiftboxMain.getFollowQrCode().split("upload/")[1]:demolitiongiftboxMain.getFollowQrCode());
+            demolitiongiftboxMain.setFollowQrCode(demolitiongiftboxMain.getFollowQrCode().split("/upload").length > 1
+                                                            ?demolitiongiftboxMain.getFollowQrCode().split("/upload")[1]:demolitiongiftboxMain.getFollowQrCode());
             demolitiongiftboxMainService.insert(demolitiongiftboxMain);
         }else{//编辑
             demolitiongiftboxMain = demolitiongiftboxMainService.selectById(demolitionSaveReq.getId());
@@ -441,8 +441,8 @@ public class DemolitionServiceImpl implements DemolitionService {
                 throw new DemolitionException(ResponseEnums.DIFF_USER);
             }
             BeanUtils.copyProperties(demolitionSaveReq,demolitiongiftboxMain);
-            demolitiongiftboxMain.setFollowQrCode(demolitiongiftboxMain.getFollowQrCode().split("upload/").length > 1
-                    ?demolitiongiftboxMain.getFollowQrCode().split("upload/")[1]:demolitiongiftboxMain.getFollowQrCode());
+            demolitiongiftboxMain.setFollowQrCode(demolitiongiftboxMain.getFollowQrCode().split("/upload").length > 1
+                    ?demolitiongiftboxMain.getFollowQrCode().split("/upload")[1]:demolitiongiftboxMain.getFollowQrCode());
             demolitiongiftboxMainService.updateById(demolitiongiftboxMain);
             //删除
             //礼盒
@@ -482,8 +482,8 @@ public class DemolitionServiceImpl implements DemolitionService {
                         DemolitiongiftboxPrizeImg demolitiongiftboxPrizeImg = new DemolitiongiftboxPrizeImg();
                         BeanUtils.copyProperties(demolitionPrizeImgReq,demolitiongiftboxPrizeImg);
                         demolitiongiftboxPrizeImg.setPrizeId(demolitiongiftboxPrize.getId());
-                        demolitiongiftboxPrizeImg.setImgUrl(demolitiongiftboxPrizeImg.getImgUrl().split("upload/").length>1?
-                                                        demolitiongiftboxPrizeImg.getImgUrl().split("upload/")[1]:demolitiongiftboxPrizeImg.getImgUrl());
+                        demolitiongiftboxPrizeImg.setImgUrl(demolitiongiftboxPrizeImg.getImgUrl().split("/upload").length>1?
+                                                        demolitiongiftboxPrizeImg.getImgUrl().split("/upload")[1]:demolitiongiftboxPrizeImg.getImgUrl());
                         demolitiongiftboxPrizeImgService.insert(demolitiongiftboxPrizeImg);
                     }
                 }
@@ -524,8 +524,8 @@ public class DemolitionServiceImpl implements DemolitionService {
                 DemolitiongiftboxAd demolitiongiftboxAd = new DemolitiongiftboxAd();
                 BeanUtils.copyProperties(demolitionAdReq,demolitiongiftboxAd);
                 demolitiongiftboxAd.setActId(demolitiongiftboxMain.getId());
-                demolitiongiftboxAd.setUrl(demolitiongiftboxAd.getUrl().split("upload/").length>1?
-                        demolitiongiftboxAd.getUrl().split("upload/")[1]:demolitiongiftboxAd.getUrl());
+                demolitiongiftboxAd.setUrl(demolitiongiftboxAd.getUrl().split("/upload").length>1?
+                        demolitiongiftboxAd.getUrl().split("/upload")[1]:demolitiongiftboxAd.getUrl());
                 demolitionGiftBoxAdService.insert(demolitiongiftboxAd);
             }
         }
