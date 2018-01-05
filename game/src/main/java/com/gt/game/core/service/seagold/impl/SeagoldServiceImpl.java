@@ -388,7 +388,7 @@ public class SeagoldServiceImpl implements SeagoldService {
                 UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
                 updateFenbiReduceReq.setBusId(busUser.getId());
                 updateFenbiReduceReq.setFkId(seagoldMain.getId());
-                updateFenbiReduceReq.setFreType(99);
+                updateFenbiReduceReq.setFreType(41);
                 updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi-num));
                 AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
                 if(axisResult.getCode() != 0){
