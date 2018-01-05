@@ -13,11 +13,11 @@
         <span class="padding-left-md ml30 mb10">
             <el-select v-model="prizeType"  @change="getData()"> 
                 <el-option  label="全部"          value="-1"></el-option>
-                <el-option  label="粉币"          value="1"></el-option>
-                <el-option  label="手机流量"      value="2"></el-option>
-                <el-option  label="实体物品"      value="4"></el-option>
-                <el-option  label="积分"          value="6"></el-option> 
-                <el-option  label="优惠券"        value="7"></el-option> 
+                <el-option label="粉币"       :value="1"></el-option>
+                <el-option label="手机流量"   :value="2"></el-option>
+                <el-option label="实体物品"   :value="4"></el-option>
+                <el-option label="积分"       :value="6"></el-option> 
+                <el-option label="优惠券"       :value="7"></el-option> 
             </el-select>
         </span> 
         <span class="padding-left-md ml10 mb10">

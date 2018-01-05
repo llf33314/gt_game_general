@@ -127,12 +127,11 @@
                 <el-table-column label="奖品类型">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.name0" placeholder="请选择"> 
-                        <el-option label="粉币"       :value="1"></el-option>
-                        <el-option label="手机流量"   :value="2"></el-option>
-                        <el-option label="手机话费"   :value="3"></el-option>
-                        <el-option label="实体物品"   :value="4"></el-option>
-                        <el-option label="谢谢参与"   :value="5"></el-option> 
-                        <el-option label="积分"       :value="6"></el-option> 
+                            <el-option label="粉币"       :value="1"></el-option>
+                            <el-option label="手机流量"   :value="2"></el-option>
+                            <el-option label="实体物品"   :value="4"></el-option>
+                            <el-option label="积分"       :value="6"></el-option> 
+                            <el-option label="优惠券"     :value="7"></el-option> 
                         </el-select>
                     </template>
                 </el-table-column> 
