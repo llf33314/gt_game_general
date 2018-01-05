@@ -45,9 +45,9 @@
               {{scope.row.status |actStatus(scope.row.status)}} 
             </template> 
           </el-table-column>
-          <el-table-column  width="400" label="操作">
+          <el-table-column  width="450" label="操作">
             <template slot-scope="scope"> 
-              <el-button class="gt-button-normal blue" v-show="scope.row.isEdit==1" @click="editActive(scope.row.id)">编辑</el-button>
+              <el-button class="gt-button-normal blue" v-if="scope.row.isEdit==1" @click="editActive(scope.row.id)">编辑</el-button>
               <el-button class="gt-button-normal blue" @click="record(scope.row.id)">中奖纪录</el-button>
               <el-button class="gt-button-normal blue" @click="askPreview(scope.row.id)">预览链接</el-button>
               <el-button class="gt-button-normal blue" @click="impower(scope.row.id)">核销授权</el-button>
@@ -56,7 +56,7 @@
           </el-table-column>
         </el-table>
         <div class="public-page-fr">
-            <el-pagination @current-change="handleCurrentChange"  :page-size="10"  v-if="this.tableData.page.totalNums!=0"
+            <el-pagination @current-change="handleCurrentChange"  :current-page.sync="current" :page-size="10"  v-if="this.tableData.page.totalNums!=0"
             layout="prev, pager, next, jumper" :total="tableData.page.totalNums">
             </el-pagination>
         </div> 

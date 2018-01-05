@@ -190,7 +190,7 @@
             <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步1</el-button> 
             <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
-            <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>   
+            <el-button type="primary" @click="lastStep()"   :disabled="this.isSubmit"     v-if="this.active==3">保存</el-button>   
             <!-- <el-button type="primary" @click="submit()">打印</el-button>    -->
         </div> 
 
@@ -227,7 +227,7 @@ export default {
     }; 
     return { 
       active:0,
-      isSubmit:true,
+      isSubmit:false,
       ruleForm1: {
         name: "",
         name1: "", 
@@ -409,7 +409,6 @@ export default {
                 return  s; 
         };  
        var sum = getSum(arr1)
-    //    console.log(sum,998);
        if(sum!=100){
             this.$message.error("中奖概率之和必须等于100%");
         }else{
@@ -432,14 +431,14 @@ export default {
                 this.$message.error("当奖品为实物时，请上传实物图片~");
                 return false 
         }else{
-            this.ruleForm4[i].name4 = parseFloat(this.ruleForm4[i].name4).toFixed(2); 
-            this.checkGL(); 
+            this.ruleForm4[i].name4 = parseFloat(this.ruleForm4[i].name4).toFixed(2);  
         }  
       }
+       this.checkGL(); 
     }, 
     //表单提交--------------------------------------star
     submit(){ 
-        if(!this.isSubmit){
+        if(this.isSubmit){
              this.$message({type: "info", message: "请不要重复提交~" });
         }else{ 
         //广告
@@ -511,17 +510,16 @@ export default {
         console.log(data,123); 
         
          saveSeagold(data).then(data=>{
-          this.isSubmit==false
+          this.isSubmit==true
           if (data.code == 100) { 
               console.log(12336666)
-            this.$message({ message: "操作成功", type: "success"}); 
-             this.$router.push({path: '/seaRich/index'});
+              this.active=5
           } else {
-              this.isSubmit==true
+              this.isSubmit==false
               this.$message.error(data.msg + "错误码：[" + data.code + "]");
           }
         }).catch(() => {
-            this.isSubmit==true
+            this.isSubmit==false
             this.$message({type: "info", message: "网络问题，请刷新重试~" });
         }); 
     } 

@@ -1,27 +1,10 @@
-<style lang="less">
-  .bgMusic{
-    .material-box {
-      height: 29px !important;
-      width: 72px !important;
-      line-height: 29px;
-
-      .plus-box {
-        color: #fff;
-        background-color: #20a0ff;
-        border-color: #20a0ff;
-        font-size: 13px;
-        line-height: 28px;
-      }
-    }
-  }
-</style> 
 <template>
 <section>
 <div class="hd-common">
     <el-breadcrumb separator="/" class="gt-crumbs">
       <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
       <el-breadcrumb-item :to="{ path:'/seaRich/index' }">大海捞金</el-breadcrumb-item>  
-      <el-breadcrumb-item>创建活动</el-breadcrumb-item>   
+      <el-breadcrumb-item>编辑活动</el-breadcrumb-item>   
     </el-breadcrumb>  
     <div class="gt-content">
         <el-tabs v-model="active" type="card"  @tab-click="handleClick">
@@ -30,6 +13,14 @@
             <el-tab-pane label="兑奖设置" name="2"></el-tab-pane>
             <el-tab-pane label="奖项设置" name="3"></el-tab-pane>
         </el-tabs>
+
+        <!-- <el-steps :active="active" :center="true" :align-center="true" class="bbtom pb20">
+            <el-step title="基础设置"></el-step>
+            <el-step title="规则设置"></el-step>
+            <el-step title="兑奖设置"></el-step>
+            <el-step title="奖项设置"></el-step>
+            <el-step title="新建完成"></el-step>
+        </el-steps> -->
         <!-- 基础设置 -->
         <div v-if="this.active==0" class="mt40">
           <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="120px" class="demo-ruleForm">
@@ -290,31 +281,75 @@ export default {
         desc: [{ required: true,message: "兑奖说明不能为空", trigger: "blur" }], 
       },
       explain: "",
-      ruleForm4: [{ 
-          name0: 1,
-          name1: "",
-          name2: "",
-          name3: "",
-          name4: "",
-          name5:[] 
-        },
-        { 
-          name0: 1,
-          name1: "",
-          name2: "",
-          name3: "",
-          name4: "" ,
-          name5:[]
-        }],   
+      ruleForm4: [],   
     };
   },
   methods: {   
+    //初始化--
+    getActData(){
+        var id=this.$router.history.current.query.id
+        getAct(id).then(data=>{
+          if (data.code == 100) {
+            console.log(data) 
+            //基础设置
+            this.ruleForm1.name=data.data.name
+            this.ruleForm1.name1=[data.data.activityBeginTime,data.data.activityEndTime]
+            this.ruleForm1.musicUrl=data.data.musicUrl
+            //规则设置
+            if(data.data.followQrCode){
+                this.ruleForm2.code=window.IMAGEURL+data.data.followQrCode
+            } 
+            this.ruleForm2.freePeople=String(data.data.manTotalChance)
+            this.ruleForm2.freeNum=String(data.data.manDayChance)
+            this.ruleForm2.time=String(data.data.gameTime)
+            this.ruleForm2.desc=data.data.actRule
+            //兑奖设置
+            this.ruleForm3.date=[data.data.cashPrizeBeginTime,data.data.cashPrizeEndTime]
+            this.ruleForm3.type=data.data.receiveType.split(',')
+            this.ruleForm3.phone=data.data.phone
+            this.ruleForm3.desc=data.data.cashPrizeInstruction
+            var newaddr = [];//兑奖地址
+            for (var i = 0; i < data.data.seagoldAddressReqs.length; i++) {
+                var newabc1 = {
+                list  : data.data.seagoldAddressReqs[i].address,  
+                };
+                newaddr.push(newabc1);  
+            } 
+            this.ruleForm3.addrRow= newaddr 
+            //奖项设置 
+            var newPraise = [];//兑奖地址
+            for (var i = 0; i < data.data.seagoldPrizeReqs.length; i++) {
+                var newabc1 = {
+                    name0  : data.data.seagoldPrizeReqs[i].type, 
+                    name1  : data.data.seagoldPrizeReqs[i].prizeUnit, 
+                    name2  : data.data.seagoldPrizeReqs[i].prizeName, 
+                    name3  : String(data.data.seagoldPrizeReqs[i].num), 
+                    name4  : data.data.seagoldPrizeReqs[i].probabiliy, 
+                    name5:[] 
+                };
+                if(newabc1.name0==4){
+                    for(var j = 0; j < data.data.seagoldPrizeReqs[i].seagoldPrizeImgReqs.length; j++){
+                        var imgarr={
+                             url:window.IMAGEURL+data.data.seagoldPrizeReqs[i].seagoldPrizeImgReqs[j].imgUrl
+                        }
+                        newabc1.name5.push(imgarr)
+                    }
+                }
+               newPraise.push(newabc1);  
+            } 
+            this.ruleForm4=newPraise 
+          } else {
+              this.$message.error(data.msg + "错误码：[" + data.code + "]");
+          }
+        }).catch(() => {
+            this.$message({type: "info", message: "网络问题，请刷新重试~" });
+        }); 
+    },
     getMusic(e) {
         console.log(e);
         this.ruleForm1.music = e.music.name
         this.ruleForm1.musicUrl = e.music.url
-    },  
-      
+    },   
     addrPass(rule, value, callback) {
       if (!value) {
         callback(new Error("不能为空"));
@@ -404,6 +439,7 @@ export default {
                 return  s; 
         };  
        var sum = getSum(arr1)
+    //    console.log(sum,998);
        if(sum!=100){
             this.$message.error("中奖概率之和必须等于100%");
         }else{
@@ -426,10 +462,10 @@ export default {
                 this.$message.error("当奖品为实物时，请上传实物图片~");
                 return false 
         }else{
-            this.ruleForm4[i].name4 = parseFloat(this.ruleForm4[i].name4).toFixed(2);  
+            this.ruleForm4[i].name4 = parseFloat(this.ruleForm4[i].name4).toFixed(2); 
+            this.checkGL(); 
         }  
       }
-       this.checkGL(); 
     }, 
     //表单提交--------------------------------------star
     submit(){ 
@@ -475,9 +511,9 @@ export default {
                         }
                     arr4.seagoldPrizeImgReqs.push(imgarr)
                     } 
-                } 
-                seagoldPrizeReqs.push(arr4)
+                }  
             } 
+            seagoldPrizeReqs.push(arr4)
         } 
         const data = {
             id:this.$router.history.current.query.id,
@@ -486,7 +522,7 @@ export default {
             activityBeginTime: this.ruleForm1.name1[0], 
             activityEndTime  : this.ruleForm1.name1[1], 
             musicUrl         : this.ruleForm1.musicUrl, 
-            //规则设置
+            //规则设置            
             followQrCode   : this.ruleForm2.code, 
             manTotalChance : Number(this.ruleForm2.freePeople), 
             manDayChance   : Number(this.ruleForm2.freeNum), 
@@ -502,13 +538,13 @@ export default {
              //奖项设置 
             seagoldPrizeReqs:seagoldPrizeReqs,  
         };
-        console.log(data,123); 
+        console.log(data,12366); 
         
          saveSeagold(data).then(data=>{
           this.isSubmit==true
-          if (data.code == 100) { 
-               console.log(12336666)
-               this.$router.push({path: '/seaRich/index'});
+          if (data.code == 100) {  
+              this.$message({ message: "操作成功", type: "success"}); 
+              this.$router.push({path: '/seaRich/index'});
           } else {
               this.isSubmit==false
               this.$message.error(data.msg + "错误码：[" + data.code + "]");
@@ -519,78 +555,17 @@ export default {
         }); 
     } 
     },  
-        //初始化--
-    getActData(){
-        var id=this.$router.history.current.query.id
-        getAct(id).then(data=>{
-          if (data.code == 100) {
-            console.log(data) 
-            //基础设置
-            this.ruleForm1.name=data.data.name
-            this.ruleForm1.name1=[data.data.activityBeginTime,data.data.activityEndTime] 
-            this.ruleForm1.music = data.data.musicUrl.split("/")[data.data.musicUrl.split("/").length-1]; 
-            this.ruleForm1.musicUrl=data.data.musicUrl  
-            //规则设置
-            if(data.data.followQrCode){
-                this.ruleForm2.code=window.IMAGEURL+data.data.followQrCode
-            } 
-            this.ruleForm2.freePeople=String(data.data.manTotalChance)
-            this.ruleForm2.freeNum=String(data.data.manDayChance)
-            this.ruleForm2.time=String(data.data.gameTime)
-            this.ruleForm2.desc=data.data.actRule
-            //兑奖设置
-            this.ruleForm3.date=[data.data.cashPrizeBeginTime,data.data.cashPrizeEndTime]
-            this.ruleForm3.type=data.data.receiveType.split(',')
-            this.ruleForm3.phone=data.data.phone
-            this.ruleForm3.desc=data.data.cashPrizeInstruction
-            var newaddr = [];//兑奖地址
-            for (var i = 0; i < data.data.seagoldAddressReqs.length; i++) {
-                var newabc1 = {
-                list  : data.data.seagoldAddressReqs[i].address,  
-                };
-                newaddr.push(newabc1);  
-            } 
-            this.ruleForm3.addrRow= newaddr 
-            //奖项设置 
-            var newPraise = [];//兑奖地址
-            for (var i = 0; i < data.data.seagoldPrizeReqs.length; i++) {
-                var newabc1 = {
-                    name0  : data.data.seagoldPrizeReqs[i].type, 
-                    name1  : data.data.seagoldPrizeReqs[i].prizeUnit, 
-                    name2  : data.data.seagoldPrizeReqs[i].prizeName, 
-                    name3  : String(data.data.seagoldPrizeReqs[i].num), 
-                    name4  : data.data.seagoldPrizeReqs[i].probabiliy, 
-                    name5:[] 
-                };
-                if(newabc1.name0==4){
-                    for(var j = 0; j < data.data.seagoldPrizeReqs[i].seagoldPrizeImgReqs.length; j++){
-                        var imgarr={
-                             url:window.IMAGEURL+data.data.seagoldPrizeReqs[i].seagoldPrizeImgReqs[j].imgUrl
-                        }
-                        newabc1.name5.push(imgarr)
-                    }
-                }
-               newPraise.push(newabc1);  
-            } 
-            this.ruleForm4=newPraise 
-          } else {
-              this.$message.error(data.msg + "错误码：[" + data.code + "]");
-          }
-        }).catch(() => {
-            this.$message({type: "info", message: "网络问题，请刷新重试~" });
-        }); 
-    },
     backUrl(){
          window.history.go(-1);
     },
-        handleClick(tab, event) {
-        console.log(tab, event);
-      },
     test(){
         console.log(1122);
-    }
+    },
+    handleClick(tab, event) {
+        console.log(tab, event);
+      }
   },
- mounted() {
+  mounted() {
     this.getActData();
   }
 };

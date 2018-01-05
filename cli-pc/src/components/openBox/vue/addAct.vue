@@ -1,6 +1,3 @@
-<style lang="less">
-
-</style>
 <template>
 <section>
 <div class="hd-common">
