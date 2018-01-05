@@ -15,6 +15,7 @@
           <i class="el-icon-plus" v-if="btnContent == 'icon'"></i>
           <span v-else>{{btnContent}}</span>
         </div>
+
       </div>
       <div v-if="type == 'text'" @click.stop="visibleMaterial">
         <slot></slot>
@@ -89,29 +90,40 @@
       sonIndex: {
          type: [String, Number],
          default: 0
-      }
+      },
+      isMusic: {
+        type: Boolean,
+        default: false
+      },
     },
     mounted: function () {
       let _this = this;
+      // 这个监听函数需要注意 调用了多少个组件 就会执行多少次
       window.addEventListener("message", function (e) {
         const num = e.data.length - 1
         if (!num) return false;
         var newList = []
-        if (_this.selectType == 'radio') {
-          e.data.substring(6, num).split(',').forEach((item) => {
-            newList.push(item.substring(1, (item.length - 1)))
-          })
-          if (_this.materialVisible == _this.prop) {
-            _this.$set(_this.showImg, _this.prop, newList[1])
-            _this.postToParent()
-          }
-        } else if (_this.selectType == 'select') {
-          newList = e.data.substring(7, num - 13)
-          if (_this.materialVisible == _this.prop) {
-            _this.$set(_this.showImg, _this.prop, newList)
-            _this.postToParent()
+        if (_this.isMusic) {
+            if (e.data.indexOf('video') < 0) { return }
+            _this.postToParent(JSON.parse(e.data))
+        } else {
+          if (_this.selectType == 'radio') {
+            e.data.substring(6, num).split(',').forEach((item) => {
+              newList.push(item.substring(1, (item.length - 1)))
+            })
+            if (_this.materialVisible == _this.prop) {
+              _this.$set(_this.showImg, _this.prop, newList[1])
+              _this.postToParent()
+            }
+          } else if (_this.selectType == 'select') {
+            newList = e.data.substring(7, num - 13)
+            if (_this.materialVisible == _this.prop) {
+              _this.$set(_this.showImg, _this.prop, newList)
+              _this.postToParent()
+            }
           }
         }
+        
         _this.materialVisible = null
         _this.showProp = false
       });
@@ -127,11 +139,16 @@
       //打开素材库
       visibleMaterial() {
         this.materialVisible = this.prop
-        if (this.selectType == 'radio') {
-          this.materialUrl = window.MATERIALUrl + window.location.href;
-        } else if (this.selectType == 'select') {
-          this.materialUrl = window.MATERIALUrlMULTI + window.location.href;
+        if (this.isMusic) {
+          this.materialUrl = window.MATERIALAUDIO + window.location.href;
+        } else {
+          if (this.selectType == 'radio') {
+            this.materialUrl = window.MATERIALUrl + window.location.href;
+          } else if (this.selectType == 'select') {
+            this.materialUrl = window.MATERIALUrlMULTI + window.location.href;
+          }
         }
+        
 
       },
       // 放大图片
@@ -161,10 +178,11 @@
         }
       },
       // 传值给父组件
-      postToParent() {
+      postToParent(musicData) {
         this.$emit('getChangeUrl', {
           prop: this.prop,
-          url: this.showImg[this.prop] || ''
+          url: this.showImg[this.prop] || '',
+          music: musicData || '' 
         })
       },
       // 关闭素材库
@@ -336,7 +354,7 @@
       padding: 0 10px 10px;
       overflow: hidden;
       border-radius: 5px;
-      min-width: 700px;
+      min-width: 900px;
       max-width: 1000px;
       display: inline-block;
       margin-top: 10%;

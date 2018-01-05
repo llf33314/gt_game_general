@@ -486,7 +486,7 @@ export default {
             } 
         } 
         const data = {
-            id:0,
+            id:this.$router.history.current.query.id,
             //基础设置 
             name             : this.ruleForm1.name, 
             activityBeginTime: this.ruleForm1.name1[0], 

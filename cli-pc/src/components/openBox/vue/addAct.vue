@@ -29,7 +29,7 @@
                     </el-date-picker>
                 </el-form-item>  
                  <el-form-item label="背景音乐：">
-                    <div class="pd20 bb bw">
+                    <div class="pd20 bb bw"> 
                         <el-button size="small" type="primary">点击上传</el-button>
                         <span class="el-upload__tip grey ml20">{{ruleForm1.music}}</span> 
                         <div class="el-upload__tip grey" style="line-height:25px">

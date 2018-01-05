@@ -1,6 +1,7 @@
 
 const index = ()=>import( '@/components/seaRich/vue/index')
 const addAct = ()=>import( '@/components/seaRich/vue/addAct')
+const editAct = ()=>import( '@/components/seaRich/vue/editAct')
 const cancelOut = ()=>import( '@/components/seaRich/vue/cancelOut')
 const prizeRecord = ()=>import( '@/components/seaRich/vue/prizeRecord') 
 export const seaRich = [
@@ -13,6 +14,10 @@ export const seaRich = [
         path:'/seaRich/addAct',
         component: addAct,
         name:'seaRich_addAct'
+    },    {
+        path:'/seaRich/editAct',
+        component: editAct,
+        name:'seaRich_editAct'
     },
     {
         path:'/seaRich/cancelOut',
