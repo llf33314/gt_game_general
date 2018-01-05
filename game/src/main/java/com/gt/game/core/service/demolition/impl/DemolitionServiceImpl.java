@@ -330,10 +330,10 @@ public class DemolitionServiceImpl implements DemolitionService {
             if(demolitiongiftboxPrize.getType() != 4){//非兑奖
                 if (DateTimeKit.laterThanNow(demolitiongiftboxMain.getCashPrizeBeginTime())) {
                     //"未到兑奖时间！"
-                    throw  new DemolitionException(ResponseEnums.DEMOLITION_HAS1);
+                    throw  new DemolitionException(ResponseEnums.DEMOLITION_HAS3);
                 } else if (!DateTimeKit.laterThanNow(demolitiongiftboxMain.getCashPrizeEndTime())) {
                     //""已过兑奖时间！";
-                    throw  new DemolitionException(ResponseEnums.DEMOLITION_HAS1);
+                    throw  new DemolitionException(ResponseEnums.DEMOLITION_HAS4);
                 }
             }
             if (demolitiongiftboxCashPrizeApply.getStatus() == 3) {
