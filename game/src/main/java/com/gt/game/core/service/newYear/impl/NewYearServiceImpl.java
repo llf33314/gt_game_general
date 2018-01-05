@@ -383,8 +383,8 @@ public class NewYearServiceImpl implements NewYearService {
             BeanUtils.copyProperties(newYearSaveReq,newYearGameMain);
             newYearGameMain.setBusId(busUser.getId());
             newYearGameMain.setCreatetime(new Date());
-            newYearGameMain.setFollowQrCode(newYearGameMain.getFollowQrCode().split("upload/").length > 1
-                    ?newYearGameMain.getFollowQrCode().split("upload/")[1]:newYearGameMain.getFollowQrCode());
+            newYearGameMain.setFollowQrCode(newYearGameMain.getFollowQrCode().split("/upload").length > 1
+                    ?newYearGameMain.getFollowQrCode().split("/upload")[1]:newYearGameMain.getFollowQrCode());
             newYearGameMainService.insert(newYearGameMain);
         }else{//编辑
             newYearGameMain = newYearGameMainService.selectById(newYearSaveReq.getId());
@@ -398,8 +398,8 @@ public class NewYearServiceImpl implements NewYearService {
                 throw new NewYearException(ResponseEnums.DIFF_USER);
             }
             BeanUtils.copyProperties(newYearSaveReq,newYearGameMain);
-            newYearGameMain.setFollowQrCode(newYearGameMain.getFollowQrCode().split("upload/").length > 1
-                    ?newYearGameMain.getFollowQrCode().split("upload/")[1]:newYearGameMain.getFollowQrCode());
+            newYearGameMain.setFollowQrCode(newYearGameMain.getFollowQrCode().split("/upload").length > 1
+                    ?newYearGameMain.getFollowQrCode().split("/upload")[1]:newYearGameMain.getFollowQrCode());
             newYearGameMainService.updateById(newYearGameMain);
             //删除
             //兑奖地址
@@ -437,8 +437,8 @@ public class NewYearServiceImpl implements NewYearService {
                         NewYearGamePrizeImg newYearGamePrizeImg = new NewYearGamePrizeImg();
                         BeanUtils.copyProperties(newYearPrizeImgReq,newYearGamePrizeImg);
                         newYearGamePrizeImg.setPrizeId(newYearGamePrize.getId());
-                        newYearGamePrizeImg.setImgUrl(newYearGamePrizeImg.getImgUrl().split("upload/").length>1?
-                                newYearGamePrizeImg.getImgUrl().split("upload/")[1]:newYearGamePrizeImg.getImgUrl());
+                        newYearGamePrizeImg.setImgUrl(newYearGamePrizeImg.getImgUrl().split("/upload").length>1?
+                                newYearGamePrizeImg.getImgUrl().split("/upload")[1]:newYearGamePrizeImg.getImgUrl());
                         newYearGamePrizeImgService.insert(newYearGamePrizeImg);
                     }
                 }
@@ -459,8 +459,8 @@ public class NewYearServiceImpl implements NewYearService {
                 NewYearGameAd newYearGameAd = new NewYearGameAd();
                 BeanUtils.copyProperties(newYearAdReq,newYearGameAd);
                 newYearGameAd.setActId(newYearGameMain.getId());
-                newYearGameAd.setUrl(newYearGameAd.getUrl().split("upload/").length>1?
-                        newYearGameAd.getUrl().split("upload/")[1]:newYearGameAd.getUrl());
+                newYearGameAd.setUrl(newYearGameAd.getUrl().split("/upload").length>1?
+                        newYearGameAd.getUrl().split("/upload")[1]:newYearGameAd.getUrl());
                 newYearGameAdService.insert(newYearGameAd);
             }
         }
