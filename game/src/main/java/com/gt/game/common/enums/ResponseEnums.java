@@ -46,6 +46,8 @@ public enum ResponseEnums {
     SEAGOLD_HAS11(411,"奖品未发放完毕，不允许操作"),
     SEAGOLD_HAS12(412,"未过活动兑换期限，不允许删除"),
     SEAGOLD_HAS13(413,"回滚粉币失败，删除失败"),
+    SEAGOLD_HAS14(414,"请输入正确的粉币数量"),
+    SEAGOLD_HAS15(415,"修改粉币数量失败"),
 
     //元旦跨年跳跃响应
     NEWYEAR_HAS1(401,"该奖品已发放!"),

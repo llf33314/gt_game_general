@@ -358,6 +358,9 @@ public class SeagoldServiceImpl implements SeagoldService {
         if(CommonUtil.isNotEmpty(seagoldSaveReq.getSeagoldPrizeReqs())){
             for(SeagoldPrizeReq seagoldPrizeReq :seagoldSaveReq.getSeagoldPrizeReqs()){
                 if(seagoldPrizeReq.getType()==1){
+                    if(seagoldPrizeReq.getNum() < 0){
+                        throw new SeagoldException(ResponseEnums.SEAGOLD_HAS14);
+                    }
                     fenbi += seagoldPrizeReq.getNum();
                 }
                 SeagoldPrize seagoldPrize = new SeagoldPrize();
@@ -392,7 +395,7 @@ public class SeagoldServiceImpl implements SeagoldService {
                 updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi-num));
                 AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
                 if(axisResult.getCode() != 0){
-                    throw new SeagoldException(ResponseEnums.SEAGOLD_HAS8);
+                    throw new SeagoldException(ResponseEnums.SEAGOLD_HAS15);
                 }
             }else {
                 // 判断账户中的粉币是否足够
