@@ -19,7 +19,6 @@ import java.util.Date;
 @ApiModel("拆礼盒分页查询活动请求参数对象")
 public class DemolitionListPageReq extends PageReq{
 
-
     /**
      * 主键
      */

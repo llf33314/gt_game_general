@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.game.core.dao.stand.StandtotheendPrizeDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.game.core.entity.stand.StandtotheendPrize">
+		<id column="id" property="id" />
+		<result column="prize_name" property="prizeName" />
+		<result column="act_id" property="actId" />
+		<result column="createtime" property="createtime" />
+		<result column="prize_count" property="prizeCount" />
+		<result column="prize_Per" property="prizePer" />
+		<result column="prize_chance" property="prizeChance" />
+		<result column="prize_img" property="prizeImg" />
+		<result column="prize_type" property="prizeType" />
+		<result column="img_Instruction" property="imgInstruction" />
+		<result column="cash_url" property="cashUrl" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, prize_name, act_id, createtime, prize_count, prize_Per AS prizePer, prize_chance, prize_img, prize_type, img_Instruction AS imgInstruction, cash_url
+    </sql>
+
+</mapper>

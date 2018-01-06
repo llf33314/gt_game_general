@@ -1,7 +1,13 @@
 package com.gt.game.core.dao.demolition;
 
+import com.baomidou.mybatisplus.plugins.Page;
+import com.gt.game.core.bean.demolition.req.DemolitionApplyListPageReq;
+import com.gt.game.core.bean.demolition.res.DemolitionApplyListRes;
 import com.gt.game.core.entity.demolition.DemolitiongiftboxCashPrizeApply;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -13,4 +19,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 public interface DemolitiongiftboxCashPrizeApplyDAO extends BaseMapper<DemolitiongiftboxCashPrizeApply> {
 
+    List<DemolitionApplyListRes> queryRecodList(Page<DemolitionApplyListRes> page, DemolitionApplyListPageReq demolitionApplyListPageReq);
+
+    List<Map<String,Object>> findExports(Map<String, Object> params);
 }

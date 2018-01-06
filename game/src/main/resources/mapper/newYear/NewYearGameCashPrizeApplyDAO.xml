@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.game.core.dao.newYear.NewYearGameCashPrizeApplyDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.game.core.entity.newYear.NewYearGameCashPrizeApply">
+		<id column="id" property="id" />
+		<result column="createtime" property="createtime" />
+		<result column="main_id" property="mainId" />
+		<result column="prize_id" property="prizeId" />
+		<result column="member_id" property="memberId" />
+		<result column="receive_type" property="receiveType" />
+		<result column="member_name" property="memberName" />
+		<result column="member_phone" property="memberPhone" />
+		<result column="address_id" property="addressId" />
+		<result column="address" property="address" />
+		<result column="sn_code" property="snCode" />
+		<result column="status" property="status" />
+		<result column="cash_time" property="cashTime" />
+		<result column="record_id" property="recordId" />
+		<result column="au_id" property="auId" />
+	</resultMap>
+	<resultMap id="BaseResultMap1" type="com.gt.game.core.bean.newYear.res.NewYearApplyListRes">
+		<id column="id" property="id" />
+		<result column="prize_name" property="prizeName" />
+		<result column="type" property="type" />
+		<result column="prize_unit" property="prizeUnit" />
+		<result column="cash_time" property="cashTime" />
+		<result column="member_phone" property="memberPhone" />
+		<result column="member_id" property="memberId" />
+		<result column="status" property="status" />
+		<result column="sn_code" property="snCode" />
+		<result column="score" property="score" />
+		<result column="address" property="address" />
+		<result column="addressName" property="addressName" />
+		<result column="receive_type" property="receiveType" />
+	</resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, createtime, main_id, prize_id, member_id, receive_type, member_name, member_phone, address_id, address, sn_code, status, cash_time, record_id, au_id
+    </sql>
+
+	<select id="queryRecodList" resultMap="BaseResultMap1" parameterType="com.gt.game.core.bean.demolition.req.DemolitionApplyListPageReq" >
+		SELECT t1.id,t4.prize_name,t4.type,t4.prize_unit,t1.cash_time as cashTime,t1.member_phone,t1.status,t1.sn_code,t3.score,t1.member_id,t5.address AS  addressName ,t1.address,t1.receive_type
+		from t_wx_activity_new_year_game_cash_prize_apply t1
+		LEFT JOIN t_wx_activity_new_year_game_play_record t3 on t1.record_id = t3.id
+		LEFT JOIN t_wx_activity_new_year_game_prize t4 on t1.prize_id = t4.id
+		LEFT JOIN t_wx_activity_new_year_game_address t5 on t1.address_id = t5.id
+		WHERE t1.main_id = #{actId}
+		<if test="snCode != null and snCode != '' ">
+			and t1.sn_code = #{snCode}
+		</if>
+		<if test="type != -1">
+			and t4.type = #{type}
+		</if>
+		<if test="status != -1">
+			and t1.status = #{status}
+		</if>
+		ORDER BY t3.score desc,t3.createtime asc
+	</select>
+
+	<select id="findExports" resultType="map" parameterType="map" >
+		SELECT t1.id,t4.prize_name,t4.type,t4.prize_unit,t1.cash_time as cashTime,t1.member_phone,t1.member_id,t1.status,t1.sn_code,t3.score
+		from t_wx_activity_new_year_game_cash_prize_apply t1
+		LEFT JOIN t_wx_activity_new_year_game_play_record t3 on t1.record_id = t3.id
+		LEFT JOIN t_wx_activity_new_year_game_prize t4 on t1.prize_id = t4.id
+		WHERE t1.main_id = #{actId}
+		<if test="snCode != null and snCode != '' ">
+			and t1.sn_code = #{snCode}
+		</if>
+		<if test="type != -1 ">
+			and t4.type = #{type}
+		</if>
+		<if test="status != -1 ">
+			and t1.status = #{status}
+		</if>
+		ORDER BY t3.score desc,t3.createtime asc
+	</select>
+
+</mapper>

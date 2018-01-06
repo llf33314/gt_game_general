@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.game.core.dao.stand.StandtotheendQuestionDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.game.core.entity.stand.StandtotheendQuestion">
+		<id column="id" property="id" />
+		<result column="order_id" property="orderId" />
+		<result column="ques_title" property="quesTitle" />
+		<result column="option_a" property="optionA" />
+		<result column="option_b" property="optionB" />
+		<result column="option_c" property="optionC" />
+		<result column="option_d" property="optionD" />
+		<result column="createtime" property="createtime" />
+		<result column="right_answer" property="rightAnswer" />
+		<result column="bank_id" property="bankId" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, order_id, ques_title, option_a, option_b, option_c, option_d, createtime, right_answer, bank_id
+    </sql>
+
+</mapper>

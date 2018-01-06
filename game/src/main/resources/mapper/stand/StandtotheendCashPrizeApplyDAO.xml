@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.game.core.dao.stand.StandtotheendCashPrizeApplyDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.game.core.entity.stand.StandtotheendCashPrizeApply">
+		<id column="id" property="id" />
+		<result column="apply_name" property="applyName" />
+		<result column="member_id" property="memberId" />
+		<result column="create_time" property="createTime" />
+		<result column="receive_type" property="receiveType" />
+		<result column="receive_address" property="receiveAddress" />
+		<result column="apply_status" property="applyStatus" />
+		<result column="sn_code" property="snCode" />
+		<result column="apply_phone" property="applyPhone" />
+		<result column="prize_id" property="prizeId" />
+		<result column="act_id" property="actId" />
+		<result column="record_id" property="recordId" />
+		<result column="cash_time" property="cashTime" />
+		<result column="address_id" property="addressId" />
+		<result column="au_id" property="auId" />
+	</resultMap>
+	<resultMap id="BaseResultMap1" type="com.gt.game.core.bean.stand.res.StandApplyListRes">
+		<id column="id" property="id" />
+		<result column="prize_name" property="prizeName" />
+		<result column="prize_type" property="type" />
+		<result column="prize_per" property="prizeUnit" />
+		<result column="cashTime" property="cashTime" />
+		<result column="apply_phone" property="memberPhone" />
+		<result column="member_id" property="memberId" />
+		<result column="apply_status" property="status" />
+		<result column="sn_code" property="snCode" />
+		<result column="total_score" property="score" />
+		<result column="address" property="address" />
+		<result column="addressName" property="addressName" />
+		<result column="receive_type" property="receiveType" />
+	</resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, apply_name, member_id, create_time, receive_type, receive_address, apply_status, sn_code, apply_phone, prize_id, act_id, record_id, cash_time, address_id, au_id
+    </sql>
+	<select id="getStandApplyList" resultMap="BaseResultMap1" parameterType="com.gt.game.core.bean.stand.req.StandApplyListPageReq" >
+		SELECT t1.id,t4.prize_name,t4.prize_type,t4.prize_per,t1.cash_time as cashTime,t1.apply_phone,t1.member_id,t1.apply_status,t1.sn_code,t3.total_score,t1.receive_type,t5.address AS addressName
+		from t_wx_activity_standtotheend_cash_prize_apply t1
+		LEFT JOIN t_wx_activity_standtotheend_join_record t3 on t1.record_id = t3.id
+		LEFT JOIN t_wx_activity_standtotheend_prize t4 on t1.prize_id = t4.id
+		LEFT JOIN t_wx_activity_standtotheend_cash_address t5 on t1.address_id = t5.id
+		WHERE t1.act_id = #{actId}
+		<if test="snCode != null and snCode != '' ">
+			and t1.sn_code = #{snCode}
+		</if>
+		<if test="type != -1">
+			and t4.prize_type = #{type}
+		</if>
+		<if test="status != -1">
+			and t1.apply_status = #{status}
+		</if>
+		ORDER BY t3.total_score desc,t3.createtime asc
+	</select>
+
+	<select id="findExports" resultType="map" parameterType="map" >
+		SELECT t1.id,t4.prize_name,t4.prize_type,t4.prize_per,t1.cash_time as cashTime,t1.apply_phone,t1.member_id,t1.apply_status,t1.sn_code,t3.total_score
+		from t_wx_activity_standtotheend_cash_prize_apply t1
+		LEFT JOIN t_wx_activity_standtotheend_join_record t3 on t1.record_id = t3.id
+		LEFT JOIN t_wx_activity_standtotheend_prize t4 on t1.prize_id = t4.id
+		WHERE t1.act_id = #{actId}
+		<if test="snCode != null and snCode != '' ">
+			and t1.sn_code = #{snCode}
+		</if>
+		<if test="type != -1 ">
+			and t4.prize_type = #{type}
+		</if>
+		<if test="status != -1">
+			and t1.apply_status = #{status}
+		</if>
+		ORDER BY t3.total_score desc,t3.createtime asc
+	</select>
+
+</mapper>

@@ -19,4 +19,6 @@ import java.util.Map;
 public interface DemolitiongiftboxMainDAO extends BaseMapper<DemolitiongiftboxMain> {
 
     List<DemolitionListRes> getDemolitionList(Page<DemolitionListRes> page, Map<String, Object> map);
+
+    Map<String,Object> getCount(Map<String, Object> params);
 }
