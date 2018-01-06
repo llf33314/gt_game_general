@@ -1,7 +1,7 @@
 package com.gt.game.core.service.seagold;
 
 import com.baomidou.mybatisplus.service.IService;
-import com.gt.axis.bean.wxmp.bus.BusUser;
+import com.gt.api.bean.session.BusUser;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.core.bean.seagold.req.*;
 import com.gt.game.core.bean.seagold.res.*;

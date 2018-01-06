@@ -1,12 +1,13 @@
 package com.gt.game.core.service.stand;
 
 
-import com.gt.axis.bean.wxmp.bus.BusUser;
+import com.gt.api.bean.session.BusUser;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.core.bean.stand.req.*;
 import com.gt.game.core.bean.stand.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -50,4 +51,18 @@ public interface StandService{
     ResponseDTO<List<StandJoinRecordListRes>> getStandJoinRecord(BusUser busUser, StandIdReq standIdReq);
 
     ResponseDTO<List<StandJoinDetailListRes>> getStandJoinDetail(BusUser busUser, StandRecordIdReq standRecordIdReq);
+
+    ResponseDTO<List<StandQuesbankListRes>> getStandQuesbankList(BusUser busUser);
+
+    ResponseDTO<StandQuesbankRes> getStandQuesbank(BusUser busUser, StandQuesbankIdReq standQuesbankIdReq);
+
+    ResponseDTO<StandQuesbankSaveReq> saveStandQuesbank(BusUser busUser, StandQuesbankSaveReq standQuesbankSaveReq);
+
+    ResponseDTO saveStandQuestion(BusUser busUser, StandQuestionSaveReq standQuestionSaveReq);
+
+    ResponseDTO removeStandQuesbank(BusUser busUser, StandQuesbankIdReq standQuesbankIdReq);
+
+    ResponseDTO removeStandQuestion(BusUser busUser, StandQuesbankIdReq standQuesbankIdReq);
+
+    ResponseDTO uploadStandQuestion(BusUser busUser, MultipartFile file, Integer bankId);
 }

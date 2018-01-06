@@ -149,7 +149,7 @@
 		<dependency>
 			<groupId>com.gt.axis</groupId>
 			<artifactId>gt_axis</artifactId>
-			<version>0.0.10-SNAPSHOT</version>
+			<version>0.0.13-SNAPSHOT</version>
 		</dependency>
 
 		<!-- 谷通 api -->
