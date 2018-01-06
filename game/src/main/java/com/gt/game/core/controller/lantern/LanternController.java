@@ -1,11 +1,10 @@
 package com.gt.game.core.controller.lantern;
 
 
-import com.gt.api.exception.SignException;
-import com.gt.axis.bean.wxmp.bus.BusUser;
+
+import com.gt.api.bean.session.BusUser;
 import com.gt.game.common.base.BaseController;
 import com.gt.game.common.dto.ResponseDTO;
-import com.gt.game.core.bean.demolition.res.DemolitionListRes;
 import com.gt.game.core.bean.lantern.req.*;
 import com.gt.game.core.bean.lantern.res.LanternCountActivityRes;
 import com.gt.game.core.bean.lantern.res.LanternListRes;
@@ -141,7 +140,7 @@ public class LanternController extends BaseController {
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
     })
     @ApiOperation(value = "编辑元宵点灯活动基础设置", notes = "编辑元宵点灯活动基础设置")
-    @RequestMapping(value = "/addLantern", method = RequestMethod.POST)
+    @RequestMapping(value = "/modfiyBasicsLantern", method = RequestMethod.POST)
     protected ResponseDTO modfiyBasicsLantern(@RequestBody @ApiParam(value = "编辑元宵点灯活动基础设置对象") LanternModfiyBasicsReq lanternModfiyBasicsReq, BindingResult bindingResult,
                                               HttpServletRequest request) {
         InvalidParameter(bindingResult);

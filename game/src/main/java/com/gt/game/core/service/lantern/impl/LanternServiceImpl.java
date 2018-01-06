@@ -2,29 +2,20 @@ package com.gt.game.core.service.lantern.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
-import com.gt.axis.bean.wxmp.bus.BusUser;
-import com.gt.game.common.config.ApplyProperties;
+import com.gt.api.bean.session.BusUser;
 import com.gt.game.common.dto.PageDTO;
 import com.gt.game.common.dto.ResponseDTO;
-import com.gt.game.core.bean.demolition.req.DemolitionListPageReq;
-import com.gt.game.core.bean.demolition.res.DemolitionListRes;
-import com.gt.game.core.bean.demolition.res.DemolitionRes;
 import com.gt.game.core.bean.lantern.req.*;
 import com.gt.game.core.bean.lantern.res.LanternCountActivityRes;
 import com.gt.game.core.bean.lantern.res.LanternListRes;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
-import com.gt.game.core.dao.demolition.DemolitiongiftboxMainDAO;
-import com.gt.game.core.entity.demolition.DemolitiongiftboxMain;
 import com.gt.game.core.entity.lantern.*;
-import com.gt.game.core.service.demolition.DemolitionService;
-import com.gt.game.core.service.demolition.DemolitiongiftboxMainService;
 import com.gt.game.core.service.lantern.*;
 import com.gt.game.core.util.CommonUtil;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.applet.Main;
+
 
 import java.util.*;
 
@@ -369,5 +360,10 @@ public class LanternServiceImpl implements LanternService {
                 }
             }
         }
+    }
+
+    @Override
+    public ResponseDTO<List<LanternListRes>> getWinningList(BusUser busUser, LanternGetWinningReq lanternGetWinningReq) {
+        return null;
     }
 }

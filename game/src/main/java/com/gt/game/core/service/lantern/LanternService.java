@@ -1,15 +1,15 @@
 package com.gt.game.core.service.lantern;
 
 
-import com.baomidou.mybatisplus.service.IService;
-import com.gt.axis.bean.wxmp.bus.BusUser;
+
+import com.gt.api.bean.session.BusUser;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.core.bean.lantern.req.*;
 import com.gt.game.core.bean.lantern.res.LanternCountActivityRes;
 import com.gt.game.core.bean.lantern.res.LanternListRes;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
-import com.gt.game.core.entity.lantern.LanternAd;
+
 
 import java.util.List;
 
