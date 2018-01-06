@@ -44,7 +44,7 @@ public class StandQuestionSaveReq {
 	/**
 	 * 正确答案
 	 */
-	@ApiModelProperty("正确答案")
+	@ApiModelProperty("正确答案 传 A 或 B 或 C 或 D")
 	private String rightAnswer;
 
 	/**
