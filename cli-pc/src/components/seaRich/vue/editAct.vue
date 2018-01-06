@@ -1,30 +1,13 @@
-<style lang="less">
-  .bgMusic{
-    .material-box {
-      height: 29px !important;
-      width: 72px !important;
-      line-height: 29px;
-
-      .plus-box {
-        color: #fff;
-        background-color: #20a0ff;
-        border-color: #20a0ff;
-        font-size: 13px;
-        line-height: 28px;
-      }
-    }
-  }
-</style> 
 <template>
 <section>
 <div class="hd-common">
     <el-breadcrumb separator="/" class="gt-crumbs">
       <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
       <el-breadcrumb-item :to="{ path:'/seaRich/index' }">大海捞金</el-breadcrumb-item>  
-      <el-breadcrumb-item>创建活动</el-breadcrumb-item>   
+      <el-breadcrumb-item>编辑活动</el-breadcrumb-item>   
     </el-breadcrumb>  
     <div class="gt-content">
-        <el-tabs v-model="active" type="card"  @tab-click="handleClick">
+        <el-tabs v-model="active" type="card">
             <el-tab-pane label="基础设置" name="0"></el-tab-pane>
             <el-tab-pane label="规则设置" name="1"></el-tab-pane>
             <el-tab-pane label="兑奖设置" name="2"></el-tab-pane>
@@ -126,11 +109,8 @@
                 <el-table-column label="奖品类型">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.name0" placeholder="请选择"> 
-                            <el-option label="粉币"       :value="1"></el-option>
-                            <el-option label="手机流量"   :value="2"></el-option>
-                            <el-option label="实体物品"   :value="4"></el-option>
-                            <el-option label="积分"       :value="6"></el-option> 
-                            <el-option label="优惠券"       :value="7"></el-option> 
+                                <el-option v-for="item in options" :key="item.value" :label="item.name"  :value="item.value">
+                                </el-option>
                         </el-select>
                     </template>
                 </el-table-column> 
@@ -155,7 +135,7 @@
                   </template>
                 </el-table-column>
                 <el-table-column label="奖品图片">
-                    <template slot-scope="scope" v-if="scope.row.name0==4">  
+                    <template slot-scope="scope" v-if="scope.row.name0==4||scope.row.name0=='实体物品'">  
                             <span  class="imgRow" >
                                 <el-upload  action="''" list-type="picture-card" :file-list="scope.row.name5"  :on-remove="handleRemove">
                                 </el-upload>
@@ -183,19 +163,17 @@
         </div>
         <!-- 按钮 -->
         <div class="h80"></div> 
-        <div class="btnRow">
+         <div class="btnRow"> 
             <el-button type="primary" @click="lastStep()" :disabled="this.isSubmit" >保存</el-button>   
             <el-button   @click="backUrl()">返回</el-button> 
-        </div> 
-
-
+        </div>  
 </div>   
 </div>
 </section>
 </template>
 <script>
 import { 
- saveSeagold,getAct
+saveSeagold,getAct,getPrizeType
 }from './../api/api'
 export default {
   data() {
@@ -288,9 +266,9 @@ export default {
         phone:[{ required: true,type: 'text', validator:iiPass,trigger: "blur" }], 
         desc: [{ required: true,message: "兑奖说明不能为空", trigger: "blur" }], 
       },
-      explain: "",
+       options: [],
       ruleForm4: [{ 
-          name0: 1,
+          name0: "",
           name1: "",
           name2: "",
           name3: "",
@@ -298,7 +276,7 @@ export default {
           name5:[] 
         },
         { 
-          name0: 1,
+          name0: "",
           name1: "",
           name2: "",
           name3: "",
@@ -313,7 +291,20 @@ export default {
         this.ruleForm1.music = e.music.name
         this.ruleForm1.musicUrl = e.music.url
     },  
-      
+    //获取奖品类型-----------star
+      getPrizeTypeData(){
+        getPrizeType().then(data=>{
+          if (data.code == 100) {
+            console.log(data,1233);
+            this.options=data.data
+             console.log(this.options,444);
+          } else {
+              this.$message.error(data.msg + "错误码：[" + data.code + "]");
+          }
+        }).catch(() => {
+            this.$message({ type: "info", message: "网络问题，请刷新重试~" });
+        }); 
+      }, 
     addrPass(rule, value, callback) {
       if (!value) {
         callback(new Error("不能为空"));
@@ -374,7 +365,7 @@ export default {
       this.ruleForm4[i].name5=e.url
     }, 
     addForm4(){ 
-        this.ruleForm4.push({ name0: 1, name1: "", name2: "", name3: "", name4: "", name5: []},)
+        this.ruleForm4.push({ name0:"", name1: "", name2: "", name3: "", name4: "", name5: []},)
     },
     delForm4(val){
         this.ruleForm4.splice(val, 1); 
@@ -382,7 +373,7 @@ export default {
     next(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) { 
-          this.active++;
+          this.submit;
         } else {
          console.log("error submit!!");
         }
@@ -412,7 +403,7 @@ export default {
     lastStep() {
       for (let i = 0; i < this.ruleForm4.length; i++) { 
         var regu =/^[1-9]\d*$/;
-        if(!this.ruleForm4[i].name1||!this.ruleForm4[i].name2||!this.ruleForm4[i].name3||!this.ruleForm4[i].name4){
+        if(!this.ruleForm4[i].name0||!this.ruleForm4[i].name1||!this.ruleForm4[i].name2||!this.ruleForm4[i].name3||!this.ruleForm4[i].name4){
             this.$message.error("表单不能留空，请填写完整~");
             return false
         }else if (!regu.test(this.ruleForm4[i].name1)) {
@@ -467,6 +458,19 @@ export default {
                     probabiliy :this.ruleForm4[i].name4,  //概率
                     seagoldPrizeImgReqs:[]//图片
                 }
+                if (arr4.type == "粉币"){
+                    arr4.type =1
+                 }else if (arr4.type == "手机流量"){
+                    arr4.type =2 
+                }else if (arr4.type == "实体物品"){
+                    arr4.type =4 
+                }
+                else if (arr4.type == "积分"){
+                    arr4.type =6
+                }
+                else if (arr4.type == "优惠券"){
+                    arr4.type =7 
+                } 
                 if(arr4.type==4){
                     for(var j=0;j<this.ruleForm4[i].name5.length;j++){
                         var imgarr={
@@ -506,8 +510,7 @@ export default {
          saveSeagold(data).then(data=>{
           this.isSubmit==true
           if (data.code == 100) { 
-               console.log(12336666)
-               this.$router.push({path: '/seaRich/index'});
+              this.$message({ message: "操作成功", type: "success"}); 
           } else {
               this.isSubmit==false
               this.$message.error(data.msg + "错误码：[" + data.code + "]");
@@ -518,7 +521,14 @@ export default {
         }); 
     } 
     },  
-        //初始化--
+    backUrl(){
+         window.history.go(-1);
+    },
+    test(){
+        console.log(1122);
+    },
+
+           //初始化--
     getActData(){
         var id=this.$router.history.current.query.id
         getAct(id).then(data=>{
@@ -527,16 +537,19 @@ export default {
             //基础设置
             this.ruleForm1.name=data.data.name
             this.ruleForm1.name1=[data.data.activityBeginTime,data.data.activityEndTime] 
-            this.ruleForm1.music = data.data.musicUrl.split("/")[data.data.musicUrl.split("/").length-1]; 
+            //
             this.ruleForm1.musicUrl=data.data.musicUrl  
+            if(data.data.musicUrl){
+               this.ruleForm1.music = data.data.musicUrl.split("/")[data.data.musicUrl.split("/").length-1]
+            } 
             //规则设置
             if(data.data.followQrCode){
                 this.ruleForm2.code=window.IMAGEURL+data.data.followQrCode
             } 
             this.ruleForm2.freePeople=String(data.data.manTotalChance)
-            this.ruleForm2.freeNum=String(data.data.manDayChance)
-            this.ruleForm2.time=String(data.data.gameTime)
-            this.ruleForm2.desc=data.data.actRule
+            this.ruleForm2.freeNum   =String(data.data.manDayChance)
+            this.ruleForm2.time      =String(data.data.gameTime)
+            this.ruleForm2.desc      =data.data.actRule
             //兑奖设置
             this.ruleForm3.date=[data.data.cashPrizeBeginTime,data.data.cashPrizeEndTime]
             this.ruleForm3.type=data.data.receiveType.split(',')
@@ -559,9 +572,20 @@ export default {
                     name2  : data.data.seagoldPrizeReqs[i].prizeName, 
                     name3  : String(data.data.seagoldPrizeReqs[i].num), 
                     name4  : data.data.seagoldPrizeReqs[i].probabiliy, 
-                    name5:[] 
+                    name5  :[] 
                 };
-                if(newabc1.name0==4){
+                if (newabc1.name0 == 1) {
+                newabc1.name0  = "粉币";
+                }else if(newabc1.name0  == 2){
+                newabc1.name0  = "手机流量"; 
+                }else if(newabc1.name0  == 4){
+                newabc1.name0  = "实体物品";
+                }  else if(newabc1.name0  == 6){
+                newabc1.name0  = "积分";
+                } else if(newabc1.name0  == 7){
+                newabc1.name0  = "优惠券";
+                } 
+                if(newabc1.name0=="实体物品"){
                     for(var j = 0; j < data.data.seagoldPrizeReqs[i].seagoldPrizeImgReqs.length; j++){
                         var imgarr={
                              url:window.IMAGEURL+data.data.seagoldPrizeReqs[i].seagoldPrizeImgReqs[j].imgUrl
@@ -579,18 +603,10 @@ export default {
             this.$message({type: "info", message: "网络问题，请刷新重试~" });
         }); 
     },
-    backUrl(){
-         window.history.go(-1);
-    },
-        handleClick(tab, event) {
-        console.log(tab, event);
-      },
-    test(){
-        console.log(1122);
-    }
   },
- mounted() {
+   mounted() {
     this.getActData();
+    this.getPrizeTypeData()
   }
 };
 </script>

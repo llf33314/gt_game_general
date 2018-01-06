@@ -48,7 +48,7 @@
           <el-table-column  width="450" label="操作">
             <template slot-scope="scope"> 
               <el-button class="gt-button-normal blue" v-if="scope.row.isEdit==1" @click="editActive(scope.row.id)">编辑</el-button>
-              <el-button class="gt-button-normal blue" @click="record(scope.row.id)">中奖纪录</el-button>
+              <el-button class="gt-button-normal blue"  v-if="scope.row.status!=0" @click="record(scope.row.id)">中奖纪录</el-button>
               <el-button class="gt-button-normal blue" @click="askPreview(scope.row.id)">预览链接</el-button>
               <el-button class="gt-button-normal blue" @click="impower(scope.row.id)">核销授权</el-button>
               <el-button class="gt-button-normal"       @click="delBtn(scope.row.id)">删除</el-button> 
@@ -62,8 +62,7 @@
         </div> 
     </div> 
     <!-- 链接 -->
-    <gt-copy-url :copeData="copeData"></gt-copy-url>
-    
+    <gt-copy-url :copeData="copeData"></gt-copy-url> 
 </div>
 </section>
 </template>
@@ -94,7 +93,7 @@ import {
       //初始化数据-----------------------------------star
       getdata(){
         var params    ={};
-        params.status =this.activeName;
+        params.status =Number(this.activeName);
         params.name   =this.keyWord;
         params.current=this.current;
         params.size   =10;
