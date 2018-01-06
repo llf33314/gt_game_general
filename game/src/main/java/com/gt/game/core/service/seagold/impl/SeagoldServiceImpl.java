@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.axis.bean.member.member.MemberReq;
 import com.gt.axis.bean.member.member.MemberRes;
-import com.gt.axis.bean.wxmp.bus.BusUser;
+import com.gt.api.bean.session.BusUser;
 import com.gt.axis.bean.wxmp.dict.DictApiReq;
 import com.gt.axis.bean.wxmp.dict.DictApiRes;
 import com.gt.axis.bean.wxmp.fenbiflow.FenbiFlowRecord;
@@ -37,6 +37,7 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -308,6 +309,7 @@ public class SeagoldServiceImpl implements SeagoldService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResponseDTO saveSeagold(BusUser busUser, SeagoldSaveReq seagoldSaveReq) {
         SeagoldMain seagoldMain = null;
         Double num = 0.0;
@@ -432,6 +434,7 @@ public class SeagoldServiceImpl implements SeagoldService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResponseDTO removeSeagold(BusUser busUser, SeagoldIdReq seagoldIdReq) {
         SeagoldMain seagoldMain = seagoldMainService.selectById(seagoldIdReq.getId());
         if(CommonUtil.isNotEmpty(seagoldMain)){

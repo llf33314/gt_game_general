@@ -58,8 +58,8 @@
 		ORDER BY t3.total_score desc,t3.createtime asc
 	</select>
 
-	<select id="queryRecodList" resultType="map" parameterType="map" >
-		SELECT t1.id,t4.prize_name,t4.prize_type,t4.prize_per,t1.cash_time as cashTime,t1.apply_phone,t2.nickname,t1,member_id,t1.apply_status,t1.sn_code,t3.total_score
+	<select id="findExports" resultType="map" parameterType="map" >
+		SELECT t1.id,t4.prize_name,t4.prize_type,t4.prize_per,t1.cash_time as cashTime,t1.apply_phone,t1.member_id,t1.apply_status,t1.sn_code,t3.total_score
 		from t_wx_activity_standtotheend_cash_prize_apply t1
 		LEFT JOIN t_wx_activity_standtotheend_join_record t3 on t1.record_id = t3.id
 		LEFT JOIN t_wx_activity_standtotheend_prize t4 on t1.prize_id = t4.id

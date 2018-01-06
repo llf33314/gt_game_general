@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.gt.axis.bean.member.member.MemberReq;
 import com.gt.axis.bean.member.member.MemberRes;
-import com.gt.axis.bean.wxmp.bus.BusUser;
+import com.gt.api.bean.session.BusUser;
 import com.gt.axis.bean.wxmp.dict.DictApiReq;
 import com.gt.axis.bean.wxmp.dict.DictApiRes;
 import com.gt.axis.bean.wxmp.fenbiflow.FenbiFlowRecord;
@@ -213,6 +213,7 @@ public class NewYearServiceImpl implements NewYearService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResponseDTO editNewYearApply(BusUser busUser, NewYearApplyIdReq newYearApplyIdReq) {
         NewYearGameCashPrizeApply newYearGameCashPrizeApply = newYearGameCashPrizeApplyService.selectById(newYearApplyIdReq.getId());
         if(CommonUtil.isNotEmpty(newYearGameCashPrizeApply)){

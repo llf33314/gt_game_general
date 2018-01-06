@@ -1,7 +1,7 @@
 package com.gt.game.core.controller.stand;
 
 
-import com.gt.axis.bean.wxmp.bus.BusUser;
+import com.gt.api.bean.session.BusUser;
 import com.gt.game.common.base.BaseController;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.core.bean.stand.req.*;
@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -343,11 +344,11 @@ public class StandController extends BaseController {
     })
     @ApiOperation(value = "获取用户信息列表", notes = "获取用户信息列表")
     @RequestMapping(value = "/getStandJoinRecord", method = RequestMethod.POST)
-    protected ResponseDTO getStandJoinRecord( @RequestBody @ApiParam("请求参数") StandIdReq StandIdReq,
+    protected ResponseDTO getStandJoinRecord( @RequestBody @ApiParam("请求参数") StandIdReq standIdReq,
             HttpServletRequest request) {
         try {
             BusUser busUser = CommonUtil.getLoginUser(request);
-            ResponseDTO<List<StandJoinRecordListRes>> responseDTO = standService.getStandJoinRecord(busUser,StandIdReq);
+            ResponseDTO<List<StandJoinRecordListRes>> responseDTO = standService.getStandJoinRecord(busUser,standIdReq);
             return responseDTO;
         } catch (StandException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
@@ -378,6 +379,142 @@ public class StandController extends BaseController {
             return ResponseDTO.createByError();
         }
     }
+
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+            @ApiResponse(code = 1, message = "响应对象", response = StandQuesbankListRes.class),
+    })
+    @ApiOperation(value = "获取题库列表", notes = "获取题库列表")
+    @RequestMapping(value = "/getStandQuesbankList", method = RequestMethod.POST)
+    protected ResponseDTO getStandQuesbankList(   HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO<List<StandQuesbankListRes>> responseDTO = standService.getStandQuesbankList(busUser);
+            return responseDTO;
+        } catch (StandException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+            @ApiResponse(code = 1, message = "响应对象", response = StandQuesbankRes.class),
+    })
+    @ApiOperation(value = "获取题库", notes = "获取题库")
+    @RequestMapping(value = "/getStandQuesbank", method = RequestMethod.POST)
+    protected ResponseDTO getStandQuesbank(@RequestBody @ApiParam("请求参数") StandQuesbankIdReq standQuesbankIdReq , HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO<StandQuesbankRes> responseDTO = standService.getStandQuesbank(busUser,standQuesbankIdReq);
+            return responseDTO;
+        } catch (StandException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+            @ApiResponse(code = 1, message = "响应对象", response = StandQuesbankSaveReq.class),
+    })
+    @ApiOperation(value = "保存题库", notes = "保存题库")
+    @RequestMapping(value = "/saveStandQuesbank", method = RequestMethod.POST)
+    protected ResponseDTO saveStandQuesbank(@RequestBody @ApiParam("请求参数") StandQuesbankSaveReq standQuesbankSaveReq , HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO<StandQuesbankSaveReq> responseDTO = standService.saveStandQuesbank(busUser,standQuesbankSaveReq);
+            return responseDTO;
+        } catch (StandException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+    })
+    @ApiOperation(value = "保存题目", notes = "保存题目")
+    @RequestMapping(value = "/saveStandQuestion", method = RequestMethod.POST)
+    protected ResponseDTO saveStandQuestion(@RequestBody @ApiParam("请求参数") StandQuestionSaveReq standQuestionSaveReq , HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO responseDTO = standService.saveStandQuestion(busUser,standQuestionSaveReq);
+            return responseDTO;
+        } catch (StandException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+    })
+    @ApiOperation(value = "删除题库", notes = "删除题库")
+    @RequestMapping(value = "/removeStandQuesbank", method = RequestMethod.POST)
+    protected ResponseDTO removeStandQuesbank(@RequestBody @ApiParam("请求参数") StandQuesbankIdReq standQuesbankIdReq , HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO responseDTO = standService.removeStandQuesbank(busUser,standQuesbankIdReq);
+            return responseDTO;
+        } catch (StandException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+    })
+    @ApiOperation(value = "删除题目", notes = "删除题目")
+    @RequestMapping(value = "/removeStandQuestion", method = RequestMethod.POST)
+    protected ResponseDTO removeStandQuestion(@RequestBody @ApiParam("请求参数") StandQuesbankIdReq standQuesbankIdReq , HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO responseDTO = standService.removeStandQuestion(busUser,standQuesbankIdReq);
+            return responseDTO;
+        } catch (StandException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+
+
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+    })
+    @ApiOperation(value = "导入题目", notes = "导入题目")
+    @RequestMapping(value = "/uploadStandQuestion", method = RequestMethod.POST)
+    protected ResponseDTO uploadStandQuestion(
+            @RequestParam @ApiParam("file") MultipartFile file ,@RequestParam @ApiParam("题库id") Integer bankId , HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO responseDTO = standService.uploadStandQuestion(busUser,file,bankId);
+            return responseDTO;
+        } catch (StandException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+
 
 
 }

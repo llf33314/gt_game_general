@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.gt.axis.bean.member.member.MemberReq;
 import com.gt.axis.bean.member.member.MemberRes;
-import com.gt.axis.bean.wxmp.bus.BusUser;
+import com.gt.api.bean.session.BusUser;
 import com.gt.axis.bean.wxmp.dict.DictApiReq;
 import com.gt.axis.bean.wxmp.dict.DictApiRes;
 import com.gt.axis.bean.wxmp.fenbiflow.FenbiFlowRecord;
@@ -31,6 +31,8 @@ import com.gt.game.core.exception.stand.StandException;
 import com.gt.game.core.service.stand.*;
 import com.gt.game.core.util.CommonUtil;
 import com.gt.game.core.util.DateTimeKit;
+import org.apache.commons.collections.IteratorUtils;
+import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -38,7 +40,10 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -76,6 +81,12 @@ public class StandServiceImpl implements StandService {
 
     @Autowired
     StandtotheendJoinDetailService standtotheendJoinDetailService;
+
+    @Autowired
+    StandtotheendQuesbankService standtotheendQuesbankService;
+
+    @Autowired
+    StandtotheendQuestionService standtotheendQuestionService;
 
     @Autowired
     StandtotheendCashPrizeApplyDAO standtotheendCashPrizeApplyDAO;
@@ -209,6 +220,7 @@ public class StandServiceImpl implements StandService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResponseDTO editStandApply(BusUser busUser, StandApplyIdReq standApplyIdReq) {
         StandtotheendCashPrizeApply standtotheendCashPrizeApply = standtotheendCashPrizeApplyService.selectById(standApplyIdReq.getId());
         if(CommonUtil.isNotEmpty(standtotheendCashPrizeApply)){
@@ -287,6 +299,7 @@ public class StandServiceImpl implements StandService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResponseDTO removeStand(BusUser busUser, StandIdReq standIdReq) {
         StandtotheendMain StandtotheendMain = standtotheendMainService.selectById(standIdReq.getId());
         if(CommonUtil.isNotEmpty(StandtotheendMain)){
@@ -363,6 +376,7 @@ public class StandServiceImpl implements StandService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResponseDTO saveStand(BusUser busUser, StandSaveReq standSaveReq) {
         StandtotheendMain standtotheendMain = null;
         Double num = 0.0;
@@ -549,7 +563,7 @@ public class StandServiceImpl implements StandService {
      * @return
      */
     @Override
-    public Map<String, Object> exports(Map<String, Object> params) {
+    public Map<String, Object> exports(Map<String, Object> params){
         Map<String, Object> msg = new HashMap<>();
         boolean result = true;
         String message = "生成成功！";
@@ -570,12 +584,7 @@ public class StandServiceImpl implements StandService {
                 MemberReq memberReq = new MemberReq();
                 memberReq.setBusId(main.getBusId());
                 memberReq.setIds(ids.toString());
-                AxisResult<List<MemberRes>> axisResult = null;
-                try {
-                    axisResult = MemberServer.findMemberByIds(memberReq);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                AxisResult<List<MemberRes>> axisResult = MemberServer.findMemberByIds(memberReq);
                 List<MemberRes> memberResList = null;
                 if (CommonUtil.isNotEmpty(axisResult)) {
                     memberResList = axisResult.getData();
@@ -626,13 +635,232 @@ public class StandServiceImpl implements StandService {
         return ResponseDTO.createBySuccess("获取成功",standJoinRecordListResList);
     }
     /**
-     * 获取用户信息列表
+     * 获取答题记录列表
      * @param standRecordIdReq
      * @return
      */
     @Override
     public ResponseDTO<List<StandJoinDetailListRes>> getStandJoinDetail(BusUser busUser, StandRecordIdReq standRecordIdReq) {
-        return null;
+        List<StandtotheendJoinDetail> standtotheendJoinDetailList = standtotheendJoinDetailService.selectList(
+                new EntityWrapper<StandtotheendJoinDetail>().eq("record_id",standRecordIdReq.getId()).orderBy("id",false));
+        List<StandJoinDetailListRes> standJoinDetailListResList = new ArrayList<>();
+        for(StandtotheendJoinDetail standtotheendJoinDetail :standtotheendJoinDetailList){
+            StandJoinDetailListRes standJoinRecordListRes = new StandJoinDetailListRes();
+            BeanUtils.copyProperties(standtotheendJoinDetail,standJoinRecordListRes);
+            standJoinDetailListResList.add(standJoinRecordListRes);
+        }
+        return ResponseDTO.createBySuccess("获取成功",standJoinDetailListResList);
+    }
+    /**
+     * 获取题库列表
+     * @param busUser
+     * @return
+     */
+    @Override
+    public ResponseDTO<List<StandQuesbankListRes>> getStandQuesbankList(BusUser busUser) {
+        List<StandtotheendQuesbank> standtotheendQuesbankList = standtotheendQuesbankService.selectList(
+                new EntityWrapper<StandtotheendQuesbank>().eq("bus_id",busUser.getId()).orderBy("id",false));
+        List<StandQuesbankListRes> standQuesbankListResList = new ArrayList<>();
+        for(StandtotheendQuesbank standtotheendQuesbank :standtotheendQuesbankList){
+            StandQuesbankListRes standJoinRecordListRes = new StandQuesbankListRes();
+            BeanUtils.copyProperties(standtotheendQuesbank,standJoinRecordListRes);
+            standQuesbankListResList.add(standJoinRecordListRes);
+        }
+        return ResponseDTO.createBySuccess("获取成功",standQuesbankListResList);
+    }
+    /**
+     * 获取题库
+     * @param busUser
+     * @return
+     */
+    @Override
+    public ResponseDTO<StandQuesbankRes> getStandQuesbank(BusUser busUser, StandQuesbankIdReq standQuesbankIdReq) {
+        StandQuesbankRes standQuesbankRes = new StandQuesbankRes();
+        StandtotheendQuesbank standtotheendQuesbank = standtotheendQuesbankService.selectById(standQuesbankIdReq.getId());
+        if(CommonUtil.isNotEmpty(standQuesbankRes)){
+            BeanUtils.copyProperties(standtotheendQuesbank,standQuesbankRes);
+            List<StandtotheendQuestion> standtotheendQuestionList = standtotheendQuestionService.selectList(new EntityWrapper<StandtotheendQuestion>()
+                                                                                            .eq("bank_id",standQuesbankIdReq.getId()).orderBy("id",false));
+            List<StandQuestionRes> standQuestionResList = new ArrayList<>();
+            for(StandtotheendQuestion standtotheendQuestion : standtotheendQuestionList){
+                StandQuestionRes standQuestionRes = new StandQuestionRes();
+                BeanUtils.copyProperties(standtotheendQuestion,standQuestionRes);
+                standQuestionResList.add(standQuestionRes);
+            }
+            standQuesbankRes.setStandQuestionResList(standQuestionResList);
+        }
+        return ResponseDTO.createBySuccess("获取成功",standQuesbankRes);
+    }
+    /**
+     * 保存题库
+     * @param busUser
+     * @return
+     */
+    @Override
+    public ResponseDTO<StandQuesbankSaveReq> saveStandQuesbank(BusUser busUser, StandQuesbankSaveReq standQuesbankSaveReq) {
+        StandtotheendQuesbank standtotheendQuesbank = null;
+        if(standQuesbankSaveReq.getId() == 0){ //新增
+            standtotheendQuesbank  =new StandtotheendQuesbank();
+            standtotheendQuesbank.setBankName(standQuesbankSaveReq.getBankName());
+            standtotheendQuesbank.setCreateTime(new Date());
+            standtotheendQuesbank.setBusId(busUser.getId());
+            standtotheendQuesbank.setQuesAmount(0);
+            standtotheendQuesbankService.insert(standtotheendQuesbank);
+            standQuesbankSaveReq.setId(standtotheendQuesbank.getId());
+        }else{ //编辑
+            isEdit(standQuesbankSaveReq.getId());
+            standtotheendQuesbank = standtotheendQuesbankService.selectById(standQuesbankSaveReq.getId());
+            if(CommonUtil.isNotEmpty(standtotheendQuesbank)){
+                standtotheendQuesbank.setBankName(standQuesbankSaveReq.getBankName());
+                standtotheendQuesbankService.updateById(standtotheendQuesbank);
+            }
+        }
+        return ResponseDTO.createBySuccess("保存成功",standQuesbankSaveReq);
+    }
+    /**
+     * 保存题目
+     * @param busUser
+     * @return
+     */
+    @Override
+    public ResponseDTO saveStandQuestion(BusUser busUser, StandQuestionSaveReq standQuestionSaveReq) {
+        StandtotheendQuestion standtotheendQuestion = null;
+        isEdit(standQuestionSaveReq.getBankId());
+        if(standQuestionSaveReq.getId() == 0){ //新增
+            standtotheendQuestion  =new StandtotheendQuestion();
+            standtotheendQuestion.setCreatetime(new Date());
+            BeanUtils.copyProperties(standQuestionSaveReq,standtotheendQuestion);
+            standtotheendQuestionService.insert(standtotheendQuestion);
+        }else{ //编辑
+            standtotheendQuestion = standtotheendQuestionService.selectById(standQuestionSaveReq.getId());
+            if(CommonUtil.isNotEmpty(standtotheendQuestion)){
+                BeanUtils.copyProperties(standQuestionSaveReq,standtotheendQuestion);
+                standtotheendQuestionService.updateById(standtotheendQuestion);
+            }
+        }
+        return ResponseDTO.createBySuccess("保存成功");
+    }
+    public void isEdit(Integer id){
+        List<StandtotheendMain> mains = standtotheendMainService.selectList(new EntityWrapper<StandtotheendMain>().eq("bank_id",id));
+        Date date = new Date();
+        for (StandtotheendMain standtotheendMain : mains){
+            if(standtotheendMain.getActivityBegintime().getTime() < date.getTime() && standtotheendMain.getActivityEndtime().getTime() > date.getTime() ){
+                throw new StandException(ResponseEnums.STAND_HAS14);
+            }
+        }
+    }
+    /**
+     * 删除题库
+     * @param busUser
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseDTO removeStandQuesbank(BusUser busUser, StandQuesbankIdReq standQuesbankIdReq) {
+        isEdit(standQuesbankIdReq.getId());
+        standtotheendQuesbankService.deleteById(standQuesbankIdReq.getId());
+        standtotheendQuestionService.delete(new EntityWrapper<StandtotheendQuestion>().eq("bank_id",standQuesbankIdReq.getId()));
+        return ResponseDTO.createBySuccess("删除成功");
+    }
+    /**
+     * 删除题目
+     * @param busUser
+     * @return
+     */
+    @Override
+    public ResponseDTO removeStandQuestion(BusUser busUser, StandQuesbankIdReq standQuesbankIdReq) {
+        StandtotheendQuestion standtotheendQuestion = standtotheendQuestionService.selectById(standQuesbankIdReq.getId());
+        if(CommonUtil.isNotEmpty(standtotheendQuestion)){
+            isEdit(standtotheendQuestion.getBankId());
+            standtotheendQuestionService.deleteById(standQuesbankIdReq.getId());
+        }
+        return ResponseDTO.createBySuccess("删除成功");
+    }
+    /**
+     * 导入题目
+     * @param busUser
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseDTO uploadStandQuestion(BusUser busUser, MultipartFile file, Integer bankId) {
+        isEdit(bankId);
+        String last = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+        boolean flag=false;
+        if(!last.equalsIgnoreCase(".xls")&&!last.equalsIgnoreCase(".xlsx")){
+           // strMsg="格式错误！请上传Excel文件，文件后缀为xls或者xlsx。";
+            throw new StandException(ResponseEnums.STAND_HAS15);
+        }
+        //导入
+        Workbook workbook=null;
+        try {
+            if(last.equalsIgnoreCase("xls")){
+                workbook = new HSSFWorkbook(file.getInputStream());
+            }else{
+                workbook = WorkbookFactory.create(file.getInputStream());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(CommonUtil.isEmpty(workbook)){
+            throw new StandException(ResponseEnums.STAND_HAS16);
+        }
+        Sheet sheetAt = workbook.getSheetAt(0);
+        int physicalNumberOfRows = sheetAt.getPhysicalNumberOfRows();
+        //检查
+        for(int i =1;i<physicalNumberOfRows;i++){
+            Row row = sheetAt.getRow(i);
+            Iterator<Cell> cellIterator = row.cellIterator();
+            List<Cell> list = IteratorUtils.toList(cellIterator);
+            if(list.size()!=6){
+               // strMsg="导入失败,格式有误！第"+i+1+"行或存在空值！请修正后再尝试导入!";
+                throw new StandException(ResponseEnums.STAND_HAS17);
+            }
+        }
+        List<StandtotheendQuestion> questions = new ArrayList<>();
+        for(int i =1;i<physicalNumberOfRows;i++){
+            Row row = sheetAt.getRow(i);
+            Iterator<Cell> cellIterator = row.cellIterator();
+            List<HSSFCell> list = IteratorUtils.toList(cellIterator);
+            StandtotheendQuestion question = new StandtotheendQuestion();
+            question.setBankId(bankId);
+            question.setCreatetime(DateTimeKit.getNow());
+            for(int j=0;j<list.size();j++){
+                Cell cell = list.get(j);
+                switch (j) {
+                    case 0:
+                        question.setQuesTitle(cell.toString().trim());
+                        break;
+                    case 1:
+                        question.setOptionA(cell.toString().trim());
+                        break;
+                    case 2:
+                        question.setOptionB(cell.toString().trim());
+                        break;
+                    case 3:
+                        question.setOptionC(cell.toString().trim());
+                        break;
+                    case 4:
+                        question.setOptionD(cell.toString().trim());
+                        break;
+                    case 5:
+                        question.setRightAnswer(cell.toString().trim());
+                        break;
+                    default:
+                        //strMsg="导入失败,格式有误！";
+                        throw new StandException(ResponseEnums.STAND_HAS18);
+                }
+            }
+            //保存
+            questions.add(question);
+        }
+        //保存
+        standtotheendQuestionService.insertBatch(questions);
+        //更新题库数量
+        StandtotheendQuesbank bank = standtotheendQuesbankService.selectById(bankId);
+        bank.setQuesAmount(bank.getQuesAmount()+questions.size());
+        standtotheendQuesbankService.updateById(bank);
+        return ResponseDTO.createBySuccess("导入成功");
     }
 
     private HSSFWorkbook exportExcelForRecoding(List<Map<String, Object>> list, String title) {
@@ -713,7 +941,7 @@ public class StandServiceImpl implements StandService {
                             "yyyy-MM-dd HH:mm")),
                     font1);
             createCell(wb, rowData, 5, delWithColumn(map.get("apply_phone")), font1);
-            createCell(wb, rowData, 6, CommonUtil.isEmpty(map.get("nickname"))?"游客":CommonUtil.Blob2String(map.get("nickname")), font1);
+            createCell(wb, rowData, 6, CommonUtil.isEmpty(map.get("nickname"))?"未知用户":map.get("nickname").toString(), font1);
             if ("1".equals(delWithColumn(map.get("apply_status")).toString())) {
                 createCell(wb, rowData, 7, "未兑奖", font1);
             } else if ("2".equals(delWithColumn(map.get("apply_status")).toString())) {

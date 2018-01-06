@@ -1,7 +1,7 @@
 package com.gt.game.core.controller.demolition;
 
 
-import com.gt.axis.bean.wxmp.bus.BusUser;
+import com.gt.api.bean.session.BusUser;
 import com.gt.game.common.base.BaseController;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.core.bean.demolition.req.*;

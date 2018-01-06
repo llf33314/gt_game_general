@@ -1,7 +1,7 @@
 package com.gt.game.core.util;
 
 
-import com.gt.axis.bean.wxmp.bus.BusUser;
+import com.gt.api.bean.session.BusUser;
 import com.gt.axis.bean.wxmp.bus.BusUserApiReq;
 import com.gt.axis.bean.wxmp.fenbiflow.FenbiFlowRecord;
 import com.gt.axis.bean.wxmp.wxpublic.WxPublicUsers;
