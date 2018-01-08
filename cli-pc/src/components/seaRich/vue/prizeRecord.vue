@@ -44,7 +44,7 @@
           </el-table-column>
           <el-table-column prop="cashTime" label="兑奖时间"> 
             <template slot-scope="scope">
-              {{scope.row.cashTime|parseTime('{y}-{m}-{d}')}}
+              {{scope.row.cashTime|parseTime('{y}-{m}-{d} {h}:{i}')}}
             </template>           
           </el-table-column>
           <el-table-column prop="status" label="状态">  

@@ -52,7 +52,7 @@
 </template>
 <script>
 import {  
-getUserList,getUserDetail
+getUserList,getUserDetail,delUser
 }from './../api/api'
   export default{
     data() {
@@ -70,6 +70,7 @@ getUserList,getUserDetail
       };
     },
     methods: {  
+       //初始化---------------------Star
        getData(){
         var params    ={}; 
         params.id  =this.$router.history.current.query.id; 
@@ -102,8 +103,24 @@ getUserList,getUserDetail
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
         }); 
       },
+      //删除---------------------Star
       delBtn(val){
-        console.log(val)
+         this.$confirm("确定要删除此用户吗?", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning" 
+            }).then(() => {  
+            delUser({id:val}).then(data => {  
+                if (data.code == 100) { 
+                    this.$message({ message: "操作成功", type: "success"}); 
+                    this.getData();
+                } else {
+                this.$message.error(data.msg + "错误码：[" + data.code + "]");
+                }
+            });
+            }).catch(() => {
+                this.$message({ type: "info", message: "已取消删除" });
+            });    
       },
       handleCurrentChange(val){
         console.log(val)
