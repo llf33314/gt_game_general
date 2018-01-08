@@ -41,7 +41,7 @@
                 <el-button class="ticket-button-small" @click="select_delbtn()">批量删除</el-button>
             </div> 
             <div class="pull-right">
-                <el-pagination @current-change="handleCurrentChange"  :page-size="10" 
+                <el-pagination @current-change="handleCurrentChange"  :current-page.sync="current" :page-size="10" 
                 layout="prev, pager, next, jumper" :total="tableData.page.totalNums">
                 </el-pagination>
             </div> 
@@ -198,7 +198,7 @@ import {
             console.log(123)
         },
         handleCurrentChange(val){
-            console.log(val)
+            this.getData();
         }
     },
     mounted() {

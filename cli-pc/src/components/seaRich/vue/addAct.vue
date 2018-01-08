@@ -1,20 +1,3 @@
-<style lang="less">
-  .bgMusic{
-    .material-box {
-      height: 29px !important;
-      width: 72px !important;
-      line-height: 29px;
-
-      .plus-box {
-        color: #fff;
-        background-color: #20a0ff;
-        border-color: #20a0ff;
-        font-size: 13px;
-        line-height: 28px;
-      }
-    }
-  }
-</style> 
 <template>
 <section>
 <div class="hd-common">
@@ -127,11 +110,8 @@
                 <el-table-column label="奖品类型">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.name0" placeholder="请选择"> 
-                            <el-option label="粉币"       :value="1"></el-option>
-                            <el-option label="手机流量"   :value="2"></el-option>
-                            <el-option label="实体物品"   :value="4"></el-option>
-                            <el-option label="积分"       :value="6"></el-option> 
-                            <el-option label="优惠券"     :value="7"></el-option> 
+                                <el-option v-for="item in options" :key="item.value" :label="item.name"  :value="item.value">
+                                </el-option>
                         </el-select>
                     </template>
                 </el-table-column> 
@@ -200,7 +180,7 @@
 </template>
 <script>
 import { 
- saveSeagold
+ saveSeagold,getPrizeType
 }from './../api/api'
 export default {
   data() {
@@ -293,9 +273,9 @@ export default {
         phone:[{ required: true,type: 'text', validator:iiPass,trigger: "blur" }], 
         desc: [{ required: true,message: "兑奖说明不能为空", trigger: "blur" }], 
       },
-      explain: "",
+       options: [],
       ruleForm4: [{ 
-          name0: 1,
+          name0: "",
           name1: "",
           name2: "",
           name3: "",
@@ -303,7 +283,7 @@ export default {
           name5:[] 
         },
         { 
-          name0: 1,
+          name0: "",
           name1: "",
           name2: "",
           name3: "",
@@ -318,7 +298,20 @@ export default {
         this.ruleForm1.music = e.music.name
         this.ruleForm1.musicUrl = e.music.url
     },  
-      
+    //获取奖品类型-----------star
+      getPrizeTypeData(){
+        getPrizeType().then(data=>{
+          if (data.code == 100) {
+            console.log(data,1233);
+            this.options=data.data
+             console.log(this.options,444);
+          } else {
+              this.$message.error(data.msg + "错误码：[" + data.code + "]");
+          }
+        }).catch(() => {
+            this.$message({ type: "info", message: "网络问题，请刷新重试~" });
+        }); 
+      }, 
     addrPass(rule, value, callback) {
       if (!value) {
         callback(new Error("不能为空"));
@@ -379,7 +372,7 @@ export default {
       this.ruleForm4[i].name5=e.url
     }, 
     addForm4(){ 
-        this.ruleForm4.push({ name0: 1, name1: "", name2: "", name3: "", name4: "", name5: []},)
+        this.ruleForm4.push({ name0:"", name1: "", name2: "", name3: "", name4: "", name5: []},)
     },
     delForm4(val){
         this.ruleForm4.splice(val, 1); 
@@ -417,7 +410,7 @@ export default {
     lastStep() {
       for (let i = 0; i < this.ruleForm4.length; i++) { 
         var regu =/^[1-9]\d*$/;
-        if(!this.ruleForm4[i].name1||!this.ruleForm4[i].name2||!this.ruleForm4[i].name3||!this.ruleForm4[i].name4){
+        if(!this.ruleForm4[i].name0||!this.ruleForm4[i].name1||!this.ruleForm4[i].name2||!this.ruleForm4[i].name3||!this.ruleForm4[i].name4){
             this.$message.error("表单不能留空，请填写完整~");
             return false
         }else if (!regu.test(this.ruleForm4[i].name1)) {
@@ -531,6 +524,7 @@ export default {
     }
   },
   mounted() {
+      this.getPrizeTypeData()
     
   }
 };
