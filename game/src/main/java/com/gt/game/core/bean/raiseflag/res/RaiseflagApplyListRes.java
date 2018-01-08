@@ -1,4 +1,4 @@
-package com.gt.game.core.bean.loveArrow.res;
+package com.gt.game.core.bean.raiseflag.res;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -7,14 +7,14 @@ import java.util.Date;
 
 /**
  * <p>
- * 一箭穿心主表
+ * 升国旗主表
  * </p>
  *
  * @author zwq
  * @since 2017-12-25
  */
-@ApiModel("一箭穿心分页查询中奖记录返回对象")
-public class LoveArrowApplyListRes {
+@ApiModel("升国旗分页查询中奖记录返回对象")
+public class RaiseflagApplyListRes {
 
 
     /**
@@ -65,6 +65,17 @@ public class LoveArrowApplyListRes {
 	 */
 	@ApiModelProperty("邮寄地址")
 	private String address;
+
+	@ApiModelProperty("成绩")
+	private Double score;
+
+	public Double getScore() {
+		return score;
+	}
+
+	public void setScore(Double score) {
+		this.score = score;
+	}
 
 	public Integer getReceiveType() {
 		return receiveType;

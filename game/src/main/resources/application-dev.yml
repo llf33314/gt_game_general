@@ -11,7 +11,7 @@ gt:
   axis:
     wxmpUrl: http://hz1.yifriend.net/
     wxmpSignKey: WXMP2017
-    memberUrl: http://member.yifriend.net/
+    memberUrl: https://member.deeptel.com.cn/
     memberSignKey: MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM
     signKey: goodtom2016@shortUrl.
     serviceUrl: http://short.duofee.com/

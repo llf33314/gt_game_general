@@ -1,4 +1,4 @@
-package com.gt.game.core.bean.loveArrow.req;
+package com.gt.game.core.bean.raiseflag.req;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -7,14 +7,14 @@ import java.util.List;
 
 /**
  * <p>
- * 一箭穿心主表
+ * 升国旗主表
  * </p>
  *
  * @author zwq
  * @since 2017-12-25
  */
-@ApiModel("一箭穿心活动保存奖品对象")
-public class LoveArrowPrizeReq {
+@ApiModel("升国旗活动保存奖品对象")
+public class RaiseflagPrizeReq {
 	/**
 	 * 名称
 	 */
@@ -46,7 +46,7 @@ public class LoveArrowPrizeReq {
 	private Double probabiliy;
 
 	@ApiModelProperty("奖品图片")
-	private List<LoveArrowPrizeImgReq> loveArrowPrizeImgReqs;
+	private List<RaiseflagPrizeImgReq> raiseflagPrizeImgReqs;
 
 	public String getPrizeName() {
 		return prizeName;
@@ -96,11 +96,11 @@ public class LoveArrowPrizeReq {
 		this.probabiliy = probabiliy;
 	}
 
-	public List<LoveArrowPrizeImgReq> getLoveArrowPrizeImgReqs() {
-		return loveArrowPrizeImgReqs;
+	public List<RaiseflagPrizeImgReq> getRaiseflagPrizeImgReqs() {
+		return raiseflagPrizeImgReqs;
 	}
 
-	public void setLoveArrowPrizeImgReqs(List<LoveArrowPrizeImgReq> loveArrowPrizeImgReqs) {
-		this.loveArrowPrizeImgReqs = loveArrowPrizeImgReqs;
+	public void setRaiseflagPrizeImgReqs(List<RaiseflagPrizeImgReq> raiseflagPrizeImgReqs) {
+		this.raiseflagPrizeImgReqs = raiseflagPrizeImgReqs;
 	}
 }

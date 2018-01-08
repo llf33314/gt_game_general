@@ -1,4 +1,4 @@
-package com.gt.game.core.bean.loveArrow.req;
+package com.gt.game.core.bean.raiseflag.req;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -8,14 +8,14 @@ import java.util.List;
 
 /**
  * <p>
- * 一箭穿心主表
+ * 升国旗主表
  * </p>
  *
  * @author zwq
  * @since 2017-12-25
  */
-@ApiModel("一箭穿心查询活动保存对象")
-public class LoveArrowSaveReq {
+@ApiModel("升国旗查询活动保存对象")
+public class RaiseflagSaveReq {
 
 
     /**
@@ -62,7 +62,7 @@ public class LoveArrowSaveReq {
 	private String receiveType;
 
 	@ApiModelProperty("兑奖地址")
-	private List<LoveArrowAddressReq> loveArrowAddressReqs;
+	private List<RaiseflagAddressReq> raiseflagAddressReqs;
 
 	@ApiModelProperty("联系电话")
 	private String phone;
@@ -73,11 +73,8 @@ public class LoveArrowSaveReq {
 	@ApiModelProperty("奖品说明")
 	private String prizeSetInstruction;
 
-	@ApiModelProperty("广告轮播图")
-	private List<LoveArrowAdReq> loveArrowAdReqs;
-
 	@ApiModelProperty("奖品")
-	private List<LoveArrowPrizeReq> loveArrowPrizeReqs;
+	private List<RaiseflagPrizeReq> raiseflagPrizeReqs;
 
 	public Integer getId() {
 		return id;
@@ -199,27 +196,19 @@ public class LoveArrowSaveReq {
 		this.prizeSetInstruction = prizeSetInstruction;
 	}
 
-	public List<LoveArrowPrizeReq> getLoveArrowPrizeReqs() {
-		return loveArrowPrizeReqs;
+	public List<RaiseflagAddressReq> getRaiseflagAddressReqs() {
+		return raiseflagAddressReqs;
 	}
 
-	public void setLoveArrowPrizeReqs(List<LoveArrowPrizeReq> loveArrowPrizeReqs) {
-		this.loveArrowPrizeReqs = loveArrowPrizeReqs;
+	public void setRaiseflagAddressReqs(List<RaiseflagAddressReq> raiseflagAddressReqs) {
+		this.raiseflagAddressReqs = raiseflagAddressReqs;
 	}
 
-	public List<LoveArrowAddressReq> getLoveArrowAddressReqs() {
-		return loveArrowAddressReqs;
+	public List<RaiseflagPrizeReq> getRaiseflagPrizeReqs() {
+		return raiseflagPrizeReqs;
 	}
 
-	public void setLoveArrowAddressReqs(List<LoveArrowAddressReq> loveArrowAddressReqs) {
-		this.loveArrowAddressReqs = loveArrowAddressReqs;
-	}
-
-	public List<LoveArrowAdReq> getLoveArrowAdReqs() {
-		return loveArrowAdReqs;
-	}
-
-	public void setLoveArrowAdReqs(List<LoveArrowAdReq> loveArrowAdReqs) {
-		this.loveArrowAdReqs = loveArrowAdReqs;
+	public void setRaiseflagPrizeReqs(List<RaiseflagPrizeReq> raiseflagPrizeReqs) {
+		this.raiseflagPrizeReqs = raiseflagPrizeReqs;
 	}
 }
