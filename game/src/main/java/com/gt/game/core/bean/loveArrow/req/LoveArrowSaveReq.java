@@ -77,7 +77,7 @@ public class LoveArrowSaveReq {
 	private List<LoveArrowAdReq> loveArrowAdReqs;
 
 	@ApiModelProperty("奖品")
-	private List<LoveArrowPrizeReq> demolitionPrizeReqs;
+	private List<LoveArrowPrizeReq> loveArrowPrizeReqs;
 
 	public Integer getId() {
 		return id;
@@ -199,12 +199,12 @@ public class LoveArrowSaveReq {
 		this.prizeSetInstruction = prizeSetInstruction;
 	}
 
-	public List<LoveArrowPrizeReq> getDemolitionPrizeReqs() {
-		return demolitionPrizeReqs;
+	public List<LoveArrowPrizeReq> getLoveArrowPrizeReqs() {
+		return loveArrowPrizeReqs;
 	}
 
-	public void setDemolitionPrizeReqs(List<LoveArrowPrizeReq> demolitionPrizeReqs) {
-		this.demolitionPrizeReqs = demolitionPrizeReqs;
+	public void setLoveArrowPrizeReqs(List<LoveArrowPrizeReq> loveArrowPrizeReqs) {
+		this.loveArrowPrizeReqs = loveArrowPrizeReqs;
 	}
 
 	public List<LoveArrowAddressReq> getLoveArrowAddressReqs() {

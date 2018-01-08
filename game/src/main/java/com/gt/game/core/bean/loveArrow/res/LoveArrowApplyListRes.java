@@ -50,9 +50,6 @@ public class LoveArrowApplyListRes {
 	@ApiModelProperty("兑奖码")
 	private String snCode;
 
-	@ApiModelProperty("成绩")
-	private Double score;
-
 	@ApiModelProperty("中奖人")
 	private String nickname;
 
@@ -181,11 +178,4 @@ public class LoveArrowApplyListRes {
 		this.snCode = snCode;
 	}
 
-	public Double getScore() {
-		return score;
-	}
-
-	public void setScore(Double score) {
-		this.score = score;
-	}
 }
