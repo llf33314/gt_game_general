@@ -101,6 +101,23 @@ public enum ResponseEnums {
     LOVEARROW_HAS13(413,"回滚粉币失败，删除失败"),
     LOVEARROW_HAS14(414,"请输入正确的粉币数量"),
     LOVEARROW_HAS15(415,"修改粉币数量失败"),
+
+    //升国旗响应
+    RAISEFLAG_HAS1(401,"该奖品已发放!"),
+    RAISEFLAG_HAS2(402,"手动发放只能选择[已提交]状态的数据！!"),
+    RAISEFLAG_HAS3(403,"未到兑奖时间!"),
+    RAISEFLAG_HAS4(404,"已过兑奖时间!"),
+    RAISEFLAG_HAS5(405,"活动为空!"),
+    RAISEFLAG_HAS6(406,"活动已经开始，不允许操作!"),
+    RAISEFLAG_HAS7(407,"粉币不足，保存失败"),
+    RAISEFLAG_HAS8(408,"冻结粉币失败，保存失败"),
+    RAISEFLAG_HAS9(409,"输入的粉币数量过少"),
+    RAISEFLAG_HAS10(410,"活动正在进行，不允许删除"),
+    RAISEFLAG_HAS11(411,"奖品未发放完毕，不允许操作"),
+    RAISEFLAG_HAS12(412,"未过活动兑换期限，不允许删除"),
+    RAISEFLAG_HAS13(413,"回滚粉币失败，删除失败"),
+    RAISEFLAG_HAS14(414,"请输入正确的粉币数量"),
+    RAISEFLAG_HAS15(415,"修改粉币数量失败"),
     ;
 
 
