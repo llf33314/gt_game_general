@@ -16,7 +16,7 @@
        <gt-video-btn videoId="22" class="gt-video-btn mr70"></gt-video-btn> 
       <div class="h10"></div>
       <el-button type="primary" @click="addActive()" class="ml30">新建活动</el-button> 
-      <el-button type="primary" @click="test()" class="ml30">题库管理</el-button> 
+      <el-button type="primary" @click="askBanks()" class="ml30">题库管理</el-button> 
     </div> 
     <div class="gt-content">        
         <el-tabs v-model="activeName" type="card" @tab-click="handleClick" >
@@ -48,8 +48,8 @@
           <el-table-column  width="450" label="操作">
             <template slot-scope="scope"> 
               <el-button class="gt-button-normal blue" v-if="scope.row.isEdit==1" @click="editActive(scope.row.id)">编辑</el-button>
-              <el-button class="gt-button-normal blue" @click="record(scope.row.id)">中奖纪录</el-button>
-              <el-button class="gt-button-normal blue" @click="impower(scope.row.id)">核销授权</el-button>
+              <el-button class="gt-button-normal blue"  v-if="scope.row.status!=0" @click="record(scope.row.id)">中奖纪录</el-button>
+              <el-button class="gt-button-normal blue" @click="askPreview(scope.row.id)">预览链接</el-button>
               <el-button class="gt-button-normal blue" @click="userList(scope.row.id)">用户列表</el-button>
               <el-button class="gt-button-normal blue" @click="impower(scope.row.id)">核销授权</el-button>
               <el-button class="gt-button-normal"       @click="delBtn(scope.row.id)">删除</el-button> 
@@ -79,7 +79,6 @@ import {
         keyWord:"",
         activeName:"-1",
         dialogTip:false, 
-        // countNum:{first:"10",second:"20",third:"30",fourth:"40",fifth:"2"},
         countNum:{all:"",nostar:"",started:"",stop:"",over:""},
         tableData:{data:[], page:{}}, 
         current:1,
@@ -162,9 +161,6 @@ import {
                 this.$message({ type: "info", message: "已取消删除" });
             });    
       },
-      // askPreview(){
-      //   this.copeData.copyUrlVisible = true
-      // },
       //切换------------------------------------------------------------star
       handleClick() { 
         this.getdata();
@@ -175,6 +171,10 @@ import {
       //中奖记录
       record(val){
          this.$router.push({path: '/standStill/prizeRecord', query: {id: val}});
+      },
+      //题库
+      askBanks(){
+         this.$router.push({path: '/standStill/question'});
       },
       //核销授权
       impower(val){

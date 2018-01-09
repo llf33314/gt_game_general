@@ -26,5 +26,10 @@ export const givePrize        = params => { return axios.post(`${base}/editSeago
 /*用户信息*/
 export const getUserList     = params => { return axios.post(`${base}/getStandJoinRecord`, params).then(res => res.data) }
 export const getUserDetail     = params => { return axios.post(`${base}/getStandJoinDetail`, params).then(res => res.data) }
+export const delUser     = params => { return axios.post(`${base}/getStandJoinDetail`, params).then(res => res.data) }
 
 
+
+
+/*题库管理*/
+export const getQuesbank     = params => { return axios.post(`${base}/getStandQuesbankList`, params).then(res => res.data) }

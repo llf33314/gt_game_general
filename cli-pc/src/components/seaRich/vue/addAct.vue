@@ -205,15 +205,15 @@ export default {
       }
     }; 
     return { 
-      active:0,
+      active:3,
       isSubmit:false,
       ruleForm1: {
         name: "",
         name1: "", 
         musicUrl:"",//音乐链接
         music: "暂无上传音乐",
-        links:[
-          {url:"www.duofriend.com",img:""},
+       links:[
+          {url:"",img:""},
           {url:"",img:""}
         ]
       },
@@ -355,8 +355,7 @@ export default {
     },
     //广告设置的新增&删除
     addlinks(){
-      this.linksId++
-      this.ruleForm1.links.push({id:this.linksId,url:"",img:""},)
+      this.ruleForm1.links.push({url:"",img:""},)
     },
     delLinks(val) { 
           this.ruleForm1.links.splice(val, 1); 

@@ -219,9 +219,9 @@ export default {
         name: "",
         name1: "",
         name4:"",
-        links:[
-          {id:0,url:"www.duofriend.com",img:""},
-          {id:1,url:"",img:""}
+       links:[
+          {url:"",img:""},
+          {url:"",img:""}
         ]
       },
       rules1: {
