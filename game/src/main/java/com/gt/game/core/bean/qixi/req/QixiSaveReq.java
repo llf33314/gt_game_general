@@ -79,6 +79,16 @@ public class QixiSaveReq {
 	@ApiModelProperty("奖品")
 	private List<QixiPrizeReq> qixiPrizeReqs;
 
+	@ApiModelProperty("牛郎与织女的距离")
+	private Integer gameTime;
+
+	public Integer getGameTime() {
+		return gameTime;
+	}
+
+	public void setGameTime(Integer gameTime) {
+		this.gameTime = gameTime;
+	}
 	public Integer getId() {
 		return id;
 	}
