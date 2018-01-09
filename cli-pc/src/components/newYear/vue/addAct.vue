@@ -397,7 +397,7 @@ export default {
                 var arr4={
                     imgInstruction :"",
                     type :this.ruleForm4[i].name0,//类型
-                    prizeUnit :this.ruleForm4[i].name1,//单位
+                    prizeUnit :Number(this.ruleForm4[i].name1),//单位
                     prizeName :this.ruleForm4[i].name1,//名称
                     num :Number(this.ruleForm4[i].name3),//数量
                     // probabiliy :this.ruleForm4[i].name4,  //概率

@@ -94,8 +94,7 @@
                 <p>奖品类型：奖品的内容;奖品单位：奖品的数量货内容；奖项数量:该奖品的可领取次数</p>
                 <p>如：奖品类型：粉币；奖品数额：2；奖项名称：粉币；奖项数量：3；中奖概率：12</p> 
                 <p>当奖品为实物时，请上传实物图片，实物图片建议尺寸1160px*64px</p> 
-            </div> 
-            
+            </div>  
             <div class="mt20 mb20">
                 <el-button   @click="addForm4()" :disabled='ruleForm4.length>8'  type="primary">新增奖品</el-button> 
                 <span class="el-upload__tip grey ml10">最多设置9个奖项</span> 
@@ -136,14 +135,9 @@
                   </template>
                 </el-table-column>
                 <el-table-column label="奖品图片">
-                    <template slot-scope="scope" v-if="scope.row.name0==4">  
-                            <span  class="imgRow" >
-                                <el-upload  action="''" list-type="picture-card" :file-list="scope.row.name5"  :on-remove="handleRemove">
-                                </el-upload>
-                            </span>
-                            <span class="uploadBtn">
-                                <gt-material :prop="''" selectType="select" btnContent="+" v-on:getChangeUrl="getContentUrl(scope.$index, $event)" width="50" height="50"></gt-material>
-                            </span>
+                    <template slot-scope="scope"  v-if="scope.row.name0==4">  
+                        <gt-material v-for="(item,index) in scope.row.name5" :key="index" :prop="scope" :sonIndex="index" selectType="radio" :url="item" @getChangeUrl="getAwardImgList" width="50" height="50" class="mr10"></gt-material>
+                        <gt-material :prop="scope" selectType="select"  @getChangeUrl="addAwardImg" width="50" height="50" class="uploadBtn"></gt-material>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作">
@@ -151,8 +145,7 @@
                         <el-button class="gt-button-normal" v-if="scope.$index!=0" @click="delForm4(scope.$index)">删除</el-button>
                     </template>
                 </el-table-column>
-            </el-table>
-            
+            </el-table>            
         </div>       
         <!-- 新建完成 -->
         <div v-if="active==5" class="gt-content complete"> 
@@ -205,17 +198,13 @@ export default {
       }
     }; 
     return { 
-      active:3,
+      active:0,
       isSubmit:false,
       ruleForm1: {
         name: "",
         name1: "", 
         musicUrl:"",//音乐链接
-        music: "暂无上传音乐",
-       links:[
-          {url:"",img:""},
-          {url:"",img:""}
-        ]
+        music: "暂无上传音乐",        
       },
       rules1: {
         name: [{ required: true, message: "活动名称不能为空", trigger: "blur" }],
@@ -273,7 +262,7 @@ export default {
         phone:[{ required: true,type: 'text', validator:iiPass,trigger: "blur" }], 
         desc: [{ required: true,message: "兑奖说明不能为空", trigger: "blur" }], 
       },
-       options: [],
+      options: [],
       ruleForm4: [{ 
           name0: "",
           name1: "",
@@ -336,34 +325,21 @@ export default {
     },
     upStep() {
       this.active--;
-    }, 
-    //实物图
-    getContentUrl(x,e) {
-      if (e.url === "go_back") { return; } 
-      console.log(e.url);
-      let arr = JSON.parse(e.url); 
-      var g =[];
-      for(let i = 0; i < arr.length; i++) {
-        arr[i].url = arr[i].url;
-        g.push(arr[i])
-      } 
-      this.ruleForm4[x].name5=this.ruleForm4[x].name5.concat(g)
-    }, 
-    // 删除实物图
-    handleRemove(file, fileList) {
-         this.ruleForm4.name5 = fileList
+    },  
+    // 添加实物图 
+    addAwardImg(val) {
+         JSON.parse(val.url).forEach(function (item, index, arr) {
+               this.ruleForm4[val.prop.$index].name5.push(item.url)
+         }, this)
     },
-    //广告设置的新增&删除
-    addlinks(){
-      this.ruleForm1.links.push({url:"",img:""},)
-    },
-    delLinks(val) { 
-          this.ruleForm1.links.splice(val, 1); 
-    },
-    getChangeUrl(i,e) { 
-      //console.log(i)
-      this.ruleForm1.links[i].img=e.url
+   // 删除实物图 
+    getAwardImgList(val) { 
+      if(!val.url) {
+        this.ruleForm4[val.prop.$index].name5.splice(val.sonIndex, 1)
+        return
+      }
     }, 
+     
     getChangeUrl2(e) { 
       this.ruleForm2.code=e.url
     }, 
@@ -431,16 +407,7 @@ export default {
     submit(){ 
         if(this.isSubmit){
              this.$message({type: "info", message: "请不要重复提交~" });
-        }else{ 
-        //广告
-        var newarr=[];
-        for(let i =0;i< this.ruleForm1.links.length;i++){ 
-            var arr={
-                name0:this.ruleForm1.links[i].url, 
-                name1:this.ruleForm1.links[i].img, 
-            } 
-            newarr.push(arr)
-        }  
+        }else{  
         //兑奖地址
         var seagoldAddressReqs=[];
         if(this.ruleForm3.addrRow){ 
@@ -458,7 +425,7 @@ export default {
                 var arr4={
                     imgInstruction :"",
                     type :this.ruleForm4[i].name0,//类型
-                    prizeUnit :this.ruleForm4[i].name1,//单位
+                    prizeUnit :Number(this.ruleForm4[i].name1),//单位
                     prizeName :this.ruleForm4[i].name1,//名称
                     num :Number(this.ruleForm4[i].name3),//数量
                     probabiliy :this.ruleForm4[i].name4,  //概率
@@ -467,7 +434,7 @@ export default {
                 if(arr4.type==4){
                     for(var j=0;j<this.ruleForm4[i].name5.length;j++){
                         var imgarr={
-                            imgUrl:this.ruleForm4[i].name5[j].url
+                            imgUrl:this.ruleForm4[i].name5[j]
                         }
                     arr4.seagoldPrizeImgReqs.push(imgarr)
                     } 
@@ -498,12 +465,10 @@ export default {
              //奖项设置 
             seagoldPrizeReqs:seagoldPrizeReqs,  
         };
-        console.log(data,123); 
-        
-         saveSeagold(data).then(data=>{
+        console.log(data,123);         
+        saveSeagold(data).then(data=>{
           this.isSubmit==true
           if (data.code == 100) { 
-              console.log(12336666)
               this.active=5
           } else {
               this.isSubmit==false
