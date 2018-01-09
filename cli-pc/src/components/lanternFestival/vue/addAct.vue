@@ -224,9 +224,9 @@ export default {
         name1: "",
         name4:"",
         music:"暂无上传音乐",
-        links:[
-          {id:0,url:"www.duofriend.com",img:""},
-          {id:1,url:"",img:""}
+      links:[
+          {url:"",img:""},
+          {url:"",img:""}
         ]
       },
       rules1: {

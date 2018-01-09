@@ -150,17 +150,8 @@
                         <el-button class="gt-button-normal" v-if="scope.$index!=0" @click="delForm4(scope.$index)">删除</el-button>
                     </template>
                 </el-table-column>
-            </el-table>
-            
-        </div>       
-        <!-- 新建完成 -->
-        <div v-if="active==5" class="gt-content complete"> 
-            <div class="addOk"> 
-                <div class="el-icon-circle-check green" style="font-size:40px"></div>
-                <div class="complete-info">活动添加成功</div>
-                <el-button class="mt80" type="primary" @click="backUrl()">返回活动列表</el-button>  
-            </div> 
-        </div>
+            </el-table> 
+        </div>    
         <!-- 按钮 -->
         <div class="h80"></div> 
          <div class="btnRow"> 
@@ -205,8 +196,8 @@ export default {
         name1: "", 
         musicUrl:"",//音乐链接
         music: "暂无上传音乐",
-        links:[
-          {url:"www.duofriend.com",img:""},
+       links:[
+          {url:"",img:""},
           {url:"",img:""}
         ]
       },

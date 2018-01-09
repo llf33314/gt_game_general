@@ -82,7 +82,7 @@
               <p><span class="w20_demo">中奖人</span><b> : </b> {{showDetailData.nickname}}</p> 
               <p><span class="w20_demo">兑奖人</span><b> : </b> -</p> 
               <p><span class="w20_demo">兑奖人联系方式</span><b> : </b> {{showDetailData.memberPhone}}</p> 
-              <p><span class="w20_demo">领取方式</span><b> : </b> {{showDetailData.receiveType|receiveTypeStatus(showDetailData.receiveType)}} }}</p> 
+              <p><span class="w20_demo">领取方式</span><b> : </b> {{showDetailData.receiveType|receiveTypeStatus(showDetailData.receiveType)}}</p> 
               <p><span class="w20_demo">到店领取地址</span><b> : </b> {{showDetailData.addressName}}</p> 
               <p><span class="w20_demo">兑奖时间</span><b> : </b>-</p> 
           </div> 
