@@ -84,7 +84,6 @@ public enum ResponseEnums {
     STAND_HAS17(417,"导入失败,格式有误！存在空值！请修正后再尝试导入"),
     STAND_HAS18(418,"导入失败,格式有误"),
 
-
     //一箭穿心响应
     LOVEARROW_HAS1(401,"该奖品已发放!"),
     LOVEARROW_HAS2(402,"手动发放只能选择[已提交]状态的数据！!"),
@@ -119,7 +118,7 @@ public enum ResponseEnums {
     RAISEFLAG_HAS14(414,"请输入正确的粉币数量"),
     RAISEFLAG_HAS15(415,"修改粉币数量失败"),
 
-    //一箭穿心响应
+    //浪漫七夕响应
     QIXI_HAS1(401,"该奖品已发放!"),
     QIXI_HAS2(402,"手动发放只能选择[已提交]状态的数据！!"),
     QIXI_HAS3(403,"未到兑奖时间!"),
@@ -135,6 +134,22 @@ public enum ResponseEnums {
     QIXI_HAS13(413,"回滚粉币失败，删除失败"),
     QIXI_HAS14(414,"请输入正确的粉币数量"),
     QIXI_HAS15(415,"修改粉币数量失败"),
+    //欢乐抢元宝响应
+    GOLDRUSH_HAS1(401,"该奖品已发放!"),
+    GOLDRUSH_HAS2(402,"手动发放只能选择[已提交]状态的数据！!"),
+    GOLDRUSH_HAS3(403,"未到兑奖时间!"),
+    GOLDRUSH_HAS4(404,"已过兑奖时间!"),
+    GOLDRUSH_HAS5(405,"活动为空!"),
+    GOLDRUSH_HAS6(406,"活动已经开始，不允许操作!"),
+    GOLDRUSH_HAS7(407,"粉币不足，保存失败"),
+    GOLDRUSH_HAS8(408,"冻结粉币失败，保存失败"),
+    GOLDRUSH_HAS9(409,"输入的粉币数量过少"),
+    GOLDRUSH_HAS10(410,"活动正在进行，不允许删除"),
+    GOLDRUSH_HAS11(411,"奖品未发放完毕，不允许操作"),
+    GOLDRUSH_HAS12(412,"未过活动兑换期限，不允许删除"),
+    GOLDRUSH_HAS13(413,"回滚粉币失败，删除失败"),
+    GOLDRUSH_HAS14(414,"请输入正确的粉币数量"),
+    GOLDRUSH_HAS15(415,"修改粉币数量失败"),
     ;
 
 

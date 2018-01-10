@@ -349,7 +349,7 @@ public class QixiServiceImpl implements QixiService {
                 FenbiSurplus fenbiSurplus = new FenbiSurplus();
                 fenbiSurplus.setBusId(busUser.getId());
                 fenbiSurplus.setFkId(QixiMain.getId());
-                fenbiSurplus.setFre_type(99);
+                fenbiSurplus.setFre_type(39);
                 fenbiSurplus.setRec_type(1);
                 AxisResult<FenbiFlowRecord> ffr = FenbiflowServer.getFenbiFlowRecord(fenbiSurplus);
                 if(ffr!=null && ffr.getData() != null && ffr.getData().getRollStatus() == 1){//未回滚
@@ -358,7 +358,7 @@ public class QixiServiceImpl implements QixiService {
                     fenbiSurplus1.setBusId(busUser.getId());
                     fenbiSurplus1.setFkId(QixiMain.getId());
                     fenbiSurplus1.setRec_type(1);
-                    fenbiSurplus1.setFre_type(99);
+                    fenbiSurplus1.setFre_type(39);
                     AxisResult axisResult = FenbiflowServer.rollbackFenbiRecord(fenbiSurplus1);
                     if(axisResult.getCode() != 0){
                         throw new QixiException(ResponseEnums.QIXI_HAS13);
@@ -477,7 +477,7 @@ public class QixiServiceImpl implements QixiService {
                 UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
                 updateFenbiReduceReq.setBusId(busUser.getId());
                 updateFenbiReduceReq.setFkId(QixiMain.getId());
-                updateFenbiReduceReq.setFreType(99);
+                updateFenbiReduceReq.setFreType(39);
                 updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi-num));
                 AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
                 if(axisResult.getCode() != 0){
@@ -489,7 +489,7 @@ public class QixiServiceImpl implements QixiService {
                     throw new QixiException(ResponseEnums.QIXI_HAS7);
                 }
                 //构建冻结信息
-                FenbiFlowRecord ffr=CommonUtil.bulidFenFlow(busUser.getId(), fenbi, QixiMain.getId(), 99, 1, "拆礼盒活动支出", 0);
+                FenbiFlowRecord ffr=CommonUtil.bulidFenFlow(busUser.getId(), fenbi, QixiMain.getId(), 39, 1, "浪漫七夕活动支出", 0);
                 // 保存冻结信息
                 if(ffr!=null){
                     FenbiFlowRecordReq fenbiFlowRecordReq = new FenbiFlowRecordReq();

@@ -349,7 +349,7 @@ public class LovearrowServiceImpl implements LovearrowService {
                 FenbiSurplus fenbiSurplus = new FenbiSurplus();
                 fenbiSurplus.setBusId(busUser.getId());
                 fenbiSurplus.setFkId(LovearrowMain.getId());
-                fenbiSurplus.setFre_type(99);
+                fenbiSurplus.setFre_type(38);
                 fenbiSurplus.setRec_type(1);
                 AxisResult<FenbiFlowRecord> ffr = FenbiflowServer.getFenbiFlowRecord(fenbiSurplus);
                 if(ffr!=null && ffr.getData() != null && ffr.getData().getRollStatus() == 1){//未回滚
@@ -358,7 +358,7 @@ public class LovearrowServiceImpl implements LovearrowService {
                     fenbiSurplus1.setBusId(busUser.getId());
                     fenbiSurplus1.setFkId(LovearrowMain.getId());
                     fenbiSurplus1.setRec_type(1);
-                    fenbiSurplus1.setFre_type(99);
+                    fenbiSurplus1.setFre_type(38);
                     AxisResult axisResult = FenbiflowServer.rollbackFenbiRecord(fenbiSurplus1);
                     if(axisResult.getCode() != 0){
                         throw new LoveArrowException(ResponseEnums.LOVEARROW_HAS13);
@@ -477,7 +477,7 @@ public class LovearrowServiceImpl implements LovearrowService {
                 UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
                 updateFenbiReduceReq.setBusId(busUser.getId());
                 updateFenbiReduceReq.setFkId(LovearrowMain.getId());
-                updateFenbiReduceReq.setFreType(99);
+                updateFenbiReduceReq.setFreType(38);
                 updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi-num));
                 AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
                 if(axisResult.getCode() != 0){
@@ -489,7 +489,7 @@ public class LovearrowServiceImpl implements LovearrowService {
                     throw new LoveArrowException(ResponseEnums.LOVEARROW_HAS7);
                 }
                 //构建冻结信息
-                FenbiFlowRecord ffr=CommonUtil.bulidFenFlow(busUser.getId(), fenbi, LovearrowMain.getId(), 99, 1, "拆礼盒活动支出", 0);
+                FenbiFlowRecord ffr=CommonUtil.bulidFenFlow(busUser.getId(), fenbi, LovearrowMain.getId(), 38, 1, "一箭穿心活动支出", 0);
                 // 保存冻结信息
                 if(ffr!=null){
                     FenbiFlowRecordReq fenbiFlowRecordReq = new FenbiFlowRecordReq();
