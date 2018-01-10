@@ -395,6 +395,8 @@ public class RaiseflagServiceImpl implements RaiseflagService {
             //删除
             //兑奖地址
             raiseflagAddressService.delete(new EntityWrapper<RaiseflagAddress>().eq("act_id",RaiseflagMain.getId()));
+            //赞助商
+            raiseflagSponsorService.delete(new EntityWrapper<RaiseflagSponsor>().eq("act_id",RaiseflagMain.getId()));
             //奖品
             List<RaiseflagPrize> RaiseflagPrizes = raiseflagPrizeService.selectList(new EntityWrapper<RaiseflagPrize>().eq("act_id",RaiseflagMain.getId()));
             if(RaiseflagPrizes.size() > 0){
@@ -431,6 +433,15 @@ public class RaiseflagServiceImpl implements RaiseflagService {
                         raiseflagPrizeImgService.insert(RaiseflagPrizeImg);
                     }
                 }
+            }
+        }
+        //赞助商
+        if(CommonUtil.isNotEmpty(RaiseflagSaveReq.getRaiseflagSponsorReqs())){
+            for(RaiseflagSponsorReq raiseflagSponsorReq :RaiseflagSaveReq.getRaiseflagSponsorReqs()){
+                RaiseflagSponsor raiseflagSponsor = new RaiseflagSponsor();
+                BeanUtils.copyProperties(raiseflagSponsorReq,raiseflagSponsor);
+                raiseflagSponsor.setActId(RaiseflagMain.getId());
+                raiseflagSponsorService.insert(raiseflagSponsor);
             }
         }
         //兑奖地址

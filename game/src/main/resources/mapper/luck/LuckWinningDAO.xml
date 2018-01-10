@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.game.core.dao.luck.LuckWinningDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.game.core.entity.luck.LuckWinning">
+		<id column="id" property="id" />
+		<result column="luck_act_id" property="luckActId" />
+		<result column="luck_prize_id" property="luckPrizeId" />
+		<result column="luck_status" property="luckStatus" />
+		<result column="luck_memberId" property="luckMemberId" />
+		<result column="luck_create_time" property="luckCreateTime" />
+		<result column="luck_user_id" property="luckUserId" />
+		<result column="luck_exchangeCode" property="luckExchangeCode" />
+		<result column="luck_cash_memberId" property="luckCashMemberId" />
+		<result column="luck_way" property="luckWay" />
+		<result column="luck_phone" property="luckPhone" />
+		<result column="luck_address" property="luckAddress" />
+		<result column="luck_name" property="luckName" />
+		<result column="luck_cashtime" property="luckCashtime" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, luck_act_id, luck_prize_id, luck_status, luck_memberId AS luckMemberId, luck_create_time, luck_user_id, luck_exchangeCode AS luckExchangeCode, luck_cash_memberId AS luckCashMemberId, luck_way, luck_phone, luck_address, luck_name, luck_cashtime
+    </sql>
+
+</mapper>

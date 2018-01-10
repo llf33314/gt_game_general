@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.game.core.dao.luck.LuckMainDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.game.core.entity.luck.LuckMain">
+		<id column="id" property="id" />
+		<result column="luck_name" property="luckName" />
+		<result column="luck_countOfDay" property="luckCountOfDay" />
+		<result column="luck_winning_txt" property="luckWinningTxt" />
+		<result column="luck_beginTime" property="luckBeginTime" />
+		<result column="luck_endTime" property="luckEndTime" />
+		<result column="luck_wx_userid" property="luckWxUserid" />
+		<result column="luck_describe" property="luckDescribe" />
+		<result column="luck_overdescribe" property="luckOverdescribe" />
+		<result column="luck_rule" property="luckRule" />
+		<result column="luck_calculateWay" property="luckCalculateWay" />
+		<result column="luck_countOfAll" property="luckCountOfAll" />
+		<result column="luck_before_txt" property="luckBeforeTxt" />
+		<result column="luck_is_give" property="luckIsGive" />
+		<result column="luck_cash_day" property="luckCashDay" />
+		<result column="luck_picture" property="luckPicture" />
+		<result column="luck_address" property="luckAddress" />
+		<result column="luck_bgm" property="luckBgm" />
+		<result column="luck_bgm_name" property="luckBgmName" />
+		<result column="luck_luckPartaker" property="luckLuckPartaker" />
+		<result column="luck_pway" property="luckPway" />
+		<result column="luck_man" property="luckMan" />
+		<result column="luck_kou" property="luckKou" />
+		<result column="luck_status" property="luckStatus" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, luck_name, luck_countOfDay AS luckCountOfDay, luck_winning_txt, luck_beginTime AS luckBeginTime, luck_endTime AS luckEndTime, luck_wx_userid, luck_describe, luck_overdescribe, luck_rule, luck_calculateWay AS luckCalculateWay, luck_countOfAll AS luckCountOfAll, luck_before_txt, luck_is_give, luck_cash_day, luck_picture, luck_address, luck_bgm, luck_bgm_name, luck_luckPartaker AS luckLuckPartaker, luck_pway, luck_man, luck_kou, luck_status
+    </sql>
+
+	<select id="getCount" resultType="map" parameterType="map">
+		SELECT  t1.count2 ,t2.count3 , t3.count4
+		FROM (SELECT  count(m1.id) AS count2 FROM  t_wx_activity_luck_main m1
+		WHERE m1.luck_wx_userid = #{busId,jdbcType=INTEGER} AND luck_status = 1 AND UNIX_TIMESTAMP(m1.luck_beginTime) > UNIX_TIMESTAMP(#{nowTime})) t1
+		JOIN
+		(SELECT count(m2.id) AS count3 FROM  t_wx_activity_luck_main m2
+		WHERE m2.luck_wx_userid = #{busId,jdbcType=INTEGER} AND luck_status = 1 and UNIX_TIMESTAMP(m2.luck_beginTime) &lt;= UNIX_TIMESTAMP(#{nowTime}) and  UNIX_TIMESTAMP(m2.luck_endTime) >= UNIX_TIMESTAMP(#{nowTime})) t2
+		JOIN
+		(SELECT count(m3.id) AS count4 FROM  t_wx_activity_luck_main m3
+		WHERE m3.luck_wx_userid = #{busId,jdbcType=INTEGER} AND luck_status = 1 AND  UNIX_TIMESTAMP(m3.luck_endTime) &lt; UNIX_TIMESTAMP(#{nowTime})) t3
+		JOIN
+		(SELECT count(m4.id) AS count5 FROM  t_wx_activity_luck_main m4
+		WHERE m4.luck_wx_userid = #{busId,jdbcType=INTEGER} AND luck_status = 2 ) t4
+	</select>
+
+</mapper>
