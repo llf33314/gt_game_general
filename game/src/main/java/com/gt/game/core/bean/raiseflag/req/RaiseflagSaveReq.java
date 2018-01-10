@@ -119,7 +119,7 @@ public class RaiseflagSaveReq {
 	/**
 	 * 参与奖按钮提示语
 	 */
-	@ApiModelProperty("参与完成提示语")
+	@ApiModelProperty("参与按钮提示语")
 	private String joinPrizeBtnTips;
 
 	public Integer getIsSponsor() {

@@ -40,10 +40,6 @@ public class RaiseflagPrizeReq {
 	 */
 	@ApiModelProperty("奖品图片说明")
 	private String imgInstruction;
-	/**
-	 */
-	@ApiModelProperty("中奖概率")
-	private Double probabiliy;
 
 	@ApiModelProperty("奖品图片")
 	private List<RaiseflagPrizeImgReq> raiseflagPrizeImgReqs;
@@ -86,14 +82,6 @@ public class RaiseflagPrizeReq {
 
 	public void setImgInstruction(String imgInstruction) {
 		this.imgInstruction = imgInstruction;
-	}
-
-	public Double getProbabiliy() {
-		return probabiliy;
-	}
-
-	public void setProbabiliy(Double probabiliy) {
-		this.probabiliy = probabiliy;
 	}
 
 	public List<RaiseflagPrizeImgReq> getRaiseflagPrizeImgReqs() {
