@@ -41,11 +41,11 @@
                   <gt-material prop="url" :url="ruleForm2.code" v-on:getChangeUrl="getChangeUrl2" width="72" height="72"></gt-material>
                   <span class="el-upload__tip grey ml10">上传1:1二维码，将会在活动规则中显示商家二维码</span>  
                 </el-form-item> 
-                <el-form-item label="游戏总数：" prop="freePeople">
-                    <el-input class="w25_demo mr10" placeholder="请输入游戏总数" v-model="ruleForm2.freePeople"></el-input>次/人
+                <el-form-item label="游戏总数：" prop="manTotalChance">
+                    <el-input class="w25_demo mr10" placeholder="请输入游戏总数" v-model="ruleForm2.manTotalChance"></el-input>次/人
                 </el-form-item> 
-                <el-form-item label="每天次数：" prop="freeNum">
-                    <el-input class="w25_demo mr10" placeholder="请输入每天次数" v-model="ruleForm2.freeNum"></el-input>次/人
+                <el-form-item label="每天次数：" prop="manDayChance">
+                    <el-input class="w25_demo mr10" placeholder="请输入每天次数" v-model="ruleForm2.manDayChance"></el-input>次/人
                 </el-form-item>
                <el-form-item label="每天时长：" prop="time">
                     <el-input class="w_demo" v-model="ruleForm2.time" type="number" placeholder="请输入游戏时长"></el-input>
@@ -174,7 +174,7 @@
 </template>
 <script>
 import { 
-saveSeagold,getAct,getPrizeType
+saveAct,getAct,getPrizeType
 }from './../api/api'
 export default {
   data() {
@@ -200,7 +200,6 @@ export default {
     }; 
     return { 
       active:0,
-      isSubmit:false,
       ruleForm1: {
         name: "",
         name1: "", 
@@ -219,8 +218,8 @@ export default {
         code: "",
         time: "",
         duihuan:"",
-        freePeople:"",
-        freeNum:"", 
+        manTotalChance:"",
+        manDayChance:"", 
         fenbi:"",
         jifen:"",
         desc: "", 
@@ -234,10 +233,10 @@ export default {
         duihuan: [
           { required: true,  message: "请填写元宝兑换金币比例", trigger: "blur" } 
         ], 
-        freePeople: [
+        manTotalChance: [
           { required: true,  message: "游戏总数不能为空", trigger: "blur" } 
         ], 
-        freeNum: [
+        manDayChance: [
           { required: true,  message: "每天次数不能为空", trigger: "blur" } 
         ],
         fenbi: [
@@ -420,9 +419,6 @@ export default {
     }, 
     //表单提交--------------------------------------star
     submit(){ 
-        if(this.isSubmit){
-             this.$message({type: "info", message: "请不要重复提交~" });
-        }else{ 
         //广告
         var newarr=[];
         for(let i =0;i< this.ruleForm1.links.length;i++){ 
@@ -443,7 +439,7 @@ export default {
             }    
         }  
         //奖品
-        var seagoldPrizeReqs=[];
+        var loveArrowPrizeReqs=[];
         if(this.ruleForm4){
             for(let i =0;i< this.ruleForm4.length;i++){
                 var arr4={
@@ -453,7 +449,7 @@ export default {
                     prizeName :this.ruleForm4[i].name1,//名称
                     num :Number(this.ruleForm4[i].name3),//数量
                     probabiliy :this.ruleForm4[i].name4,  //概率
-                    seagoldPrizeImgReqs:[]//图片
+                    loveArrowPrizeImgReqs:[]//图片
                 }
                  if (arr4.type == "粉币"){
                     arr4.type =1
@@ -473,10 +469,10 @@ export default {
                         var imgarr={
                             imgUrl:this.ruleForm4[i].name5[j]
                         }
-                    arr4.seagoldPrizeImgReqs.push(imgarr)
+                    arr4.loveArrowPrizeImgReqs.push(imgarr)
                     } 
                 } 
-                seagoldPrizeReqs.push(arr4)
+                loveArrowPrizeReqs.push(arr4)
             } 
         } 
         const data = {
@@ -488,8 +484,8 @@ export default {
             musicUrl         : this.ruleForm1.musicUrl, 
             //规则设置
             followQrCode   : this.ruleForm2.code, 
-            manTotalChance : Number(this.ruleForm2.freePeople), 
-            manDayChance   : Number(this.ruleForm2.freeNum), 
+            manTotalChance : Number(this.ruleForm2.manTotalChance), 
+            manDayChance   : Number(this.ruleForm2.manDayChance), 
             gameTime       :Number(this.ruleForm2.time), 
             actRule        : this.ruleForm2.desc,   
             //兑奖设置 
@@ -500,23 +496,20 @@ export default {
             phone             :this.ruleForm3.phone, 
             cashPrizeInstruction:this.ruleForm3.desc, 
              //奖项设置 
-            seagoldPrizeReqs:seagoldPrizeReqs,  
+            loveArrowPrizeReqs:loveArrowPrizeReqs,  
         };
         console.log(data,123); 
         
-         saveSeagold(data).then(data=>{
-          this.isSubmit==true
+         saveAct(data).then(data=>{
+             
           if (data.code == 100) { 
               this.$message({ message: "操作成功", type: "success"}); 
           } else {
-              this.isSubmit==false
               this.$message.error(data.msg + "错误码：[" + data.code + "]");
           }
         }).catch(() => {
-            this.isSubmit==false
             this.$message({type: "info", message: "网络问题，请刷新重试~" });
         }); 
-    } 
     },  
     backUrl(){
          window.history.go(-1);
@@ -543,8 +536,8 @@ export default {
             if(data.data.followQrCode){
                 this.ruleForm2.code=window.IMAGEURL+data.data.followQrCode
             } 
-            this.ruleForm2.freePeople=String(data.data.manTotalChance)
-            this.ruleForm2.freeNum   =String(data.data.manDayChance)
+            this.ruleForm2.manTotalChance=String(data.data.manTotalChance)
+            this.ruleForm2.manDayChance   =String(data.data.manDayChance)
             this.ruleForm2.time      =String(data.data.gameTime)
             this.ruleForm2.desc      =data.data.actRule
             //兑奖设置
@@ -562,19 +555,21 @@ export default {
             this.ruleForm3.addrRow= newaddr 
             //奖项设置 
             var newPraise = [];//兑奖地址
-            for (var i = 0; i < data.data.seagoldPrizeReqs.length; i++) {
+            for (var i = 0; i < data.data.loveArrowPrizeReqs.length; i++) {
                 var newabc1 = {
-                    name0  : data.data.seagoldPrizeReqs[i].type, 
-                    name1  : data.data.seagoldPrizeReqs[i].prizeUnit, 
-                    name2  : data.data.seagoldPrizeReqs[i].prizeName, 
-                    name3  : String(data.data.seagoldPrizeReqs[i].num), 
-                    name4  : data.data.seagoldPrizeReqs[i].probabiliy, 
+                    name0  : data.data.loveArrowPrizeReqs[i].type, 
+                    name1  : data.data.loveArrowPrizeReqs[i].prizeUnit, 
+                    name2  : data.data.loveArrowPrizeReqs[i].prizeName, 
+                    name3  : String(data.data.loveArrowPrizeReqs[i].num), 
+                    name4  : data.data.loveArrowPrizeReqs[i].probabiliy, 
                     name5  :[] 
                 };
                 if (newabc1.name0 == 1) {
                 newabc1.name0  = "粉币";
                 }else if(newabc1.name0  == 2){
                 newabc1.name0  = "手机流量"; 
+                }else if(newabc1.name0  == 3){
+                newabc1.name0  = "手机话费"; 
                 }else if(newabc1.name0  == 4){
                 newabc1.name0  = "实体物品";
                 }  else if(newabc1.name0  == 6){
@@ -583,9 +578,9 @@ export default {
                 newabc1.name0  = "优惠券";
                 } 
                 if(newabc1.name0=="实体物品"){
-                    for(var j = 0; j < data.data.seagoldPrizeReqs[i].seagoldPrizeImgReqs.length; j++){
+                    for(var j = 0; j < data.data.loveArrowPrizeReqs[i].loveArrowPrizeImgReqs.length; j++){
                         var imgarr={
-                             url:window.IMAGEURL+data.data.seagoldPrizeReqs[i].seagoldPrizeImgReqs[j].imgUrl
+                             url:window.IMAGEURL+data.data.loveArrowPrizeReqs[i].loveArrowPrizeImgReqs[j].imgUrl
                         }
                         newabc1.name5.push(imgarr.url)
                     }

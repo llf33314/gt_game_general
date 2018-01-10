@@ -429,11 +429,10 @@ export default {
                 this.$message.error("当奖品为实物时，请上传实物图片~");
                 return false 
         }else{
-            this.ruleForm4[i].name4 = parseFloat(this.ruleForm4[i].name4).toFixed(2); 
-           
-        }  
-         this.checkGL(); 
+            this.ruleForm4[i].name4 = parseFloat(this.ruleForm4[i].name4).toFixed(2);  
+        }   
       }
+      this.checkGL(); 
     }, 
     //表单提交--------------------------------------star
     submit(){
@@ -451,13 +450,13 @@ export default {
             newadv.push(arr)
         } 
         //兑奖地址
-        var newYearAddressReqs=[];
+        var newAddr=[];
         if(this.ruleForm3.addrRow){ 
             for(let i =0;i< this.ruleForm3.addrRow.length;i++){ 
                 var arraddr={
                     address:this.ruleForm3.addrRow[i].list,  
                 } 
-                newYearAddressReqs.push(arraddr)
+                newAddr.push(arraddr)
             }    
         } 
         //奖品
@@ -470,7 +469,7 @@ export default {
                     prizeUnit :Number(this.ruleForm4[i].name1),//单位
                     prizeName :this.ruleForm4[i].name1,//名称
                     num :Number(this.ruleForm4[i].name3),//数量
-                    // probabiliy :this.ruleForm4[i].name4,  //概率
+                    probabiliy :this.ruleForm4[i].name4,  //概率
                     loveArrowPrizeImgReqs:[]//图片
                 }
                 if(arr4.type==4){
@@ -503,7 +502,7 @@ export default {
             receiveType       :this.ruleForm3.type.toString(), //兑奖方式
             phone             :this.ruleForm3.phone,  
             cashPrizeInstruction :this.ruleForm3.desc,  
-            loveArrowAddressReqs :newYearAddressReqs ,   
+            loveArrowAddressReqs :newAddr ,   
             //奖项设置  
             loveArrowPrizeReqs:loveArrowPrizeReqs,            
         };

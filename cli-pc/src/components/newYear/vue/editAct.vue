@@ -16,15 +16,7 @@
             <el-tab-pane label="规则设置" name="1"></el-tab-pane>
             <el-tab-pane label="兑奖设置" name="2"></el-tab-pane>
             <el-tab-pane label="奖项设置" name="3"></el-tab-pane>
-        </el-tabs>
-
-        <!-- <el-steps :active="active" :center="true" :align-center="true" class="bbtom pb20">
-            <el-step title="基础设置"></el-step>
-            <el-step title="规则设置"></el-step>
-            <el-step title="兑奖设置"></el-step>
-            <el-step title="奖项设置"></el-step>
-            <el-step title="新建完成"></el-step>
-        </el-steps> -->
+        </el-tabs> 
         <!-- 基础设置 -->
         <div v-if="this.active==0" class="mt40">
           <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="120px" class="demo-ruleForm">
@@ -119,6 +111,7 @@
             <div class="gt-gray-region mt20" style="color:#666;line-height:20px">
                 <p>奖品类型：奖品的内容;奖品单位：奖品的数量货内容；奖项数量:该奖品的可领取次数</p>
                 <p>如：奖品类型：粉币；奖品数额：2；奖项名称：粉币；奖项数量：3；中奖概率：12</p> 
+                 <p>当奖品为实物时，请上传实物图片，实物图片建议尺寸1160px*64px</p> 
             </div> 
             <div class="mt20 mb20">
                 <el-button   @click="addForm4()"  type="primary">新增奖品</el-button> 
@@ -182,7 +175,7 @@
 </template>
 <script>
 import { 
- saveAct,getPrizeType,getActData
+ saveAct,getPrizeType,getAct
 }from './../api/api'
 export default {
   data() {
@@ -341,12 +334,7 @@ export default {
         console.log(file,11);
         console.log(fileList,22);
         console.log(this.ruleForm4.name5,33);
-    },
-
-
-
-
-
+    }, 
     addForm4(){ 
         this.ruleForm4.push({ name0: "", name1: "", name2: "", name3: "", name5: []},)
     },
@@ -397,13 +385,13 @@ export default {
             newarrLink.push(arr)
         }
        //兑奖地址
-        var newYearAddressReqs=[];
+        var newAddr=[];
         if(this.ruleForm3.addrRow){ 
             for(let i =0;i< this.ruleForm3.addrRow.length;i++){ 
                 var arraddr={
                     address:this.ruleForm3.addrRow[i].list,  
                 } 
-                newYearAddressReqs.push(arraddr)
+                newAddr.push(arraddr)
             }    
         } 
         //奖品
@@ -463,22 +451,19 @@ export default {
             receiveType  :this.ruleForm3.type.toString(), //兑奖方式
             phone  :this.ruleForm3.phone,  
             cashPrizeInstruction :this.ruleForm3.desc,  
-            newYearAddressReqs  :newYearAddressReqs ,  
+            newAddr  :newAddr ,  
             //奖项设置 
             prizeSetInstruction :this.explain, 
             newYearPrizeReqs:newYearPrizeReqs,  
         };
         console.log(data,123); 
-        saveAct(data).then(data=>{
-          this.isSubmit==true
+        saveAct(data).then(data=>{ 
           if (data.code == 100) {  
               this.$message({ message: "操作成功", type: "success"}); 
-          } else {
-              this.isSubmit==false
+          } else { 
               this.$message.error(data.msg + "错误码：[" + data.code + "]");
           }
-        }).catch(() => {
-            this.isSubmit==false
+        }).catch(() => { 
             this.$message({type: "info", message: "网络问题，请刷新重试~" });
         }); 
     },  
@@ -490,7 +475,7 @@ export default {
     },
     geteditData(){
         var id=this.$router.history.current.query.id
-        getActData(id).then(data=>{
+        getAct(id).then(data=>{
             if (data.code == 100) {                
             console.log(data,1233); 
             //基础设置
@@ -498,13 +483,15 @@ export default {
             this.ruleForm1.name1=[data.data.activityBeginTime,data.data.activityEndTime] 
             //广告设置 
             var newadv = [];//兑奖地址
-            for (var i = 0; i < data.data.newYearAdReqs.length; i++) {
-                var newabc1 = {
-                    url  : data.data.newYearAdReqs[i].hrefUrl,  
-                    img  : window.IMAGEURL+data.data.newYearAdReqs[i].url,  
-                };
-                newadv.push(newabc1);  
-            } 
+            if(data.data.newYearAdReqs.length!=0){           
+                for (var i = 0; i < data.data.newYearAdReqs.length; i++) {
+                    var newabc1 = {
+                        url  : data.data.newYearAdReqs[i].hrefUrl,  
+                        img  : window.IMAGEURL+data.data.newYearAdReqs[i].url,  
+                    };
+                    newadv.push(newabc1);  
+                } 
+            }
             this.ruleForm1.links= newadv 
             //规则设置 
             this.ruleForm2.code=window.IMAGEURL+data.data.followQrCode
