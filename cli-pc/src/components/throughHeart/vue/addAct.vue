@@ -429,11 +429,10 @@ export default {
                 this.$message.error("当奖品为实物时，请上传实物图片~");
                 return false 
         }else{
-            this.ruleForm4[i].name4 = parseFloat(this.ruleForm4[i].name4).toFixed(2); 
-           
-        }  
-         this.checkGL(); 
+            this.ruleForm4[i].name4 = parseFloat(this.ruleForm4[i].name4).toFixed(2);  
+        }   
       }
+      this.checkGL(); 
     }, 
     //表单提交--------------------------------------star
     submit(){

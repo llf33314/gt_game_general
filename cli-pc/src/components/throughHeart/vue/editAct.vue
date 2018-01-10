@@ -7,13 +7,12 @@
       <el-breadcrumb-item>编辑活动</el-breadcrumb-item>   
     </el-breadcrumb> 
     <div class="gt-content">
-        <el-steps :active="active" :center="true" :align-center="true" class="bbtom pb20">
-            <el-step title="基础设置"></el-step>
-            <el-step title="规则设置"></el-step>
-            <el-step title="兑奖设置"></el-step>
-            <el-step title="奖项设置"></el-step>
-            <el-step title="新建完成"></el-step>
-        </el-steps>
+        <el-tabs v-model="active" type="card">
+            <el-tab-pane label="基础设置" name="0"></el-tab-pane>
+            <el-tab-pane label="规则设置" name="1"></el-tab-pane>
+            <el-tab-pane label="兑奖设置" name="2"></el-tab-pane>
+            <el-tab-pane label="奖项设置" name="3"></el-tab-pane>
+        </el-tabs>
         <!-- 基础设置 -->
         <div v-if="this.active==0" class="mt40">
           <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="120px" class="demo-ruleForm">
@@ -153,7 +152,7 @@
                   </template>
                 </el-table-column>
                 <el-table-column label="奖品图片">
-                    <template slot-scope="scope"  v-if="scope.row.name0==4">  
+                    <template slot-scope="scope"  v-if="scope.row.name0==4||scope.row.name0=='实体物品'">  
                         <gt-material v-for="(item,index) in scope.row.name5" :key="index" :prop="scope" :sonIndex="index" selectType="radio" :url="item" @getChangeUrl="getAwardImgList" width="50" height="50" class="mr10"></gt-material>
                         <gt-material :prop="scope" selectType="select"  @getChangeUrl="addAwardImg" width="50" height="50" class="uploadBtn"></gt-material>
                     </template>
@@ -164,24 +163,14 @@
                     </template>
                 </el-table-column>
             </el-table>            
-        </div>        
-        <!-- 新建完成 -->
-        <div v-if="active==5" class="gt-content complete"> 
-            <div class="addOk"> 
-                <div class="el-icon-circle-check green" style="font-size:40px"></div>
-                <div class="complete-info">活动添加成功</div>
-                <el-button class="mt80" type="primary" @click="backUrl()">返回活动列表</el-button>  
-            </div> 
-        </div>
+        </div>   
         <!-- 按钮 -->
         <div class="h80"></div> 
         <div class="btnRow"  v-if="this.active!=5">
-            <el-button   @click="upStep()" v-if="this.active!=0">上一步</el-button>
-            <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步1</el-button> 
-            <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
-            <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
-            <el-button type="primary" @click="lastStep()"   :disabled="this.isSubmit"   v-if="this.active==3">保存</el-button>   
-            <el-button type="primary" @click="checkGL()">打印</el-button>   
+            <el-button   @click="backUrl()">返回</el-button>
+            <el-button type="primary" @click="submit()"          v-if="this.active==0||this.active==1">保存</el-button>   
+            <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">保存</el-button>   
+            <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>   
         </div> 
     </div>   
 </div>
@@ -383,7 +372,7 @@ export default {
     next(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) { 
-          this.active++;
+          this.submit();
         } else {
          console.log("error submit!!");
         }
@@ -533,8 +522,7 @@ export default {
         var id=this.$router.history.current.query.id
         getAct(id).then(data=>{
           if (data.code == 100) {
-            console.log(data,88552223333) 
-           
+            console.log(data,88552223333)  
             //基础设置
             this.ruleForm1.name=data.data.name
             this.ruleForm1.name1=[data.data.activityBeginTime,data.data.activityEndTime]  
@@ -542,22 +530,72 @@ export default {
             if(data.data.musicUrl){
                this.ruleForm1.music = data.data.musicUrl.split("/")[data.data.musicUrl.split("/").length-1]
             } 
+            //广告设置 
+            var newadv = [];//兑奖地址
+            for (var i = 0; i < data.data.loveArrowAdReqs.length; i++) {
+                var newabc1 = {
+                    url     : data.data.loveArrowAdReqs[i].hrefUrl,  
+                    imgUrl  : window.IMAGEURL+data.data.loveArrowAdReqs[i].url,  
+                };
+                newadv.push(newabc1);  
+            } 
+            this.ruleForm1.links= newadv 
             //规则设置
             if(data.data.followQrCode){
-                this.ruleForm2.code=window.IMAGEURL+data.data.followQrCode
+                this.ruleForm2.code=window.IMAGEURL1+data.data.followQrCode
             } 
-            this.ruleForm2.freePeople=String(data.data.manTotalChance)
-            this.ruleForm2.freeNum   =String(data.data.manDayChance)
-            this.ruleForm2.time      =String(data.data.gameTime)
+            this.ruleForm2.manTotalChance=String(data.data.manTotalChance)
+            this.ruleForm2.manDayChance   =String(data.data.manDayChance) 
             this.ruleForm2.desc      =data.data.actRule
-            //兑奖设置
-           
-           
-            //奖项设置 
-            
-            
-          
-          
+            //兑奖设置 
+            this.ruleForm3.date=[data.data.cashPrizeBeginTime,data.data.cashPrizeEndTime]
+            this.ruleForm3.type=data.data.receiveType.split(',')
+            this.ruleForm3.phone=data.data.phone
+            this.ruleForm3.desc=data.data.cashPrizeInstruction 
+            //兑奖地址  
+            var newaddr = [];
+            for (var i = 0; i < data.data.loveArrowAddressReqs.length; i++) {
+                var newabc1 = {
+                list  : data.data.loveArrowAddressReqs[i].address,  
+                };
+                newaddr.push(newabc1);  
+            } 
+            this.ruleForm3.addrRow= newaddr
+            //奖项设置  
+            var newPraise = [];//兑奖地址
+            for (var i = 0; i < data.data.loveArrowPrizeReqs .length; i++) {
+                var newabc1 = {
+                    name0  : data.data.loveArrowPrizeReqs [i].type, 
+                    name1  : data.data.loveArrowPrizeReqs [i].prizeUnit, 
+                    name2  : data.data.loveArrowPrizeReqs [i].prizeName, 
+                    name3  : String(data.data.loveArrowPrizeReqs [i].num), 
+                    name4  : data.data.loveArrowPrizeReqs [i].probabiliy, 
+                    name5  :[] 
+                };
+                if (newabc1.name0 == 1) {
+                newabc1.name0  = "粉币";
+                }else if(newabc1.name0  == 2){
+                newabc1.name0  = "手机流量"; 
+                }else if(newabc1.name0  == 3){
+                newabc1.name0  = "手机话费"; 
+                }else if(newabc1.name0  == 4){
+                newabc1.name0  = "实体物品";
+                }  else if(newabc1.name0  == 6){
+                newabc1.name0  = "积分";
+                } else if(newabc1.name0  == 7){
+                newabc1.name0  = "优惠券";
+                } 
+                if(newabc1.name0=="实体物品"){
+                    for(var j = 0; j < data.data.loveArrowPrizeReqs [i].loveArrowPrizeImgReqs.length; j++){
+                        var imgarr={
+                             url:window.IMAGEURL+data.data.loveArrowPrizeReqs [i].loveArrowPrizeImgReqs[j].imgUrl
+                        }
+                        newabc1.name5.push(imgarr.url)
+                    }
+                }
+               newPraise.push(newabc1);  
+            } 
+            this.ruleForm4=newPraise 
           } else {
               this.$message.error(data.msg + "错误码：[" + data.code + "]");
           }
