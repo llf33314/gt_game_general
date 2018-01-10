@@ -24,4 +24,4 @@ export const givePrize        = params => { return axios.post(`${base}/editNewYe
 
 /*新增，编辑*/
 export const saveAct          = params => { return axios.post(`${base}/saveNewYear`, params).then(res => res.data) }
-export const getActData       = params => { return axios.get(`${base}/getNewYear?id=${params}`).then(res => res.data) }
+export const getAct       = params => { return axios.get(`${base}/getNewYear?id=${params}`).then(res => res.data) }

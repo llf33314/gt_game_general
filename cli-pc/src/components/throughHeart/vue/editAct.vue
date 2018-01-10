@@ -203,8 +203,7 @@ export default {
       }
     }; 
     return {
-      active: 0,
-      isSubmit:false,
+      active: 0, 
       ruleForm1: {
         name: "",
         name1: "",
@@ -425,9 +424,6 @@ export default {
     }, 
     //表单提交--------------------------------------star
     submit(){
-        if(this.isSubmit){
-             this.$message({type: "info", message: "请不要重复提交~" });
-        }else{ 
         console.log(this.ruleForm3,123); 
         //广告
         var newadv=[];
@@ -439,13 +435,13 @@ export default {
             newadv.push(arr)
         } 
         //兑奖地址
-        var newYearAddressReqs=[];
+        var newAddr=[];
         if(this.ruleForm3.addrRow){ 
             for(let i =0;i< this.ruleForm3.addrRow.length;i++){ 
                 var arraddr={
                     address:this.ruleForm3.addrRow[i].list,  
                 } 
-                newYearAddressReqs.push(arraddr)
+                newAddr.push(arraddr)
             }    
         } 
         //奖品
@@ -458,7 +454,7 @@ export default {
                     prizeUnit :Number(this.ruleForm4[i].name1),//单位
                     prizeName :this.ruleForm4[i].name1,//名称
                     num :Number(this.ruleForm4[i].name3),//数量
-                    // probabiliy :this.ruleForm4[i].name4,  //概率
+                    probabiliy :this.ruleForm4[i].name4,  //概率
                     loveArrowPrizeImgReqs:[]//图片
                 }
                 if(arr4.type==4){
@@ -491,24 +487,20 @@ export default {
             receiveType       :this.ruleForm3.type.toString(), //兑奖方式
             phone             :this.ruleForm3.phone,  
             cashPrizeInstruction :this.ruleForm3.desc,  
-            loveArrowAddressReqs :newYearAddressReqs ,   
+            loveArrowAddressReqs :newAddr ,   
             //奖项设置  
             loveArrowPrizeReqs:loveArrowPrizeReqs,            
         };
         console.log(data,123); 
         saveAct(data).then(data=>{
-          this.isSubmit==true
           if (data.code == 100) {  
               this.active=5
           } else {
-              this.isSubmit==false
               this.$message.error(data.msg + "错误码：[" + data.code + "]");
           }
         }).catch(() => {
-            this.isSubmit==false
             this.$message({type: "info", message: "网络问题，请刷新重试~" });
         }); 
-        }
     },  
     backUrl(){
          window.history.go(-1);
@@ -532,13 +524,15 @@ export default {
             } 
             //广告设置 
             var newadv = [];//兑奖地址
-            for (var i = 0; i < data.data.loveArrowAdReqs.length; i++) {
-                var newabc1 = {
-                    url     : data.data.loveArrowAdReqs[i].hrefUrl,  
-                    imgUrl  : window.IMAGEURL+data.data.loveArrowAdReqs[i].url,  
-                };
-                newadv.push(newabc1);  
-            } 
+            if(data.data.loveArrowAdReqs.length!=0){
+                for (var i = 0; i < data.data.loveArrowAdReqs.length; i++) {
+                    var newabc1 = {
+                        url     : data.data.loveArrowAdReqs[i].hrefUrl,  
+                        imgUrl  : window.IMAGEURL+data.data.loveArrowAdReqs[i].url,  
+                    };
+                    newadv.push(newabc1);  
+                }   
+            }
             this.ruleForm1.links= newadv 
             //规则设置
             if(data.data.followQrCode){

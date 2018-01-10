@@ -55,11 +55,11 @@
                   <span class="el-upload__tip grey ml10">上传1:1二维码，将会在活动规则中显示商家二维码</span>  
                 </el-form-item> 
                
-                <el-form-item label="游戏总数:" prop="freePeople">
-                    <el-input class="w25_demo mr10" v-model="ruleForm2.freePeople"></el-input>次/人
+                <el-form-item label="游戏总数:" prop="manTotalChance">
+                    <el-input class="w25_demo mr10" v-model="ruleForm2.manTotalChance"></el-input>次/人
                 </el-form-item> 
-                <el-form-item label="免费次数：" prop="freeNum">
-                    <el-input class="w25_demo mr10" v-model="ruleForm2.freeNum"></el-input>次/人
+                <el-form-item label="免费次数：" prop="manDayChance">
+                    <el-input class="w25_demo mr10" v-model="ruleForm2.manDayChance"></el-input>次/人
                 </el-form-item>
                 <el-form-item label="答题时间：" prop="time">
                     <el-input class="w_demo" v-model="ruleForm2.time" type="number" placeholder="请输入答题时间"></el-input>
@@ -228,8 +228,8 @@ export default {
         code: "",
         time: "",
         duihuan:"",
-        freePeople:"",
-        freeNum:"", 
+        manTotalChance:"",
+        manDayChance:"", 
         fenbi:"",
         jifen:"",
         desc: "", 
@@ -243,10 +243,10 @@ export default {
         duihuan: [
           { required: true,  message: "请填写元宝兑换金币比例", trigger: "blur" } 
         ], 
-        freePeople: [
+        manTotalChance: [
           { required: true,  message: "请填写每人免费游戏次数", trigger: "blur" } 
         ], 
-        freeNum: [
+        manDayChance: [
           { required: true,  message: "请填写每人每天免费游戏次数", trigger: "blur" } 
         ],
         fenbi: [
@@ -406,7 +406,7 @@ export default {
         if(this.ruleForm3.addrRow){ 
             for(let i =0;i< this.ruleForm3.addrRow.length;i++){ 
                 var arraddr={
-                    name0:this.ruleForm3.addrRow[i].list,  
+                    address:this.ruleForm3.addrRow[i].list,  
                 } 
                 newaddr.push(arraddr)
             }    
@@ -433,8 +433,8 @@ export default {
             name6 : this.ruleForm2.code, 
             name7 : this.ruleForm2.time, 
             name8 : this.ruleForm2.duihuan, 
-            name9 : this.ruleForm2.freePeople, 
-            name10: this.ruleForm2.freeNum, 
+            name9 : this.ruleForm2.manTotalChance, 
+            name10: this.ruleForm2.manDayChance, 
             name11: this.ruleForm2.fenbi, 
             name12: this.ruleForm2.jifen,  
             name4 : this.ruleForm2.desc,  

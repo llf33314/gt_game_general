@@ -23,5 +23,5 @@ export const getPrizeList     = params => { return axios.post(`${base}/getSeagol
 export const givePrize        = params => { return axios.post(`${base}/editSeagoldApply`, params).then(res => res.data) }
 
 /*新增，编辑*/
-export const saveSeagold      = params => { return axios.post(`${base}/saveSeagold`, params).then(res => res.data) }
+export const saveAct      = params => { return axios.post(`${base}/saveSeagold`, params).then(res => res.data) }
 export const getAct           = params => { return axios.get(`${base}/getSeagoldRes?id=${params}`).then(res => res.data) }

@@ -42,11 +42,11 @@
                   <gt-material prop="url" :url="ruleForm2.code" v-on:getChangeUrl="getChangeUrl2" width="72" height="72"></gt-material>
                   <span class="el-upload__tip grey ml10">上传1:1二维码，将会在活动规则中显示商家二维码</span>  
                 </el-form-item> 
-                <el-form-item label="游戏总数：" prop="freePeople">
-                    <el-input class="w25_demo mr10" placeholder="请输入游戏总数" v-model="ruleForm2.freePeople"></el-input>次/人
+                <el-form-item label="游戏总数：" prop="manTotalChance">
+                    <el-input class="w25_demo mr10" placeholder="请输入游戏总数" v-model="ruleForm2.manTotalChance"></el-input>次/人
                 </el-form-item> 
-                <el-form-item label="每天次数：" prop="freeNum">
-                    <el-input class="w25_demo mr10" placeholder="请输入每天次数" v-model="ruleForm2.freeNum"></el-input>次/人
+                <el-form-item label="每天次数：" prop="manDayChance">
+                    <el-input class="w25_demo mr10" placeholder="请输入每天次数" v-model="ruleForm2.manDayChance"></el-input>次/人
                 </el-form-item>
                <el-form-item label="每天时长：" prop="time">
                     <el-input class="w_demo" v-model="ruleForm2.time" type="number" placeholder="请输入游戏时长"></el-input>
@@ -173,7 +173,7 @@
 </template>
 <script>
 import { 
- saveSeagold,getPrizeType
+ saveAct,getPrizeType
 }from './../api/api'
 export default {
   data() {
@@ -214,8 +214,8 @@ export default {
         code: "",
         time: "",
         duihuan:"",
-        freePeople:"",
-        freeNum:"", 
+        manTotalChance:"",
+        manDayChance:"", 
         fenbi:"",
         jifen:"",
         desc: "", 
@@ -229,10 +229,10 @@ export default {
         duihuan: [
           { required: true,  message: "请填写元宝兑换金币比例", trigger: "blur" } 
         ], 
-        freePeople: [
+        manTotalChance: [
           { required: true,  message: "游戏总数不能为空", trigger: "blur" } 
         ], 
-        freeNum: [
+        manDayChance: [
           { required: true,  message: "每天次数不能为空", trigger: "blur" } 
         ],
         fenbi: [
@@ -451,8 +451,8 @@ export default {
             musicUrl         : this.ruleForm1.musicUrl, 
             //规则设置
             followQrCode   : this.ruleForm2.code, 
-            manTotalChance : Number(this.ruleForm2.freePeople), 
-            manDayChance   : Number(this.ruleForm2.freeNum), 
+            manTotalChance : Number(this.ruleForm2.manTotalChance), 
+            manDayChance   : Number(this.ruleForm2.manDayChance), 
             gameTime       :Number(this.ruleForm2.time), 
             actRule        : this.ruleForm2.desc,   
             //兑奖设置 
@@ -466,7 +466,7 @@ export default {
             seagoldPrizeReqs:seagoldPrizeReqs,  
         };
         console.log(data,123);         
-        saveSeagold(data).then(data=>{
+        saveAct(data).then(data=>{
           this.isSubmit==true
           if (data.code == 100) { 
               this.active=5

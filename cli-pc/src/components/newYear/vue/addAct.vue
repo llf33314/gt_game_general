@@ -112,6 +112,7 @@
             <div class="gt-gray-region mt20" style="color:#666;line-height:20px">
                 <p>奖品类型：奖品的内容;奖品单位：奖品的数量货内容；奖项数量:该奖品的可领取次数</p>
                 <p>如：奖品类型：粉币；奖品数额：2；奖项名称：粉币；奖项数量：3；中奖概率：12</p> 
+                 <p>当奖品为实物时，请上传实物图片，实物图片建议尺寸1160px*64px</p> 
             </div> 
             <div class="mt20 mb20">
                 <el-button   @click="addForm4()"  type="primary">新增奖品</el-button> 
@@ -149,7 +150,7 @@
                 </el-table-column>
                 <el-table-column label="奖品图片">
                     <template slot-scope="scope"  v-if="scope.row.name0==4">  
-                        <gt-material v-for="(item,index) in scope.row.name5" :key="index" :prop="scope" :sonIndex="index" selectType="radio" :url="item" @getChangeUrl="getAwardImgList" width="41" height="40" class="mg-l10 imgUrl"></gt-material>
+                        <gt-material v-for="(item,index) in scope.row.name5" :key="index" :prop="scope" :sonIndex="index" selectType="radio" :url="item" @getChangeUrl="getAwardImgList" width="50" height="50" class="mr10"></gt-material>
                         <gt-material :prop="scope" selectType="select"  @getChangeUrl="addAwardImg" width="50" height="50" class="uploadBtn"></gt-material>
                     </template>
                 </el-table-column>
@@ -258,7 +259,7 @@ export default {
         desc: [{ required: true,message: "兑奖说明不能为空", trigger: "blur" }], 
       },
       explain: "",
-       options: [],
+      options: [],
       ruleForm4: [{ 
           name0: "",
           name1: "",
@@ -327,10 +328,7 @@ export default {
         this.ruleForm4[val.prop.$index].name5.splice(val.sonIndex, 1)
         return
       }
-    }, 
-
-
-
+    },  
     addForm4(){ 
         this.ruleForm4.push({ name0: "", name1: "", name2: "", name3: "", name5: []},)
     },
@@ -381,17 +379,17 @@ export default {
             newadv.push(arr)
         }
        //兑奖地址
-        var newYearAddressReqs=[];
+        var newAddr=[];
         if(this.ruleForm3.addrRow){ 
             for(let i =0;i< this.ruleForm3.addrRow.length;i++){ 
                 var arraddr={
                     address:this.ruleForm3.addrRow[i].list,  
                 } 
-                newYearAddressReqs.push(arraddr)
+                newAddr.push(arraddr)
             }    
         } 
         //奖品
-        var newYearPrizeReqs=[];
+        var newPrize=[];
          if(this.ruleForm4){
             for(let i =0;i< this.ruleForm4.length;i++){
                 var arr4={
@@ -411,7 +409,7 @@ export default {
                     arr4.newYearPrizeImgReqs.push(imgarr)
                     } 
                 } 
-                newYearPrizeReqs.push(arr4)
+                newPrize.push(arr4)
             } 
         } 
         const data = {
@@ -432,10 +430,10 @@ export default {
             receiveType  :this.ruleForm3.type.toString(), //兑奖方式
             phone  :this.ruleForm3.phone,  
             cashPrizeInstruction :this.ruleForm3.desc,  
-            newYearAddressReqs  :newYearAddressReqs ,  
+            newAddr  :newAddr ,  
             //奖项设置 
             prizeSetInstruction :this.explain, 
-            newYearPrizeReqs:newYearPrizeReqs,  
+            newPrize:newPrize,  
         };
         console.log(data,123); 
         saveAct(data).then(data=>{
