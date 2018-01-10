@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.gt.api.bean.session.BusUser;
 import com.gt.axis.bean.member.member.MemberReq;
 import com.gt.axis.bean.member.member.MemberRes;
+import com.gt.axis.bean.wxmp.applet.MsgTemplateRes;
 import com.gt.axis.bean.wxmp.dict.DictApiReq;
 import com.gt.axis.bean.wxmp.dict.DictApiRes;
 import com.gt.axis.bean.wxmp.fenbiflow.FenbiFlowRecord;
@@ -14,6 +15,7 @@ import com.gt.axis.bean.wxmp.fenbiflow.FenbiSurplus;
 import com.gt.axis.bean.wxmp.fenbiflow.UpdateFenbiReduceReq;
 import com.gt.axis.content.AxisResult;
 import com.gt.axis.server.member.MemberServer;
+import com.gt.axis.server.wxmp.AppletServer;
 import com.gt.axis.server.wxmp.DictServer;
 import com.gt.axis.server.wxmp.FenbiflowServer;
 import com.gt.game.common.config.ApplyProperties;
@@ -112,6 +114,24 @@ public class RaiseflagServiceImpl implements RaiseflagService {
     public ResponseDTO<MobileUrlRes> getAuthorityUrl(BusUser busUser, MobileUrlReq mobileUrlReq) {
         String url = applyProperties.getMobileBaseUrl() + "raiseflagMobile/"+ mobileUrlReq.getMainId() + "/79B4DE7C/saveAuthorizer.do";
         return ResponseDTO.createBySuccess("获取新增授权链接成功",new MobileUrlRes(url));
+    }
+    /**
+     *
+     * 获取公众号消息模板列表
+     *
+     * */
+    @Override
+    public ResponseDTO<List<RaiseflagTemplateRes>> getTemplateList(BusUser busUser) {
+        List<RaiseflagTemplateRes> list = new ArrayList<>();
+        AxisResult<List<MsgTemplateRes>> axisResult = AppletServer.selectTempObjByBusId(busUser.getId());
+        if(CommonUtil.isNotEmpty(axisResult) && CommonUtil.isNotEmpty(axisResult.getData())){
+            for(MsgTemplateRes msgTemplateRes : axisResult.getData()){
+                RaiseflagTemplateRes raiseflagTemplateRes = new RaiseflagTemplateRes();
+                BeanUtils.copyProperties(msgTemplateRes,raiseflagTemplateRes);
+                list.add(raiseflagTemplateRes);
+            }
+        }
+        return ResponseDTO.createBySuccess("消息模板列表成功",list);
     }
     /**
      * 获取活动数量

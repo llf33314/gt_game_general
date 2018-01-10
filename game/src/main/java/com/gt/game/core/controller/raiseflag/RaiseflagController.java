@@ -85,6 +85,25 @@ public class RaiseflagController  extends BaseController {
 
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+            @ApiResponse(code = 1, message = "响应对象", response = RaiseflagTemplateRes.class),
+    })
+    @ApiOperation(value = "获取公众号消息模板列表", notes = "获取公众号消息模板列表")
+    @RequestMapping(value = "/getTemplateList", method = RequestMethod.POST)
+    public ResponseDTO getTemplateList( HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO<List<RaiseflagTemplateRes>> responseDTO = raiseflagService.getTemplateList(busUser);
+            return responseDTO;
+        } catch (RaiseflagException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
             @ApiResponse(code = 1, message = "响应对象", response = RaiseflagCountRes.class),
     })
     @ApiOperation(value = "获取活动数量", notes = "获取活动数量")
