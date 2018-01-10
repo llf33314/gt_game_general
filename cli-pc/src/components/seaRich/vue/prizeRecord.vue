@@ -3,7 +3,7 @@
 </style>
 <template>
 <section>
-<div class="hd-common turnPlate">
+<div class="hd-common">
     <el-breadcrumb separator="/" class="gt-crumbs">
       <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
       <el-breadcrumb-item :to="{ path:'/seaRich/index' }">大海捞金</el-breadcrumb-item>  
@@ -64,27 +64,15 @@
         </el-table> 
         <!-- 详情 -->
         <el-dialog title="详情" :visible.sync="showDetail" class="detail-dialog"> 
-          <div v-if="showDetailData.status==1">
+          <div>
               <p><span class="w20_demo">中奖人</span><b> : </b> {{showDetailData.nickname}}</p> 
               <p><span class="w20_demo">兑奖人</span><b> : </b> -</p> 
               <p><span class="w20_demo">兑奖人联系方式</span><b> : </b> {{showDetailData.memberPhone }}</p> 
-              <p><span class="w20_demo">兑奖时间</span><b> : </b> -</p>  
-          </div>
-          <div v-if="showDetailData.status==2">
-              <p><span class="w20_demo">中奖人</span><b> : </b> {{showDetailData.nickname}}</p> 
-              <p><span class="w20_demo">兑奖人</span><b> : </b> {{showDetailData.memberName}}</p> 
-              <p><span class="w20_demo">兑奖人联系方式</span><b> : </b> {{showDetailData.memberPhone}}</p> 
-              <p><span class="w20_demo">领取方式</span><b> : </b> {{showDetailData.receiveType|receiveTypeStatus(showDetailData.receiveType)}}</p> 
-              <p><span class="w20_demo">到店领取地址</span><b> : </b> {{showDetailData.addressName}}</p> 
-              <p><span class="w20_demo">兑奖时间</span><b> : </b> {{showDetailData.cashTime | parseTime('{y}-{m}-{d} {h}:{i}')}} </p> 
-          </div>
-          <div v-if="showDetailData.status==3">
-              <p><span class="w20_demo">中奖人</span><b> : </b> {{showDetailData.nickname}}</p> 
-              <p><span class="w20_demo">兑奖人</span><b> : </b> -</p> 
-              <p><span class="w20_demo">兑奖人联系方式</span><b> : </b> {{showDetailData.memberPhone}}</p> 
-              <p><span class="w20_demo">领取方式</span><b> : </b> {{showDetailData.receiveType|receiveTypeStatus(showDetailData.receiveType)}}</p> 
-              <p><span class="w20_demo">到店领取地址</span><b> : </b> {{showDetailData.addressName}}</p> 
-              <p><span class="w20_demo">兑奖时间</span><b> : </b>-</p> 
+              <p v-if="showDetailData.status==1"><span class="w20_demo">兑奖时间</span><b> : </b> -</p> 
+              <p v-if="showDetailData.status!=1"><span class="w20_demo">领取方式</span><b> : </b> {{showDetailData.receiveType|receiveTypeStatus(showDetailData.receiveType)}}</p> 
+              <p v-if="showDetailData.receiveType==1"><span class="w20_demo">到店领取地址</span><b> : </b> {{showDetailData.addressName}}</p> 
+              <p v-if="showDetailData.receiveType==2"><span class="w20_demo">收货人姓名</span><b> : </b> {{showDetailData.addressName}}</p> 
+              <p v-if="showDetailData.receiveType==2"><span class="w20_demo">收货地址</span><b> : </b> {{showDetailData.address}}</p> 
           </div> 
         </el-dialog> 
         <div class="public-page-fr" v-if="this.tableData.data.length!=0">
@@ -218,6 +206,8 @@ import {
           val = "粉币";
         }else if(val == 2){
           val = "手机流量"; 
+        }else if(val == 3){
+          val = "手机话费"; 
         }else if(val == 4){
           val = "实体物品";
         }  else if(val == 6){

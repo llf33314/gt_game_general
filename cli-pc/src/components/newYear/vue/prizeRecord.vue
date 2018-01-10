@@ -32,8 +32,7 @@
         <div class="h10"></div>
         <el-button type="primary" @click="toExport()" class="ml30">导出</el-button> 
     </div> 
-    <div class="gt-content"> 
-       
+    <div class="gt-content">        
         <el-table :data="tableData.data"  v-if="this.tableData.data.length!=0">
           <el-table-column prop="prizeName" label="奖项名称">              
           </el-table-column>
@@ -65,27 +64,15 @@
         <gt-null-data v-if="this.tableData.data.length==0">还没有相关中奖纪录</gt-null-data>  
         <!-- 详情 -->
         <el-dialog title="详情" :visible.sync="showDetail" class="detail-dialog"> 
-          <div v-if="showDetailData.status==1">
+          <div>
               <p><span class="w20_demo">中奖人</span><b> : </b> {{showDetailData.nickname}}</p> 
               <p><span class="w20_demo">兑奖人</span><b> : </b> -</p> 
               <p><span class="w20_demo">兑奖人联系方式</span><b> : </b> {{showDetailData.memberPhone }}</p> 
-              <p><span class="w20_demo">兑奖时间</span><b> : </b> -</p>  
-          </div>
-          <div v-if="showDetailData.status==2">
-              <p><span class="w20_demo">中奖人</span><b> : </b> {{showDetailData.nickname}}</p> 
-              <p><span class="w20_demo">兑奖人</span><b> : </b> {{showDetailData.memberName}}</p> 
-              <p><span class="w20_demo">兑奖人联系方式</span><b> : </b> {{showDetailData.memberPhone}}</p> 
-              <p><span class="w20_demo">领取方式</span><b> : </b> {{showDetailData.receiveType|receiveTypeStatus(showDetailData.receiveType)}}</p> 
-              <p><span class="w20_demo">到店领取地址</span><b> : </b> {{showDetailData.addressName}}</p> 
-              <p><span class="w20_demo">兑奖时间</span><b> : </b> {{showDetailData.cashTime | parseTime('{y}-{m}-{d} {h}:{i}')}} </p> 
-          </div>
-          <div v-if="showDetailData.status==3">
-              <p><span class="w20_demo">中奖人</span><b> : </b> {{showDetailData.nickname}}</p> 
-              <p><span class="w20_demo">兑奖人</span><b> : </b> -</p> 
-              <p><span class="w20_demo">兑奖人联系方式</span><b> : </b> {{showDetailData.memberPhone}}</p> 
-              <p><span class="w20_demo">领取方式</span><b> : </b> {{showDetailData.receiveType|receiveTypeStatus(showDetailData.receiveType)}} </p> 
-              <p><span class="w20_demo">到店领取地址</span><b> : </b> {{showDetailData.addressName}}</p> 
-              <p><span class="w20_demo">兑奖时间</span><b> : </b>-</p> 
+              <p v-if="showDetailData.status==1"><span class="w20_demo">兑奖时间</span><b> : </b> -</p> 
+              <p v-if="showDetailData.status!=1"><span class="w20_demo">领取方式</span><b> : </b> {{showDetailData.receiveType|receiveTypeStatus(showDetailData.receiveType)}}</p> 
+              <p v-if="showDetailData.receiveType==1"><span class="w20_demo">到店领取地址</span><b> : </b> {{showDetailData.addressName}}</p> 
+              <p v-if="showDetailData.receiveType==2"><span class="w20_demo">收货人姓名</span><b> : </b> {{showDetailData.addressName}}</p> 
+              <p v-if="showDetailData.receiveType==2"><span class="w20_demo">收货地址</span><b> : </b> {{showDetailData.address}}</p> 
           </div> 
         </el-dialog> 
         <div class="public-page-fr" v-if="this.tableData.data.length!=0">
