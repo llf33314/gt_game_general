@@ -107,7 +107,7 @@
         <div v-if="this.active==2" class="mt40">
             <el-form :model="ruleForm3" :rules="rules3" ref="ruleForm3" label-width="120px" class="mt40 demo-ruleForm">
                 <el-form-item label="兑奖时间：" prop="date">
-                    <el-date-picker class="w_demo" v-model="ruleForm3.date" type="daterange" placeholder="选择日期范围">
+                    <el-date-picker class="w_demo" v-model="ruleForm3.date" :picker-options="pickerOptions"  type="daterange" placeholder="选择日期范围">
                     </el-date-picker> 
                 </el-form-item>  
                 <el-form-item label="兑奖方式：" prop="type">
@@ -309,6 +309,12 @@ export default {
         ],
          
         
+      },
+            // 时间的筛选
+      pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() < Date.now() - 8.64e7;
+          }
       },
       ruleForm3: {
         date:"",
@@ -521,7 +527,7 @@ export default {
             receiveType       :this.ruleForm3.type.toString(), //兑奖方式
             phone             :this.ruleForm3.phone,  
             cashPrizeInstruction :this.ruleForm3.desc,  
-            qixiAddressReqs      :newAddr, 
+            raiseflagAddressReqs      :newAddr, 
             //奖项设置 
             isJoinPrize     :this.isJoinPrize , 
             joinPrizeHref   :this.ruleForm5.name1, 
