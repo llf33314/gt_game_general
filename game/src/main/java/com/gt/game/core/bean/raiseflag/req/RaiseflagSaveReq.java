@@ -76,6 +76,132 @@ public class RaiseflagSaveReq {
 	@ApiModelProperty("奖品")
 	private List<RaiseflagPrizeReq> raiseflagPrizeReqs;
 
+	@ApiModelProperty("游戏结束后提示语")
+	private String gameEndTips;
+	/**
+	 * 是否需要赞助商(1开启0关闭)
+	 */
+	@ApiModelProperty("赞助商提示(1开启0关闭)")
+	private Integer isSponsor;
+	/**
+	 * 赞助商提示语
+	 */
+	@ApiModelProperty("赞助商自定义提示")
+	private String sponsorTips;
+
+	@ApiModelProperty("赞助商")
+	List<RaiseflagSponsorReq> raiseflagSponsorReqs;
+	/**
+	 * 发送中奖消息(1开启0关闭)
+	 */
+	@ApiModelProperty("中奖消息(1开启0关闭)")
+	private Integer isMsgTemplate;
+	/**
+	 * 消息模板id
+	 */
+	@ApiModelProperty("消息模板id")
+	private Integer msgTemplateId;
+	/**
+	 * 设置参与奖(1开启0关闭)
+	 */
+	@ApiModelProperty("参与奖(1开启0关闭)")
+	private Integer isJoinPrize;
+	/**
+	 * 设置参与奖链接
+	 */
+	@ApiModelProperty("参与奖链接")
+	private String joinPrizeHref;
+	/**
+	 * 参与奖提示语
+	 */
+	@ApiModelProperty("参与奖提示语")
+	private String joinPrizeTips;
+	/**
+	 * 参与奖按钮提示语
+	 */
+	@ApiModelProperty("参与按钮提示语")
+	private String joinPrizeBtnTips;
+
+	public Integer getIsSponsor() {
+		return isSponsor;
+	}
+
+	public void setIsSponsor(Integer isSponsor) {
+		this.isSponsor = isSponsor;
+	}
+
+	public String getSponsorTips() {
+		return sponsorTips;
+	}
+
+	public void setSponsorTips(String sponsorTips) {
+		this.sponsorTips = sponsorTips;
+	}
+
+	public List<RaiseflagSponsorReq> getRaiseflagSponsorReqs() {
+		return raiseflagSponsorReqs;
+	}
+
+	public void setRaiseflagSponsorReqs(List<RaiseflagSponsorReq> raiseflagSponsorReqs) {
+		this.raiseflagSponsorReqs = raiseflagSponsorReqs;
+	}
+
+	public Integer getIsMsgTemplate() {
+		return isMsgTemplate;
+	}
+
+	public void setIsMsgTemplate(Integer isMsgTemplate) {
+		this.isMsgTemplate = isMsgTemplate;
+	}
+
+	public Integer getMsgTemplateId() {
+		return msgTemplateId;
+	}
+
+	public void setMsgTemplateId(Integer msgTemplateId) {
+		this.msgTemplateId = msgTemplateId;
+	}
+
+	public Integer getIsJoinPrize() {
+		return isJoinPrize;
+	}
+
+	public void setIsJoinPrize(Integer isJoinPrize) {
+		this.isJoinPrize = isJoinPrize;
+	}
+
+	public String getJoinPrizeHref() {
+		return joinPrizeHref;
+	}
+
+	public void setJoinPrizeHref(String joinPrizeHref) {
+		this.joinPrizeHref = joinPrizeHref;
+	}
+
+	public String getJoinPrizeTips() {
+		return joinPrizeTips;
+	}
+
+	public void setJoinPrizeTips(String joinPrizeTips) {
+		this.joinPrizeTips = joinPrizeTips;
+	}
+
+	public String getJoinPrizeBtnTips() {
+		return joinPrizeBtnTips;
+	}
+
+	public void setJoinPrizeBtnTips(String joinPrizeBtnTips) {
+		this.joinPrizeBtnTips = joinPrizeBtnTips;
+	}
+
+	public String getGameEndTips() {
+		return gameEndTips;
+	}
+
+	public void setGameEndTips(String gameEndTips) {
+		this.gameEndTips = gameEndTips;
+	}
+
 	public Integer getId() {
 		return id;
 	}

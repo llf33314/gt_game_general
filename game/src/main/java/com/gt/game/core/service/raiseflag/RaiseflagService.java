@@ -47,4 +47,6 @@ public interface RaiseflagService{
     ResponseDTO removeRaiseflagAuthority(BusUser busUser, RaiseflagAuthorityIdsReq raiseflagAuthorityIdsReq);
 
     Map<String,Object> exports(Map<String, Object> params);
+
+    ResponseDTO<List<RaiseflagTemplateRes>> getTemplateList(BusUser busUser);
 }

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.gt.api.bean.session.BusUser;
 import com.gt.axis.bean.member.member.MemberReq;
 import com.gt.axis.bean.member.member.MemberRes;
+import com.gt.axis.bean.wxmp.applet.MsgTemplateRes;
 import com.gt.axis.bean.wxmp.dict.DictApiReq;
 import com.gt.axis.bean.wxmp.dict.DictApiRes;
 import com.gt.axis.bean.wxmp.fenbiflow.FenbiFlowRecord;
@@ -14,6 +15,7 @@ import com.gt.axis.bean.wxmp.fenbiflow.FenbiSurplus;
 import com.gt.axis.bean.wxmp.fenbiflow.UpdateFenbiReduceReq;
 import com.gt.axis.content.AxisResult;
 import com.gt.axis.server.member.MemberServer;
+import com.gt.axis.server.wxmp.AppletServer;
 import com.gt.axis.server.wxmp.DictServer;
 import com.gt.axis.server.wxmp.FenbiflowServer;
 import com.gt.game.common.config.ApplyProperties;
@@ -112,6 +114,24 @@ public class RaiseflagServiceImpl implements RaiseflagService {
     public ResponseDTO<MobileUrlRes> getAuthorityUrl(BusUser busUser, MobileUrlReq mobileUrlReq) {
         String url = applyProperties.getMobileBaseUrl() + "raiseflagMobile/"+ mobileUrlReq.getMainId() + "/79B4DE7C/saveAuthorizer.do";
         return ResponseDTO.createBySuccess("获取新增授权链接成功",new MobileUrlRes(url));
+    }
+    /**
+     *
+     * 获取公众号消息模板列表
+     *
+     * */
+    @Override
+    public ResponseDTO<List<RaiseflagTemplateRes>> getTemplateList(BusUser busUser) {
+        List<RaiseflagTemplateRes> list = new ArrayList<>();
+        AxisResult<List<MsgTemplateRes>> axisResult = AppletServer.selectTempObjByBusId(busUser.getId());
+        if(CommonUtil.isNotEmpty(axisResult) && CommonUtil.isNotEmpty(axisResult.getData())){
+            for(MsgTemplateRes msgTemplateRes : axisResult.getData()){
+                RaiseflagTemplateRes raiseflagTemplateRes = new RaiseflagTemplateRes();
+                BeanUtils.copyProperties(msgTemplateRes,raiseflagTemplateRes);
+                list.add(raiseflagTemplateRes);
+            }
+        }
+        return ResponseDTO.createBySuccess("消息模板列表成功",list);
     }
     /**
      * 获取活动数量
@@ -275,14 +295,21 @@ public class RaiseflagServiceImpl implements RaiseflagService {
             //兑奖地址
             List<RaiseflagAddress> RaiseflagAddresses = raiseflagAddressService.selectList(new EntityWrapper<RaiseflagAddress>().eq("act_id", id));
             List<RaiseflagAddressReq> RaiseflagAddressReqs = new ArrayList<>();
-            if (RaiseflagAddresses.size() > 0) {
-                for (RaiseflagAddress RaiseflagAddress : RaiseflagAddresses) {
-                    RaiseflagAddressReq RaiseflagAddressReq = new RaiseflagAddressReq();
-                    BeanUtils.copyProperties(RaiseflagAddress, RaiseflagAddressReq);
-                    RaiseflagAddressReqs.add(RaiseflagAddressReq);
-                }
+            for (RaiseflagAddress RaiseflagAddress : RaiseflagAddresses) {
+                RaiseflagAddressReq RaiseflagAddressReq = new RaiseflagAddressReq();
+                BeanUtils.copyProperties(RaiseflagAddress, RaiseflagAddressReq);
+                RaiseflagAddressReqs.add(RaiseflagAddressReq);
             }
             RaiseflagRes.setRaiseflagAddressReqs(RaiseflagAddressReqs);
+            //赞助商
+            List<RaiseflagSponsorReq> raiseflagSponsorReqs = new ArrayList<>();
+            List<RaiseflagSponsor> list = raiseflagSponsorService.selectList(new EntityWrapper<RaiseflagSponsor>().eq("act_id", id));
+            for(RaiseflagSponsor raiseflagSponsor : list){
+                RaiseflagSponsorReq raiseflagSponsorReq = new RaiseflagSponsorReq();
+                BeanUtils.copyProperties(raiseflagSponsor,raiseflagSponsorReq);
+                raiseflagSponsorReqs.add(raiseflagSponsorReq);
+            }
+            RaiseflagRes.setRaiseflagSponsorReqs(raiseflagSponsorReqs);
         }
         return ResponseDTO.createBySuccess("获取成功",RaiseflagRes);
     }
@@ -395,6 +422,8 @@ public class RaiseflagServiceImpl implements RaiseflagService {
             //删除
             //兑奖地址
             raiseflagAddressService.delete(new EntityWrapper<RaiseflagAddress>().eq("act_id",RaiseflagMain.getId()));
+            //赞助商
+            raiseflagSponsorService.delete(new EntityWrapper<RaiseflagSponsor>().eq("act_id",RaiseflagMain.getId()));
             //奖品
             List<RaiseflagPrize> RaiseflagPrizes = raiseflagPrizeService.selectList(new EntityWrapper<RaiseflagPrize>().eq("act_id",RaiseflagMain.getId()));
             if(RaiseflagPrizes.size() > 0){
@@ -431,6 +460,15 @@ public class RaiseflagServiceImpl implements RaiseflagService {
                         raiseflagPrizeImgService.insert(RaiseflagPrizeImg);
                     }
                 }
+            }
+        }
+        //赞助商
+        if(CommonUtil.isNotEmpty(RaiseflagSaveReq.getRaiseflagSponsorReqs())){
+            for(RaiseflagSponsorReq raiseflagSponsorReq :RaiseflagSaveReq.getRaiseflagSponsorReqs()){
+                RaiseflagSponsor raiseflagSponsor = new RaiseflagSponsor();
+                BeanUtils.copyProperties(raiseflagSponsorReq,raiseflagSponsor);
+                raiseflagSponsor.setActId(RaiseflagMain.getId());
+                raiseflagSponsorService.insert(raiseflagSponsor);
             }
         }
         //兑奖地址
