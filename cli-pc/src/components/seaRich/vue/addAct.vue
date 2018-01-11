@@ -21,7 +21,7 @@
                     <el-input class="w_demo" v-model="ruleForm1.name"></el-input>
                 </el-form-item> 
                 <el-form-item label="游戏时间：" prop="name1">
-                    <el-date-picker class="w_demo" v-model="ruleForm1.name1"   type="datetimerange"  placeholder="选择时间范围">
+                    <el-date-picker class="w_demo" v-model="ruleForm1.name1"  :picker-options="pickerOptions" type="datetimerange"  placeholder="选择时间范围">
                     </el-date-picker>
                 </el-form-item>  
                 <el-form-item label="背景音乐：">
@@ -164,9 +164,7 @@
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
             <el-button type="primary" @click="lastStep()"   :disabled="this.isSubmit"     v-if="this.active==3">保存</el-button>   
             <!-- <el-button type="primary" @click="submit()">打印</el-button>    -->
-        </div> 
-
-
+        </div>  
 </div>   
 </div>
 </section>
@@ -279,7 +277,14 @@ export default {
           name4: "" ,
           name5:[]
         }],   
+        // 时间的筛选
+      pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() < Date.now() - 8.64e7;
+          }
+      },
     };
+    
   },
   methods: {   
     getMusic(e) {
@@ -325,7 +330,10 @@ export default {
     },
     upStep() {
       this.active--;
-    },  
+    },   
+    getChangeUrl2(e) { 
+      this.ruleForm2.code=e.url
+    },
     // 添加实物图 
     addAwardImg(val) {
          JSON.parse(val.url).forEach(function (item, index, arr) {
@@ -338,11 +346,7 @@ export default {
         this.ruleForm4[val.prop.$index].name5.splice(val.sonIndex, 1)
         return
       }
-    }, 
-     
-    getChangeUrl2(e) { 
-      this.ruleForm2.code=e.url
-    }, 
+    },  
     getChangeUrl4(i,e) {   
       this.ruleForm4[i].name5=e.url
     }, 
@@ -467,15 +471,15 @@ export default {
         };
         console.log(data,123);         
         saveAct(data).then(data=>{
-          this.isSubmit==true
+          this.isSubmit=true
           if (data.code == 100) { 
               this.active=5
           } else {
-              this.isSubmit==false
+              this.isSubmit=false
               this.$message.error(data.msg + "错误码：[" + data.code + "]");
           }
         }).catch(() => {
-            this.isSubmit==false
+            this.isSubmit=false
             this.$message({type: "info", message: "网络问题，请刷新重试~" });
         }); 
     } 

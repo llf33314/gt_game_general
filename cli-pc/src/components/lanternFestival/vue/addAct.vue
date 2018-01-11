@@ -440,16 +440,16 @@ export default {
         };
         console.log(data,123); 
         saveAct(data).then(data=>{
-          this.isSubmit==true
+          this.isSubmit=true
           if (data.code == 100) { 
               console.log(12336666)
               this.active=5
           } else {
-              this.isSubmit==false
+              this.isSubmit=false
               this.$message.error(data.msg + "错误码：[" + data.code + "]");
           }
         }).catch(() => {
-            this.isSubmit==false
+            this.isSubmit=false
             this.$message({type: "info", message: "网络问题，请刷新重试~" });
         }); 
     },  
