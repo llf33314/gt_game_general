@@ -33,6 +33,7 @@ import com.gt.game.core.exception.raiseflag.RaiseflagException;
 import com.gt.game.core.service.raiseflag.*;
 import com.gt.game.core.util.CommonUtil;
 import com.gt.game.core.util.DateTimeKit;
+import com.gt.game.core.util.RandomKit;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -401,6 +402,8 @@ public class RaiseflagServiceImpl implements RaiseflagService {
             BeanUtils.copyProperties(RaiseflagSaveReq,RaiseflagMain);
             RaiseflagMain.setBusId(busUser.getId());
             RaiseflagMain.setCreatetime(new Date());
+            RaiseflagMain.setRfStatus(1);
+            RaiseflagMain.setAuthoritySign(RandomKit.getRandomString(6, 2));
             RaiseflagMain.setFollowQrCode(RaiseflagMain.getFollowQrCode().split("/upload").length > 1
                     ?RaiseflagMain.getFollowQrCode().split("/upload")[1]:RaiseflagMain.getFollowQrCode());
             raiseflagMainService.insert(RaiseflagMain);
@@ -462,12 +465,15 @@ public class RaiseflagServiceImpl implements RaiseflagService {
                 }
             }
         }
+        Date date = new Date();
         //赞助商
         if(CommonUtil.isNotEmpty(RaiseflagSaveReq.getRaiseflagSponsorReqs())){
             for(RaiseflagSponsorReq raiseflagSponsorReq :RaiseflagSaveReq.getRaiseflagSponsorReqs()){
                 RaiseflagSponsor raiseflagSponsor = new RaiseflagSponsor();
                 BeanUtils.copyProperties(raiseflagSponsorReq,raiseflagSponsor);
+                raiseflagSponsor.setSponsorImgUrl(raiseflagSponsor.getSponsorUrl().split("/upload").length > 1 ? raiseflagSponsor.getSponsorUrl().split("/upload")[1]:"");
                 raiseflagSponsor.setActId(RaiseflagMain.getId());
+                raiseflagSponsor.setCreatetime(date);
                 raiseflagSponsorService.insert(raiseflagSponsor);
             }
         }
@@ -477,6 +483,7 @@ public class RaiseflagServiceImpl implements RaiseflagService {
                 RaiseflagAddress RaiseflagAddress = new RaiseflagAddress();
                 BeanUtils.copyProperties(RaiseflagAddressReq,RaiseflagAddress);
                 RaiseflagAddress.setActId(RaiseflagMain.getId());
+                RaiseflagAddress.setCreatetime(date);
                 raiseflagAddressService.insert(RaiseflagAddress);
             }
         }
