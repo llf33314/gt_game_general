@@ -24,7 +24,7 @@
                     <el-input class="w_demo" v-model="ruleForm1.name"></el-input>
                 </el-form-item>
                 <el-form-item label="游戏时间：" prop="name1">
-                    <el-date-picker class="w_demo" v-model="ruleForm1.name1"   type="datetimerange"  placeholder="选择时间范围">
+                    <el-date-picker class="w_demo" v-model="ruleForm1.name1" :picker-options="pickerOptions"  type="datetimerange"  placeholder="选择时间范围">
                     </el-date-picker>
                 </el-form-item>  
                 <el-form-item label="结束说明：" prop="desc">
@@ -394,6 +394,12 @@ export default {
           name4: ""
         }
       ],
+      // 时间的筛选
+      pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() < Date.now() - 8.64e7;
+          }
+      },
     };
   },
   methods: {  

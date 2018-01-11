@@ -22,7 +22,7 @@
                     <el-input class="w_demo" v-model="ruleForm1.name"></el-input>
                 </el-form-item>
                 <el-form-item label="游戏时间：" prop="name1">
-                    <el-date-picker class="w_demo" v-model="ruleForm1.name1"   type="datetimerange"  placeholder="请选择游戏时间范围">
+                    <el-date-picker class="w_demo" v-model="ruleForm1.name1"  :picker-options="pickerOptions"  type="datetimerange"  placeholder="请选择游戏时间范围">
                     </el-date-picker>
                 </el-form-item>   
             <h1 class="mt30 mb20 pb10 bbtom">广告设置</h1> 
@@ -167,7 +167,7 @@
             <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步1</el-button> 
             <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
-            <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>   
+            <el-button type="primary" @click="lastStep()"    :disabled="isSubmit"       v-if="this.active==3">保存</el-button>   
             <el-button type="primary" @click="submit()">打印</el-button>   
         </div> 
     </div>   
@@ -202,6 +202,7 @@ export default {
     }; 
     return {
       active: 0,
+      isSubmit:false,
       ruleForm1: {
         name: "",
         name1: "", 
@@ -264,6 +265,12 @@ export default {
           name3: "",
           name5: []
         }], 
+              // 时间的筛选
+      pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() < Date.now() - 8.64e7;
+          }
+      },
     };
   },
   methods: {    
@@ -367,6 +374,7 @@ export default {
             } 
             newadv.push(arr)
         } 
+        //兑奖地址
         var newAddr=[];
         if(this.ruleForm3.addrRow){ 
             for(let i =0;i< this.ruleForm3.addrRow.length;i++){ 
@@ -424,15 +432,15 @@ export default {
         };
         console.log(data,123); 
         saveAct(data).then(data=>{
-          this.isSubmit==true
+          this.isSubmit=true
           if (data.code == 100) {  
               this.active=5
           } else {
-              this.isSubmit==false
+              this.isSubmit=false
               this.$message.error(data.msg + "错误码：[" + data.code + "]");
           }
         }).catch(() => {
-            this.isSubmit==false
+            this.isSubmit=false
             this.$message({type: "info", message: "网络问题，请刷新重试~" });
         }); 
     },  

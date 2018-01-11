@@ -2,6 +2,7 @@ const index = ()=>import( '@/components/nationalFlag/vue/index')
 const prizeRecord = ()=>import( '@/components/nationalFlag/vue/prizeRecord') 
 const cancelOut = ()=>import( '@/components/nationalFlag/vue/cancelOut')
 const addAct = ()=>import( '@/components/nationalFlag/vue/addAct')
+const editAct = ()=>import( '@/components/nationalFlag/vue/editAct')
 export const nationalFlag = [
     {
         path:'/nationalFlag/index',
@@ -23,5 +24,11 @@ export const nationalFlag = [
         path:'/nationalFlag/addAct',
         component: addAct,
         name:'nationalFlag_addAct'
+    }
+    ,
+    {
+        path:'/nationalFlag/editAct',
+        component: editAct,
+        name:'nationalFlag_editAct'
     }
 ]

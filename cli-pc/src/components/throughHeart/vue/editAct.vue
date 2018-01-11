@@ -20,7 +20,7 @@
                     <el-input class="w_demo" v-model="ruleForm1.name"></el-input>
                 </el-form-item>
                 <el-form-item label="游戏时间：" prop="name1">
-                    <el-date-picker class="w_demo" v-model="ruleForm1.name1"   type="datetimerange"  placeholder="请选择游戏时间范围">
+                    <el-date-picker class="w_demo" v-model="ruleForm1.name1"   type="datetimerange" :picker-options="pickerOptions"  placeholder="请选择游戏时间范围">
                     </el-date-picker>
                 </el-form-item>  
                 <el-form-item label="背景音乐：">
@@ -286,7 +286,13 @@ export default {
           name3: "",
           name4: "" ,
           name5:[]
-        }],    
+        }],   
+      // 时间的筛选
+      pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() < Date.now() - 8.64e7;
+          }
+      }, 
     };
   },
   methods: {    
@@ -556,7 +562,7 @@ export default {
             } 
             this.ruleForm3.addrRow= newaddr
             //奖项设置  
-            var newPraise = [];//兑奖地址
+            var newPraise = [];//兑奖
             for (var i = 0; i < data.data.loveArrowPrizeReqs .length; i++) {
                 var newabc1 = {
                     name0  : data.data.loveArrowPrizeReqs [i].type, 
