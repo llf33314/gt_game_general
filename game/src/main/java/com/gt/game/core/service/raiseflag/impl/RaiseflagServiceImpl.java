@@ -295,14 +295,21 @@ public class RaiseflagServiceImpl implements RaiseflagService {
             //兑奖地址
             List<RaiseflagAddress> RaiseflagAddresses = raiseflagAddressService.selectList(new EntityWrapper<RaiseflagAddress>().eq("act_id", id));
             List<RaiseflagAddressReq> RaiseflagAddressReqs = new ArrayList<>();
-            if (RaiseflagAddresses.size() > 0) {
-                for (RaiseflagAddress RaiseflagAddress : RaiseflagAddresses) {
-                    RaiseflagAddressReq RaiseflagAddressReq = new RaiseflagAddressReq();
-                    BeanUtils.copyProperties(RaiseflagAddress, RaiseflagAddressReq);
-                    RaiseflagAddressReqs.add(RaiseflagAddressReq);
-                }
+            for (RaiseflagAddress RaiseflagAddress : RaiseflagAddresses) {
+                RaiseflagAddressReq RaiseflagAddressReq = new RaiseflagAddressReq();
+                BeanUtils.copyProperties(RaiseflagAddress, RaiseflagAddressReq);
+                RaiseflagAddressReqs.add(RaiseflagAddressReq);
             }
             RaiseflagRes.setRaiseflagAddressReqs(RaiseflagAddressReqs);
+            //赞助商
+            List<RaiseflagSponsorReq> raiseflagSponsorReqs = new ArrayList<>();
+            List<RaiseflagSponsor> list = raiseflagSponsorService.selectList(new EntityWrapper<RaiseflagSponsor>().eq("act_id", id));
+            for(RaiseflagSponsor raiseflagSponsor : list){
+                RaiseflagSponsorReq raiseflagSponsorReq = new RaiseflagSponsorReq();
+                BeanUtils.copyProperties(raiseflagSponsor,raiseflagSponsorReq);
+                raiseflagSponsorReqs.add(raiseflagSponsorReq);
+            }
+            RaiseflagRes.setRaiseflagSponsorReqs(raiseflagSponsorReqs);
         }
         return ResponseDTO.createBySuccess("获取成功",RaiseflagRes);
     }
