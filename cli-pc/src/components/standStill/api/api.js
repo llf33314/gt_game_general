@@ -28,8 +28,10 @@ export const getUserList     = params => { return axios.post(`${base}/getStandJo
 export const getUserDetail     = params => { return axios.post(`${base}/getStandJoinDetail`, params).then(res => res.data) }
 export const delUser     = params => { return axios.post(`${base}/getStandJoinDetail`, params).then(res => res.data) }
 
-
-
-
-/*题库管理*/
+/*获取题库列表*/
 export const getQuesbank     = params => { return axios.post(`${base}/getStandQuesbankList`, params).then(res => res.data) }
+
+
+/*新增，编辑*/
+export const saveAct      = params => { return axios.post(`${base}/saveStand`, params).then(res => res.data) }
+export const getAct           = params => { return axios.get(`${base}/getStand?id=${params}`).then(res => res.data) }

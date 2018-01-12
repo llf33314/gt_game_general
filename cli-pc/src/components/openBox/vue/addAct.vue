@@ -361,7 +361,7 @@ export default {
         desc:""
       },
       rules3: {
-        list: [{ required: true,message: "不能为空" }],
+        list: [{ required: true }],
         date: [{ required: true,type: 'array', message: "兑奖时间不能为空" }],
         type: [{ required: true,type: 'array', message: "兑奖方式不能为空", trigger: "blur" }], 
         phone:[{ required: true,type: 'text', validator:iiPass,trigger: "blur" }], 
@@ -393,7 +393,7 @@ export default {
   methods: {    
     addrPass(rule, value, callback) {
       if (!value) {
-        callback(new Error("不能为空"));
+       callback(new Error("到店领取地址不能为空"));
       }else {
         callback();
       }
