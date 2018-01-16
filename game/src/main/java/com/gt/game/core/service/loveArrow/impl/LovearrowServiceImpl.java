@@ -109,7 +109,7 @@ public class LovearrowServiceImpl implements LovearrowService {
      */
     @Override
     public ResponseDTO<MobileUrlRes> getAuthorityUrl(BusUser busUser, MobileUrlReq mobileUrlReq) {
-        String url = applyProperties.getMobileBaseUrl() + "LoveArrowGiftBoxMobile/"+ mobileUrlReq.getMainId() + "/79B4DE7C/saveAuthorizer.do";
+        String url = applyProperties.getMobileBaseUrl() + "loveArrowMobile/"+ mobileUrlReq.getMainId() + "/79B4DE7C/saveAuthorizer.do";
         return ResponseDTO.createBySuccess("获取新增授权链接成功",new MobileUrlRes(url));
     }
     /**
