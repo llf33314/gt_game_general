@@ -174,7 +174,6 @@ public enum ResponseEnums {
     SHAKELUCK_HAS13(413,"回滚粉币失败，删除失败"),
     SHAKELUCK_HAS14(414,"请输入正确的粉币数量"),
     SHAKELUCK_HAS15(415,"修改粉币数量失败"),
-    ;
 
     //端午赛龙舟响应
     DRAGONBOAT_HAS1(401,"删除活动失败！"),
