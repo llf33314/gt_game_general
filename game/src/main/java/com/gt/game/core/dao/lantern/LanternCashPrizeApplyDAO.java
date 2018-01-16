@@ -4,7 +4,6 @@ package com.gt.game.core.dao.lantern;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.game.core.bean.demolition.res.DemolitionApplyListRes;
-import com.gt.game.core.bean.lantern.req.LanternExportLanternReq;
 import com.gt.game.core.bean.lantern.req.LanternGetWinningReq;
 import com.gt.game.core.bean.lantern.res.LanternGetWinningRes;
 import com.gt.game.core.entity.lantern.LanternCashPrizeApply;
