@@ -10,7 +10,7 @@
     </el-breadcrumb>
     <div class="gt-gray-region mb20"> 
       <span class="padding-left-md ml30 mb10">
-        <el-input placeholder="输入标题关键字查询" icon="search" v-model="keyWord" style="width:250px" :on-icon-click="getdata" @blur="getdata($event)"> 
+        <el-input placeholder="输入标题关键字查询" icon="search" v-model="keyWord" style="width:250px" @keyup.native.enter="getdata"  @blur="getdata($event)"> 
         </el-input>
       </span> 
        <gt-video-btn videoId="22" class="gt-video-btn mr70"></gt-video-btn> 

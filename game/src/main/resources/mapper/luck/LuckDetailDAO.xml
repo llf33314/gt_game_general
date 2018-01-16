@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.game.core.dao.luck.LuckDetailDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.game.core.entity.luck.LuckDetail">
+		<id column="id" property="id" />
+		<result column="luck_id" property="luckId" />
+		<result column="luck_prize_name" property="luckPrizeName" />
+		<result column="luck_prize_nums" property="luckPrizeNums" />
+		<result column="luck_prize_chance" property="luckPrizeChance" />
+		<result column="luck_prize_image" property="luckPrizeImage" />
+		<result column="luck_prize_type" property="luckPrizeType" />
+		<result column="luck_prize_limit" property="luckPrizeLimit" />
+		<result column="freeze_id" property="freezeId" />
+		<result column="openid" property="openid" />
+		<result column="nickname" property="nickname" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, luck_id, luck_prize_name, luck_prize_nums, luck_prize_chance, luck_prize_image, luck_prize_type, luck_prize_limit, freeze_id, openid, nickname
+    </sql>
+
+</mapper>

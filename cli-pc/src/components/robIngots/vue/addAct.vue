@@ -9,7 +9,6 @@
       <el-breadcrumb-item :to="{ path:'/robIngots/index' }">欢乐抢元宝</el-breadcrumb-item>  
       <el-breadcrumb-item>创建活动</el-breadcrumb-item>   
     </el-breadcrumb> 
-
     <div class="gt-content">
         <el-steps :active="active" :center="true" :align-center="true" class="bbtom pb20">
             <el-step title="基础设置"></el-step>
@@ -25,31 +24,13 @@
                     <el-input class="w_demo" v-model="ruleForm1.name"></el-input>
                 </el-form-item> 
                 <el-form-item label="游戏时间：" prop="name1">
-                    <el-date-picker class="w_demo" v-model="ruleForm1.name1"   type="datetimerange"  placeholder="选择时间范围">
+                    <el-date-picker class="w_demo" v-model="ruleForm1.name1" :picker-options="pickerOptions"  type="datetimerange"  placeholder="选择时间范围">
                     </el-date-picker>
-                </el-form-item>  
-            <h1 class="mt30 mb20 pb10 bbtom">广告设置</h1> 
-            <el-button type="primary" class="mb20" @click="addlinks()">新增</el-button>  
-            <span class="ml10 el-upload__tip grey">1.仅支持多粉与一点揩油的链接    2.广告图格式：1000*300px</span>
-            <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark">
-                <el-table-column label="广告链接">
-                  <template slot-scope="scope" >
-                        <el-input v-model="scope.row.url">
-                          <template slot="prepend">Http://</template>
-                        </el-input>
-                  </template>
-                </el-table-column> 
-                <el-table-column label="选择图片">
-                  <template slot-scope="scope">
-                      <gt-material prop="url" :url="scope.row.img" v-on:getChangeUrl="getChangeUrl(scope.row.id, $event)" width="60" height="60"></gt-material>
-                  </template>
-                </el-table-column> 
-                <el-table-column label="操作">
-                  <template slot-scope="scope">
-                        <el-button class="gt-button-normal" @click="delLinks(scope.$index)">删除</el-button>
-                  </template>
-                </el-table-column> 
-             </el-table> 
+                </el-form-item>
+                <el-form-item label="祝福语：">
+                    <el-input class="w_demo" v-model="ruleForm1.name2"   placeholder="请输入祝福语">
+                    </el-input>
+                </el-form-item>   
           </el-form> 
         </div>
         <!-- 规则设置 -->
@@ -59,11 +40,11 @@
                   <gt-material prop="url" :url="ruleForm2.code" v-on:getChangeUrl="getChangeUrl2" width="72" height="72"></gt-material>
                   <span class="el-upload__tip grey ml10">上传1:1二维码，将会在活动规则中显示商家二维码</span>  
                 </el-form-item>
-                <el-form-item label="游戏总数：" prop="freePeople">
-                    <el-input class="w25_demo mr10" v-model="ruleForm2.freePeople"></el-input>次/人
+                <el-form-item label="游戏总数：" prop="manTotalChance">
+                    <el-input class="w25_demo mr10" v-model="ruleForm2.manTotalChance"></el-input>次/人
                 </el-form-item> 
-                <el-form-item label="每天次数：" prop="freeNum">
-                    <el-input class="w25_demo mr10" v-model="ruleForm2.freeNum"></el-input>次/人
+                <el-form-item label="每天次数：" prop="manDayChance">
+                    <el-input class="w25_demo mr10" v-model="ruleForm2.manDayChance"></el-input>次/人
                 </el-form-item> 
                 <el-form-item label="游戏时间：" prop="gameTime">
                     <el-input class="w25_demo mr10" type="number" v-model="ruleForm2.gameTime"></el-input>秒
@@ -78,7 +59,7 @@
         <div v-if="this.active==2" class="mt40">
             <el-form :model="ruleForm3" :rules="rules3" ref="ruleForm3" label-width="120px" class="mt40 demo-ruleForm">
                 <el-form-item label="兑奖时间：" prop="date">
-                    <el-date-picker class="w_demo" v-model="ruleForm3.date" type="daterange" placeholder="选择日期范围">
+                    <el-date-picker class="w_demo" :picker-options="pickerOptions" v-model="ruleForm3.date" type="daterange" placeholder="选择日期范围">
                     </el-date-picker> 
                 </el-form-item>  
                 <el-form-item label="兑奖方式：" prop="type">
@@ -107,7 +88,7 @@
         <!-- 奖项设置 -->
         <div v-if="this.active==3" class="mt40">
             <div>
-                <span style="color: #333; position:absolute;margin-top:0px;" >设置奖品说明：</span>
+                <span style="color: #333; position:absolute;margin-top:0px;" >奖品说明：</span>
                 <el-input type="textarea" class="bw ml120"  :maxlength="300"  :rows="3" placeholder="请输入兑奖说明" v-model="explain">
                 </el-input>
                 <span class="el-upload__tip grey ml10">300字以内</span>
@@ -115,6 +96,7 @@
             <div class="gt-gray-region mt20" style="color:#666;line-height:20px">
                 <p>奖品类型：奖品的内容;奖品单位：奖品的数量货内容；奖项数量:该奖品的可领取次数</p>
                 <p>如：奖品类型：粉币；奖品数额：2；奖项名称：粉币；奖项数量：3；中奖概率：12</p> 
+                 <p>当奖品为实物时，请上传实物图片，实物图片建议尺寸1160px*64px</p> 
             </div> 
             <div class="mt20 mb20">
                 <el-button   @click="addForm4()"  type="primary">新增奖品</el-button> 
@@ -126,16 +108,12 @@
                 </div>
                 <span class="el-icon-warning" style="font-size:18px; margin-left:67%;z-index:11;position: absolute;margin-top: 12px; color:#ccc"></span> 
             </el-tooltip> 
-            <el-table ref="multipleTable" :data="ruleForm4" tooltip-effect="dark">
+             <el-table ref="multipleTable" :data="ruleForm4" tooltip-effect="dark">
                 <el-table-column label="奖品类型">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.name0" placeholder="请选择"> 
-                        <el-option label="粉币"       :value="1"></el-option>
-                        <el-option label="手机流量"   :value="2"></el-option>
-                        <el-option label="手机话费"   :value="3"></el-option>
-                        <el-option label="实体物品"   :value="4"></el-option>
-                        <el-option label="谢谢参与"   :value="5"></el-option> 
-                        <el-option label="积分"       :value="6"></el-option> 
+                                <el-option v-for="item in options" :key="item.value" :label="item.name"  :value="item.value">
+                                </el-option>
                         </el-select>
                     </template>
                 </el-table-column> 
@@ -155,10 +133,9 @@
                 </template>
                 </el-table-column>
                 <el-table-column label="奖品图片">
-                    <template slot-scope="scope"> 
-                        <div  v-if="scope.row.name0==4" >
-                            <gt-material prop="url" :url="scope.row.name4" v-on:getChangeUrl="getChangeUrl4(scope.$index, $event)" width="72" height="72"></gt-material>
-                        </div>
+                    <template slot-scope="scope"  v-if="scope.row.name0==4">  
+                        <gt-material v-for="(item,index) in scope.row.name5" :key="index" :prop="scope" :sonIndex="index" selectType="radio" :url="item" @getChangeUrl="getAwardImgList" width="50" height="50" class="mr10"></gt-material>
+                        <gt-material :prop="scope" selectType="select"  @getChangeUrl="addAwardImg" width="50" height="50" class="uploadBtn"></gt-material>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作">
@@ -166,7 +143,7 @@
                         <el-button class="gt-button-normal" v-if="scope.$index!=0" @click="delForm4(scope.$index)">删除</el-button>
                     </template>
                 </el-table-column>
-            </el-table>  
+            </el-table> 
         </div>       
         <!-- 新建完成 -->
         <div v-if="active==5" class="gt-content complete"> 
@@ -183,7 +160,7 @@
             <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步1</el-button> 
             <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
-            <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>   
+            <el-button type="primary" @click="lastStep()"      :disabled="this.isSubmit"       v-if="this.active==3">保存</el-button>   
             <el-button type="primary" @click="submit()">打印</el-button>   
         </div> 
     </div>   
@@ -191,6 +168,9 @@
 </section>
 </template>
 <script>
+import { 
+ saveAct,getPrizeType
+}from './../api/api'
 export default {
   data() {
     let iiPass = (rule, value, callback) => {
@@ -214,57 +194,45 @@ export default {
       }
     }; 
     return {
-      active: 0,
+      // 时间的筛选
+      pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() < Date.now() - 8.64e7;
+          }
+      },
+      active: 3,
+      isSubmit:false,
       ruleForm1: {
         name: "",
         name1: "",
-        name4:"",
-        links:[
-          {id:0,url:"www.duofriend.com",img:""},
-          {id:1,url:"",img:""}
-        ]
+        name2:"", 
       },
       rules1: {
         name: [{ required: true, message: "活动名称不能为空", trigger: "blur" }],
-        name1: [{required: true, type: "array",message: "游戏时间不能为空", trigger: "blur" }] 
+        name1: [{required: true, type: "array",message: "游戏时间不能为空", trigger: "blur" }] , 
       },
       ruleForm2: {
-        code: "",
-        time: "",
-        duihuan:"",
-        freePeople:"",
-        freeNum:"", 
-        fenbi:"",
-        jifen:"",
-        desc: "", 
-        msgModel:"",
+        code: "", 
+        manTotalChance:"",
+        manDayChance:"",  
         gameTime:"",
-        msg:1
+        desc: "",   
       },
       rules2: {
         time: [ 
           { required: true,validator: timePass,  trigger: "blur,change" }
-        ], 
-        duihuan: [
-          { required: true,  message: "请填写元宝兑换金币比例", trigger: "blur" } 
-        ], 
-        freePeople: [
+        ],  
+        manTotalChance: [
           { required: true,  message: "请填写每人免费游戏次数", trigger: "blur" } 
         ], 
-        freeNum: [
+        manDayChance: [
           { required: true,  message: "请填写每人每天免费游戏次数", trigger: "blur" } 
-        ],
-        fenbi: [
-          { required: true,  message: "请填写每天游戏小号的粉币或积分", trigger: "blur" } 
-        ],
-        msg: [ 
-          { required: true}
         ], 
         desc: [
           { required: true,  message: "请填写活动规则", trigger: "blur" } 
         ],
         gameTime:[
-          { required: true, type: 'string',  message: "请填写游戏时间", trigger: "blur" } 
+          { required: true,  message: "请填写游戏时间", trigger: "blur" } 
         ], 
       },
       ruleForm3: {
@@ -275,33 +243,34 @@ export default {
         desc:""
       },
       rules3: {
-        list: [{ required: true,message: "不能为空" }],
+        list: [{ required: true }],
         date: [{ required: true,type: 'array', message: "兑奖时间不能为空" }],
         type: [{ required: true,type: 'array', message: "兑奖方式不能为空", trigger: "blur" }], 
         phone:[{ required: true,type: 'text', validator:iiPass,trigger: "blur" }], 
         desc: [{ required: true,message: "兑奖说明不能为空", trigger: "blur" }], 
       },
       explain: "",
+      options: [],
       ruleForm4: [{ 
-          name0: 1,
+          name0: "",
           name1: "",
           name2: "",
           name3: "",
-          name4: ""
+          name5:[]
         },
         { 
-          name0: 1,
+          name0: "",
           name1: "",
           name2: "",
           name3: "",
-          name4: ""
+          name5: []
         }],  
     };
   },
   methods: {    
     addrPass(rule, value, callback) {
       if (!value) {
-        callback(new Error("不能为空"));
+       callback(new Error("到店领取地址不能为空"));
       }else {
         callback();
       }
@@ -315,7 +284,7 @@ export default {
         callback();
       }
     },
-    addList(){
+   addList(){
         this.ruleForm3.addrRow.push({list:""});
     },
     delList(val){
@@ -324,26 +293,24 @@ export default {
     upStep() {
       this.active--;
     },
-    //广告设置的新增&删除
-    addlinks(){
-      this.linksId++
-      this.ruleForm1.links.push({id:this.linksId,url:"",img:""},)
-    },
-    delLinks(val) { 
-          this.ruleForm1.links.splice(val, 1); 
-    },
-    getChangeUrl(i,e) { 
-      //console.log(i)
-      this.ruleForm1.links[i].img=e.url
-    }, 
     getChangeUrl2(e) { 
       this.ruleForm2.code=e.url
     }, 
-    getChangeUrl4(i,e) {   
-      this.ruleForm4[i].name4=e.url
-    }, 
+    // 添加实物图 
+    addAwardImg(val) {
+         JSON.parse(val.url).forEach(function (item, index, arr) {
+               this.ruleForm4[val.prop.$index].name5.push(item.url)
+         }, this)
+    },
+    getAwardImgList(val) {
+      // 删除图片
+      if(!val.url) {
+        this.ruleForm4[val.prop.$index].name5.splice(val.sonIndex, 1)
+        return
+      }
+    },  
     addForm4(){ 
-        this.ruleForm4.push({ name0: 1, name1: "", name2: "", name3: "", name4: ""},)
+        this.ruleForm4.push({ name0: "", name1: "", name2: "", name3: "", name5: []},)
     },
     delForm4(val){
         this.ruleForm4.splice(val, 1); 
@@ -360,7 +327,7 @@ export default {
     lastStep() {
       for (let i = 0; i < this.ruleForm4.length; i++) { 
         var regu =/^[1-9]\d*$/;
-        if(!this.ruleForm4[i].name1||!this.ruleForm4[i].name2||!this.ruleForm4[i].name3){
+        if(!this.ruleForm4[i].name0||!this.ruleForm4[i].name1||!this.ruleForm4[i].name2||!this.ruleForm4[i].name3){
             this.$message.error("表单不能留空，请填写完整~");
             return false
         }else if (!regu.test(this.ruleForm4[i].name1)) {
@@ -369,86 +336,114 @@ export default {
         }else if (!regu.test(this.ruleForm4[i].name3)) {
             this.$message.error("奖项数量填写有误，请重新填写~");
             return false
-        }else if (this.ruleForm4[i].name0==4&&this.ruleForm4[i].name4.length==0) { 
-                this.$message.error("当奖品为实物时，请上传实物图片~");
-                return false 
-        }else{
-            this.submit();
-        }  
+        }else if (this.ruleForm4[i].name0==4&&this.ruleForm4[i].name5.length==0) { 
+            this.$message.error("当奖品为实物时，请上传实物图片~");
+            return false 
+        }
       }
+       this.submit();
     }, 
     //表单提交--------------------------------------star
-    submit(){
-        console.log(this.ruleForm3,123); 
-        var newarr=[];
-        for(let i =0;i< this.ruleForm1.links.length;i++){ 
-            var arr={
-                name0:this.ruleForm1.links[i].url, 
-                name1:this.ruleForm1.links[i].img, 
-            } 
-            newarr.push(arr)
-        }  
-         var newaddr=[];
-        if(this.ruleForm3.addrRow){ 
-            for(let i =0;i< this.ruleForm3.addrRow.length;i++){ 
-                var arraddr={
-                    name0:this.ruleForm3.addrRow[i].list,  
-                } 
-                newaddr.push(arraddr)
-            }    
-        } 
-        var newarr4=[];
-        if(this.ruleForm4){
-            for(let i =0;i< this.ruleForm4.length;i++){
-                var arr4={
-                    name0:this.ruleForm4[i].name0,
-                    name1:this.ruleForm4[i].name1,
-                    name1:this.ruleForm4[i].name1,
-                    name3:this.ruleForm4[i].name3,
-                    name4:this.ruleForm4[i].name4  
-                }
-                newarr4.push(arr4)
+    submit(){ 
+        if(this.isSubmit){
+             this.$message({type: "info", message: "请不要重复提交~" });
+        }else{
+            //兑奖地址
+            var newAddr=[];
+            if(this.ruleForm3.addrRow){ 
+                for(let i =0;i< this.ruleForm3.addrRow.length;i++){ 
+                    var arraddr={
+                        address:this.ruleForm3.addrRow[i].list,  
+                    } 
+                    newAddr.push(arraddr)
+                }    
             }
-        } 
-        const data = {
-            //基础设置 
-            name  : this.ruleForm1.name, 
-            name1 : this.ruleForm1.name1, 
-            name3 : newarr, 
-            //规则设置
-            name6 : this.ruleForm2.code, 
-            name7 : this.ruleForm2.time, 
-            name8 : this.ruleForm2.duihuan, 
-            name9 : this.ruleForm2.freePeople, 
-            name10: this.ruleForm2.freeNum, 
-            name11: this.ruleForm2.fenbi, 
-            name12: this.ruleForm2.jifen,  
-            name4 : this.ruleForm2.desc,  
-            name5 : this.ruleForm2.msgModel,  
-            name13: this.ruleForm2.msg,  
-            //兑奖设置 
-            name14:this.ruleForm3.date, 
-            name15:this.ruleForm3.type, 
-            name16:newaddr, 
-            name17:this.ruleForm3.phone, 
-            name18:this.ruleForm3.desc,  
-            //奖项设置 
-            name19:this.explain, 
-            name20:newarr4, 
-
-           
-        };
-        console.log(data,123); 
+            //奖品
+            var newPrize=[];
+            if(this.ruleForm4){
+                for(let i =0;i< this.ruleForm4.length;i++){
+                    var arr4={
+                        imgInstruction :"",
+                        type :this.ruleForm4[i].name0,//类型
+                        prizeUnit :Number(this.ruleForm4[i].name1),//单位
+                        prizeName :this.ruleForm4[i].name1,//名称
+                        num :Number(this.ruleForm4[i].name3),//数量
+                        // probabiliy :this.ruleForm4[i].name4,  //概率
+                        goldRushPrizeImgReqs:[]//图片
+                    }
+                    if(arr4.type==4){
+                        for(var j=0;j<this.ruleForm4[i].name5.length;j++){
+                            var imgarr={
+                                imgUrl:this.ruleForm4[i].name5[j]
+                            }
+                        arr4.goldRushPrizeImgReqs.push(imgarr)
+                        } 
+                    } 
+                    newPrize.push(arr4)
+                } 
+            } 
+            const data = {
+                id:0,
+                //基础设置 
+                name             : this.ruleForm1.name, 
+                activityBeginTime: this.ruleForm1.name1[0],
+                activityEndTime  : this.ruleForm1.name1[1], 
+                goldRushTips     : this.ruleForm1.name2, 
+                //规则设置 
+                followQrCode     : this.ruleForm2.code, 
+                manTotalChance   : Number(this.ruleForm2.manTotalChance), 
+                manDayChance     : Number(this.ruleForm2.manDayChance),  
+                gametime         : Number(this.ruleForm2.gameTime),  
+                actRule          : this.ruleForm2.desc,   
+                //兑奖设置  
+                cashPrizeBeginTime  :this.ruleForm3.date[0], 
+                cashPrizeEndTime    :this.ruleForm3.date[1], 
+                receiveType         :this.ruleForm3.type.toString(), //兑奖方式
+                phone               :this.ruleForm3.phone,  
+                cashPrizeInstruction:this.ruleForm3.desc,  
+                goldRushAddressReqs :newAddr,   
+                //奖项设置 
+                prizeSetInstruction :this.explain, 
+                goldRushPrizeReqs:newPrize,  
+            };
+            console.log(data,123); 
+            saveAct(data).then(data=>{
+                this.isSubmit=true
+                if (data.code == 100) {  
+                    this.active=5
+                } else {
+                    this.isSubmit=false
+                    this.$message.error(data.msg + "错误码：[" + data.code + "]");
+                }
+            }).catch(() => {
+                this.isSubmit=false
+                this.$message({type: "info", message: "网络问题，请刷新重试~" });
+            }); 
+        }
     },  
     backUrl(){
          window.history.go(-1);
     },
     test(){
         console.log(1122);
-    }
+    },
+        //获取奖品类型-----------star
+    getPrizeTypeData(){
+        getPrizeType().then(data=>{
+            if (data.code == 100) {
+            console.log(data,1233);
+            this.options=data.data
+                console.log(this.options,'获取奖品类型');
+            } else {
+                this.$message.error(data.msg + "错误码：[" + data.code + "]");
+            }
+        }).catch(() => {
+            this.$message({ type: "info", message: "网络问题，请刷新重试~" });
+        }); 
+    },
   },
   mounted() {
-    
+    this.getPrizeTypeData()
   }
 };
 </script>

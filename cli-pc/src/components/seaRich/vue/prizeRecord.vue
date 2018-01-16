@@ -3,7 +3,7 @@
 </style>
 <template>
 <section>
-<div class="hd-common turnPlate">
+<div class="hd-common">
     <el-breadcrumb separator="/" class="gt-crumbs">
       <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
       <el-breadcrumb-item :to="{ path:'/seaRich/index' }">大海捞金</el-breadcrumb-item>  
@@ -12,12 +12,9 @@
     <div class="gt-gray-region mb20">  
         <span class="padding-left-md ml30 mb10">
             <el-select v-model="prizeType"  @change="getData()"> 
-                <el-option  label="全部"          value="-1"></el-option>
-                <el-option label="粉币"       :value="1"></el-option>
-                <el-option label="手机流量"   :value="2"></el-option>
-                <el-option label="实体物品"   :value="4"></el-option>
-                <el-option label="积分"       :value="6"></el-option> 
-                <el-option label="优惠券"       :value="7"></el-option> 
+               <el-option  label="全部"        value="-1"></el-option>
+               <el-option v-for="item in options" :key="item.value" :label="item.name"  :value="item.value">
+            </el-option>
             </el-select>
         </span> 
         <span class="padding-left-md ml10 mb10">
@@ -47,7 +44,7 @@
           </el-table-column>
           <el-table-column prop="cashTime" label="兑奖时间"> 
             <template slot-scope="scope">
-              {{scope.row.cashTime|parseTime('{y}-{m}-{d}')}}
+              {{scope.row.cashTime|parseTime('{y}-{m}-{d} {h}:{i}')}}
             </template>           
           </el-table-column>
           <el-table-column prop="status" label="状态">  
@@ -59,12 +56,25 @@
           </el-table-column>
           <el-table-column prop="order_option"  label="操作">
             <template slot-scope="scope"> 
-              <el-button class="gt-button-normal blue"      @click="test(scope.row.id)">详情</el-button>  
+              <el-button class="gt-button-normal blue"  @click="showDetailBtn(scope.row)">详情</el-button>  
               <el-button class="gt-button-normal blue"  v-if="scope.row.status==3"       @click="handOut(scope.row.id)">发放奖品</el-button> 
               <el-button class="gt-button-normal blue"  v-if="scope.row.status==1"  :disabled="true"   @click="handOut(scope.row.id)">发放奖品</el-button>  
             </template>
           </el-table-column>
         </el-table> 
+        <!-- 详情 -->
+        <el-dialog title="详情" :visible.sync="showDetail" class="detail-dialog"> 
+          <div>
+              <p><span class="w20_demo">中奖人</span><b> : </b> {{showDetailData.nickname}}</p> 
+              <p><span class="w20_demo">兑奖人</span><b> : </b> -</p> 
+              <p><span class="w20_demo">兑奖人联系方式</span><b> : </b> {{showDetailData.memberPhone }}</p> 
+              <p v-if="showDetailData.status==1"><span class="w20_demo">兑奖时间</span><b> : </b> -</p> 
+              <p v-if="showDetailData.status!=1"><span class="w20_demo">领取方式</span><b> : </b> {{showDetailData.receiveType|receiveTypeStatus(showDetailData.receiveType)}}</p> 
+              <p v-if="showDetailData.receiveType==1"><span class="w20_demo">到店领取地址</span><b> : </b> {{showDetailData.addressName}}</p> 
+              <p v-if="showDetailData.receiveType==2"><span class="w20_demo">收货人姓名</span><b> : </b> {{showDetailData.addressName}}</p> 
+              <p v-if="showDetailData.receiveType==2"><span class="w20_demo">收货地址</span><b> : </b> {{showDetailData.address}}</p> 
+          </div> 
+        </el-dialog> 
         <div class="public-page-fr" v-if="this.tableData.data.length!=0">
               <el-pagination @current-change="handleCurrentChange"  :page-size="10" 
               layout="prev, pager, next, jumper" :total="tableData.page.totalNums">
@@ -76,7 +86,7 @@
 </template>
 <script>
 import {  
-  getPrizeList,givePrize
+  getPrizeList,givePrize,getPrizeType
 }from './../api/api'
   export default{
     data() {
@@ -89,9 +99,18 @@ import {
           data:[ ], 
           page:{ }
         },  
+        options: [],
+        showDetail:false,
+        showDetailData:[]
       };
     },
     methods: {
+      showDetailBtn(val){
+        this.showDetail=true
+        this.showDetailData=val
+        console.log(this.showDetailData,852222);
+
+      },
       //中奖列表---------------------------star
       getData(){
         var params    ={}; 
@@ -113,15 +132,29 @@ import {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
         }); 
       },
-    //导出---------------------------star
-    toExport(){
-      var params         = {}; 
-      params.actId  = this.$router.history.current.query.id;  
-      params.status = this.prizeState;  
-      params.type   = this.prizeType; 
-      params.snCode   = this.codeWord;  
-      window.open(window.BASEDOMAIN+'/app/seagold/exports?actId='+params.actId+'&status='+params.status+'&type='+params.type+'&snCode='+params.snCode);   
-    },
+      //获取奖品类型-----------star
+      getPrizeTypeData(){
+        getPrizeType().then(data=>{
+          if (data.code == 100) {
+            console.log(data,1233);
+            this.options=data.data
+             console.log(this.options,444);
+          } else {
+              this.$message.error(data.msg + "错误码：[" + data.code + "]");
+          }
+        }).catch(() => {
+            this.$message({ type: "info", message: "网络问题，请刷新重试~" });
+        }); 
+      },
+      //导出---------------------------star
+      toExport(){
+        var params         = {}; 
+        params.actId  = this.$router.history.current.query.id;  
+        params.status = this.prizeState;  
+        params.type   = this.prizeType; 
+        params.snCode   = this.codeWord;  
+        window.open(window.BASEDOMAIN+'/app/seagold/exports?actId='+params.actId+'&status='+params.status+'&type='+params.type+'&snCode='+params.snCode);   
+      },
       //发放奖品  
       handOut(id){
         givePrize({id}).then(data=>{
@@ -144,6 +177,7 @@ import {
     },
     mounted() {
       this.getData();
+      this.getPrizeTypeData();
     
     },
     filters: {
@@ -157,11 +191,23 @@ import {
         }  
         return val;
       },
+      receiveTypeStatus(val) {
+        if (val == 1) {
+          val = "到店领取";
+        }else if(val == 2){
+          val = "邮寄"; 
+        }else if(val == 3){
+          val = "直接兑奖";
+        }  
+        return val;
+      },
       prizeType(val) {
         if (val == 1) {
           val = "粉币";
         }else if(val == 2){
           val = "手机流量"; 
+        }else if(val == 3){
+          val = "手机话费"; 
         }else if(val == 4){
           val = "实体物品";
         }  else if(val == 6){

@@ -22,7 +22,7 @@
                     <el-input class="w_demo" v-model="ruleForm1.name"></el-input>
                 </el-form-item> 
                 <el-form-item label="游戏时间：" prop="name1">
-                    <el-date-picker class="w_demo" v-model="ruleForm1.name1"   type="datetimerange"  placeholder="选择时间范围">
+                    <el-date-picker class="w_demo" v-model="ruleForm1.name1" :picker-options="pickerOptions"  type="datetimerange"  placeholder="选择时间范围">
                     </el-date-picker>
                 </el-form-item>  
                  <el-form-item label="背景音乐：">
@@ -116,11 +116,11 @@
                   <gt-material prop="url" :url="ruleForm2.code" v-on:getChangeUrl="getChangeUrl2" width="72" height="72"></gt-material>
                   <span class="el-upload__tip grey ml10">上传1:1二维码，将会在活动规则中显示商家二维码</span>  
                 </el-form-item>  
-                <el-form-item label="游戏总数：" prop="freePeople">
-                    <el-input class="w25_demo mr10" v-model="ruleForm2.freePeople"></el-input>次/人
+                <el-form-item label="游戏总数：" prop="manTotalChance">
+                    <el-input class="w25_demo mr10" v-model="ruleForm2.manTotalChance"></el-input>次/人
                 </el-form-item> 
-                <el-form-item label="每天次数：" prop="freeNum">
-                    <el-input class="w25_demo mr10" v-model="ruleForm2.freeNum"></el-input>次/人
+                <el-form-item label="每天次数：" prop="manDayChance">
+                    <el-input class="w25_demo mr10" v-model="ruleForm2.manDayChance"></el-input>次/人
                 </el-form-item>    
                 <el-form-item label="活动规则：" prop="desc">
                     <el-input class="w_demo" :maxlength="300"  type="textarea" v-model="ruleForm2.desc" :rows="3" placeholder="请填写活动规则"></el-input>
@@ -132,7 +132,7 @@
         <div v-if="this.active==2" class="mt40">
             <el-form :model="ruleForm3" :rules="rules3" ref="ruleForm3" label-width="120px" class="mt40 demo-ruleForm">
                 <el-form-item label="兑奖时间：" prop="date">
-                    <el-date-picker class="w_demo" v-model="ruleForm3.date" type="daterange" placeholder="选择日期范围">
+                    <el-date-picker class="w_demo" v-model="ruleForm3.date" :picker-options="pickerOptions"  type="daterange" placeholder="选择日期范围">
                     </el-date-picker> 
                 </el-form-item>  
                 <el-form-item label="兑奖方式：" prop="type">
@@ -169,8 +169,7 @@
             <div class="gt-gray-region mt20" style="color:#666;line-height:20px">
                 <p>奖品类型：奖品的内容;奖品单位：奖品的数量货内容；奖项数量:该奖品的可领取次数</p>
                 <p>如：奖品类型：粉币；奖品数额：2；奖项名称：粉币；奖项数量：3；中奖概率：12</p> 
-                <p>当奖品为实物时，请上传实物图片</p> 
-                <p>当奖品为实物时，请上传实物图片</p> 
+                 <p>当奖品为实物时，请上传实物图片，实物图片建议尺寸1160px*64px</p> 
             </div> 
             <div class="mt20 mb20">
                 <el-button   @click="addForm4()"  type="primary">新增奖品</el-button> 
@@ -304,6 +303,12 @@ export default {
             
         ],
       },
+            // 时间的筛选
+      pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() < Date.now() - 8.64e7;
+          }
+      },
       rules1: {
         name: [{ required: true, message: "活动名称不能为空", trigger: "blur" }],
         name1: [{required: true, type: "array",message: "游戏时间不能为空", trigger: "blur" }] 
@@ -312,8 +317,8 @@ export default {
         code: "",
         time: "",
         duihuan:"",
-        freePeople:"",
-        freeNum:"", 
+        manTotalChance:"",
+        manDayChance:"", 
         fenbi:"",
         jifen:"",
         desc: "", 
@@ -327,10 +332,10 @@ export default {
         duihuan: [
           { required: true,  message: "请填写元宝兑换金币比例", trigger: "blur" } 
         ], 
-        freePeople: [
+        manTotalChance: [
           { required: true,  message: "请填写每人免费游戏次数", trigger: "blur" } 
         ], 
-        freeNum: [
+        manDayChance: [
           { required: true,  message: "请填写每人每天免费游戏次数", trigger: "blur" } 
         ],
         fenbi: [
@@ -356,7 +361,7 @@ export default {
         desc:""
       },
       rules3: {
-        list: [{ required: true,message: "不能为空" }],
+        list: [{ required: true }],
         date: [{ required: true,type: 'array', message: "兑奖时间不能为空" }],
         type: [{ required: true,type: 'array', message: "兑奖方式不能为空", trigger: "blur" }], 
         phone:[{ required: true,type: 'text', validator:iiPass,trigger: "blur" }], 
@@ -376,13 +381,19 @@ export default {
           name2: "",
           name3: "",
           name4: ""
-        }],  
+        }], 
+        // 时间的筛选
+      pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() < Date.now() - 8.64e7;
+          }
+      }, 
     };
   },
   methods: {    
     addrPass(rule, value, callback) {
       if (!value) {
-        callback(new Error("不能为空"));
+       callback(new Error("到店领取地址不能为空"));
       }else {
         callback();
       }
@@ -482,7 +493,7 @@ export default {
         if(this.ruleForm3.addrRow){ 
             for(let i =0;i< this.ruleForm3.addrRow.length;i++){ 
                 var arraddr={
-                    name0:this.ruleForm3.addrRow[i].list,  
+                    address:this.ruleForm3.addrRow[i].list,  
                 } 
                 newaddr.push(arraddr)
             }    
@@ -509,8 +520,8 @@ export default {
             name6 : this.ruleForm2.code, 
             name7 : this.ruleForm2.time, 
             name8 : this.ruleForm2.duihuan, 
-            name9 : this.ruleForm2.freePeople, 
-            name10: this.ruleForm2.freeNum, 
+            name9 : this.ruleForm2.manTotalChance, 
+            name10: this.ruleForm2.manDayChance, 
             name11: this.ruleForm2.fenbi, 
             name12: this.ruleForm2.jifen,  
             name4 : this.ruleForm2.desc,  

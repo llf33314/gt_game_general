@@ -46,7 +46,7 @@ public class LoveArrowPrizeReq {
 	private Double probabiliy;
 
 	@ApiModelProperty("奖品图片")
-	private List<LoveArrowPrizeImgReq> demolitionPrizeImgReqs;
+	private List<LoveArrowPrizeImgReq> loveArrowPrizeImgReqs;
 
 	public String getPrizeName() {
 		return prizeName;
@@ -96,11 +96,11 @@ public class LoveArrowPrizeReq {
 		this.probabiliy = probabiliy;
 	}
 
-	public List<LoveArrowPrizeImgReq> getDemolitionPrizeImgReqs() {
-		return demolitionPrizeImgReqs;
+	public List<LoveArrowPrizeImgReq> getLoveArrowPrizeImgReqs() {
+		return loveArrowPrizeImgReqs;
 	}
 
-	public void setDemolitionPrizeImgReqs(List<LoveArrowPrizeImgReq> demolitionPrizeImgReqs) {
-		this.demolitionPrizeImgReqs = demolitionPrizeImgReqs;
+	public void setLoveArrowPrizeImgReqs(List<LoveArrowPrizeImgReq> loveArrowPrizeImgReqs) {
+		this.loveArrowPrizeImgReqs = loveArrowPrizeImgReqs;
 	}
 }

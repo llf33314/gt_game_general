@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.game.core.dao.raiseflag.RaiseflagSponsorDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.game.core.entity.raiseflag.RaiseflagSponsor">
+		<id column="id" property="id" />
+		<result column="act_id" property="actId" />
+		<result column="createtime" property="createtime" />
+		<result column="sponsor_url" property="sponsorUrl" />
+		<result column="sponsor_img_url" property="sponsorImgUrl" />
+		<result column="sponsor_name" property="sponsorName" />
+		<result column="sponsor_instruction" property="sponsorInstruction" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, act_id, createtime, sponsor_url, sponsor_img_url, sponsor_name, sponsor_instruction
+    </sql>
+
+</mapper>

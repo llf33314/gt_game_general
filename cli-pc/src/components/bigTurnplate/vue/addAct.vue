@@ -24,7 +24,7 @@
                     <el-input class="w_demo" v-model="ruleForm1.name"></el-input>
                 </el-form-item>
                 <el-form-item label="游戏时间：" prop="name1">
-                    <el-date-picker class="w_demo" v-model="ruleForm1.name1"   type="datetimerange"  placeholder="选择时间范围">
+                    <el-date-picker class="w_demo" v-model="ruleForm1.name1" :picker-options="pickerOptions"  type="datetimerange"  placeholder="选择时间范围">
                     </el-date-picker>
                 </el-form-item>  
                 <el-form-item label="结束说明：" prop="desc">
@@ -104,6 +104,7 @@
                 <p>奖品数额：奖品的数量或内容；奖项数量：该奖品的可领取次数；中奖概率：每种奖项在转盘中的中奖概率</p>
                 <p>如：奖品类型：粉币；奖品数额：2；奖项名称：粉币；奖项数量：3；中奖概率：12</p>
                 <p>此次游戏活动设置了六个奖项：其中一个奖项为粉币(奖项名称)，该奖项出现3次(中奖数量)，中了该奖项会得到2个(奖品数额)粉币（奖品类型）。</p>
+                 <p>当奖品为实物时，请上传实物图片，实物图片建议尺寸1160px*64px</p> 
             </div>
             <div class="mt20 mb20">
                 奖项数量：
@@ -393,6 +394,12 @@ export default {
           name4: ""
         }
       ],
+      // 时间的筛选
+      pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() < Date.now() - 8.64e7;
+          }
+      },
     };
   },
   methods: {  
