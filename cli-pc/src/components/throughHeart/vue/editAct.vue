@@ -79,7 +79,7 @@
         <div v-if="this.active==2" class="mt40">
             <el-form :model="ruleForm3" :rules="rules3" ref="ruleForm3" label-width="120px" class="mt40 demo-ruleForm">
                 <el-form-item label="兑奖时间：" prop="date">
-                    <el-date-picker class="w_demo" v-model="ruleForm3.date" type="daterange" placeholder="选择日期范围">
+                    <el-date-picker class="w_demo" v-model="ruleForm3.date" :picker-options="pickerOptions" type="daterange" placeholder="选择日期范围">
                     </el-date-picker> 
                 </el-form-item>  
                 <el-form-item label="兑奖方式：" prop="type">
@@ -230,6 +230,12 @@ export default {
         msgModel:"",
         msg:1
       },
+            // 时间的筛选
+      pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() < Date.now() - 8.64e7;
+          }
+      },
       rules2: {
         time: [ 
           { required: true,validator: timePass,  trigger: "blur,change" }
@@ -264,7 +270,7 @@ export default {
         desc:""
       },
       rules3: {
-        list: [{ required: true,message: "不能为空" }],
+        list: [{ required: true }],
         date: [{ required: true,type: 'array', message: "兑奖时间不能为空" }],
         type: [{ required: true,type: 'array', message: "兑奖方式不能为空", trigger: "blur" }], 
         phone:[{ required: true,type: 'text', validator:iiPass,trigger: "blur" }], 
@@ -298,7 +304,7 @@ export default {
   methods: {    
     addrPass(rule, value, callback) {
       if (!value) {
-        callback(new Error("不能为空"));
+       callback(new Error("到店领取地址不能为空"));
       }else {
         callback();
       }

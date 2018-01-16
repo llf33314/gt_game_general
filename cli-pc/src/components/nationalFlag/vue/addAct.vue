@@ -107,7 +107,7 @@
         <div v-if="this.active==2" class="mt40">
             <el-form :model="ruleForm3" :rules="rules3" ref="ruleForm3" label-width="120px" class="mt40 demo-ruleForm">
                 <el-form-item label="兑奖时间：" prop="date">
-                    <el-date-picker class="w_demo" v-model="ruleForm3.date" type="daterange" placeholder="选择日期范围">
+                    <el-date-picker class="w_demo" v-model="ruleForm3.date" :picker-options="pickerOptions"  type="daterange" placeholder="选择日期范围">
                     </el-date-picker> 
                 </el-form-item>  
                 <el-form-item label="兑奖方式：" prop="type">
@@ -138,7 +138,7 @@
             <div class="gt-gray-region mt20" style="color:#666;line-height:20px">
                 <p>奖品类型：奖品的内容;奖品单位：奖品的数量货内容；奖项数量:该奖品的可领取次数</p>
                 <p>如：奖品类型：粉币；奖品数额：2；奖项名称：粉币；奖项数量：3；中奖概率：12</p> 
-                 <p>当奖品为实物时，请上传实物图片，实物图片建议尺寸1160px*64px</p> 
+                <p>当奖品为实物时，请上传实物图片，实物图片建议尺寸1160px*64px</p> 
             </div> 
             <div class="ml20 mt20 mb20">
                 <span>参与奖：</span>
@@ -310,6 +310,12 @@ export default {
          
         
       },
+            // 时间的筛选
+      pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() < Date.now() - 8.64e7;
+          }
+      },
       ruleForm3: {
         date:"",
         type: [], 
@@ -318,7 +324,7 @@ export default {
         desc:""
       },
       rules3: {
-        list: [{ required: true,message: "不能为空" }],
+        list: [{ required: true }],
         date: [{ required: true,type: 'array', message: "兑奖时间不能为空" }],
         type: [{ required: true,type: 'array', message: "兑奖方式不能为空", trigger: "blur" }], 
         phone:[{ required: true,type: 'text', validator:iiPass,trigger: "blur" }], 
@@ -360,7 +366,7 @@ export default {
   methods: {    
     addrPass(rule, value, callback) {
       if (!value) {
-        callback(new Error("不能为空"));
+       callback(new Error("到店领取地址不能为空"));
       }else {
         callback();
       }
@@ -492,7 +498,7 @@ export default {
                         var imgarr={
                             imgUrl:this.ruleForm4[i].name5[j]
                         }
-                    arr4.raiseflagPrizeImgReqs .push(imgarr)
+                    arr4.raiseflagPrizeImgReqs.push(imgarr)
                     } 
                 } 
                 newPrize.push(arr4)
@@ -521,7 +527,7 @@ export default {
             receiveType       :this.ruleForm3.type.toString(), //兑奖方式
             phone             :this.ruleForm3.phone,  
             cashPrizeInstruction :this.ruleForm3.desc,  
-            qixiAddressReqs      :newAddr, 
+            raiseflagAddressReqs      :newAddr, 
             //奖项设置 
             isJoinPrize     :this.isJoinPrize , 
             joinPrizeHref   :this.ruleForm5.name1, 
