@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.game.core.dao.tree.TreeMainDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.game.core.dao.tree.TreeMainDAO">
+		<id column="id" property="id" />
+		<result column="tree_name" property="treeName" />
+		<result column="tree_countOfDay" property="treeCountOfDay" />
+		<result column="tree_winning_txt" property="treeWinningTxt" />
+		<result column="tree_beginTime" property="treeBeginTime" />
+		<result column="tree_endTime" property="treeEndTime" />
+		<result column="tree_wx_userid" property="treeWxUserid" />
+		<result column="tree_describe" property="treeDescribe" />
+		<result column="tree_overdescribe" property="treeOverdescribe" />
+		<result column="tree_rule" property="treeRule" />
+		<result column="tree_calculateWay" property="treeCalculateWay" />
+		<result column="tree_countOfAll" property="treeCountOfAll" />
+		<result column="tree_before_txt" property="treeBeforeTxt" />
+		<result column="tree_is_give" property="treeIsGive" />
+		<result column="tree_cash_day" property="treeCashDay" />
+		<result column="tree_picture" property="treePicture" />
+		<result column="tree_address" property="treeAddress" />
+		<result column="tree_bgm" property="treeBgm" />
+		<result column="tree_bgm_name" property="treeBgmName" />
+		<result column="tree_eggPartaker" property="treeEggPartaker" />
+		<result column="tree_pway" property="treePway" />
+		<result column="tree_man" property="treeMan" />
+		<result column="tree_kou" property="treeKou" />
+		<result column="tree_status" property="treeStatus" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, tree_name, tree_countOfDay AS treeCountOfDay, tree_winning_txt, tree_beginTime AS treeBeginTime, tree_endTime AS treeEndTime, tree_wx_userid, tree_describe, tree_overdescribe, tree_rule, tree_calculateWay AS treeCalculateWay, tree_countOfAll AS treeCountOfAll, tree_before_txt, tree_is_give, tree_cash_day, tree_picture, tree_address, tree_bgm, tree_bgm_name, tree_eggPartaker AS treeEggPartaker, tree_pway, tree_man, tree_kou, tree_status
+    </sql>
+
+</mapper>

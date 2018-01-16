@@ -84,9 +84,36 @@ public enum ResponseEnums {
     STAND_HAS17(417,"导入失败,格式有误！存在空值！请修正后再尝试导入"),
     STAND_HAS18(418,"导入失败,格式有误"),
 
+    //元宵点灯响应
+    LANTERN_HAS1(401,"未到兑奖时间!"),
+    LANTERN_HAS2(402,"已过兑奖时间!"),
+    LANTERN_HAS3(403,"该奖品已发放!"),
+    LANTERN_HAS4(404,"手动发放只能选择[已提交]状态的数据！!"),
+    LANTERN_HAS5(405,"活动为空!"),
+    LANTERN_HAS6(401,"删除活动失败！"),
+
+    //端午赛龙舟响应
+    DRAGONBOAT_HAS1(401,"删除活动失败！"),
+    DRAGONBOAT_HAS2(402,"未到兑奖时间!"),
+    DRAGONBOAT_HAS3(403,"已过兑奖时间!"),
+    DRAGONBOAT_HAS4(403,"该奖品已发放!"),
+    DRAGONBOAT_HAS5(404,"手动发放只能选择[已提交]状态的数据!"),
+    DRAGONBOAT_HAS6(405,"活动为空!"),
+
+    //幸运九宫格响应
+    NINELATTICE_HAS1(401,"未到兑奖时间!"),
+    NINELATTICE_HAS2(402,"已过兑奖时间!"),
+    NINELATTICE_HAS3(403,"该奖品已发放!"),
+    NINELATTICE_HAS4(404,"手动发放只能选择[已提交]状态的数据！!"),
+    NINELATTICE_HAS5(405,"活动为空!"),
+    NINELATTICE_HAS6(401,"删除活动失败！"),
+
+    //圣诞大礼包
+    TREE_HAS1(401,"未到兑奖时间!"),
+    TREE_HAS2(402,"已过兑奖时间!"),
+    TREE_HAS3(403,"该奖品已发放!"),
+    TREE_HAS4(404,"手动发放只能选择[已提交]状态的数据！!"),
     ;
-
-
 
     private final int code;
     private final String desc;

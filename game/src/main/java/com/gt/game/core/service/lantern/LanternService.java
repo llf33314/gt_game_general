@@ -5,13 +5,13 @@ package com.gt.game.core.service.lantern;
 import com.gt.api.bean.session.BusUser;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.core.bean.lantern.req.*;
-import com.gt.game.core.bean.lantern.res.LanternCountActivityRes;
-import com.gt.game.core.bean.lantern.res.LanternListRes;
+import com.gt.game.core.bean.lantern.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -55,6 +55,14 @@ public interface LanternService {
     void addLantern(BusUser busUser, LanternAddReq lanternAddReq);
 
     /**
+     * 通过活动id查询元宵点灯活动
+     * @param busUser
+     * @param lanternGetActivityReq
+     * @return
+     */
+    LanternGetActivityRes getActivityById(BusUser busUser, LanternGetActivityReq lanternGetActivityReq);
+
+    /**
      * 编辑元宵点灯活动基础设置
      * @param busUser
      * @param lanternModfiyBasicsReq
@@ -82,5 +90,65 @@ public interface LanternService {
      */
     void modfiyAwardsLantern(BusUser busUser, LanternModfiyAwardsReq lanternModfiyAwardsReq);
 
-    ResponseDTO<List<LanternListRes>> getWinningList(BusUser busUser, LanternGetWinningReq lanternGetWinningReq);
+    /**
+     * 删除元宵点灯活动
+     * @param busUser
+     * @param lanternDelReq
+     */
+    void delLantern(BusUser busUser, LanternDelReq lanternDelReq);
+
+    /**
+     * 分页获取元宵点灯中奖记录列表
+     * @param busUser
+     * @param lanternGetWinningReq
+     * @return
+     */
+    ResponseDTO<List<LanternGetWinningRes>> getWinningList(BusUser busUser, LanternGetWinningReq lanternGetWinningReq);
+
+    /**
+     * 中奖记录发放奖品
+     * @param busUser
+     * @param lanternEditApplyReq
+     * @return
+     */
+    ResponseDTO editLanternApply(BusUser busUser, LanternEditApplyReq lanternEditApplyReq);
+
+    /**
+     * 导出元宵点灯中奖记录
+     * @param params
+     * @return
+     */
+    Map<String,Object> exportLantern(Map<String, Object> params);
+
+    /**
+     * 批量删除元宵点灯中奖记录
+     * @param busUser
+     * @param lanternDelWinningReq
+     * @return
+     */
+    void  delLanternWinning(BusUser busUser, LanternDelWinningReq lanternDelWinningReq);
+
+    /**
+     * 分页获取核销授权列表
+     * @param busUser
+     * @param lanternAuthorityListReq
+     * @return
+     */
+    ResponseDTO<List<LanternAuthorityListRes>> getLanternAuthorityList(BusUser busUser, LanternAuthorityListReq lanternAuthorityListReq);
+
+    /**
+     * 获取奖品类型列表
+     * @param busUser
+     * @return
+     */
+    ResponseDTO<List<LanternPrizeTypeListRes>> getLanternPrizeType(BusUser busUser);
+
+    /**
+     * 批量删除核销授权
+     * @param busUser
+     * @param lanternDelAuthorityReq
+     */
+    void delLanternAuthority(BusUser busUser, LanternDelAuthorityReq lanternDelAuthorityReq);
+
+
 }

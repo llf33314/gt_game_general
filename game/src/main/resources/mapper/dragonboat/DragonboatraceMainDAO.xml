@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.game.core.dao.dragonboat.DragonboatraceMainDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.game.core.dao.dragonboat.DragonboatraceMainDAO">
+		<id column="id" property="id" />
+		<result column="createtime" property="createtime" />
+		<result column="activity_begin_time" property="activityBeginTime" />
+		<result column="activity_end_time" property="activityEndTime" />
+		<result column="cash_prize_begin_time" property="cashPrizeBeginTime" />
+		<result column="cash_prize_end_time" property="cashPrizeEndTime" />
+		<result column="act_rule" property="actRule" />
+		<result column="name" property="name" />
+		<result column="follow_qr_code" property="followQrCode" />
+		<result column="man_day_chance" property="manDayChance" />
+		<result column="man_total_chance" property="manTotalChance" />
+		<result column="cash_prize_instruction" property="cashPrizeInstruction" />
+		<result column="receive_type" property="receiveType" />
+		<result column="phone" property="phone" />
+		<result column="cash_address" property="cashAddress" />
+		<result column="bus_id" property="busId" />
+		<result column="music_url" property="musicUrl" />
+		<result column="bgm_sp" property="bgmSp" />
+		<result column="prize_description" property="prizeDescription" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, createtime, activity_begin_time, activity_end_time, cash_prize_begin_time, cash_prize_end_time, act_rule, name, follow_qr_code, man_day_chance, man_total_chance, cash_prize_instruction, receive_type, phone, cash_address, bus_id, music_url, bgm_sp, prize_description
+    </sql>
+
+</mapper>

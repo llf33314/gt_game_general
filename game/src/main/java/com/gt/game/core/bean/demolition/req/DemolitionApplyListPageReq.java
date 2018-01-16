@@ -15,7 +15,6 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel("拆礼盒分页查询中奖记录请求参数对象")
 public class DemolitionApplyListPageReq extends PageReq{
 
-
     /**
      * 主键
      */

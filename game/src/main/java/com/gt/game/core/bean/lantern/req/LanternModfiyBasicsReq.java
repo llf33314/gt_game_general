@@ -16,6 +16,9 @@ import java.util.Date;
 @ApiModel("编辑元宵点灯活动基础设置请求类")
 public class LanternModfiyBasicsReq {
 
+	@ApiModelProperty("活动主键id")
+	private Integer id;
+
 	@ApiModelProperty("活动名称")
 	private String name;
 
@@ -24,6 +27,14 @@ public class LanternModfiyBasicsReq {
 
 	@ApiModelProperty("活动结束时间")
 	private Date activityEndTime;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	public String getName() {
 		return name;

@@ -17,6 +17,9 @@ import java.util.List;
 @ApiModel("编辑元宵点灯活动兑奖设置请求类")
 public class LanternModfiyExpiryReq {
 
+	@ApiModelProperty("活动主键id")
+	private Integer id;
+
 	@ApiModelProperty("兑奖开始时间")
 	private Date cashPrizeBeginTime;
 
@@ -34,6 +37,14 @@ public class LanternModfiyExpiryReq {
 
 	@ApiModelProperty("兑奖说明")
 	private String cashPrizeInstruction;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	public Date getCashPrizeBeginTime() {
 		return cashPrizeBeginTime;

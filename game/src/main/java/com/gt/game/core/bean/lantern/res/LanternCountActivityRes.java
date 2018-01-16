@@ -11,7 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
 public class LanternCountActivityRes {
 
     @ApiModelProperty(value = "活动总数")
-    private Integer count;
+    private Integer count1;
 
     @ApiModelProperty(value = "未开始活动总数")
     private Integer count2;
@@ -22,13 +22,12 @@ public class LanternCountActivityRes {
     @ApiModelProperty(value = "已结束活动总数")
     private Integer count4;
 
-
-    public Integer getCount() {
-        return count;
+    public Integer getCount1() {
+        return count1;
     }
 
-    public void setCount(Integer count) {
-        this.count = count;
+    public void setCount1(Integer count1) {
+        this.count1 = count1;
     }
 
     public Integer getCount2() {
