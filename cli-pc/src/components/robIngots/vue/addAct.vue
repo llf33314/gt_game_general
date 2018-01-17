@@ -200,7 +200,7 @@ export default {
             return time.getTime() < Date.now() - 8.64e7;
           }
       },
-      active: 3,
+      active: 0,
       isSubmit:false,
       ruleForm1: {
         name: "",
