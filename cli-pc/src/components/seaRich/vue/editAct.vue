@@ -53,7 +53,7 @@
                 </el-form-item>  
                 <el-form-item label="活动规则：" prop="desc">
                     <el-input class="w_demo" :maxlength="300"  type="textarea" v-model="ruleForm2.desc" :rows="3" placeholder="请填写活动规则"></el-input>
-                    <span class="el-upload__tip grey ml10">150个字以内</span>   
+                    <span class="el-upload__tip grey ml10">300个字以内</span>   
                 </el-form-item>   
             </el-form> 
         </div> 
@@ -159,9 +159,9 @@
         <!-- 按钮 -->
         <div class="h80"></div> 
         <div class="btnRow"  v-if="this.active!=5">
-             <el-button   @click="backUrl()">返回</el-button> 
-            <el-button type="primary" @click="submit()" v-if="this.active==0">保存</el-button> 
-            <el-button type="primary" @click="submit()" v-if="this.active==1">保存</el-button>
+            <el-button   @click="backUrl()">返回</el-button> 
+            <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">保存</el-button> 
+            <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">保存</el-button>
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">保存</el-button>   
             <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>   
             <!-- <el-button type="primary" @click="submit()">打印</el-button>    -->
@@ -310,7 +310,7 @@ export default {
             this.options=data.data
              console.log(this.options,444);
           } else {
-              this.$message.error(data.msg + "错误码：[" + data.code + "]");
+              this.$message.errorthis.$message.error(data.msg);;
           }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
@@ -380,7 +380,7 @@ export default {
     next(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) { 
-          this.active++;
+          this.submit();
         } else {
          console.log("error submit!!");
         }
@@ -516,7 +516,7 @@ export default {
           if (data.code == 100) { 
               this.$message({ message: "操作成功", type: "success"}); 
           } else {
-              this.$message.error(data.msg + "错误码：[" + data.code + "]");
+              this.$message.errorthis.$message.error(data.msg);;
           }
         }).catch(() => {
             this.$message({type: "info", message: "网络问题，请刷新重试~" });
@@ -600,7 +600,7 @@ export default {
             } 
             this.ruleForm4=newPraise 
           } else {
-              this.$message.error(data.msg + "错误码：[" + data.code + "]");
+              this.$message.errorthis.$message.error(data.msg);;
           }
         }).catch(() => {
             this.$message({type: "info", message: "网络问题，请刷新重试~" });

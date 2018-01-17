@@ -126,7 +126,7 @@ import {
             this.tableData=data
             console.log(data,'中奖列表');
           } else {
-              this.$message.error(data.msg + "错误码：[" + data.code + "]");
+              this.$message.errorthis.$message.error(data.msg);;
           }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
@@ -140,7 +140,7 @@ import {
             this.options=data.data
              console.log(this.options,444);
           } else {
-              this.$message.error(data.msg + "错误码：[" + data.code + "]");
+              this.$message.errorthis.$message.error(data.msg);;
           }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
@@ -162,7 +162,7 @@ import {
                 this.$message({ message: "发放成功", type: "success" });
                 this.getData();  
           } else {
-              this.$message.error(data.msg + "错误码：[" + data.code + "]");
+              this.$message.errorthis.$message.error(data.msg);;
           }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });

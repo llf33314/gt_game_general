@@ -467,7 +467,7 @@ export default {
             console.log(data,1233);
             this.options=data.data 
           } else {
-              this.$message.error(data.msg + "错误码：[" + data.code + "]");
+              this.$message.errorthis.$message.error(data.msg);;
           }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
@@ -480,7 +480,7 @@ export default {
             console.log(data,1233);
             this.Quesbank=data.data 
           } else {
-              this.$message.error(data.msg + "错误码：[" + data.code + "]");
+              this.$message.errorthis.$message.error(data.msg);;
           }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });

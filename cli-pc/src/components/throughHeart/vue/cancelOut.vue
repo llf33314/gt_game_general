@@ -100,7 +100,7 @@ import {
             this.tableData=data
             console.log(data,'获取核销员');
           } else {
-              this.$message.error(data.msg + "错误码：[" + data.code + "]");
+              this.$message.errorthis.$message.error(data.msg);;
           }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
@@ -115,7 +115,7 @@ import {
                 this.cancelCode=true 
                 console.log(data.data.mobileUrl,'新增授权');
             } else {
-                this.$message.error(data.msg + "错误码：[" + data.code + "]");
+                this.$message.errorthis.$message.error(data.msg);;
             }
             }).catch(() => {
                 this.$message({ type: "info", message: "网络问题，请刷新重试~" });
@@ -139,7 +139,7 @@ import {
                     this.$message({ message: "操作成功", type: "success"}); 
                     this.getData();
                 } else {
-                this.$message.error(data.msg + "错误码：[" + data.code + "]");
+                this.$message.errorthis.$message.error(data.msg);;
                 }
             });
             }).catch(() => {
@@ -168,7 +168,7 @@ import {
                         this.$message({ message: "操作成功", type: "success"}); 
                         this.getData();
                 } else {
-                this.$message.error(data.msg + "错误码：[" + data.code + "]");
+                this.$message.errorthis.$message.error(data.msg);;
                 }
             });
             }).catch(() => {
