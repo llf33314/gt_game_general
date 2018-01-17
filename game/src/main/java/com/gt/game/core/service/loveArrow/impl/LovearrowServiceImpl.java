@@ -199,8 +199,8 @@ public class LovearrowServiceImpl implements LovearrowService {
                         LoveArrowApplyListResList.get(i).setNickname(memberResList.get(j).getNickname());
                     }
                 }
-                if (CommonUtil.isEmpty(LoveArrowApplyListResList.get(i).getMemberName())) {
-                    LoveArrowApplyListResList.get(i).setNickname("游客");
+                if (CommonUtil.isEmpty(LoveArrowApplyListResList.get(i).getNickname())) {
+                    LoveArrowApplyListResList.get(i).setNickname("未知用户");
                 }
             }
         }

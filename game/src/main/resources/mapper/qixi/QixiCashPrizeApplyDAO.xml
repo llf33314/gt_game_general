@@ -26,6 +26,7 @@
 		<result column="type" property="type" />
 		<result column="prize_unit" property="prizeUnit" />
 		<result column="cash_time" property="cashTime" />
+		<result column="member_name" property="memberName" />
 		<result column="member_phone" property="memberPhone" />
 		<result column="member_id" property="memberId" />
 		<result column="status" property="status" />
@@ -40,7 +41,7 @@
         id, createtime, act_id, prize_id, member_id, receive_type, member_name, member_phone, address_id, address, sn_code, status, cash_time, record_id, au_id
     </sql>
 	<select id="queryRecodList" resultMap="BaseResultMap1" parameterType="com.gt.game.core.bean.qixi.req.QixiApplyListPageReq" >
-		SELECT t1.id,t4.prize_name,t4.type,t4.prize_unit,t1.cash_time as cashTime,t1.member_phone,t1.status,t1.sn_code,t1.member_id,t5.address AS  addressName ,t1.address,t1.receive_type
+		SELECT t1.id,t4.prize_name,t4.type,t4.prize_unit,t1.cash_time as cashTime,t1.member_phone,t1.member_name,t1.status,t1.sn_code,t1.member_id,t5.address AS  addressName ,t1.address,t1.receive_type
 		from t_wx_activity_qixi_cash_prize_apply t1
 		LEFT JOIN t_wx_activity_qixi_prize t4 on t1.prize_id = t4.id
 		LEFT JOIN t_wx_activity_qixi_address t5 on t1.address_id = t5.id
@@ -58,7 +59,7 @@
 	</select>
 
 	<select id="findExports" resultType="map" parameterType="map" >
-		SELECT t1.id,t4.prize_name,t4.type,t4.prize_unit,t1.cash_time as cashTime,t1.member_phone,t1.status,t1.sn_code,t1.member_id
+		SELECT t1.id,t4.prize_name,t4.type,t4.prize_unit,t1.cash_time as cashTime,t1.member_phone,t1.member_name,t1.status,t1.sn_code,t1.member_id
 		from t_wx_activity_qixi_cash_prize_apply t1
 		LEFT JOIN t_wx_activity_qixi_prize t4 on t1.prize_id = t4.id
 		WHERE t1.act_id = #{actId}

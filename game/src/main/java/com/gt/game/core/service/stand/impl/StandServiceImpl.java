@@ -205,7 +205,7 @@ public class StandServiceImpl implements StandService {
                         standApplyListResList.get(i).setMemberName(memberResList.get(j).getNickname());
                     }
                 }
-                if (CommonUtil.isEmpty(standApplyListResList.get(i).getMemberName())) {
+                if (CommonUtil.isEmpty(standApplyListResList.get(i).getNickname())) {
                     standApplyListResList.get(i).setNickname("未知用户");
                     standApplyListResList.get(i).setMemberName("未知用户");
                 }

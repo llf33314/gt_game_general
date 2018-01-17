@@ -31,9 +31,44 @@
 		<result column="game_time" property="gameTime" />
 	</resultMap>
 
-    <!-- 通用查询结果列 -->
-    <sql id="Base_Column_List">
-        id, bus_id, createtime, activity_begin_time, activity_end_time, cash_prize_begin_time, cash_prize_end_time, act_rule, name, follow_qr_code, free_times, day_free_times, game_fb, game_jf, music_url, cash_prize_instruction, receive_type, phone, rf_status, prize_set_instruction, ingot_money, money_coin, is_msg_template, msg_template_id, game_time
-    </sql>
+	<resultMap id="BaseResultMap1" type="com.gt.game.core.bean.goldtree.res.GoldtreeListRes">
+		<id column="id" property="id" />
+		<result column="activity_begin_time" property="activityBeginTime" />
+		<result column="activity_end_time" property="activityEndTime" />
+		<result column="name" property="name" />
+	</resultMap>
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, bus_id, createtime, activity_begin_time, activity_end_time, cash_prize_begin_time, cash_prize_end_time, act_rule, name, follow_qr_code, free_times, day_free_times, game_fb, game_jf, music_url, cash_prize_instruction, receive_type, phone, rf_status, prize_set_instruction, ingot_money, money_coin, is_msg_template, msg_template_id, game_time
+	</sql>
+	<select id="getGoldtreeList" resultMap="BaseResultMap1" parameterType="Map">
+		SELECT  id,activity_begin_time, activity_end_time, name
+		FROM t_wx_activity_goldtree_main
+		WHERE bus_id = #{busId,jdbcType=INTEGER}
+		<if test="status == 0">
+			and UNIX_TIMESTAMP(activity_begin_time) > UNIX_TIMESTAMP(#{nowTime})
+		</if>
+		<if  test="status == 1">
+			and UNIX_TIMESTAMP(activity_begin_time) &lt;= UNIX_TIMESTAMP(#{nowTime}) and  UNIX_TIMESTAMP(activity_end_time) >= UNIX_TIMESTAMP(#{nowTime})
+		</if>
+		<if test="status == 2">
+			and UNIX_TIMESTAMP(activity_end_time) &lt; UNIX_TIMESTAMP(#{nowTime})
+		</if>
+		<if test="name != null and name != ''">
+			and name LIKE CONCAT('%','${name}','%' )
+		</if>
+		order BY  id DESC
+	</select>
+	<select id="getCount" resultType="map" parameterType="map">
+		SELECT  t1.count2 ,t2.count3 , t3.count4
+		FROM (SELECT  count(m1.id) AS count2 FROM  t_wx_activity_goldtree_main m1
+		WHERE m1.bus_id = #{busId,jdbcType=INTEGER} AND UNIX_TIMESTAMP(m1.activity_begin_time) > UNIX_TIMESTAMP(#{nowTime})) t1
+		JOIN
+		(SELECT count(m2.id) AS count3 FROM  t_wx_activity_goldtree_main m2
+		WHERE m2.bus_id = #{busId,jdbcType=INTEGER} and UNIX_TIMESTAMP(m2.activity_begin_time) &lt;= UNIX_TIMESTAMP(#{nowTime}) and  UNIX_TIMESTAMP(m2.activity_end_time) >= UNIX_TIMESTAMP(#{nowTime})) t2
+		JOIN
+		(SELECT count(m3.id) AS count4 FROM  t_wx_activity_goldtree_main m3
+		WHERE m3.bus_id = #{busId,jdbcType=INTEGER} AND UNIX_TIMESTAMP(m3.activity_end_time) &lt; UNIX_TIMESTAMP(#{nowTime})) t3
+	</select>
 
 </mapper>

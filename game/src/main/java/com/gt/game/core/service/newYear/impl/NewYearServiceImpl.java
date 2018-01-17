@@ -199,7 +199,7 @@ public class NewYearServiceImpl implements NewYearService {
                         newYearApplyListResList.get(i).setNickname(memberResList.get(j).getNickname());
                     }
                 }
-                if (CommonUtil.isEmpty(newYearApplyListResList.get(i).getMemberName())) {
+                if (CommonUtil.isEmpty(newYearApplyListResList.get(i).getNickname())) {
                     newYearApplyListResList.get(i).setNickname("游客");
                 }
             }

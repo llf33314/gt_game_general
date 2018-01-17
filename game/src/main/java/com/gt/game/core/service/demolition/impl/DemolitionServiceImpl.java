@@ -308,7 +308,7 @@ public class DemolitionServiceImpl implements DemolitionService {
                         demolitionApplyListResList.get(i).setNickname(memberResList.get(j).getNickname());
                     }
                 }
-                if (CommonUtil.isEmpty(demolitionApplyListResList.get(i).getMemberName())) {
+                if (CommonUtil.isEmpty(demolitionApplyListResList.get(i).getNickname())) {
                     demolitionApplyListResList.get(i).setNickname("游客");
                 }
             }
