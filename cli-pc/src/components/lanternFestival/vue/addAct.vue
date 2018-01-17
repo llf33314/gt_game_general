@@ -399,7 +399,7 @@ export default {
                     imgInstruction :"",
                     type :this.ruleForm4[i].name0,//类型
                     prizeUnit :this.ruleForm4[i].name1,//单位
-                    prizeName :this.ruleForm4[i].name1,//名称
+                    prizeName :this.ruleForm4[i].name2,//名称
                     num :Number(this.ruleForm4[i].name3),//数量
                     // probabiliy :this.ruleForm4[i].name4,  //概率
                     newYearPrizeImgReqs:[]//图片
