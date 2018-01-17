@@ -58,8 +58,8 @@
         <!-- 规则设置 -->
         <div v-if="this.active==1" class="mt40">
             <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="150px" class="mt40 demo-ruleForm">
-                <el-form-item label="关注二维码：" prop="code">
-                  <gt-material prop="url" :url="ruleForm2.code" v-on:getChangeUrl="getChangeUrl2" width="72" height="72"></gt-material>
+                <el-form-item label="关注二维码：">
+                  <gt-material :url="ruleForm2.code" v-on:getChangeUrl="getChangeUrl2" width="72" height="72"></gt-material>
                   <span class="el-upload__tip grey ml10">上传1:1二维码，将会在活动规则中显示商家二维码</span>  
                 </el-form-item> 
                 <el-form-item label="游戏总数：" prop="manTotalChance">
@@ -174,12 +174,12 @@
         <!-- 按钮 -->
         <div class="h80"></div> 
         <div class="btnRow"  v-if="this.active!=5">
-            <el-button   @click="upStep()" v-if="this.active!=0">上一步</el-button>
-            <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步</el-button> 
-            <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步</el-button>
-            <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步</el-button>   
+            <el-button   @click="backUrl()">返回</el-button>
+            <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">保存</el-button> 
+            <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">保存</el-button>
+            <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">保存</el-button>   
             <el-button type="primary" @click="lastStep()"   :disabled="this.isSubmit"     v-if="this.active==3">保存</el-button>   
-            <el-button type="primary" @click="submit()">打印</el-button>   
+            <!-- <el-button type="primary" @click="submit()">打印</el-button>    -->
         </div>  
 </div>   
 </div>
@@ -219,8 +219,7 @@ export default {
         name1:[{required: true, type: "array",message: "游戏时间不能为空", trigger: "blur" }] 
       },
       ruleForm2: {
-        code: "",
-        time: "", 
+        code: "", 
         manTotalChance:"",
         manDayChance:"",  
         desc: "",  
@@ -296,7 +295,7 @@ export default {
             this.options=data.data
              console.log(this.options,444);
           } else {
-              this.$message.error(data.msg + "错误码：[" + data.code + "]");
+              this.$message.errorthis.$message.error(data.msg);;
           }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
@@ -369,7 +368,7 @@ export default {
     next(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) { 
-          this.active++;
+          this.submit();
         } else {
          console.log("error submit!!");
         }
@@ -454,12 +453,27 @@ export default {
                     probabiliy :this.ruleForm4[i].name4,  //概率
                     shakeluckPrizeImgReqs:[]//图片
                 }
+                if (arr4.type == "粉币"){
+                    arr4.type =1
+                }else if (arr4.type == "手机流量"){
+                    arr4.type =2 
+                }else if (arr4.type == "手机话费"){
+                    arr4.type =3 
+                }else if (arr4.type == "实体物品"){
+                    arr4.type =4 
+                }
+                else if (arr4.type == "积分"){
+                    arr4.type =6
+                }
+                else if (arr4.type == "优惠券"){
+                    arr4.type =7 
+                } 
                 if(arr4.type==4){
                     for(var j=0;j<this.ruleForm4[i].name5.length;j++){
                         var imgarr={
                             imgUrl:this.ruleForm4[i].name5[j]
                         }
-                    arr4.seagoldPrizeImgReqs.push(imgarr)
+                    arr4.shakeluckPrizeImgReqs.push(imgarr)
                     } 
                 } 
                 newPrize.push(arr4)
@@ -492,11 +506,11 @@ export default {
         console.log(data,123);         
         saveAct(data).then(data=>{
           this.isSubmit=true
-          if (data.code == 100) { 
-              this.active=5
+          if (data.code == 100) {  
+              this.$message({ message: "操作成功", type: "success"}); 
           } else {
               this.isSubmit=false
-              this.$message.error(data.msg + "错误码：[" + data.code + "]");
+              this.$message.errorthis.$message.error(data.msg);;
           }
         }).catch(() => {
             this.isSubmit=false
@@ -588,7 +602,7 @@ export default {
             } 
             this.ruleForm4=newPraise
             } else {
-                this.$message.error(data.msg + "错误码：[" + data.code + "]");
+                this.$message.errorthis.$message.error(data.msg);;
             }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });

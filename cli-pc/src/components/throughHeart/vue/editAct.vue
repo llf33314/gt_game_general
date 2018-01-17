@@ -368,7 +368,7 @@ export default {
             this.options=data.data
              console.log(this.options,444);
           } else {
-              this.$message.error(data.msg + "错误码：[" + data.code + "]");
+              this.$message.errorthis.$message.error(data.msg);;
           }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
@@ -506,9 +506,9 @@ export default {
         console.log(data,123); 
         saveAct(data).then(data=>{
           if (data.code == 100) {  
-              this.active=5
+            this.$message({ message: "操作成功", type: "success"}); 
           } else {
-              this.$message.error(data.msg + "错误码：[" + data.code + "]");
+              this.$message.errorthis.$message.error(data.msg);; 
           }
         }).catch(() => {
             this.$message({type: "info", message: "网络问题，请刷新重试~" });
@@ -603,7 +603,7 @@ export default {
             } 
             this.ruleForm4=newPraise 
           } else {
-              this.$message.error(data.msg + "错误码：[" + data.code + "]");
+              this.$message.errorthis.$message.error(data.msg);;
           }
         }).catch(() => {
             this.$message({type: "info", message: "网络问题，请刷新重试~" });

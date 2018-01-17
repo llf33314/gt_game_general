@@ -443,7 +443,7 @@ export default {
               this.active=5
           } else {
               this.isSubmit=false
-              this.$message.error(data.msg + "错误码：[" + data.code + "]");
+              this.$message.errorthis.$message.error(data.msg);;
           }
         }).catch(() => {
             this.isSubmit=false
@@ -464,7 +464,7 @@ export default {
             this.options=data.data
                 console.log(this.options,'获取奖品类型');
             } else {
-                this.$message.error(data.msg + "错误码：[" + data.code + "]");
+                this.$message.errorthis.$message.error(data.msg);;
             }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });

@@ -79,7 +79,7 @@ getUserList,getUserDetail,delUser
             this.tableData=data
             console.log(data,'中奖列表');
           } else {
-              this.$message.error(data.msg + "错误码：[" + data.code + "]");
+              this.$message.errorthis.$message.error(data.msg);;
           }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
@@ -97,7 +97,7 @@ getUserList,getUserDetail,delUser
             this.detailData=data
             console.log(data,11)
           } else {
-              this.$message.error(data.msg + "错误码：[" + data.code + "]");
+              this.$message.errorthis.$message.error(data.msg);;
           }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
@@ -115,7 +115,7 @@ getUserList,getUserDetail,delUser
                     this.$message({ message: "操作成功", type: "success"}); 
                     this.getData();
                 } else {
-                this.$message.error(data.msg + "错误码：[" + data.code + "]");
+                this.$message.errorthis.$message.error(data.msg);;
                 }
             });
             }).catch(() => {
