@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.game.core.dao.tree.TreeDetailDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.game.core.dao.tree.TreeDetailDAO">
+		<id column="id" property="id" />
+		<result column="tree_id" property="treeId" />
+		<result column="tree_prize_name" property="treePrizeName" />
+		<result column="tree_prize_nums" property="treePrizeNums" />
+		<result column="tree_prize_chance" property="treePrizeChance" />
+		<result column="tree_prize_image" property="treePrizeImage" />
+		<result column="tree_prize_type" property="treePrizeType" />
+		<result column="tree_prize_limit" property="treePrizeLimit" />
+		<result column="freeze_id" property="freezeId" />
+		<result column="openid" property="openid" />
+		<result column="nickname" property="nickname" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, tree_id, tree_prize_name, tree_prize_nums, tree_prize_chance, tree_prize_image, tree_prize_type, tree_prize_limit, freeze_id, openid, nickname
+    </sql>
+
+</mapper>

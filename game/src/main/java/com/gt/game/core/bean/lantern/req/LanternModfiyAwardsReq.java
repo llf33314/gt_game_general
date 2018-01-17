@@ -17,6 +17,9 @@ import java.util.List;
 @ApiModel("编辑元宵点灯活动奖项设置请求类")
 public class LanternModfiyAwardsReq {
 
+	@ApiModelProperty("活动主键id")
+	private Integer id;
+
 	@ApiModelProperty("奖品说明")
 	private String prizeDescription;
 
@@ -25,6 +28,14 @@ public class LanternModfiyAwardsReq {
 
 	@ApiModelProperty("奖品设置")
 	private List<LanternPrizeSetReq> prizeSetList;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	public String getPrizeDescription() {
 		return prizeDescription;

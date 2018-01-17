@@ -1,4 +1,4 @@
-package com.gt.game.core.exception.demolition.lantern;
+package com.gt.game.core.exception.lantern;
 
 
 import com.gt.game.common.enums.ResponseEnums;

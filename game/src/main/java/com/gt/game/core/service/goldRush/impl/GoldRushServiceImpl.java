@@ -193,7 +193,7 @@ public class GoldRushServiceImpl  implements GoldRushService {
                         GoldRushApplyListResList.get(i).setNickname(memberResList.get(j).getNickname());
                     }
                 }
-                if (CommonUtil.isEmpty(GoldRushApplyListResList.get(i).getMemberName())) {
+                if (CommonUtil.isEmpty(GoldRushApplyListResList.get(i).getNickname())) {
                     GoldRushApplyListResList.get(i).setNickname("未知用户");
                 }
             }

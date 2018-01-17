@@ -84,6 +84,13 @@ public enum ResponseEnums {
     STAND_HAS17(417,"导入失败,格式有误！存在空值！请修正后再尝试导入"),
     STAND_HAS18(418,"导入失败,格式有误"),
 
+    //元宵点灯响应
+    LANTERN_HAS1(401,"未到兑奖时间!"),
+    LANTERN_HAS2(402,"已过兑奖时间!"),
+    LANTERN_HAS3(403,"该奖品已发放!"),
+    LANTERN_HAS4(404,"手动发放只能选择[已提交]状态的数据！!"),
+    LANTERN_HAS5(405,"活动为空!"),
+    LANTERN_HAS6(401,"删除活动失败！"),
     //一箭穿心响应
     LOVEARROW_HAS1(401,"该奖品已发放!"),
     LOVEARROW_HAS2(402,"手动发放只能选择[已提交]状态的数据！!"),
@@ -150,9 +157,63 @@ public enum ResponseEnums {
     GOLDRUSH_HAS13(413,"回滚粉币失败，删除失败"),
     GOLDRUSH_HAS14(414,"请输入正确的粉币数量"),
     GOLDRUSH_HAS15(415,"修改粉币数量失败"),
+
+    //摇手气响应
+    SHAKELUCK_HAS1(401,"该奖品已发放!"),
+    SHAKELUCK_HAS2(402,"手动发放只能选择[已提交]状态的数据！!"),
+    SHAKELUCK_HAS3(403,"未到兑奖时间!"),
+    SHAKELUCK_HAS4(404,"已过兑奖时间!"),
+    SHAKELUCK_HAS5(405,"活动为空!"),
+    SHAKELUCK_HAS6(406,"活动已经开始，不允许操作!"),
+    SHAKELUCK_HAS7(407,"粉币不足，保存失败"),
+    SHAKELUCK_HAS8(408,"冻结粉币失败，保存失败"),
+    SHAKELUCK_HAS9(409,"输入的粉币数量过少"),
+    SHAKELUCK_HAS10(410,"活动正在进行，不允许删除"),
+    SHAKELUCK_HAS11(411,"奖品未发放完毕，不允许操作"),
+    SHAKELUCK_HAS12(412,"未过活动兑换期限，不允许删除"),
+    SHAKELUCK_HAS13(413,"回滚粉币失败，删除失败"),
+    SHAKELUCK_HAS14(414,"请输入正确的粉币数量"),
+    SHAKELUCK_HAS15(415,"修改粉币数量失败"),
+
+    //一箭穿心响应
+    GOLDTREE_HAS1(401,"该奖品已发放!"),
+    GOLDTREE_HAS2(402,"手动发放只能选择[已提交]状态的数据！!"),
+    GOLDTREE_HAS3(403,"未到兑奖时间!"),
+    GOLDTREE_HAS4(404,"已过兑奖时间!"),
+    GOLDTREE_HAS5(405,"活动为空!"),
+    GOLDTREE_HAS6(406,"活动已经开始，不允许操作!"),
+    GOLDTREE_HAS7(407,"粉币不足，保存失败"),
+    GOLDTREE_HAS8(408,"冻结粉币失败，保存失败"),
+    GOLDTREE_HAS9(409,"输入的粉币数量过少"),
+    GOLDTREE_HAS10(410,"活动正在进行，不允许删除"),
+    GOLDTREE_HAS11(411,"奖品未发放完毕，不允许操作"),
+    GOLDTREE_HAS12(412,"未过活动兑换期限，不允许删除"),
+    GOLDTREE_HAS13(413,"回滚粉币失败，删除失败"),
+    GOLDTREE_HAS14(414,"请输入正确的粉币数量"),
+    GOLDTREE_HAS15(415,"修改粉币数量失败"),
+
+    //端午赛龙舟响应
+    DRAGONBOAT_HAS1(401,"删除活动失败！"),
+    DRAGONBOAT_HAS2(402,"未到兑奖时间!"),
+    DRAGONBOAT_HAS3(403,"已过兑奖时间!"),
+    DRAGONBOAT_HAS4(403,"该奖品已发放!"),
+    DRAGONBOAT_HAS5(404,"手动发放只能选择[已提交]状态的数据!"),
+    DRAGONBOAT_HAS6(405,"活动为空!"),
+
+    //幸运九宫格响应
+    NINELATTICE_HAS1(401,"未到兑奖时间!"),
+    NINELATTICE_HAS2(402,"已过兑奖时间!"),
+    NINELATTICE_HAS3(403,"该奖品已发放!"),
+    NINELATTICE_HAS4(404,"手动发放只能选择[已提交]状态的数据！!"),
+    NINELATTICE_HAS5(405,"活动为空!"),
+    NINELATTICE_HAS6(401,"删除活动失败！"),
+
+    //圣诞大礼包
+    TREE_HAS1(401,"未到兑奖时间!"),
+    TREE_HAS2(402,"已过兑奖时间!"),
+    TREE_HAS3(403,"该奖品已发放!"),
+    TREE_HAS4(404,"手动发放只能选择[已提交]状态的数据！!"),
     ;
-
-
 
     private final int code;
     private final String desc;

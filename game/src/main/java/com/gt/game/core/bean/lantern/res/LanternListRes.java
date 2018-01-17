@@ -1,9 +1,12 @@
 package com.gt.game.core.bean.lantern.res;
 
+import com.gt.game.core.bean.lantern.req.LanternAdvertisingPictureReq;
+import com.gt.game.core.bean.lantern.req.LanternPrizeSetReq;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -37,20 +40,20 @@ public class LanternListRes {
 	@ApiModelProperty("活动状态  0 未开始 1 进行中 2 已结束")
 	private Integer status;
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public Integer getId() {
 		return id;
 	}
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public Date getActivityBeginTime() {

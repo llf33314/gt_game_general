@@ -109,7 +109,7 @@ public class LovearrowServiceImpl implements LovearrowService {
      */
     @Override
     public ResponseDTO<MobileUrlRes> getAuthorityUrl(BusUser busUser, MobileUrlReq mobileUrlReq) {
-        String url = applyProperties.getMobileBaseUrl() + "LoveArrowGiftBoxMobile/"+ mobileUrlReq.getMainId() + "/79B4DE7C/saveAuthorizer.do";
+        String url = applyProperties.getMobileBaseUrl() + "loveArrowMobile/"+ mobileUrlReq.getMainId() + "/79B4DE7C/saveAuthorizer.do";
         return ResponseDTO.createBySuccess("获取新增授权链接成功",new MobileUrlRes(url));
     }
     /**
@@ -199,8 +199,8 @@ public class LovearrowServiceImpl implements LovearrowService {
                         LoveArrowApplyListResList.get(i).setNickname(memberResList.get(j).getNickname());
                     }
                 }
-                if (CommonUtil.isEmpty(LoveArrowApplyListResList.get(i).getMemberName())) {
-                    LoveArrowApplyListResList.get(i).setNickname("游客");
+                if (CommonUtil.isEmpty(LoveArrowApplyListResList.get(i).getNickname())) {
+                    LoveArrowApplyListResList.get(i).setNickname("未知用户");
                 }
             }
         }

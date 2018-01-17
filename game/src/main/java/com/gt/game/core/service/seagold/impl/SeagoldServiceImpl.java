@@ -178,7 +178,7 @@ public class SeagoldServiceImpl implements SeagoldService {
                         seagoldApplyListResList.get(i).setNickname(memberResList.get(j).getNickname());
                     }
                 }
-                if (CommonUtil.isEmpty(seagoldApplyListResList.get(i).getMemberName())) {
+                if (CommonUtil.isEmpty(seagoldApplyListResList.get(i).getNickname())) {
                     seagoldApplyListResList.get(i).setNickname("游客");
                 }
             }

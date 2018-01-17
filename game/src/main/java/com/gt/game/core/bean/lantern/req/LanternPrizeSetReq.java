@@ -3,6 +3,8 @@ package com.gt.game.core.bean.lantern.req;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.List;
+
 /**
  * <p>
  * 元宵点灯主表
@@ -27,7 +29,7 @@ public class LanternPrizeSetReq {
 	private  Integer num;
 
 	@ApiModelProperty("选择图片")
-	private  String imgUrl;
+	private List<String> imgUrl;
 
 	public Integer getType() {
 		return type;
@@ -61,11 +63,11 @@ public class LanternPrizeSetReq {
 		this.num = num;
 	}
 
-	public String getImgUrl() {
+	public List<String> getImgUrl() {
 		return imgUrl;
 	}
 
-	public void setImgUrl(String imgUrl) {
+	public void setImgUrl(List<String> imgUrl) {
 		this.imgUrl = imgUrl;
 	}
 }

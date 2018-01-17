@@ -16,14 +16,17 @@ import java.util.Date;
 @ApiModel("编辑元宵点灯活动规则设置请求类")
 public class LanternModfiyRuleReq {
 
+	@ApiModelProperty("活动主键id")
+	private Integer id;
+
 	@ApiModelProperty("关注二维码")
 	private String followQrCode;
 
-	@ApiModelProperty("背景音乐URL")
+	/*@ApiModelProperty("背景音乐URL")
 	private String musicUrl;
 
 	@ApiModelProperty("背景音乐名")
-	private String bgmSp;
+	private String bgmSp;*/
 
 	@ApiModelProperty("游戏总数")
 	private Integer manTotalChance;
@@ -37,6 +40,14 @@ public class LanternModfiyRuleReq {
 	@ApiModelProperty("活动规则")
 	private String actRule;
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	public String getFollowQrCode() {
 		return followQrCode;
 	}
@@ -45,7 +56,7 @@ public class LanternModfiyRuleReq {
 		this.followQrCode = followQrCode;
 	}
 
-	public String getMusicUrl() {
+	/*public String getMusicUrl() {
 		return musicUrl;
 	}
 
@@ -59,7 +70,7 @@ public class LanternModfiyRuleReq {
 
 	public void setBgmSp(String bgmSp) {
 		this.bgmSp = bgmSp;
-	}
+	}*/
 
 	public Integer getManTotalChance() {
 		return manTotalChance;

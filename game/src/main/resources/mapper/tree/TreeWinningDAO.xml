@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.game.core.dao.tree.TreeWinningDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.game.core.dao.tree.TreeWinningDAO">
+		<id column="id" property="id" />
+		<result column="tree_act_id" property="treeActId" />
+		<result column="tree_prize_id" property="treePrizeId" />
+		<result column="tree_status" property="treeStatus" />
+		<result column="tree_memberId" property="treeMemberId" />
+		<result column="tree_create_time" property="treeCreateTime" />
+		<result column="tree_user_id" property="treeUserId" />
+		<result column="tree_exchangeCode" property="treeExchangeCode" />
+		<result column="tree_cash_memberId" property="treeCashMemberId" />
+		<result column="tree_way" property="treeWay" />
+		<result column="tree_phone" property="treePhone" />
+		<result column="tree_address" property="treeAddress" />
+		<result column="tree_name" property="treeName" />
+		<result column="tree_cashtime" property="treeCashtime" />
+	</resultMap>
+
+	<resultMap id="BaseResultMap1" type="com.gt.game.core.bean.tree.res.TreeGetWinningRes">
+		<id column="id" property="id" />
+		<result column="tree_prize_name" property="prizeName" />
+		<result column="tree_prize_type" property="type" />
+		<result column="tree_prize_limit" property="prizeUnit" />
+		<result column="tree_cashtime" property="cashTime" />
+		<result column="tree_phone" property="memberPhone" />
+		<result column="tree_memberId" property="memberId" />
+		<result column="tree_status" property="status" />
+		<result column="tree_exchangeCode" property="snCode" />
+		<result column="score" property="score" />
+		<result column="tree_address" property="address" />
+		<result column="addressName" property="addressName" />
+		<result column="tree_way" property="receiveType" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, tree_act_id, tree_prize_id, tree_status, tree_memberId AS treeMemberId, tree_create_time, tree_user_id, tree_exchangeCode AS treeExchangeCode, tree_cash_memberId AS treeCashMemberId, tree_way, tree_phone, tree_address, tree_name, tree_cashtime
+    </sql>
+
+	<select id="queryRecodList" resultMap="BaseResultMap1" parameterType="com.gt.game.core.bean.tree.req.TreeGetWinningReq" >
+		SELECT t1.id,t4.tree_prize_name,t4.tree_prize_type,t4.tree_prize_limit,t1.tree_create_time AS cashTime,t1.tree_phone,t1.tree_status,t1.tree_exchangeCode,t1.tree_memberId,t5.tree_address AS addressName,t1.tree_address,t1.tree_way
+		FROM  t_wx_activity_tree_winning t1
+		LEFT JOIN t_wx_activity_tree_detail t4 ON t1.tree_prize_id = t4.id
+		LEFT JOIN t_wx_activity_tree_main t5 ON t1.tree_act_id = t5.id
+		WHERE t1.tree_act_id = #{actId}
+		<if test="snCode != null and snCode != '' ">
+			and t1.tree_exchangeCode = #{snCode}
+		</if>
+		<if test="type != -1 ">
+			and t4.tree_prize_type = #{type}
+		</if>
+		<if test="status != -1">
+			and t1.tree_status = #{status}
+		</if>
+		and t4.tree_prize_type != 5
+	</select>
+
+
+	<select id="findExports" resultType="map" parameterType="map" >
+		SELECT t1.id,t4.tree_prize_name,t4.tree_prize_type,t4.tree_prize_limit,t1.tree_create_time AS cashTime,t1.tree_phone,t1.tree_status,t1.tree_exchangeCode,t1.tree_memberId,t5.tree_address AS addressName,t1.tree_address,t1.tree_way
+		FROM  t_wx_activity_tree_winning t1
+		LEFT JOIN t_wx_activity_tree_detail t4 ON t1.tree_prize_id = t4.id
+		LEFT JOIN t_wx_activity_tree_main t5 ON t1.tree_act_id = t5.id
+		WHERE t1.tree_act_id = #{actId}
+		<if test="snCode != null and snCode != '' ">
+			and t1.tree_exchangeCode = #{snCode}
+		</if>
+		<if test="type != -1 ">
+			and t4.tree_prize_type = #{type}
+		</if>
+		<if test="status != -1">
+			and t1.tree_status = #{status}
+		</if>
+		and t4.tree_prize_type != 5
+	</select>
+
+</mapper>

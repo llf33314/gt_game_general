@@ -26,6 +26,7 @@
 		<result column="type" property="type" />
 		<result column="prize_unit" property="prizeUnit" />
 		<result column="cash_time" property="cashTime" />
+		<result column="member_name" property="memberName" />
 		<result column="member_phone" property="memberPhone" />
 		<result column="member_id" property="memberId" />
 		<result column="status" property="status" />
@@ -41,7 +42,7 @@
     </sql>
 
 	<select id="queryRecodList" resultMap="BaseResultMap1" parameterType="com.gt.game.core.bean.demolition.req.DemolitionApplyListPageReq" >
-		SELECT t1.id,t4.prize_name,t4.type,t4.prize_unit,t1.cash_time as cashTime,t1.member_phone,t1.status,t1.sn_code,t3.score,t1.member_id,t5.address AS  addressName ,t1.address,t1.receive_type
+		SELECT t1.id,t4.prize_name,t4.type,t4.prize_unit,t1.cash_time as cashTime,t1.member_phone,t1.member_name,t1.status,t1.sn_code,t3.score,t1.member_id,t5.address AS  addressName ,t1.address,t1.receive_type
 		from t_wx_activity_new_year_game_cash_prize_apply t1
 		LEFT JOIN t_wx_activity_new_year_game_play_record t3 on t1.record_id = t3.id
 		LEFT JOIN t_wx_activity_new_year_game_prize t4 on t1.prize_id = t4.id
@@ -60,7 +61,7 @@
 	</select>
 
 	<select id="findExports" resultType="map" parameterType="map" >
-		SELECT t1.id,t4.prize_name,t4.type,t4.prize_unit,t1.cash_time as cashTime,t1.member_phone,t1.member_id,t1.status,t1.sn_code,t3.score
+		SELECT t1.id,t4.prize_name,t4.type,t4.prize_unit,t1.cash_time as cashTime,t1.member_phone,t1.member_name,t1.member_id,t1.status,t1.sn_code,t3.score
 		from t_wx_activity_new_year_game_cash_prize_apply t1
 		LEFT JOIN t_wx_activity_new_year_game_play_record t3 on t1.record_id = t3.id
 		LEFT JOIN t_wx_activity_new_year_game_prize t4 on t1.prize_id = t4.id
