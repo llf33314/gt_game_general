@@ -108,6 +108,22 @@ public enum ResponseEnums {
     LOVEARROW_HAS14(414,"请输入正确的粉币数量"),
     LOVEARROW_HAS15(415,"修改粉币数量失败"),
 
+    //Common响应
+    COMMON_HAS1(401,"该奖品已发放!"),
+    COMMON_HAS2(402,"手动发放只能选择[已提交]状态的数据！!"),
+    COMMON_HAS3(403,"未到兑奖时间!"),
+    COMMON_HAS4(404,"已过兑奖时间!"),
+    COMMON_HAS5(405,"活动为空!"),
+    COMMON_AS6(406,"活动已经开始，不允许操作!"),
+    COMMON_HAS7(407,"粉币不足，保存失败"),
+    COMMON_HAS8(408,"冻结粉币失败，保存失败"),
+    COMMON_HAS9(409,"输入的粉币数量过少"),
+    COMMON_HAS10(410,"活动正在进行，不允许删除"),
+    COMMON_HAS11(411,"奖品未发放完毕，不允许操作"),
+    COMMON_HAS12(412,"未过活动兑换期限，不允许删除"),
+    COMMON_HAS13(413,"回滚粉币失败，删除失败"),
+    COMMON_HAS14(414,"请输入正确的粉币数量"),
+    COMMON_HAS15(415,"修改粉币数量失败"),
     //升国旗响应
     RAISEFLAG_HAS1(401,"该奖品已发放!"),
     RAISEFLAG_HAS2(402,"手动发放只能选择[已提交]状态的数据！!"),
@@ -174,6 +190,30 @@ public enum ResponseEnums {
     SHAKELUCK_HAS13(413,"回滚粉币失败，删除失败"),
     SHAKELUCK_HAS14(414,"请输入正确的粉币数量"),
     SHAKELUCK_HAS15(415,"修改粉币数量失败"),
+
+    //摇钱树响应
+    GOLDTREE_HAS1(401,"该奖品已发放!"),
+    GOLDTREE_HAS2(402,"手动发放只能选择[已提交]状态的数据！!"),
+    GOLDTREE_HAS3(403,"未到兑奖时间!"),
+    GOLDTREE_HAS4(404,"已过兑奖时间!"),
+    GOLDTREE_HAS5(405,"活动为空!"),
+    GOLDTREE_HAS6(406,"活动已经开始，不允许操作!"),
+    GOLDTREE_HAS7(407,"粉币不足，保存失败"),
+    GOLDTREE_HAS8(408,"冻结粉币失败，保存失败"),
+    GOLDTREE_HAS9(409,"输入的粉币数量过少"),
+    GOLDTREE_HAS10(410,"活动正在进行，不允许删除"),
+    GOLDTREE_HAS11(411,"奖品未发放完毕，不允许操作"),
+    GOLDTREE_HAS12(412,"未过活动兑换期限，不允许删除"),
+    GOLDTREE_HAS13(413,"回滚粉币失败，删除失败"),
+    GOLDTREE_HAS14(414,"请输入正确的粉币数量"),
+    GOLDTREE_HAS15(415,"修改粉币数量失败"),
+
+    //好运翻翻看响应
+    LUCK_HAS1(401,"请选择游戏时间"),
+    LUCK_HAS2(402,"活动为空"),
+    LUCK_HAS3(403,"活动已经开始，不允许操作"),
+    LUCK_HAS4(404,"请添加奖品"),
+    LUCK_HAS5(405,"至少需要一个谢谢参与奖项"),
 
     //端午赛龙舟响应
     DRAGONBOAT_HAS1(401,"删除活动失败！"),

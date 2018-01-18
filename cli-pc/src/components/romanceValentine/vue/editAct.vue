@@ -26,7 +26,7 @@
                 </el-form-item>   
             <h1 class="mt30 mb20 pb10 bbtom">广告设置</h1> 
             <el-button type="primary" class="mb20" @click="addlinks()">新增</el-button>  
-            <span class="ml10 el-upload__tip grey">1.仅支持多粉与一点揩油的链接    2.广告图格式：1000*300px</span>
+            <span class="ml10 el-upload__tip grey">1.仅支持多粉与翼粉开头的链接    2.广告图格式：1000*300px</span>
             <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark">
                 <el-table-column label="广告链接">
                   <template slot-scope="scope" >
@@ -394,7 +394,7 @@ export default {
                     imgInstruction :"",
                     type :this.ruleForm4[i].name0,//类型
                     prizeUnit :Number(this.ruleForm4[i].name1),//单位
-                    prizeName :this.ruleForm4[i].name1,//名称
+                    prizeName :this.ruleForm4[i].name2,//名称
                     num :Number(this.ruleForm4[i].name3),//数量
                     // probabiliy :this.ruleForm4[i].name4,  //概率
                     qixiPrizeImgReqs :[]//图片
@@ -452,7 +452,7 @@ export default {
           if (data.code == 100) {  
              this.$message({ message: "操作成功", type: "success"}); 
           } else { 
-              this.$message.error(data.msg + "错误码：[" + data.code + "]");
+              this.$message.errorthis.$message.error(data.msg);;
           }
         }).catch(() => { 
             this.$message({type: "info", message: "网络问题，请刷新重试~" });
@@ -538,7 +538,7 @@ export default {
             } 
             this.ruleForm4=newPraise
             } else {
-                this.$message.error(data.msg + "错误码：[" + data.code + "]");
+                this.$message.errorthis.$message.error(data.msg);;
             }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
@@ -551,7 +551,7 @@ export default {
                 this.options=data.data
                 console.log(this.options,'获取奖品类型');
             } else {
-                this.$message.error(data.msg + "错误码：[" + data.code + "]");
+                this.$message.errorthis.$message.error(data.msg);;
             }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });

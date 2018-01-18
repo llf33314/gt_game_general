@@ -199,7 +199,7 @@ public class QixiServiceImpl implements QixiService {
                         QixiApplyListResList.get(i).setNickname(memberResList.get(j).getNickname());
                     }
                 }
-                if (CommonUtil.isEmpty(QixiApplyListResList.get(i).getMemberName())) {
+                if (CommonUtil.isEmpty(QixiApplyListResList.get(i).getNickname())) {
                     QixiApplyListResList.get(i).setNickname("未知用户");
                 }
             }

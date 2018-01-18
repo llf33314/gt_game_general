@@ -40,17 +40,9 @@ public class GoldtreeRes {
 	@ApiModelProperty("活动结束时间")
 	private Date activityEndTime;
 
-	@ApiModelProperty("背景音乐")
-	private String musicUrl;
-
 	@ApiModelProperty("关注二维码")
 	private String followQrCode;
 
-	@ApiModelProperty("游戏总数")
-	private Integer manTotalChance;
-
-	@ApiModelProperty("每天次数")
-	private Integer manDayChance;
 
 	@ApiModelProperty("活动规则")
 	private String actRule;
@@ -81,6 +73,105 @@ public class GoldtreeRes {
 
 	@ApiModelProperty("奖品")
 	private List<GoldtreePrizeReq> goldtreePrizeReqs;
+
+	@ApiModelProperty("免费次数")
+	private Integer freeTimes;
+
+	@ApiModelProperty("每天免费次数")
+	private Integer dayFreeTimes;
+
+	@ApiModelProperty("每次游戏粉币数")
+	private Integer gameFb;
+
+	@ApiModelProperty("每次游戏积分数")
+	private Integer gameJf;
+
+	@ApiModelProperty(" 1元宝=多少金钱")
+	private Integer ingotMoney;
+
+	@ApiModelProperty("1金钱=多少金币")
+	private Integer moneyCoin;
+
+	@ApiModelProperty("1开启模板，0关闭模板")
+	private Integer isMsgTemplate;
+
+	@ApiModelProperty("模板id")
+	private String msgTemplateId;
+
+	@ApiModelProperty("游戏时间")
+	private Integer gameTime;
+
+	public Integer getFreeTimes() {
+		return freeTimes;
+	}
+
+	public void setFreeTimes(Integer freeTimes) {
+		this.freeTimes = freeTimes;
+	}
+
+	public Integer getDayFreeTimes() {
+		return dayFreeTimes;
+	}
+
+	public void setDayFreeTimes(Integer dayFreeTimes) {
+		this.dayFreeTimes = dayFreeTimes;
+	}
+
+	public Integer getGameFb() {
+		return gameFb;
+	}
+
+	public void setGameFb(Integer gameFb) {
+		this.gameFb = gameFb;
+	}
+
+	public Integer getGameJf() {
+		return gameJf;
+	}
+
+	public void setGameJf(Integer gameJf) {
+		this.gameJf = gameJf;
+	}
+
+	public Integer getIngotMoney() {
+		return ingotMoney;
+	}
+
+	public void setIngotMoney(Integer ingotMoney) {
+		this.ingotMoney = ingotMoney;
+	}
+
+	public Integer getMoneyCoin() {
+		return moneyCoin;
+	}
+
+	public void setMoneyCoin(Integer moneyCoin) {
+		this.moneyCoin = moneyCoin;
+	}
+
+	public Integer getIsMsgTemplate() {
+		return isMsgTemplate;
+	}
+
+	public void setIsMsgTemplate(Integer isMsgTemplate) {
+		this.isMsgTemplate = isMsgTemplate;
+	}
+
+	public String getMsgTemplateId() {
+		return msgTemplateId;
+	}
+
+	public void setMsgTemplateId(String msgTemplateId) {
+		this.msgTemplateId = msgTemplateId;
+	}
+
+	public Integer getGameTime() {
+		return gameTime;
+	}
+
+	public void setGameTime(Integer gameTime) {
+		this.gameTime = gameTime;
+	}
 
 	public Integer getId() {
 		return id;
@@ -114,36 +205,12 @@ public class GoldtreeRes {
 		this.activityEndTime = activityEndTime;
 	}
 
-	public String getMusicUrl() {
-		return musicUrl;
-	}
-
-	public void setMusicUrl(String musicUrl) {
-		this.musicUrl = musicUrl;
-	}
-
 	public String getFollowQrCode() {
 		return followQrCode;
 	}
 
 	public void setFollowQrCode(String followQrCode) {
 		this.followQrCode = followQrCode;
-	}
-
-	public Integer getManTotalChance() {
-		return manTotalChance;
-	}
-
-	public void setManTotalChance(Integer manTotalChance) {
-		this.manTotalChance = manTotalChance;
-	}
-
-	public Integer getManDayChance() {
-		return manDayChance;
-	}
-
-	public void setManDayChance(Integer manDayChance) {
-		this.manDayChance = manDayChance;
 	}
 
 	public String getActRule() {

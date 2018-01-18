@@ -221,7 +221,7 @@ public class RaiseflagServiceImpl implements RaiseflagService {
                         RaiseflagApplyListResList.get(i).setNickname(memberResList.get(j).getNickname());
                     }
                 }
-                if (CommonUtil.isEmpty(RaiseflagApplyListResList.get(i).getMemberName())) {
+                if (CommonUtil.isEmpty(RaiseflagApplyListResList.get(i).getNickname())) {
                     RaiseflagApplyListResList.get(i).setNickname("未知用户");
                 }
             }

@@ -2,9 +2,10 @@ package com.gt.game.core.util;
 
 
 import com.gt.api.bean.session.BusUser;
+import com.gt.api.bean.session.WxPublicUsers;
+import com.gt.api.util.SessionUtils;
 import com.gt.axis.bean.wxmp.bus.BusUserApiReq;
 import com.gt.axis.bean.wxmp.fenbiflow.FenbiFlowRecord;
-import com.gt.axis.bean.wxmp.wxpublic.WxPublicUsers;
 import com.gt.axis.content.AxisResult;
 import com.gt.axis.server.wxmp.BusServer;
 import com.gt.axis.server.wxmp.WxPublicServer;
@@ -32,10 +33,7 @@ public class CommonUtil {
 	public static BusUser getLoginUser(HttpServletRequest request) {
 		try {
 			// 从共享的session中获取，部署
-//			com.gt.api.bean.session.BusUser apiBusUser = SessionUtils.getLoginUser(request);
-//			BusUser busUser = new BusUser();
-//			BeanUtils.copyProperties(apiBusUser,busUser);
-//			return busUser;
+//			return SessionUtils.getLoginUser(request);
 			// 用于测试
 			BusUserApiReq busUserApiReq = new BusUserApiReq();
 			busUserApiReq.setUserId(33);
@@ -59,7 +57,7 @@ public class CommonUtil {
 	public static WxPublicUsers getLoginPbUser(HttpServletRequest request) {
 		try {
 			// 部署打开注释
-//			com.gt.api.bean.session.WxPublicUsers apiWxPublicUsers = SessionUtils.getLoginPbUser(request);
+//			return SessionUtils.getLoginPbUser(request);
 //			AxisResult<WxPublicUsers> wxPublicUsersAxisResult = WxPublicServer.selectByBusId(apiWxPublicUsers.getBusUserId());
 			AxisResult<WxPublicUsers> wxPublicUsersAxisResult = WxPublicServer.selectByBusId(33);
 			return wxPublicUsersAxisResult.getData();

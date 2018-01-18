@@ -197,7 +197,7 @@ public class ShakeluckServiceImpl  implements ShakeluckService {
                         ShakeluckApplyListResList.get(i).setNickname(memberResList.get(j).getNickname());
                     }
                 }
-                if (CommonUtil.isEmpty(ShakeluckApplyListResList.get(i).getMemberName())) {
+                if (CommonUtil.isEmpty(ShakeluckApplyListResList.get(i).getNickname())) {
                     ShakeluckApplyListResList.get(i).setNickname("游客");
                 }
             }

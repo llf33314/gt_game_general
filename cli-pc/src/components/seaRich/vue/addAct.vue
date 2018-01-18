@@ -32,7 +32,8 @@
                             音频文件的格式为mp3、wma、wav,大小不超过3M
                         </div>
                     </div>
-                </el-form-item>           
+                </el-form-item>
+                           
           </el-form> 
         </div>
         <!-- 规则设置 -->
@@ -54,7 +55,7 @@
                 </el-form-item>  
                 <el-form-item label="活动规则：" prop="desc">
                     <el-input class="w_demo" :maxlength="300"  type="textarea" v-model="ruleForm2.desc" :rows="3" placeholder="请填写活动规则"></el-input>
-                    <span class="el-upload__tip grey ml10">150个字以内</span>   
+                    <span class="el-upload__tip grey ml10">300个字以内</span>   
                 </el-form-item>   
             </el-form> 
         </div> 
@@ -159,9 +160,9 @@
         <div class="h80"></div> 
         <div class="btnRow"  v-if="this.active!=5">
             <el-button   @click="upStep()" v-if="this.active!=0">上一步</el-button>
-            <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步1</el-button> 
-            <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
-            <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
+            <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步</el-button> 
+            <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步</el-button>
+            <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步</el-button>   
             <el-button type="primary" @click="lastStep()"   :disabled="this.isSubmit"     v-if="this.active==3">保存</el-button>   
             <!-- <el-button type="primary" @click="submit()">打印</el-button>    -->
         </div>  
@@ -306,7 +307,7 @@ export default {
             this.options=data.data
              console.log(this.options,444);
           } else {
-              this.$message.error(data.msg + "错误码：[" + data.code + "]");
+              this.$message.errorthis.$message.error(data.msg);;
           }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
@@ -429,14 +430,14 @@ export default {
             }    
         }  
         //奖品
-        var seagoldPrizeReqs=[];
+        var newPrize=[];
         if(this.ruleForm4){
             for(let i =0;i< this.ruleForm4.length;i++){
                 var arr4={
                     imgInstruction :"",
                     type :this.ruleForm4[i].name0,//类型
                     prizeUnit :Number(this.ruleForm4[i].name1),//单位
-                    prizeName :this.ruleForm4[i].name1,//名称
+                    prizeName :this.ruleForm4[i].name2,//名称
                     num :Number(this.ruleForm4[i].name3),//数量
                     probabiliy :this.ruleForm4[i].name4,  //概率
                     seagoldPrizeImgReqs:[]//图片
@@ -449,7 +450,7 @@ export default {
                     arr4.seagoldPrizeImgReqs.push(imgarr)
                     } 
                 } 
-                seagoldPrizeReqs.push(arr4)
+                newPrize.push(arr4)
             } 
         } 
         const data = {
@@ -469,7 +470,7 @@ export default {
             cashPrizeBeginTime:this.ruleForm3.date[0], 
             cashPrizeEndTime  :this.ruleForm3.date[1], 
             receiveType       :this.ruleForm3.type.toString(), //兑奖方式
-            seagoldAddressReqs:seagoldAddressReqs,//兑奖地址 
+            seagoldAddressReqs:newPrize,//兑奖地址 
             phone             :this.ruleForm3.phone, 
             cashPrizeInstruction:this.ruleForm3.desc, 
              //奖项设置 
@@ -482,7 +483,7 @@ export default {
               this.active=5
           } else {
               this.isSubmit=false
-              this.$message.error(data.msg + "错误码：[" + data.code + "]");
+              this.$message.errorthis.$message.error(data.msg);;
           }
         }).catch(() => {
             this.isSubmit=false
