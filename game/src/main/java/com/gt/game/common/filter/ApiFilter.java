@@ -22,10 +22,10 @@ public class ApiFilter implements Filter {
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
 
         String uri = httpServletRequest.getRequestURI();
-        System.out.println(uri);
+//        System.out.println(uri);
 
         StringBuffer url = httpServletRequest.getRequestURL();
-        System.out.println(url.toString());
+//        System.out.println(url.toString());
 
         filterChain.doFilter(servletRequest, servletResponse);
     }

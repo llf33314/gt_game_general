@@ -1,5 +1,10 @@
 package com.gt.game.common.filter;
 
+import com.alibaba.fastjson.JSONObject;
+import com.gt.api.bean.session.BusUser;
+import com.gt.api.util.SessionUtils;
+import com.gt.game.common.dto.ResponseDTO;
+import com.gt.game.common.enums.ResponseEnums;
 import org.apache.log4j.Logger;
 
 import javax.servlet.*;
@@ -37,16 +42,16 @@ public class AppFilter implements Filter {
         logger.debug("app filter");
 
         // 部署打开注释
-//        BusUser busUser = SessionUtils.getLoginUser(httpServletRequest);
-//        if(busUser == null){
-//            servletResponse.getWriter().write(JSONObject.toJSONString(ResponseDTO.createByErrorCodeMessage(ResponseEnums.LOGIN.getCode(), ResponseEnums.LOGIN.getDesc())));
-//            return;
-//        }else{
-//            //不为空
-//            filterChain.doFilter(servletRequest, servletResponse);
-//        }
+        BusUser busUser = SessionUtils.getLoginUser(httpServletRequest);
+        if(busUser == null){
+            servletResponse.getWriter().write(JSONObject.toJSONString(ResponseDTO.createByErrorCodeMessage(ResponseEnums.LOGIN.getCode(), ResponseEnums.LOGIN.getDesc())));
+            return;
+        }else{
+            //不为空
+            filterChain.doFilter(servletRequest, servletResponse);
+        }
 
-        filterChain.doFilter(servletRequest, servletResponse);
+//        filterChain.doFilter(servletRequest, servletResponse);
     }
 
     @Override

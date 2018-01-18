@@ -9,7 +9,7 @@ spring:
     name: game
   profiles:
     # 选择配置文件
-    active: dev
+    active: test
 
 ################### mybatis
 #mybatis plus

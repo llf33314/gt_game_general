@@ -33,11 +33,11 @@ public class CommonUtil {
 	public static BusUser getLoginUser(HttpServletRequest request) {
 		try {
 			// 从共享的session中获取，部署
-//			return SessionUtils.getLoginUser(request);
+			return SessionUtils.getLoginUser(request);
 			// 用于测试
-			BusUserApiReq busUserApiReq = new BusUserApiReq();
-			busUserApiReq.setUserId(33);
-			return BusServer.getBusUserApi(busUserApiReq).getData();
+//			BusUserApiReq busUserApiReq = new BusUserApiReq();
+//			busUserApiReq.setUserId(33);
+//			return BusServer.getBusUserApi(busUserApiReq).getData();
 //			BusUser busUser = new BusUser();
 //			busUser.setId(33);
 //			busUser.setLevel(4);
@@ -57,10 +57,10 @@ public class CommonUtil {
 	public static WxPublicUsers getLoginPbUser(HttpServletRequest request) {
 		try {
 			// 部署打开注释
-//			return SessionUtils.getLoginPbUser(request);
+			return SessionUtils.getLoginPbUser(request);
 //			AxisResult<WxPublicUsers> wxPublicUsersAxisResult = WxPublicServer.selectByBusId(apiWxPublicUsers.getBusUserId());
-			AxisResult<WxPublicUsers> wxPublicUsersAxisResult = WxPublicServer.selectByBusId(33);
-			return wxPublicUsersAxisResult.getData();
+//			AxisResult<WxPublicUsers> wxPublicUsersAxisResult = WxPublicServer.selectByBusId(33);
+//			return wxPublicUsersAxisResult.getData();
 		} catch (Exception e) {
 			log.info(e.getLocalizedMessage());
 			e.printStackTrace();
