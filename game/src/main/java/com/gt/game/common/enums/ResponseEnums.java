@@ -191,11 +191,19 @@ public enum ResponseEnums {
     NINELATTICE_HAS5(405,"活动为空!"),
     NINELATTICE_HAS6(401,"删除活动失败！"),
 
-    //圣诞大礼包
+    //圣诞大礼包响应
     TREE_HAS1(401,"未到兑奖时间!"),
     TREE_HAS2(402,"已过兑奖时间!"),
     TREE_HAS3(403,"该奖品已发放!"),
     TREE_HAS4(404,"手动发放只能选择[已提交]状态的数据！!"),
+
+    //砸金蛋响应
+    EGGS_HAS1(401,"未到兑奖时间!"),
+    EGGS_HAS2(402,"已过兑奖时间!"),
+    EGGS_HAS3(403,"该奖品已发放!"),
+    EGGS_HAS4(404,"手动发放只能选择[已提交]状态的数据！!"),
+    EGGS_HAS5(405,"活动为空!"),
+    EGGS_HAS6(401,"删除活动失败！"),
     ;
 
     private final int code;
