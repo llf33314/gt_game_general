@@ -28,7 +28,7 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="祝福语：">
-                    <el-input class="w_demo" v-model="ruleForm1.name2"   placeholder="请输入祝福语">
+                    <el-input class="w_demo" v-model="ruleForm1.goldRushTips"   placeholder="请输入祝福语">
                     </el-input>
                 </el-form-item>   
           </el-form> 
@@ -200,12 +200,12 @@ export default {
             return time.getTime() < Date.now() - 8.64e7;
           }
       },
-      active: 3,
+      active: 0,
       isSubmit:false,
       ruleForm1: {
         name: "",
         name1: "",
-        name2:"", 
+        goldRushTips:"", 
       },
       rules1: {
         name: [{ required: true, message: "活动名称不能为空", trigger: "blur" }],
@@ -366,7 +366,7 @@ export default {
                         imgInstruction :"",
                         type :this.ruleForm4[i].name0,//类型
                         prizeUnit :Number(this.ruleForm4[i].name1),//单位
-                        prizeName :this.ruleForm4[i].name1,//名称
+                        prizeName :this.ruleForm4[i].name2,//名称
                         num :Number(this.ruleForm4[i].name3),//数量
                         // probabiliy :this.ruleForm4[i].name4,  //概率
                         goldRushPrizeImgReqs:[]//图片
@@ -388,7 +388,7 @@ export default {
                 name             : this.ruleForm1.name, 
                 activityBeginTime: this.ruleForm1.name1[0],
                 activityEndTime  : this.ruleForm1.name1[1], 
-                goldRushTips     : this.ruleForm1.name2, 
+                goldRushTips     : this.ruleForm1.goldRushTips, 
                 //规则设置 
                 followQrCode     : this.ruleForm2.code, 
                 manTotalChance   : Number(this.ruleForm2.manTotalChance), 
@@ -413,7 +413,7 @@ export default {
                     this.active=5
                 } else {
                     this.isSubmit=false
-                    this.$message.errorthis.$message.error(data.msg);;
+                    this.$message.error(data.msg);
                 }
             }).catch(() => {
                 this.isSubmit=false
@@ -435,7 +435,7 @@ export default {
             this.options=data.data
                 console.log(this.options,'获取奖品类型');
             } else {
-                this.$message.errorthis.$message.error(data.msg);;
+                this.$message.error(data.msg);
             }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });

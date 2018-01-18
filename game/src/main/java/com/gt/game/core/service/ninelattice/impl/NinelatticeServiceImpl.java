@@ -554,9 +554,9 @@ public class NinelatticeServiceImpl implements NinelatticeService {
                 ninelatticeCashPrizeApply.setCashTime(new Date());
                 ninelatticeCashPrizeApplyService.updateById(ninelatticeCashPrizeApply);
             } else if (ninelatticeCashPrizeApply.getStatus() == 2){//已兑奖
-                throw  new NinelatticeException(ResponseEnums.LANTERN_HAS3);
+                throw  new NinelatticeException(ResponseEnums.NINELATTICE_HAS3);
             }else{//还未提交
-                throw  new NinelatticeException(ResponseEnums.LANTERN_HAS4);
+                throw  new NinelatticeException(ResponseEnums.NINELATTICE_HAS4);
             }
         }
         return ResponseDTO.createBySuccess("发放成功");

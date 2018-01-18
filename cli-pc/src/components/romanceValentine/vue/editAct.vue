@@ -338,7 +338,7 @@ export default {
     next(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) { 
-          this.active++;
+          this.submit();
         } else {
          console.log("error submit!!");
         }
@@ -394,7 +394,7 @@ export default {
                     imgInstruction :"",
                     type :this.ruleForm4[i].name0,//类型
                     prizeUnit :Number(this.ruleForm4[i].name1),//单位
-                    prizeName :this.ruleForm4[i].name1,//名称
+                    prizeName :this.ruleForm4[i].name2,//名称
                     num :Number(this.ruleForm4[i].name3),//数量
                     // probabiliy :this.ruleForm4[i].name4,  //概率
                     qixiPrizeImgReqs :[]//图片
@@ -452,7 +452,7 @@ export default {
           if (data.code == 100) {  
              this.$message({ message: "操作成功", type: "success"}); 
           } else { 
-              this.$message.errorthis.$message.error(data.msg);;
+              this.$message.error(data.msg);
           }
         }).catch(() => { 
             this.$message({type: "info", message: "网络问题，请刷新重试~" });
@@ -538,7 +538,7 @@ export default {
             } 
             this.ruleForm4=newPraise
             } else {
-                this.$message.errorthis.$message.error(data.msg);;
+                this.$message.error(data.msg);
             }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
@@ -551,7 +551,7 @@ export default {
                 this.options=data.data
                 console.log(this.options,'获取奖品类型');
             } else {
-                this.$message.errorthis.$message.error(data.msg);;
+                this.$message.error(data.msg);
             }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });

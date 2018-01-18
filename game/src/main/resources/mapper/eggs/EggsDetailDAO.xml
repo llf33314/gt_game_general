@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.game.core.dao.eggs.EggsDetailDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.game.core.dao.eggs.EggsDetailDAO">
+		<id column="id" property="id" />
+		<result column="egg_id" property="eggId" />
+		<result column="egg_prize_name" property="eggPrizeName" />
+		<result column="egg_prize_nums" property="eggPrizeNums" />
+		<result column="egg_prize_chance" property="eggPrizeChance" />
+		<result column="egg_prize_image" property="eggPrizeImage" />
+		<result column="egg_prize_type" property="eggPrizeType" />
+		<result column="egg_prize_limit" property="eggPrizeLimit" />
+		<result column="freeze_id" property="freezeId" />
+		<result column="openid" property="openid" />
+		<result column="nickname" property="nickname" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, egg_id, egg_prize_name, egg_prize_nums, egg_prize_chance, egg_prize_image, egg_prize_type, egg_prize_limit, freeze_id, openid, nickname
+    </sql>
+
+</mapper>

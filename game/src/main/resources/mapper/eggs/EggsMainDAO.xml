@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.game.core.dao.eggs.EggsMainDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.game.core.dao.eggs.EggsMainDAO">
+		<id column="id" property="id" />
+		<result column="egg_name" property="eggName" />
+		<result column="egg_countOfDay" property="eggCountOfDay" />
+		<result column="egg_winning_txt" property="eggWinningTxt" />
+		<result column="egg_beginTime" property="eggBeginTime" />
+		<result column="egg_endTime" property="eggEndTime" />
+		<result column="egg_wx_userid" property="eggWxUserid" />
+		<result column="egg_describe" property="eggDescribe" />
+		<result column="egg_overdescribe" property="eggOverdescribe" />
+		<result column="egg_rule" property="eggRule" />
+		<result column="egg_calculateWay" property="eggCalculateWay" />
+		<result column="egg_countOfAll" property="eggCountOfAll" />
+		<result column="egg_before_txt" property="eggBeforeTxt" />
+		<result column="egg_is_give" property="eggIsGive" />
+		<result column="egg_cash_day" property="eggCashDay" />
+		<result column="egg_picture" property="eggPicture" />
+		<result column="egg_address" property="eggAddress" />
+		<result column="egg_bgm" property="eggBgm" />
+		<result column="egg_bgm_name" property="eggBgmName" />
+		<result column="egg_pway" property="eggPway" />
+		<result column="egg_man" property="eggMan" />
+		<result column="egg_kou" property="eggKou" />
+		<result column="egg_status" property="eggStatus" />
+		<result column="egg_eggPartaker" property="eggEggPartaker" />
+		<result column="egg_cash_way" property="eggCashWay" />
+		<result column="egg_winning_notice" property="eggWinningNotice" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, egg_name, egg_countOfDay AS eggCountOfDay, egg_winning_txt, egg_beginTime AS eggBeginTime, egg_endTime AS eggEndTime, egg_wx_userid, egg_describe, egg_overdescribe, egg_rule, egg_calculateWay AS eggCalculateWay, egg_countOfAll AS eggCountOfAll, egg_before_txt, egg_is_give, egg_cash_day, egg_picture, egg_address, egg_bgm, egg_bgm_name, egg_pway, egg_man, egg_kou, egg_status, egg_eggPartaker AS eggEggPartaker, egg_cash_way, egg_winning_notice
+    </sql>
+
+</mapper>

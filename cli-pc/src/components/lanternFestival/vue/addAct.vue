@@ -6,7 +6,7 @@
 <div class="hd-common">
     <el-breadcrumb separator="/" class="gt-crumbs">
       <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
-      <el-breadcrumb-item :to="{ path:'/newYear/index' }">元旦跨年跳跃</el-breadcrumb-item>  
+      <el-breadcrumb-item :to="{ path:'/lanternFestival/index' }">元宵点灯</el-breadcrumb-item>  
       <el-breadcrumb-item>创建活动</el-breadcrumb-item>   
     </el-breadcrumb> 
 
@@ -25,23 +25,23 @@
                     <el-input class="w_demo"  placeholder="请输入活动名称" v-model="ruleForm1.name"></el-input>
                 </el-form-item> 
                 <el-form-item label="游戏时间：" prop="name1">
-                    <el-date-picker class="w_demo" v-model="ruleForm1.name1"   type="datetimerange"  placeholder="选择时间范围">
+                    <el-date-picker class="w_demo" v-model="ruleForm1.name1" :editable="false"  type="datetimerange"  placeholder="选择时间范围">
                     </el-date-picker>
                 </el-form-item>    
             <h1 class="mt30 mb20 pb10 bbtom" style="width:80%">广告设置</h1> 
             <el-button type="primary" class="mb20" @click="addlinks()">新增</el-button>  
-            <span class="ml10 el-upload__tip grey">1.仅支持多粉与翼粉开头的链接    2.广告图格式：1000*300px</span>
+            <span class="ml10 el-upload__tip grey">1.仅支持多粉与一点揩油的链接    2.广告图格式：1000*300px</span>
             <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark" style="width:80%">
                 <el-table-column label="广告链接">
                   <template slot-scope="scope" >
-                        <el-input v-model="scope.row.url">
+                        <el-input v-model="scope.row.hrefUrl">
                           <template slot="prepend">Http://</template>
                         </el-input>
                   </template>
                 </el-table-column> 
                 <el-table-column label="选择图片">
                   <template slot-scope="scope">
-                      <gt-material prop="url" :url="scope.row.imgUrl" v-on:getChangeUrl="getChangeUrl(scope.$index, $event)" width="60" height="60"></gt-material>
+                      <gt-material prop="url" :url="scope.row.url" v-on:getChangeUrl="getChangeUrl(scope.$index, $event)" width="60" height="60"></gt-material>
                   </template>
                 </el-table-column> 
                 <el-table-column label="操作">
@@ -60,11 +60,14 @@
                   <span class="el-upload__tip grey ml10">上传1:1二维码，将会在活动规则中显示商家二维码</span>  
                 </el-form-item>  
                 <el-form-item label="游戏总数：" prop="manTotalChance">
-                    <el-input class="w25_demo mr10" type="number" v-model="ruleForm2.manTotalChance"></el-input>次/人
+                    <el-input class="w25_demo mr10" type="number" placeholder="请输入游戏总数" v-model="ruleForm2.manTotalChance"></el-input>次/人
                 </el-form-item> 
                 <el-form-item label="每天次数：" prop="manDayChance">
-                    <el-input class="w25_demo mr10" type="number" v-model="ruleForm2.manDayChance"></el-input>次/人
+                    <el-input class="w25_demo mr10" type="number" placeholder="请输入每天游戏次数）" v-model="ruleForm2.manDayChance"></el-input>次/人
                 </el-form-item>    
+                <el-form-item label="游戏时长：" prop="gameTime">
+                    <el-input class="w25_demo mr10" type="number" placeholder="请输入时长（60~100秒）" v-model="ruleForm2.gameTime"></el-input>秒
+                </el-form-item> 
                 <el-form-item label="活动规则：" prop="desc">
                     <el-input class="w_demo" :maxlength="300"  type="textarea" v-model="ruleForm2.desc" :rows="3" placeholder="请填写活动规则"></el-input>
                     <span class="el-upload__tip grey ml10">300个字以内</span>   
@@ -125,7 +128,7 @@
                 <span class="el-icon-warning" style="font-size:18px; margin-left:67%;z-index:11;position: absolute;margin-top: 12px; color:#ccc"></span> 
             </el-tooltip> 
              <el-table ref="multipleTable" :data="ruleForm4" tooltip-effect="dark">
-                <el-table-column label="奖品类型">
+                <el-table-column label="奖品类型" :width="220">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.name0" placeholder="请选择"> 
                                 <el-option v-for="item in options" :key="item.value" :label="item.name"  :value="item.value">
@@ -133,22 +136,22 @@
                         </el-select>
                     </template>
                 </el-table-column> 
-                <el-table-column label="奖品单位">
-                <template slot-scope="scope">
-                    <el-input class="w20_demo" type="number" v-model="scope.row.name1" placeholder="数值应大于0"></el-input>
-                </template>
+                <el-table-column label="奖品单位"  :width="240">
+                    <template slot-scope="scope">
+                        <el-input class="w20_demo" type="number" v-model="scope.row.name1" placeholder="数值应大于0"></el-input>
+                    </template>
                 </el-table-column>
-                <el-table-column label="奖品名称">
+                <el-table-column label="奖品名称" :width="240">
                 <template slot-scope="scope">
                     <el-input class="w20_demo"  v-model="scope.row.name2" placeholder="请输入奖品名称"></el-input>
                 </template>
                 </el-table-column>
-                <el-table-column label="奖项数量">
+                <el-table-column label="奖项数量" :width="240">
                 <template slot-scope="scope">
                     <el-input class="w20_demo"  type="number"  v-model="scope.row.name3" placeholder="数值应大于0"></el-input>
                 </template>
                 </el-table-column>
-                <el-table-column label="奖品图片">
+                <el-table-column label="奖品图片" :width="160">
                     <template slot-scope="scope"  v-if="scope.row.name0==4">  
                         <gt-material v-for="(item,index) in scope.row.name5" :key="index" :prop="scope" :sonIndex="index" selectType="radio" :url="item" @getChangeUrl="getAwardImgList" width="50" height="50" class="mr10"></gt-material>
                         <gt-material :prop="scope" selectType="select"  @getChangeUrl="addAwardImg" width="50" height="50" class="uploadBtn"></gt-material>
@@ -184,9 +187,7 @@
 </section>
 </template>
 <script>
-import { 
- saveAct,getPrizeType
-}from './../api/api'
+import api from './../api/api'
 export default {
   data() {
     let iiPass = (rule, value, callback) => {
@@ -215,8 +216,8 @@ export default {
         name: "",
         name1: "", 
         links:[
-          {url:"",imgUrl:""},
-          {url:"",imgUrl:""}
+          {url:"",hrefUrl:""},
+          {url:"",hrefUrl:""}
         ]
       },
       rules1: {
@@ -227,7 +228,8 @@ export default {
         code: "",
         manTotalChance:"",
         manDayChance:"", 
-        desc: "", 
+        gameTime: '',
+        desc: ""
       },
       rules2: {
         time: [ 
@@ -239,6 +241,9 @@ export default {
         manDayChance: [
           { required: true,  message: "请填写每人每天免费游戏次数", trigger: "blur" } 
         ], 
+        gameTime: [
+          { required: true,  message: "请输入时长（60~100秒）", trigger: "blur" }   
+        ],
         desc: [
           { required: true,  message: "请填写活动规则", trigger: "blur" } 
         ],  
@@ -311,7 +316,7 @@ export default {
           this.ruleForm1.links.splice(val, 1); 
     },
     getChangeUrl(i,e) {  
-      this.ruleForm1.links[i].imgUrl=e.url
+      this.ruleForm1.links[i].url=e.url
     }, 
     getChangeUrl2(e) { 
       this.ruleForm2.code=e.url
@@ -329,9 +334,6 @@ export default {
         return
       }
     }, 
-
-
-
     addForm4(){ 
         this.ruleForm4.push({ name0: "", name1: "", name2: "", name3: "", name5: []},)
     },
@@ -385,10 +387,11 @@ export default {
         var newYearAddressReqs=[];
         if(this.ruleForm3.addrRow){ 
             for(let i =0;i< this.ruleForm3.addrRow.length;i++){ 
-                var arraddr={
-                    address:this.ruleForm3.addrRow[i].list,  
-                } 
-                newYearAddressReqs.push(arraddr)
+                // var arraddr={
+                //     address:this.ruleForm3.addrRow[i].list,  
+                // } 
+                // newYearAddressReqs.push(arraddr)
+                newYearAddressReqs.push(this.ruleForm3.addrRow[i].list)
             }    
         } 
         //奖品
@@ -399,17 +402,18 @@ export default {
                     imgInstruction :"",
                     type :this.ruleForm4[i].name0,//类型
                     prizeUnit :this.ruleForm4[i].name1,//单位
-                    prizeName :this.ruleForm4[i].name1,//名称
+                    prizeName :this.ruleForm4[i].name2,//名称
                     num :Number(this.ruleForm4[i].name3),//数量
                     // probabiliy :this.ruleForm4[i].name4,  //概率
-                    newYearPrizeImgReqs:[]//图片
+                    imgUrl :[]//图片
                 }
                 if(arr4.type==4){
                     for(var j=0;j<this.ruleForm4[i].name5.length;j++){
-                        var imgarr={
-                            imgUrl:this.ruleForm4[i].name5[j]
-                        }
-                    arr4.newYearPrizeImgReqs.push(imgarr)
+                    //     var imgarr={
+                    //         imgUrl:this.ruleForm4[i].name5[j]
+                    //     }
+                    // arr4.newYearPrizeImgReqs.push(imgarr)
+                    arr4.imgUrl.push(this.ruleForm4[i].name5[j])
                     } 
                 } 
                 newYearPrizeReqs.push(arr4)
@@ -421,32 +425,39 @@ export default {
             name  : this.ruleForm1.name, 
             activityBeginTime: this.ruleForm1.name1[0], 
             activityEndTime  : this.ruleForm1.name1[1], 
-            newYearAdReqs    : newadv, 
+            advertisingPictureList: newadv, 
             //规则设置
             followQrCode  : this.ruleForm2.code, 
+            bgmSp: '', // 背景音乐名
+            musicUrl: '', // 背景音乐地址 
             manTotalChance: Number(this.ruleForm2.manTotalChance), 
             manDayChance  :  Number(this.ruleForm2.manDayChance), 
+            gameTime: '', 
             actRule  : this.ruleForm2.desc,  
             //兑奖设置 
-            cashPrizeBeginTime:this.ruleForm3.date[0], 
-            cashPrizeEndTime :this.ruleForm3.date[1], 
-            receiveType  :this.ruleForm3.type.toString(), //兑奖方式
-            phone  :this.ruleForm3.phone,  
-            cashPrizeInstruction :this.ruleForm3.desc,  
-            newYearAddressReqs  :newYearAddressReqs ,  
+            cashPrizeBeginTime: this.ruleForm3.date[0], 
+            cashPrizeEndTime : this.ruleForm3.date[1], 
+            // receiveType  : this.ruleForm3.type.toString(), //兑奖方式
+            receiveTypeList : this.ruleForm3.type, // 兑奖方式
+            phone  : this.ruleForm3.phone,  
+            cashPrizeInstruction : this.ruleForm3.desc,  
+            // newYearAddressReqs  : newYearAddressReqs , 
+            addressList : newYearAddressReqs,
             //奖项设置 
-            prizeSetInstruction :this.explain, 
-            newYearPrizeReqs:newYearPrizeReqs,  
+            // prizeSetInstruction : this.explain, 
+            prizeDescription: this.explain,
+            // newYearPrizeReqs: newYearPrizeReqs, 
+            prizeSetList:  newYearPrizeReqs
         };
         console.log(data,123); 
-        saveAct(data).then(data=>{
+        api.addLantern(data).then(data=>{
           this.isSubmit=true
           if (data.code == 100) { 
               console.log(12336666)
               this.active=5
           } else {
               this.isSubmit=false
-              this.$message.errorthis.$message.error(data.msg);;
+              this.$message.error(data.msg + "错误码：[" + data.code + "]");
           }
         }).catch(() => {
             this.isSubmit=false
@@ -461,13 +472,13 @@ export default {
     },
     //获取奖品类型-----------star
     getPrizeTypeData(){
-        getPrizeType().then(data=>{
+        api.getLanternPrizeType().then(data=>{
             if (data.code == 100) {
             console.log(data,1233);
             this.options=data.data
                 console.log(this.options,'获取奖品类型');
             } else {
-                this.$message.errorthis.$message.error(data.msg);;
+                this.$message.error(data.msg + "错误码：[" + data.code + "]");
             }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });

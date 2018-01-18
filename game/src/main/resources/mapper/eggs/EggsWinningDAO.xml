@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.game.core.dao.eggs.EggsWinningDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.game.core.dao.eggs.EggsWinningDAO">
+		<id column="id" property="id" />
+		<result column="win_act_id" property="winActId" />
+		<result column="win_prize_id" property="winPrizeId" />
+		<result column="win_status" property="winStatus" />
+		<result column="win_memberId" property="winMemberId" />
+		<result column="win_create_time" property="winCreateTime" />
+		<result column="win_user_id" property="winUserId" />
+		<result column="win_exchangeCode" property="winExchangeCode" />
+		<result column="win_cash_memberId" property="winCashMemberId" />
+		<result column="win_way" property="winWay" />
+		<result column="win_phone" property="winPhone" />
+		<result column="win_address" property="winAddress" />
+		<result column="win_name" property="winName" />
+		<result column="win_cashtime" property="winCashtime" />
+	</resultMap>
+
+	<resultMap id="BaseResultMap1" type="com.gt.game.core.bean.eggs.res.EggsGetWinningRes">
+		<id column="id" property="id" />
+		<result column="egg_prize_name" property="prizeName" />
+		<result column="egg_prize_type" property="type" />
+		<result column="egg_prize_limit" property="prizeUnit" />
+		<result column="win_cashtime" property="cashTime" />
+		<result column="win_phone" property="memberPhone" />
+		<result column="win_memberId" property="memberId" />
+		<result column="win_status" property="status" />
+		<result column="win_exchangeCode" property="snCode" />
+		<result column="win_address" property="address" />
+		<result column="egg_address" property="addressName" />
+		<result column="win_way" property="receiveType" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, win_act_id, win_prize_id, win_status, win_memberId AS winMemberId, win_create_time, win_user_id, win_exchangeCode AS winExchangeCode, win_cash_memberId AS winCashMemberId, win_way, win_phone, win_address, win_name, win_cashtime
+    </sql>
+
+	<select id="queryRecodList" resultMap="BaseResultMap1" parameterType="com.gt.game.core.bean.tree.req.TreeGetWinningReq" >
+		SELECT t1.id,t4.egg_prize_name,t4.egg_prize_type,t4.egg_prize_limit,t1.win_cashtime AS cashTime,t1.win_phone,t1.win_status,t1.win_exchangeCode,t1.win_memberId,t5.egg_address AS addressName,t1.win_address,t1.win_way
+		FROM  t_wx_activity_eggs_winning t1
+		LEFT JOIN t_wx_activity_eggs_detail t4 ON t1.win_prize_id = t4.id
+		LEFT JOIN t_wx_activity_eggs_main t5 ON t1.win_act_id = t5.id
+		WHERE t1.win_act_id = #{actId}
+		<if test="snCode != null and snCode != '' ">
+			and t1.win_exchangeCode = #{snCode}
+		</if>
+		<if test="type != -1 ">
+			and t4.egg_prize_type = #{type}
+		</if>
+		<if test="status != -1">
+			and t1.win_status = #{status}
+		</if>
+		and t4.egg_prize_type != 5
+	</select>
+
+	<select id="findExports" resultType="map" parameterType="map" >
+		SELECT t1.id,t4.egg_prize_name,t4.egg_prize_type,t4.egg_prize_limit,t1.win_create_time AS cashTime,t1.win_phone,t1.win_status,t1.win_exchangeCode,t1.win_memberId,t5.egg_address AS addressName,t1.win_address,t1.win_way
+		FROM  t_wx_activity_eggs_winning t1
+		LEFT JOIN t_wx_activity_eggs_detail t4 ON t1.win_prize_id = t4.id
+		LEFT JOIN t_wx_activity_eggs_main t5 ON t1.win_act_id = t5.id
+		WHERE t1.win_act_id = #{actId}
+		<if test="snCode != null and snCode != '' ">
+			and t1.win_exchangeCode = #{snCode}
+		</if>
+		<if test="type != -1 ">
+			and t4.egg_prize_type = #{type}
+		</if>
+		<if test="status != -1">
+			and t1.win_status = #{status}
+		</if>
+		and t4.egg_prize_type != 5
+	</select>
+
+</mapper>

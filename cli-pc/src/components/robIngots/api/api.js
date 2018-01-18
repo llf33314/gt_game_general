@@ -24,6 +24,6 @@ export const givePrize        = params => { return axios.post(`${base}/editGoldR
 
 /*新增，编辑*/
 export const saveAct      = params => { return axios.post(`${base}/saveGoldRush`, params).then(res => res.data) }
-export const getAct       = params => { return axios.get(`${base}/getRaiseflag?id=${params}`).then(res => res.data) }
+export const getAct       = params => { return axios.get(`${base}/getGoldRush?id=${params}`).then(res => res.data) }
 
  

@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
-@ApiModel("奖品设置请求类")
+@ApiModel("圣诞大礼包奖品设置请求类")
 public class TreePrizeSetReq {
 
 	@ApiModelProperty("奖品类型")
