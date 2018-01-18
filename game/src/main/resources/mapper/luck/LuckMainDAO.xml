@@ -29,7 +29,13 @@
 		<result column="luck_kou" property="luckKou" />
 		<result column="luck_status" property="luckStatus" />
 	</resultMap>
-
+	<resultMap id="BaseResultMap1" type="com.gt.game.core.bean.luck.res.LuckListRes">
+		<id column="id" property="id" />
+		<result column="luck_beginTime" property="luckBeginTime" />
+		<result column="luck_endTime" property="luckEndTime" />
+		<result column="luck_name" property="luckName" />
+		<result column="luck_status" property="luckStatus" />
+	</resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, luck_name, luck_countOfDay AS luckCountOfDay, luck_winning_txt, luck_beginTime AS luckBeginTime, luck_endTime AS luckEndTime, luck_wx_userid, luck_describe, luck_overdescribe, luck_rule, luck_calculateWay AS luckCalculateWay, luck_countOfAll AS luckCountOfAll, luck_before_txt, luck_is_give, luck_cash_day, luck_picture, luck_address, luck_bgm, luck_bgm_name, luck_luckPartaker AS luckLuckPartaker, luck_pway, luck_man, luck_kou, luck_status
@@ -38,16 +44,37 @@
 	<select id="getCount" resultType="map" parameterType="map">
 		SELECT  t1.count2 ,t2.count3 , t3.count4
 		FROM (SELECT  count(m1.id) AS count2 FROM  t_wx_activity_luck_main m1
-		WHERE m1.luck_wx_userid = #{busId,jdbcType=INTEGER} AND luck_status = 1 AND UNIX_TIMESTAMP(m1.luck_beginTime) > UNIX_TIMESTAMP(#{nowTime})) t1
+		WHERE m1.luck_wx_userid = #{busId,jdbcType=INTEGER} AND UNIX_TIMESTAMP(m1.luck_beginTime) > UNIX_TIMESTAMP(#{nowTime})) t1
 		JOIN
 		(SELECT count(m2.id) AS count3 FROM  t_wx_activity_luck_main m2
 		WHERE m2.luck_wx_userid = #{busId,jdbcType=INTEGER} AND luck_status = 1 and UNIX_TIMESTAMP(m2.luck_beginTime) &lt;= UNIX_TIMESTAMP(#{nowTime}) and  UNIX_TIMESTAMP(m2.luck_endTime) >= UNIX_TIMESTAMP(#{nowTime})) t2
 		JOIN
 		(SELECT count(m3.id) AS count4 FROM  t_wx_activity_luck_main m3
-		WHERE m3.luck_wx_userid = #{busId,jdbcType=INTEGER} AND luck_status = 1 AND  UNIX_TIMESTAMP(m3.luck_endTime) &lt; UNIX_TIMESTAMP(#{nowTime})) t3
+		WHERE m3.luck_wx_userid = #{busId,jdbcType=INTEGER} AND  UNIX_TIMESTAMP(m3.luck_endTime) &lt; UNIX_TIMESTAMP(#{nowTime})) t3
 		JOIN
 		(SELECT count(m4.id) AS count5 FROM  t_wx_activity_luck_main m4
-		WHERE m4.luck_wx_userid = #{busId,jdbcType=INTEGER} AND luck_status = 2 ) t4
+		WHERE m4.luck_wx_userid = #{busId,jdbcType=INTEGER} AND luck_status = 2 and UNIX_TIMESTAMP(m3.luck_endTime) >= UNIX_TIMESTAMP(#{nowTime}))) t4
 	</select>
 
+	<select id="getLoveArrowList" resultMap="BaseResultMap1" parameterType="Map">
+		SELECT  id,luck_beginTime, luck_endTime, luck_name,luck_status
+		FROM t_wx_activity_luck_main
+		WHERE luck_wx_userid = #{busId,jdbcType=INTEGER}
+		<if test="status == 0">
+			and UNIX_TIMESTAMP(luck_beginTime) > UNIX_TIMESTAMP(#{nowTime})
+		</if>
+		<if  test="status == 1">
+			and UNIX_TIMESTAMP(luck_beginTime) &lt;= UNIX_TIMESTAMP(#{nowTime}) and  UNIX_TIMESTAMP(luck_endTime) >= UNIX_TIMESTAMP(#{nowTime}) AND luck_status = 1
+		</if>
+		<if test="status == 2">
+			and UNIX_TIMESTAMP(luck_endTime) &lt; UNIX_TIMESTAMP(#{nowTime})
+		</if>
+		<if test="status == 3">
+			AND luck_status = 2 and UNIX_TIMESTAMP(luck_endTime) >= UNIX_TIMESTAMP(#{nowTime})
+		</if>
+		<if test="luckName != null and luckName != ''">
+			and luck_name LIKE CONCAT('%','${luckName}','%' )
+		</if>
+		order BY  id DESC
+	</select>
 </mapper>

@@ -11,8 +11,8 @@ gt:
   axis:
     wxmpUrl: https://deeptel.com.cn/
     wxmpSignKey: WXMP2017
-    memberUrl: https://member.deeptel.com.cn
-    memberSignKey: MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM~
+    memberUrl: https://member.deeptel.com.cn/
+    memberSignKey: MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM
     signKey: goodtom2016@shortUrl.
     serviceUrl: http://short.duofee.com/
 
@@ -26,6 +26,10 @@ apply:
     user: gt123456
     pwd: gt12345612
     need: false
+  redis:
+      host: 113.106.202.51
+      port: 6380
+      password: gt@123456
   res:
     doc:
       path: /home/server/project/staticSource/upload/document
@@ -33,8 +37,8 @@ apply:
     url:
       prefix: http://maint.deeptel.com.cn/upload/
   path:
-    imageUrl: http://maint.deeptel.com.cn/upload/image/
-    voiceUrl: http://maint.deeptel.com.cn/upload/voice/
+    imageUrl: /home/server/project/staticSource/upload/image
+    voiceUrl: /home/server/project/staticSource/upload/voice
 
 ################ redis and mysql
 spring:

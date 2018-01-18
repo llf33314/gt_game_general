@@ -1,4 +1,5 @@
 import { Region } from "./region.js"
+import { Message } from 'element-ui'
 export default {
   /**
    * @Created by xiandan on 2017-10-09
@@ -164,5 +165,16 @@ export default {
       }
     });
     return addressObj;
-  }
+  },
+   // 获取短信链接  
+   getShortUrl(url) {
+    return axios.get(window.BASEDOMAIN + '/app/link/getShorUrl?url=' + url)
+     .then(res => {
+         return res.data
+     })
+     .catch(error => {
+       Message.error('获取短信链接失败')
+       return {code: 400}
+     })
+   },
 }
