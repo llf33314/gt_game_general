@@ -7,7 +7,7 @@ import com.gt.axis.bean.member.member.MemberReq;
 import com.gt.axis.bean.member.member.MemberRes;
 import com.gt.axis.bean.wxmp.dict.DictApiReq;
 import com.gt.axis.bean.wxmp.dict.DictApiRes;
-import com.gt.axis.bean.wxmp.wxpublic.WxPublicUsers;
+import com.gt.api.bean.session.WxPublicUsers;
 import com.gt.axis.content.AxisResult;
 import com.gt.axis.server.member.MemberServer;
 import com.gt.axis.server.wxmp.DictServer;
