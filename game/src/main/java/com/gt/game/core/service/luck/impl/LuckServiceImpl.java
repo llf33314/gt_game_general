@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.gt.api.bean.session.BusUser;
+import com.gt.api.bean.session.WxPublicUsers;
 import com.gt.axis.bean.wxmp.fenbiflow.FenbiFlowRecord;
 import com.gt.axis.bean.wxmp.fenbiflow.FenbiFlowRecordReq;
 import com.gt.axis.bean.wxmp.fenbiflow.FenbiSurplus;
@@ -77,7 +78,7 @@ public class LuckServiceImpl implements LuckService {
      * @return
      */
     @Override
-    public MobileUrlRes getMobileUrl(BusUser busUser, MobileUrlReq mobileUrlReq) {
+    public MobileUrlRes getMobileUrl(WxPublicUsers busUser, MobileUrlReq mobileUrlReq) {
         String url = applyProperties.getMobileBaseUrl() + "LuckMobile/"+ mobileUrlReq.getMainId() + "/79B4DE7C/toPhoneIndex.do";
         return new MobileUrlRes(url);
     }
@@ -86,7 +87,7 @@ public class LuckServiceImpl implements LuckService {
      * @return
      */
     @Override
-    public ResponseDTO<LuckCountRes> getLuckCount(BusUser busUser) {
+    public ResponseDTO<LuckCountRes> getLuckCount(WxPublicUsers busUser) {
         LuckCountRes LuckCountRes = new LuckCountRes();
         Date date = new Date();
         Map<String,Object> params = new HashMap<>();
@@ -107,7 +108,7 @@ public class LuckServiceImpl implements LuckService {
      * @return
      */
     @Override
-    public ResponseDTO<List<LuckListRes>> getLuckList(BusUser busUser, LuckListPageReq LuckListPageReq) {
+    public ResponseDTO<List<LuckListRes>> getLuckList(WxPublicUsers busUser, LuckListPageReq LuckListPageReq) {
         Page<LuckListRes> page = new Page<>(LuckListPageReq.getCurrent(),LuckListPageReq.getSize());
         Map<String,Object> map = new HashMap<>();
         Date date = new Date();
@@ -141,7 +142,7 @@ public class LuckServiceImpl implements LuckService {
      * @return
      */
     @Override
-    public ResponseDTO<LuckRes> getLuck(BusUser busUser, LuckIdReq luckIdReq) {
+    public ResponseDTO<LuckRes> getLuck(WxPublicUsers busUser, LuckIdReq luckIdReq) {
         LuckRes luckRes = new LuckRes();
         LuckMain luckMain = luckMainService.selectById(luckIdReq.getId());
         if(CommonUtil.isNotEmpty(luckMain)){
@@ -168,7 +169,7 @@ public class LuckServiceImpl implements LuckService {
      */
     @Override
    @Transactional(rollbackFor = Exception.class)
-    public ResponseDTO saveLuck(BusUser busUser, LuckReq luckReq) {
+    public ResponseDTO saveLuck(WxPublicUsers busUser, BusUser user, LuckReq luckReq) {
         if(CommonUtil.isNotEmpty(luckReq.getLuckBeginTime())){
             throw new LuckException(ResponseEnums.LUCK_HAS1);
         }
@@ -233,7 +234,7 @@ public class LuckServiceImpl implements LuckService {
                     throw new LuckException(ResponseEnums.COMMON_HAS9);
                 }
                 // 判断账户中的粉币是否足够
-                if (busUser.getFansCurrency().doubleValue() < (fenbi-num)) {
+                if (user.getFansCurrency().doubleValue() < (fenbi-num)) {
                     throw new LuckException(ResponseEnums.COMMON_HAS14);
                 }
                 UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
@@ -247,7 +248,7 @@ public class LuckServiceImpl implements LuckService {
                 }
             }else {
                 // 判断账户中的粉币是否足够
-                if(busUser.getFansCurrency().doubleValue() < fenbi.doubleValue()){
+                if(user.getFansCurrency().doubleValue() < fenbi.doubleValue()){
                     throw new LuckException(ResponseEnums.COMMON_HAS7);
                 }
                 //构建冻结信息
@@ -272,7 +273,7 @@ public class LuckServiceImpl implements LuckService {
      * @return
      */
     @Override
-    public ResponseDTO removeLuck(BusUser busUser, LuckIdReq luckIdReq) {
+    public ResponseDTO removeLuck(WxPublicUsers busUser, LuckIdReq luckIdReq) {
         LuckMain luckMain = luckMainService.selectById(luckIdReq.getId());
         if(CommonUtil.isNotEmpty(luckMain)){
             if(luckMain.getLuckBeginTime().getTime() < new Date().getTime() && luckMain.getLuckEndTime().getTime() > new Date().getTime()){

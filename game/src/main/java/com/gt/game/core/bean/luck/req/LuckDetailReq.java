@@ -32,7 +32,7 @@ public class LuckDetailReq {
 	/**
 	 * 奖品类型
 	 */
-	@ApiModelProperty("奖品类型")
+	@ApiModelProperty("奖品类型  -1 全部 1 粉币 2 手机流量 4 实体物品 6 积分 7 优惠劵")
 	private Integer luckPrizeType;
 	/**
 	 * 奖品额度
