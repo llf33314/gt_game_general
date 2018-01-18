@@ -295,7 +295,7 @@ export default {
             this.options=data.data
              console.log(this.options,444);
           } else {
-              this.$message.errorthis.$message.error(data.msg);;
+              this.$message.error(data.msg);
           }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
@@ -511,7 +511,7 @@ export default {
               this.$message({ message: "操作成功", type: "success"}); 
           } else {
               this.isSubmit=false
-              this.$message.errorthis.$message.error(data.msg);;
+              this.$message.error(data.msg);
           }
         }).catch(() => {
             this.isSubmit=false
@@ -603,7 +603,7 @@ export default {
             } 
             this.ruleForm4=newPraise
             } else {
-                this.$message.errorthis.$message.error(data.msg);;
+                this.$message.error(data.msg);
             }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
