@@ -69,10 +69,8 @@ getQuesbank
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
         }); 
       },
-
-      addAskBtn(){
-        this.$router.push({path:'/standStill/testBase'});
-      },      
+   
+      
       test(){
         console.log(123)
       },

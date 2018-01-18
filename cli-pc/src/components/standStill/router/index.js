@@ -5,11 +5,17 @@ const cancelOut = ()=>import( '@/components/standStill/vue/cancelOut')
 const prizeRecord = ()=>import( '@/components/standStill/vue/prizeRecord') 
 const user = ()=>import( '@/components/standStill/vue/user') 
 const question = ()=>import( '@/components/standStill/vue/question') 
+const testBase = ()=>import( '@/components/standStill/vue/testBase') 
 export const standStill = [
     {
         path:'/standStill/index',
         component: index,
         name:'standStill_index'
+    },
+    {
+        path:'/standStill/testBase',
+        component: testBase,
+        name:'standStill_testBase'
     },
     {
         path:'/standStill/addAct',
