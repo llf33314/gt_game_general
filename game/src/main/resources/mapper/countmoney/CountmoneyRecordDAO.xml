@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.game.core.dao.countmoney.CountmoneyRecordDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.game.core.dao.countmoney.CountmoneyRecordDAO">
+		<id column="id" property="id" />
+		<result column="win_act_type" property="winActType" />
+		<result column="win_prize_type" property="winPrizeType" />
+		<result column="win_prize_limit" property="winPrizeLimit" />
+		<result column="win_prize_id" property="winPrizeId" />
+		<result column="win_prize_name" property="winPrizeName" />
+		<result column="win_act_id" property="winActId" />
+		<result column="win_act_name" property="winActName" />
+		<result column="win_wx_member_id" property="winWxMemberId" />
+		<result column="win_wx_oppen_id" property="winWxOppenId" />
+		<result column="win_status" property="winStatus" />
+		<result column="win_createtime" property="winCreatetime" />
+		<result column="win_overtime" property="winOvertime" />
+		<result column="win_name" property="winName" />
+		<result column="win_phone" property="winPhone" />
+		<result column="fenbi_num_max" property="fenbiNumMax" />
+		<result column="win_exchangeCode" property="winExchangeCode" />
+		<result column="win_way" property="winWay" />
+		<result column="win_address" property="winAddress" />
+		<result column="win_cashtime" property="winCashtime" />
+		<result column="win_cash_memberId" property="winCashMemberId" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, win_act_type, win_prize_type, win_prize_limit, win_prize_id, win_prize_name, win_act_id, win_act_name, win_wx_member_id, win_wx_oppen_id, win_status, win_createtime, win_overtime, win_name, win_phone, fenbi_num_max, win_exchangeCode AS winExchangeCode, win_way, win_address, win_cashtime, win_cash_memberId AS winCashMemberId
+    </sql>
+
+</mapper>
