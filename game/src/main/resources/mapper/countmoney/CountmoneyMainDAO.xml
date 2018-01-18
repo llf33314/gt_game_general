@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.game.core.dao.countmoney.CountmoneyMainDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.game.core.dao.countmoney.CountmoneyMainDAO">
+		<id column="id" property="id" />
+		<result column="act_name" property="actName" />
+		<result column="act_notStartedTips" property="actNotStartedTips" />
+		<result column="act_awardingTips" property="actAwardingTips" />
+		<result column="act_gameTime" property="actGameTime" />
+		<result column="act_isShowNums" property="actIsShowNums" />
+		<result column="act_beginTime" property="actBeginTime" />
+		<result column="act_type" property="actType" />
+		<result column="act_describe" property="actDescribe" />
+		<result column="act_awardingAddress" property="actAwardingAddress" />
+		<result column="act_awardingTime" property="actAwardingTime" />
+		<result column="act_endTime" property="actEndTime" />
+		<result column="act_totalOfAct" property="actTotalOfAct" />
+		<result column="act_countOfDay" property="actCountOfDay" />
+		<result column="act_wx_userid" property="actWxUserid" />
+		<result column="act_wx_status" property="actWxStatus" />
+		<result column="act_frozen_flow" property="actFrozenFlow" />
+		<result column="act_frozen_fenbi" property="actFrozenFenbi" />
+		<result column="act_scrBgmUrl" property="actScrBgmUrl" />
+		<result column="act_scrBgmName" property="actScrBgmName" />
+		<result column="act_rate_fenbi" property="actRateFenbi" />
+		<result column="act_rate_rmb" property="actRateRmb" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, act_name, act_notStartedTips AS actNotStartedTips, act_awardingTips AS actAwardingTips, act_gameTime AS actGameTime, act_isShowNums AS actIsShowNums, act_beginTime AS actBeginTime, act_type, act_describe, act_awardingAddress AS actAwardingAddress, act_awardingTime AS actAwardingTime, act_endTime AS actEndTime, act_totalOfAct AS actTotalOfAct, act_countOfDay AS actCountOfDay, act_wx_userid, act_wx_status, act_frozen_flow, act_frozen_fenbi, act_scrBgmUrl AS actScrBgmUrl, act_scrBgmName AS actScrBgmName, act_rate_fenbi, act_rate_rmb
+    </sql>
+
+</mapper>

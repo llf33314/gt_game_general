@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.game.core.dao.countmoney.CountmoneyCourecordDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.game.core.dao.countmoney.CountmoneyCourecordDAO">
+		<id column="id" property="id" />
+		<result column="cou_act_id" property="couActId" />
+		<result column="cou_act_name" property="couActName" />
+		<result column="cou_money_num" property="couMoneyNum" />
+		<result column="cou_convertible_fenbi" property="couConvertibleFenbi" />
+		<result column="cou_convertible_rmb" property="couConvertibleRmb" />
+		<result column="cou_wx_oppen_id" property="couWxOppenId" />
+		<result column="cou_member_id" property="couMemberId" />
+		<result column="cou_createtime" property="couCreatetime" />
+		<result column="cou_overtime" property="couOvertime" />
+		<result column="cou_exchangeCode" property="couExchangeCode" />
+		<result column="cou_cash_memberId" property="couCashMemberId" />
+		<result column="cou_cashtime" property="couCashtime" />
+		<result column="cou_cashway" property="couCashway" />
+		<result column="cou_status" property="couStatus" />
+		<result column="cou_memo" property="couMemo" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, cou_act_id, cou_act_name, cou_money_num, cou_convertible_fenbi, cou_convertible_rmb, cou_wx_oppen_id, cou_member_id, cou_createtime, cou_overtime, cou_exchangeCode AS couExchangeCode, cou_cash_memberId AS couCashMemberId, cou_cashtime, cou_cashway, cou_status, cou_memo
+    </sql>
+
+</mapper>

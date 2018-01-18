@@ -96,15 +96,15 @@ public class TreeServiceImpl implements TreeService {
         entityWrapper.like(CommonUtil.isNotEmpty(treeListReq.getName()), "tree_name", treeListReq.getName());
         if (treeListReq.getStatus() != -1) {   // TODO -1 全部 0 未开始 1 进行中 2 已结束
             if (treeListReq.getStatus() == 0) {
-                entityWrapper.where("activity_begin_time > {0}", new Date());
+                entityWrapper.where("tree_beginTime > {0}", new Date());
             }
             if (treeListReq.getStatus() == 1) {
-                entityWrapper.where("activity_begin_time <= {0}", new Date());
+                entityWrapper.where("tree_beginTime <= {0}", new Date());
                 entityWrapper.and();
-                entityWrapper.where("activity_end_time > {0}", new Date());
+                entityWrapper.where("tree_endTime > {0}", new Date());
             }
             if (treeListReq.getStatus() == 2) {
-                entityWrapper.where("activity_end_time <= {0}", new Date());
+                entityWrapper.where("tree_endTime <= {0}", new Date());
             }
         }
         Page<TreeMain> page = new Page<>(treeListReq.getCurrent(), treeListReq.getSize());
@@ -645,7 +645,7 @@ public class TreeServiceImpl implements TreeService {
                     font1);
             if ("1".equals(delWithColumn(map.get("tree_status")).toString())) {
                 createCell(wb, rowData, 6, "已兑奖", font1);
-            } else if ("2".equals(delWithColumn(map.get("status")).toString())) {
+            } else if ("2".equals(delWithColumn(map.get("tree_status")).toString())) {
                 createCell(wb, rowData, 6, "未兑奖", font1);
             } else {
                 createCell(wb, rowData, 6, "已提交", font1);

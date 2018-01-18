@@ -2,6 +2,7 @@ package com.gt.game.core.service.luck;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.gt.api.bean.session.BusUser;
+import com.gt.api.bean.session.WxPublicUsers;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.core.bean.luck.req.LuckIdReq;
 import com.gt.game.core.bean.luck.req.LuckListPageReq;
@@ -25,15 +26,15 @@ import java.util.List;
  */
 public interface LuckService{
 
-    MobileUrlRes getMobileUrl(BusUser busUser, MobileUrlReq mobileUrlReq);
+    MobileUrlRes getMobileUrl(WxPublicUsers busUser, MobileUrlReq mobileUrlReq);
 
-    ResponseDTO<LuckCountRes> getLuckCount(BusUser busUser);
+    ResponseDTO<LuckCountRes> getLuckCount(WxPublicUsers busUser);
 
-    ResponseDTO<List<LuckListRes>> getLuckList(BusUser busUser, LuckListPageReq luckListPageReq);
+    ResponseDTO<List<LuckListRes>> getLuckList(WxPublicUsers busUser, LuckListPageReq luckListPageReq);
 
-    ResponseDTO<LuckRes> getLuck(BusUser busUser, LuckIdReq luckIdReq);
+    ResponseDTO<LuckRes> getLuck(WxPublicUsers busUser, LuckIdReq luckIdReq);
 
-    ResponseDTO saveLuck(BusUser busUser, LuckReq luckReq);
+    ResponseDTO saveLuck(WxPublicUsers busUser, BusUser user , LuckReq luckReq);
 
-    ResponseDTO removeLuck(BusUser busUser, LuckIdReq luckIdReq);
+    ResponseDTO removeLuck(WxPublicUsers busUser, LuckIdReq luckIdReq);
 }
