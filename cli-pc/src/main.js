@@ -30,7 +30,7 @@ require('./assets/css/common.less')
 //加载全局阿里iconfont 
 require('./assets/iconfont/iconfont.css')
 //挂载全局axsio方法
-Vue.prototype.axios = axios
+Vue.prototype.$axios = axios
 //在启动时生成生产提示
 Vue.config.productionTip = true
 Vue.config.devtools = true

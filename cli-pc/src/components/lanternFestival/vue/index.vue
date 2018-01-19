@@ -29,21 +29,21 @@
         <gt-null-data v-if="initRequest && tableData.length < 1">还没有创建相关活动，
           <span @click="addActive">点击这里</span>创建活动吧
         </gt-null-data>
-        <el-table :data="tableData.data" v-else>
-          <el-table-column prop="actName" label="活动名称"></el-table-column>
-          <el-table-column prop="startTime" label="活动开始时间">
+        <el-table :data="tableData" v-else>
+          <el-table-column prop="name" label="活动名称"></el-table-column>
+          <el-table-column prop="activityBeginTime" label="活动开始时间">
             <template slot-scope="scope">
-              {{scope.row.startTime|parseTime('{y}-{m}-{d} {h}:{i}')}}
+              {{scope.row.activityBeginTime|parseTime('{y}-{m}-{d} {h}:{i}')}}
             </template>
           </el-table-column>
-          <el-table-column prop="endTime" label="活动结束时间">
+          <el-table-column prop="activityEndTime" label="活动结束时间">
             <template slot-scope="scope">
-              {{scope.row.endTime|parseTime('{y}-{m}-{d} {h}:{i}')}}
+              {{scope.row.activityEndTime|parseTime('{y}-{m}-{d} {h}:{i}')}}
             </template>
           </el-table-column>
-          <el-table-column prop="state" label="活动状态">
+          <el-table-column prop="status" label="活动状态">
             <template slot-scope="scope">
-              {{scope.row.state|actStatus(scope.row.state)}}
+              {{scope.row.status|actStatus(scope.row.status)}}
             </template>
           </el-table-column>
           <el-table-column prop="order_option" width="450" label="操作">
@@ -57,7 +57,7 @@
           </el-table-column>
         </el-table>
         <div class="public-page-fr" v-show="tableData.length">
-          <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout="prev, pager, next, jumper" :total="totalNums">
+          <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pageSize" layout="prev, pager, next, jumper" :total="totalNums">
           </el-pagination>
         </div>
       </div>
@@ -72,6 +72,11 @@
   </section>
 </template>
 <script>
+  import _ from 'lodash';  //引入lodash
+  import axios from 'axios' //引入axios
+  //请求canceltoken列表
+  let sources = [];
+
   import api from '../api/api'
   export default {
     data() {
@@ -92,18 +97,12 @@
           fourth: "40",
           fifth: "2"
         },
-        tableData: {
-          data: [{
-            actName: "活动名称",
-            state: 1,
-            startTime: 1513008000000,
-            endTime: 1514476800000,
+        tableData: [{
+            name: "活动名称",
+            status: 1,
+            activityBeginTime: 1513008000000,
+            activityEndTime: 1514476800000,
           }],
-          page: {
-            totalNums: 31,
-            totalPages: 4
-          }
-        },
         //预览连接
         copeData: {
           url: "",
@@ -113,12 +112,57 @@
       };
     },
     methods: {
+      search: _.debounce(
+        function () {
+          let that = this;
+          //删除已经结束的请求
+          _.remove(sources, function (n) {
+            return n.source === null;
+          });
+          //取消还未结束的请求
+          sources.forEach(function (item) {
+            if (item !== null && item.source !== null && item.status === 1) {
+              item.status = 0;
+              item.source.cancel('取消上一个')
+            }
+          });
+        
+          //创建新的请求cancelToken,并设置状态请求中
+          var sc = {
+            source: axios.CancelToken.source(),
+            status: 1 //状态1：请求中，0:取消中
+          };
+          //这个对象加入数组中
+          sources.push(sc);
+　　　　　　//开始搜索数据，yourhttp替换成你自己的请求路径
+          let params = {
+            current: that.currentPage,
+            size: that.pageSize,
+            name: that.keyWord,
+            status: parseFloat(that.activeName)
+          }
+          axios.post(window.BASEDOMAIN + '/app/lantern/getLanternList',  params, {
+            cancelToken: sc.source.token
+          }).then(function (res) {
+            // 请求成功 网络层
+            sc.source = null; //置空请求canceltoken
+            // 后台服务器层
+            if (res.data.code == 100) {
+                 that.tableData = res.data.data
+            }
+          }).catch(function (thrown) {
+            //请求失败
+            sc.source = null; //置空请求canceltoken
+          });
+        },
+        500 //空闲时间间隔设置500ms
+      ),
+
       searchFuc() {
         this.currentPage = this.initCurrentPage
         this.fetchData()
       },
       delEmployee(hide) {
-        console.log("删除触发事件");
         this.dialogTip = false
       },
       askPreview(id) {
@@ -229,15 +273,10 @@
           status: parseFloat(this.activeName)
         }
         api.getLanternList(params).then(res => {
-          if (res.code) {
-            res.data.forEach(function (item, idnex, arr) {
-              item.actName = item.name
-              item.startTime = item.activityBeginTime
-              item.endTime = item.activityEndTime
-              item.state = item.status
-            }, this)
-            this.tableData.data = res.data
-          }
+          if (res.code == 100) {
+            this.tableData = res.data
+            this.totalNums = res.page.totalNums
+          } 
         })
       }
     },

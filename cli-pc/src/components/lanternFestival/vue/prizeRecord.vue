@@ -35,8 +35,8 @@
         <el-button type="primary" @click="test()" class="ml30">导出</el-button> 
     </div> 
     <div class="gt-content"> 
-        <gt-null-data>还没有相关中奖纪录</gt-null-data>  
-        <el-table :data="tableData.data">
+        <gt-null-data v-if="initRequest && tableData.length < 1">还没有相关中奖纪录</gt-null-data>  
+        <el-table v-else :data="tableData">
           <el-table-column prop="actName" label="奖项名称">              
           </el-table-column>
           <el-table-column prop="startTime" label="奖品类型">             
@@ -54,47 +54,64 @@
             </template>
           </el-table-column>
         </el-table> 
-        <div class="public-page-fr">
-              <el-pagination @current-change="handleCurrentChange"  :page-size="10" 
-              layout="prev, pager, next, jumper" :total="tableData.page.totalNums">
-              </el-pagination>
-        </div> 
+         <div class="public-page-fr" v-show="tableData.length">
+          <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pageSize" layout="prev, pager, next, jumper" :total="totalNums">
+          </el-pagination>
+        </div>
     </div>
 </div>
 </section>
 </template>
 <script>
-  export default{
-    data() {
-      return { 
-        prizeType:"",
-        prizeState:"",
-        keyWord:"",
-        tableData:{
-          data:[
-            {
-              
-            }
-          ], 
-          page:{
-            totalNums:31,
-            totalPages:4
-          }
-        },  
+import api from '../api/api'
+export default {
+  data() {
+    return {
+      // 分页
+      initCurrentPage: 1,
+      currentPage: 1,
+      initPageSize: 10,
+      pageSize: 10,
+      totalNums: 0,
+      snCode: '',
+      status: -1,
+      type: -1,
+
+      prizeType: "",
+      prizeState: "",
+      keyWord: "",
+      tableData: [
+        
+      ]
+    };
+  },
+  methods: {
+    test() {
+      console.log(123);
+    },
+    handleCurrentChange(val) {
+      console.log(val);
+    },
+    fetchData(initRequest) {
+      initRequest ? (this.initRequest = true) : (this.initRequest = false);
+      let params = {
+        actId: this.$route.query.id,
+        current: this.currentPage,
+        size: this.pageSize,
+        snCode: this.snCode,
+        status: this.status,
+        type: this.type
       };
-    },
-    methods: {  
-      test(){
-        console.log(123)
-      },
-      handleCurrentChange(val){
-        console.log(val)
-      }
-    },
-    mounted() {
-    
-    },
-    filters: { 
+      api.getWinningList(params).then(res => {
+        if (res.code == 100) {
+        }
+      });
     }
-  }
+  },
+  created() {
+    this.fetchData(true)
+  },
+  mounted() {},
+  filters: {}
+};
 </script>

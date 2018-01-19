@@ -1,5 +1,5 @@
 import axios from './../../../http' 
-let base = window.BASEDOMAIN + '/app/lantern'
+let base = window.BASEDOMAIN + '/app/lantern' 
 
 // let base = 'http://192.168.3.68:8080'
 
@@ -47,48 +47,60 @@ function post(url, params) {
         return {code: 400}
       })
   }
-
+  
 export default {
-       // 分页获取元宵点灯活动列表 
+       // 分页获取元宵点灯活动列表  1
        getLanternList(params) {
            return post(`${base}/getLanternList`, params)
        },
-       // 删除元宵点灯活动 
+       // 删除元宵点灯活动 2
        delLantern(params) {
            return post(`${base}/delLantern`, params) 
        }, 
-       // 获取手机端链接 
+       // 获取手机端链接 3
        getMobileUrl(params) {
            return post(`${base}/getMobileUrl`, params)   
        },
-       // 获取奖品类型列表 
+       // 获取奖品类型列表 4
        getLanternPrizeType(params) {
            return post(`${base}/getLanternPrizeType`, params)    
        },
-       // 新增元宵点灯活动 
+       // 新增元宵点灯活动 5
        addLantern(params) {
            return post(`${base}/addLantern`, params)    
        },
-       // 通过活动id查询元宵点灯活动 
+       // 通过活动id查询元宵点灯活动 6
        getActivityById(params) {
         return post(`${base}/getActivityById`, params) 
        },
-       // 编辑元宵点灯活动基础设置  
+       // 编辑元宵点灯活动基础设置  7
        modfiyBasicsLantern(params) {
         return post(`${base}/modfiyBasicsLantern`, params) 
        },
-       // 编辑元宵点灯活动规则设置  
+       // 编辑元宵点灯活动规则设置  8
        modfiyRuleLantern(params) {
         return post(`${base}/modfiyRuleLantern`, params) 
        },
-       // 编辑元宵点灯活动兑奖设置
+       // 编辑元宵点灯活动兑奖设置 9
        modfiyExpiryLantern(params) {
         return post(`${base}/modfiyExpiryLantern`, params) 
        },
-       // 编辑元宵点灯活动奖项设置 
+       // 编辑元宵点灯活动奖项设置  10
        modfiyAwardsLantern(params) {
         return post(`${base}/modfiyAwardsLantern`, params) 
+       }, 
+       // 分页获取核销授权列表 11
+       getLanternAuthorityList(params) {
+        return post(`${base}/getLanternAuthorityList`, params) 
+       }, 
+       // 批量删除核销授权 12 
+       delLanternAuthority(params) {
+        return post(`${base}/delLanternAuthority`, params) 
        },
+       // 分页获取元宵点灯中奖记录列表 13 
+       getWinningList(params) {
+        return post(`${base}/getWinningList`, params) 
+       }
 }
 
 
