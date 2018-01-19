@@ -267,6 +267,9 @@ public class StandServiceImpl implements StandService {
                 for (StandtotheendPrize StandtotheendPrize : StandtotheendPrizes) {
                     StandPrizeReq StandPrizeReq = new StandPrizeReq();
                     BeanUtils.copyProperties(StandtotheendPrize, StandPrizeReq);
+                    StandPrizeReq.setType(StandtotheendPrize.getPrizeType());
+                    StandPrizeReq.setPrizeUnit(StandtotheendPrize.getPrizePer());
+                    StandPrizeReq.setNum(StandtotheendPrize.getPrizeCount());
                     List<StandtotheendPrizeImgUrl> StandtotheendPrizeImgList = standtotheendPrizeImgUrlService.selectList(new EntityWrapper<StandtotheendPrizeImgUrl>().eq("prize_id", StandtotheendPrize.getId()));
                     List<StandPrizeImgReq> StandPrizeImgReqs = new ArrayList<>();
                     for (StandtotheendPrizeImgUrl standtotheendPrizeImgUrl : StandtotheendPrizeImgList) {
@@ -311,7 +314,7 @@ public class StandServiceImpl implements StandService {
                 throw new StandException(ResponseEnums.STAND_HAS12);
             }
             List<StandtotheendCashPrizeApply> StandtotheendCashPrizeApplies = standtotheendCashPrizeApplyService.selectList(
-                    new EntityWrapper<StandtotheendCashPrizeApply>().eq("act_id",standIdReq.getId()).eq("status",3));
+                    new EntityWrapper<StandtotheendCashPrizeApply>().eq("act_id",standIdReq.getId()).eq("apply_status",3));
             if(StandtotheendCashPrizeApplies.size() > 0 ){
                 throw new StandException(ResponseEnums.STAND_HAS11);
 
@@ -433,6 +436,9 @@ public class StandServiceImpl implements StandService {
                 StandtotheendPrize standtotheendPrize = new StandtotheendPrize();
                 BeanUtils.copyProperties(StandPrizeReq,standtotheendPrize);
                 standtotheendPrize.setActId(standtotheendMain.getId());
+                standtotheendPrize.setPrizeType(StandPrizeReq.getType());
+                standtotheendPrize.setPrizePer(StandPrizeReq.getPrizeUnit());
+                standtotheendPrize.setPrizeCount(StandPrizeReq.getNum());
                 standtotheendPrizeService.insert(standtotheendPrize);
                 if(StandPrizeReq.getStandPrizeImgReqs().size() > 0){
                     for(StandPrizeImgReq StandPrizeImgReq : StandPrizeReq.getStandPrizeImgReqs()){
