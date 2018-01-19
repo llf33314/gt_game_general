@@ -19,7 +19,7 @@
             <el-step title="新建完成"></el-step>
         </el-steps>
         <!-- 基础设置 -->
-        <div v-if="this.active==0" class="mt40">
+        <div v-show="this.active==0" class="mt40">
           <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="120px" class="demo-ruleForm">
                 <el-form-item label="活动名称：" prop="name">
                     <el-input class="w_demo" v-model="ruleForm1.name"></el-input>
@@ -46,7 +46,7 @@
           </el-form> 
         </div>
         <!-- 规则设置 -->
-        <div v-if="this.active==1" class="mt40">
+        <div v-show="this.active==1" class="mt40">
             <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="150px" class="mt40 demo-ruleForm">
                 <el-form-item label="游戏总数:" prop="manTotalChance">
                     <el-input class="w25_demo mr10" v-model="ruleForm2.manTotalChance"></el-input>次/人
@@ -56,7 +56,6 @@
                 </el-form-item>
                 <el-form-item label="答题时间：" prop="gametime">
                     <el-input class="w25_demo" v-model="ruleForm2.gametime" type="number" placeholder="请输入答题时间"></el-input>
-                    <span class="el-upload__tip grey ml10">设置时间为10~30秒</span>  
                 </el-form-item>  
                 <el-form-item label="奖励积分：" prop="jifen">
                     <el-input class="w25_demo mr10" placeholder="请输入每道题奖励的积分" v-model="ruleForm2.jifen"></el-input>分 
@@ -68,21 +67,21 @@
             </el-form> 
         </div> 
         <!-- 兑奖设置 -->
-        <div v-if="this.active==2" class="mt40">
+        <div v-show="this.active==2" class="mt40">
             <el-form :model="ruleForm3" :rules="rules3" ref="ruleForm3" label-width="120px" class="mt40 demo-ruleForm">
                 <el-form-item label="兑奖期限：" prop="days">
                     <el-input class="w_demo mr10" type="number" v-model="ruleForm3.date" placeholder="请输入兑奖期限"></el-input>天
                     <span class="el-upload__tip grey">
                         从活动结束后开始计算
                     </span>
-                </el-form-item> 
+                </el-form-item>  
                 <el-form-item label="兑奖方式：" prop="type">
                     <el-checkbox-group v-model="ruleForm3.type">
                         <el-checkbox label="1" name="1">到店领取</el-checkbox>
                         <el-checkbox label="2" name="2">邮寄</el-checkbox> 
                     </el-checkbox-group>
                 </el-form-item> 
-                <div class="bb pt20 pb20 ml120 bw mb10" v-if="this.ruleForm3.type[0]==1||this.ruleForm3.type[1]==1" >
+                <div   class="bb pt20 pb20 ml120 bw mb10" v-if="this.ruleForm3.type[0]==1||this.ruleForm3.type[1]==1" >
                     <span style="margin-left:30px;color: #333;" ><span style="color:#ff4949;margin-right:3px">*</span>兑奖地址：</span>
                     <el-button  class="mb10"  type="primary" @click="addList()">添加</el-button>  
                     <el-form-item v-for="(item,index) in ruleForm3.addrRow" :key="item.key"  :prop="'addrRow.' + index + '.list'" :rules="{required:true,validator:addrPass,trigger: 'blur'}">
@@ -100,7 +99,13 @@
             </el-form> 
         </div>
         <!-- 奖项设置 -->
-        <div v-if="this.active==3" class="mt40">
+        <div v-show="this.active==3" class="mt40">
+            <div>
+                <span style="color: #333; position:absolute;margin-top:0px;" >奖品说明：</span>
+                <el-input type="textarea" class="bw ml120"  :maxlength="300"  :rows="3" placeholder="请输入兑奖说明" v-model="explain">
+                </el-input>
+                <span class="el-upload__tip grey ml10">300字以内</span>
+            </div> 
             <div class="gt-gray-region mt20" style="color:#666;line-height:20px">
                 <p>奖品类型：奖品的内容;奖品单位：奖品的数量货内容；奖项数量:该奖品的可领取次数</p>
                 <p>如：奖品类型：粉币；奖品数额：2；奖项名称：粉币；奖项数量：3；中奖概率：12</p> 
@@ -169,7 +174,7 @@
             <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步1</el-button> 
             <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
-            <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>   
+            <el-button type="primary" @click="lastStep()"    :disabled="this.isSubmit"     v-if="this.active==3">保存</el-button>   
             <el-button type="primary" @click="submit()">打印</el-button>   
         </div> 
     </div>   
@@ -192,18 +197,9 @@ export default {
         callback();
       }
     }; 
-    let timePass = (rule, value, callback) => {
-       const time = window.parseInt(value) 
-       if (!time) {
-        callback(new Error("答题时间不能为空"));
-       } else if (time<10 || time>30) {
-        callback(new Error("答题时间有误，请重填"));
-      } else {
-        callback();
-      }
-    }; 
     return {
-      active:3, 
+      active:0, 
+      isSubmit:false,
       Quesbank:[],
       options:[],
       ruleForm1: {
@@ -216,7 +212,7 @@ export default {
       rules1: {
         name: [{ required: true, message: "活动名称不能为空", trigger: "blur" }],
         name1: [{required: true, type: "array",message: "游戏时间不能为空", trigger: "blur" }], 
-        library: [{required: true, type: 'string',  message: "请选择消息模块", trigger: "blur"}] 
+        library: [{required: true, message: "请选择消息模块", }] 
       },
       ruleForm2: { 
         manTotalChance:"",
@@ -225,22 +221,22 @@ export default {
         jifen:"",
         desc: "",  
       },
-      rules2: {
-        gametime: [ 
-          { required: true,validator: timePass,  trigger: "blur,change" }
-        ],  
+      rules2: {          
         manTotalChance: [
           { required: true,  message: "请填写每人免费游戏次数", trigger: "blur" } 
         ], 
         manDayChance: [
           { required: true,  message: "请填写每人每天免费游戏次数", trigger: "blur" } 
+        ],
+        gametime: [ 
+          { required: true, message: "请填写答题时间",trigger: "blur" }
         ], 
         jifen: [
           { required: true,  message: "请输入每道题奖励的积分", trigger: "blur" } 
         ], 
         desc: [
           { required: true,  message: "请填写活动规则", trigger: "blur" } 
-        ], 
+        ] 
       },
       ruleForm3: {
         date:"",
@@ -248,7 +244,7 @@ export default {
         addrRow:[{list:""},{list:""}],
         phone:"",
         desc:""
-      },
+      }, 
       rules3: {
         list: [{ required: true }],
         date: [{ required: true,type: 'array', message: "兑奖时间不能为空" }],
@@ -386,14 +382,16 @@ export default {
             return false
         }else if (this.ruleForm4[i].name0==4&&this.ruleForm4[i].name5.length==0) { 
                 this.$message.error("当奖品为实物时，请上传实物图片~");
-                return false 
-        }else{
-            this.submit();
-        }  
+                return false  
+        }   
       }
+      this.submit();
     }, 
     //表单提交--------------------------------------star
     submit(){ 
+        if(this.isSubmit){
+             this.$message({type: "info", message: "请不要重复提交~" });
+        }else{ 
         //兑奖地址
         var newAddr=[];
         if(this.ruleForm3.addrRow){ 
@@ -430,16 +428,16 @@ export default {
         } 
         const data = { 
             //基础设置  
-            actName          :this.ruleForm1.name, 
-            activityBegintime:this.ruleForm1.name1[0],
-            activityEndtime  :this.ruleForm1.name1[1],
-            bankId           :this.ruleForm1.library, 
-            musicUrl         :this.ruleForm1.musicUrl, 
+            actName           :this.ruleForm1.name, 
+            activityBegintime :this.ruleForm1.name1[0],
+            activityEndtime   :this.ruleForm1.name1[1],
+            bankId            :this.ruleForm1.library, 
+            musicUrl          :this.ruleForm1.musicUrl, 
             //规则设置
-            manDayTotalQuesChance:this.ruleForm2.manTotalChance, 
-            manDayChance         :this.ruleForm2.manDayChance, 
-            answerTime           :this.ruleForm2.gametime, 
-            rightCount           :this.ruleForm2.jifen, 
+            manDayTotalQuesChance:Number(this.ruleForm2.manTotalChance), 
+            manDayChance         :Number(this.ruleForm2.manDayChance), 
+            answerTime           :Number(this.ruleForm2.gametime), 
+            rightCount           :Number(this.ruleForm2.jifen), 
             actRule              :this.ruleForm2.desc,  
             //兑奖设置  
             standCashDay        :this.ruleForm3.date,  
@@ -448,11 +446,23 @@ export default {
             cashPrizeInstruction:this.ruleForm3.desc,  
             standAddressReqs    :newAddr, 
             //奖项设置 
-            name19:this.explain, 
-            standPrizeReqs:newPrize,  
-           
+            cashPrizeInstruction :this.explain, 
+            standPrizeReqs:newPrize,   
         };
         console.log(data,123); 
+        saveAct(data).then(data=>{
+          this.isSubmit=true
+          if (data.code == 100) {  
+              this.active=5
+          } else {
+              this.isSubmit=false
+              this.$message.error(data.msg);
+          }
+        }).catch(() => {
+            this.isSubmit=false
+            this.$message({type: "info", message: "网络问题，请刷新重试~" });
+        }); 
+        }
     },  
     backUrl(){
          window.history.go(-1);

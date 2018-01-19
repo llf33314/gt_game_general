@@ -20,7 +20,7 @@
             <el-form-item label="题库管理：">
                <el-button type="primary" @click="addTest('ruleForm')" class="mr10">添加</el-button> 
                <el-button type="primary" @click="test()" >导入题库</el-button>
-               <span  class="el-upload__tip grey ml10 blueee" style="cursor:pointer" @click="test()">下载导入示例</span> 
+               <a target="_blank" class="el-upload__tip grey ml10 blueee" style="cursor:pointer" href="https://deeptel.com.cn//stand/downMould.do">下载导入示例</a> 
             </el-form-item>   
 
              <el-form-item>
@@ -30,19 +30,19 @@
                       {{scope.$index+1}}
                     </template>         
                   </el-table-column>
-                  <el-table-column prop="bankName" label="题库名称">   
+                  <el-table-column prop="quesTitle" label="题目名称">   
                   </el-table-column>
                   <el-table-column prop="createTime" label="选项"> 
                     <template slot-scope="scope">
-                     <p>A：古罗马<span>(正确)</span></p>
-                     <p>B：古罗马</p>
-                     <p>C：古罗马</p>
-                     <p>D：古罗马</p>
+                     <p>A：{{scope.row.optionA}}<span v-show="scope.row.rightAnswer==1">(正确)</span></p>
+                     <p>B：{{scope.row.optionB}}<span v-show="scope.row.rightAnswer==2">(正确)</span></p>
+                     <p>C：{{scope.row.optionC}}<span v-show="scope.row.rightAnswer==3">(正确)</span></p>
+                     <p>D：{{scope.row.optionD}}<span v-show="scope.row.rightAnswer==4">(正确)</span></p>
                     </template>           
                   </el-table-column> 
                   <el-table-column prop="order_option"  label="操作">
                     <template slot-scope="scope"> 
-                      <el-button class="gt-button-normal blue"      @click="showDetailBtn(scope.row.id)">编辑</el-button>  
+                      <el-button class="gt-button-normal blue"      @click="showDetailBtn(scope.row)">编辑</el-button>  
                       <el-button class="gt-button-normal "          @click="handOut(scope.row.id)">删除</el-button>  
                     </template>
                   </el-table-column>
@@ -50,7 +50,7 @@
             </el-form-item>  
             <!-- 弹窗 -->
             <el-dialog title="添加" :visible.sync="showAdd" class="detail-dialog"> 
-                <el-form :label-position="labelPosition" label-width="180px" :model="formLabelAlign" :rules="rulesAlign" ref="formLabelAlign">
+                <el-form :label-position="labelPosition" label-width="160px" :model="formLabelAlign" :rules="rulesAlign" ref="formLabelAlign">
                   <el-form-item label="问题：" prop="name">
                     <el-input v-model="formLabelAlign.name" class="w_demo"></el-input>
                   </el-form-item>
@@ -117,6 +117,7 @@ saveQuesbank,saveStandQuestion,removeStandQuestion,getStandQuesbank
         showAdd:false,
         labelPosition: 'right',
         formLabelAlign: {
+          id:0,
           name: '',
           select:'',
           name1: '',
@@ -145,12 +146,18 @@ saveQuesbank,saveStandQuestion,removeStandQuestion,getStandQuesbank
       };
     },
     methods: { 
-       //添加 按钮---------------------------star
+      //添加 按钮---------------------------star
       addTest(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            if(this.ruleForm.id!=""){
+            if(this.ruleForm.id!=0){
               this.showAdd=true
+              this.formLabelAlign.name=''
+              this.formLabelAlign.select=''
+              this.formLabelAlign.name1=''
+              this.formLabelAlign.name2=''
+              this.formLabelAlign.name3=''
+              this.formLabelAlign.name4='' 
             }else{
              var params={};
              params.bankName=this.ruleForm.name
@@ -160,7 +167,7 @@ saveQuesbank,saveStandQuestion,removeStandQuestion,getStandQuesbank
                 console.log(data,1234);
                    this.showAdd=true
                    this.ruleForm.id=data.data.id
-                   this.getData() 
+                   //this.getData() 
                 } else {
                   this.$message.error(data.msg);;
                 }
@@ -182,14 +189,15 @@ saveQuesbank,saveStandQuestion,removeStandQuestion,getStandQuesbank
                 this.$message.error("请设定正确答案");;
             }else{
               var params={}; 
-              params.bankId=this.ruleForm.id
-              params.id=0
+              params.bankId =this.ruleForm.id
+              params.id     =this.formLabelAlign.id
               params.optionA=this.formLabelAlign.name1
               params.optionB=this.formLabelAlign.name2
               params.optionC=this.formLabelAlign.name3
               params.optionD=this.formLabelAlign.name4
               params.quesTitle=this.formLabelAlign.name
               params.rightAnswer=this.formLabelAlign.select 
+              console.log(params,7788);
               saveStandQuestion(params).then(data=>{
                 if (data.code == 100) { 
                     this.showAdd=false
@@ -208,14 +216,29 @@ saveQuesbank,saveStandQuestion,removeStandQuestion,getStandQuesbank
           }
         }); 
       }, 
-      
+      //获取题库列表---------------------------star
+      getData(){ 
+        var id=this.ruleForm.id
+        console.log(id,'id');
+        getStandQuesbank({id}).then(data=>{
+          if (data.code == 100) {
+            console.log(data,55);
+            this.tableData=data.data.standQuestionResList
+            console.log(data,'题库列表');
+          } else {
+              this.$message.error(data.msg);;
+          }
+        }).catch(() => {
+            this.$message({ type: "info", message: "网络问题，请刷新重试~" });
+        }); 
+      },
       //底部保存---------------------------star
       submit(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) { 
               var params={};
               params.bankName=this.ruleForm.name
-              params.id=0
+              params.id=this.ruleForm.id
               saveQuesbank(params).then(data=>{
               if (data.code == 100) {
                 console.log(data,123);
@@ -234,39 +257,38 @@ saveQuesbank,saveStandQuestion,removeStandQuestion,getStandQuesbank
           }
         }); 
       },  
-      //删除---------------------------star
+      //删除题目---------------------------star
       handOut(val){
-        var id=val
-        console.log(val);
-          removeStandQuestion({id}).then(data=>{
-          if (data.code == 100) {  
+        this.$confirm('此操作将永久删除该题目, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+        removeStandQuestion({id:val}).then(data=>{
+            if (data.code == 100) {
                 this.$message({ message: "操作成功", type: "success"}); 
                 this.getData();
             } else {
-              this.$message.error(data.msg);;
+                this.$message.error(data.msg);
             }
           }).catch(() => {
-              this.$message({ type: "info", message: "网络问题，请刷新重试~" });
-          });
-      },
-      //获取题库列表---------------------------star
-      getData(){ 
-        var id=this.ruleForm.id
-        console.log(id,'id');
-        getStandQuesbank({id}).then(data=>{
-          if (data.code == 100) {
-            console.log(data,55);
-            this.tableData=data.data.standQuestionResList
-            console.log(data,'题库列表');
-          } else {
-              this.$message.error(data.msg);;
-          }
-        }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
-        }); 
+          }); 
+        }).catch(() => {
+          this.$message({type: 'info',message: '已取消删除'});          
+        });   
       },
-   
-      
+      //题目编辑---------------------------star
+      showDetailBtn(val){
+        this.showAdd=true
+        this.formLabelAlign.name=val.quesTitle 
+        this.formLabelAlign.name1=val.optionA
+        this.formLabelAlign.name2=val.optionB
+        this.formLabelAlign.name3=val.optionC
+        this.formLabelAlign.name4=val.optionD
+        this.formLabelAlign.select=Number(val.rightAnswer) 
+        this.formLabelAlign.id=val.id
+      }, 
       test(){
         console.log(123)
       },
@@ -276,10 +298,6 @@ saveQuesbank,saveStandQuestion,removeStandQuestion,getStandQuesbank
       handleCurrentChange(val){
         console.log(val)
       }
-    }, 
-     mounted() {
-      
-    },
-
+    },   
   }
 </script>

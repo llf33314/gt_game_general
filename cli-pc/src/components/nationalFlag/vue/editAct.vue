@@ -15,7 +15,7 @@
             <el-tab-pane label="奖项设置" name="3"></el-tab-pane>
         </el-tabs>
         <!-- 基础设置 -->
-        <div v-if="this.active==0" class="mt40">
+        <div v-show="this.active==0" class="mt40">
           <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="160px" class="demo-ruleForm">
                 <el-form-item label="活动名称：" prop="name">
                     <el-input class="w_demo" v-model="ruleForm1.name"></el-input>
@@ -63,7 +63,7 @@
           </el-form> 
         </div>
         <!-- 规则设置 -->
-        <div v-if="this.active==1" class="mt40">
+        <div v-show="this.active==1" class="mt40">
             <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="120px" class="mt40 demo-ruleForm">
                  <el-form-item label="关注二维码：" prop="code">
                   <gt-material prop="url" :url="ruleForm2.code" v-on:getChangeUrl="getChangeUrl2" width="72" height="72"></gt-material>
@@ -103,7 +103,7 @@
             </el-form> 
         </div> 
         <!-- 兑奖设置 -->
-        <div v-if="this.active==2" class="mt40">
+        <div v-show="this.active==2" class="mt40">
             <el-form :model="ruleForm3" :rules="rules3" ref="ruleForm3" label-width="120px" class="mt40 demo-ruleForm">
                 <el-form-item label="兑奖时间：" prop="date">
                     <el-date-picker class="w_demo" v-model="ruleForm3.date" :picker-options="pickerOptions" type="daterange" placeholder="选择日期范围">
@@ -133,7 +133,7 @@
             </el-form> 
         </div>
         <!-- 奖项设置 -->
-        <div v-if="this.active==3" class="mt40">  
+        <div v-show="this.active==3" class="mt40">  
             <div class="gt-gray-region mt20" style="color:#666;line-height:20px">
                 <p>奖品类型：奖品的内容;奖品单位：奖品的数量货内容；奖项数量:该奖品的可领取次数</p>
                 <p>如：奖品类型：粉币；奖品数额：2；奖项名称：粉币；奖项数量：3；中奖概率：12</p> 
