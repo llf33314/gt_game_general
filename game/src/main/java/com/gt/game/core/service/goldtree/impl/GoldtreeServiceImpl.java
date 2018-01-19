@@ -381,7 +381,7 @@ public class GoldtreeServiceImpl implements GoldtreeService {
         Double num = 0.0;
         int f = 0;
         if(GoldtreeSaveReq.getCashPrizeBeginTime().getTime() < GoldtreeSaveReq.getActivityBeginTime().getTime()){
-            throw new GoldtreeException(ResponseEnums.COMMON_HAS17);
+            throw new GoldtreeException(ResponseEnums.COMMON_HAS16);
         }
         if(GoldtreeSaveReq.getId() == 0){//新增
             GoldtreeMain = new GoldtreeMain();
