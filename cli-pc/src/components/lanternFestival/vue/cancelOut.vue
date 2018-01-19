@@ -136,20 +136,25 @@ export default {
       this.multipleSelection = val;
     },
     delOne(id) {
-      let params = {
-        actId: this.$route.query.id,
-        id: [id]
-      };
+      this.$confirm("确定要删除选中的核销员?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        let params = {
+          actId: this.$route.query.id,
+          id: [id]
+        };
 
-      api.delLanternAuthority(params).then(res => {
-
-        if (res.code == 100) {
-          this.$message.success("删除成功");
-          this.currentPage = this.initCurrentPage;
-          this.fetchData();
-        } else {
-          this.$message.error("删除失败");
-        }
+        api.delLanternAuthority(params).then(res => {
+          if (res.code == 100) {
+            this.$message.success("删除成功");
+            this.currentPage = this.initCurrentPage;
+            this.fetchData();
+          } else {
+            this.$message.error("删除失败");
+          }
+        });
       });
     },
     delAll() {

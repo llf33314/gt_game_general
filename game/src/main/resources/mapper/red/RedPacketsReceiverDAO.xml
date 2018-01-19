@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.game.core.dao.red.RedPacketsReceiverDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.game.core.entity.red.RedPacketsReceiver">
+		<id column="id" property="id" />
+		<result column="public_id" property="publicId" />
+		<result column="openid" property="openid" />
+		<result column="amount" property="amount" />
+		<result column="rcv_time" property="rcvTime" />
+		<result column="red_id" property="redId" />
+		<result column="ncikname" property="ncikname" />
+		<result column="headimgurl" property="headimgurl" />
+		<result column="subscribe" property="subscribe" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, public_id, openid, amount, rcv_time, red_id, ncikname, headimgurl, subscribe
+    </sql>
+
+</mapper>

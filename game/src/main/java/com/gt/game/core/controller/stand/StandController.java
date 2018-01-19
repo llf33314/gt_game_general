@@ -358,6 +358,25 @@ public class StandController extends BaseController {
             return ResponseDTO.createByError();
         }
     }
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+    })
+    @ApiOperation(value = "删除用户信息", notes = "删除用户信息")
+    @RequestMapping(value = "/removeStandJoinRecord", method = RequestMethod.POST)
+    protected ResponseDTO removeStandJoinRecord( @RequestBody @ApiParam("请求参数") StandRecordIdReq standRecordIdReq,
+                                              HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO responseDTO = standService.removeStandJoinRecord(busUser,standRecordIdReq);
+            return responseDTO;
+        } catch (StandException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
 
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),

@@ -100,7 +100,29 @@ export default {
        // 分页获取元宵点灯中奖记录列表 13 
        getWinningList(params) {
         return post(`${base}/getWinningList`, params) 
-       }
+       },
+       // 导出中奖记录  14
+       exportLantern(params) {
+        let url = `${base}/exportLantern` 
+                  + '?actId=' + params.actId 
+                  + '&status=' +  params.status 
+                  + '&type=' + params.type 
+                  + '&snCode=' + params.snCode
+        return url
+       },
+       // 批量删除元宵点灯中奖记录 15
+       delLanternWinning(params) {
+        return post(`${base}/delLanternWinning`, params) 
+       },
+       // 中奖记录发放奖品 16
+       editLanternApply(params) {
+        return post(`${base}/editLanternApply`, params) 
+       },
+       // 统计元宵点灯活动总数 17 
+       countActivity(params) {
+        return post(`${base}/countActivity`, params) 
+       },
+
 }
 
 

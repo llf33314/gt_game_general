@@ -401,15 +401,9 @@ export default {
         }
         }, 
     //奖项设置--新增奖品==============================================
-        addForm4() {
-        this.ruleForm4.push({
-            name0: "",
-            name1: "",
-            name2: "",
-            name3: "",
-            name4: ""
-        });
-        },
+        addForm4(){ 
+        this.ruleForm4.push({name0: "", name1: "", name2: "", name3: "", name5: []},)
+    },
     //奖项设置--删除奖品==============================================
         delForm4(val) {
         this.ruleForm4.splice(val, 1);
@@ -508,14 +502,14 @@ export default {
                             prizeName :this.ruleForm4[i].name2,//名称
                             num :Number(this.ruleForm4[i].name3),//数量
                             // probabiliy :this.ruleForm4[i].name4,  //概率
-                            qixiPrizeImgReqs :[]//图片
+                            goldtreePrizeImgReqs :[]//图片
                         }
                         if(arr4.type==4){
                             for(var j=0;j<this.ruleForm4[i].name5.length;j++){
                                 var imgarr={
                                     imgUrl:this.ruleForm4[i].name5[j]
                                 }
-                            arr4.qixiPrizeImgReqs .push(imgarr)
+                            arr4.goldtreePrizeImgReqs .push(imgarr)
                             } 
                         } 
                         newPrize.push(arr4)
@@ -545,10 +539,10 @@ export default {
                 receiveType             :this.ruleForm3.type.toString(), //兑奖方式
                 phone                   :this.ruleForm3.phone,  
                 cashPrizeInstruction    :this.ruleForm3.desc,  
-                qixiAddressReqs         :newAddr, 
+                goldtreeAddressReqs         :newAddr, 
             //奖项设置
                 prizeSetInstruction     :this.explain,  
-                qixiPrizeReqs           :newPrize, 
+                goldtreePrizeReqs           :newPrize, 
             };
             console.log(data, 123);
             saveAct(data).then(data => {
