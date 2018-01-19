@@ -497,7 +497,7 @@ export default {
             this.ruleForm1.name=data.data.actName
             this.ruleForm1.name1=[data.data.activityBegintime,data.data.activityEndtime]  
             this.ruleForm1.musicUrl=data.data.musicUrl  
-            this.ruleForm1.library=data.data.bankId  
+            this.ruleForm1.library=Number(data.data.bankId) 
             if(data.data.musicUrl){
                 this.ruleForm1.music = data.data.musicUrl.split("/")[data.data.musicUrl.split("/").length-1]
             }              
@@ -514,9 +514,9 @@ export default {
             this.ruleForm3.desc=data.data.cashPrizeInstruction 
             //兑奖地址  
             var newaddr = [];
-            for (var i = 0; i < data.data.standPrizeReqs.length; i++) {
+            for (var i = 0; i < data.data.standAddressReqs.length; i++) {
                 var newabc1 = {
-                list  : data.data.standPrizeReqs[i].address,  
+                list  : data.data.standAddressReqs[i].address,  
                 };
                 newaddr.push(newabc1);  
             } 
