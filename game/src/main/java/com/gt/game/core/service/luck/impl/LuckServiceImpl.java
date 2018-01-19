@@ -283,10 +283,11 @@ public class LuckServiceImpl implements LuckService {
     public ResponseDTO removeLuck(WxPublicUsers busUser, LuckIdReq luckIdReq) {
         LuckMain luckMain = luckMainService.selectById(luckIdReq.getId());
         if(CommonUtil.isNotEmpty(luckMain)){
-            if(luckMain.getLuckBeginTime().getTime() < new Date().getTime() && luckMain.getLuckEndTime().getTime() > new Date().getTime()){
+            Date date = new Date();
+            if(luckMain.getLuckBeginTime().getTime() < date.getTime() && luckMain.getLuckEndTime().getTime() > date.getTime()){
                 throw new LuckException(ResponseEnums.LOVEARROW_HAS10);
             }
-            if(DateTimeKit.addDate(luckMain.getLuckEndTime(),luckMain.getLuckCashDay()).getTime() > new Date().getTime()){
+            if(luckMain.getLuckBeginTime().getTime() > date.getTime() && DateTimeKit.addDate(luckMain.getLuckEndTime(),luckMain.getLuckCashDay()).getTime() > date.getTime()){
                 throw new LuckException(ResponseEnums.LOVEARROW_HAS12);
             }
             List<LuckWinning> luckWinnings = luckWinningService.selectList(

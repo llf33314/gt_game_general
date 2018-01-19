@@ -16,7 +16,7 @@
             <el-step title="新建完成"></el-step>
         </el-steps>
         <!-- 基础设置 -->
-        <div v-if="this.active==0" class="mt40">
+        <div v-show="this.active==0" class="mt40">
           <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="120px" class="demo-ruleForm">
                 <el-form-item label="活动名称：" prop="name">
                     <el-input class="w_demo" v-model="ruleForm1.name"></el-input>
@@ -59,7 +59,7 @@
           </el-form> 
         </div>
         <!-- 规则设置 -->
-        <div v-if="this.active==1" class="mt40">
+        <div v-show="this.active==1" class="mt40">
             <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="150px" class="mt40 demo-ruleForm">
                 <el-form-item label="关注二维码：" prop="code">
                   <gt-material prop="url" :url="ruleForm2.code" v-on:getChangeUrl="getChangeUrl2" width="72" height="72"></gt-material>
@@ -78,7 +78,7 @@
             </el-form> 
         </div> 
         <!-- 兑奖设置 -->
-        <div v-if="this.active==2" class="mt40">
+        <div v-show="this.active==2" class="mt40">
             <el-form :model="ruleForm3" :rules="rules3" ref="ruleForm3" label-width="120px" class="mt40 demo-ruleForm">
                 <el-form-item label="兑奖时间：" prop="date">
                     <el-date-picker class="w_demo" v-model="ruleForm3.date" :picker-options="pickerOptions" type="daterange" placeholder="选择日期范围">
@@ -108,7 +108,7 @@
             </el-form> 
         </div>
         <!-- 奖项设置 -->
-        <div v-if="this.active==3" class="mt40">
+        <div v-show="this.active==3" class="mt40">
             <div class="gt-gray-region mt20" style="color:#666;line-height:20px">
                 <p>奖品类型：奖品的内容;奖品单位：奖品的数量货内容；奖项数量:该奖品的可领取次数</p>
                 <p>如：奖品类型：粉币；奖品数额：2；奖项名称：粉币；奖项数量：3；中奖概率：12</p> 
@@ -195,6 +195,7 @@ import {
 export default {
   data() {
     let iiPass = (rule, value, callback) => {
+        console.log('111111', this.ruleForm3.phone)
       if (!this.ruleForm3.phone) {
         return callback(new Error("联系电话不能为空"));
       }else if(!(/^1[34578]\d{9}$/.test(value)) && !/^([0-9]{3,4}-)?[0-9]{7,8}$/.test(value)){ 
@@ -238,42 +239,22 @@ export default {
         name1: [{required: true, type: "array",message: "游戏时间不能为空", trigger: "blur" }] 
       },
       ruleForm2: {
-        code: "",
-        time: "",
-        duihuan:"",
+        code: "", 
         manTotalChance:"",
-        manDayChance:"", 
-        fenbi:"",
-        jifen:"",
-        desc: "", 
-        msgModel:"",
-        msg:1
+        manDayChance:"",  
+        desc: "",  
       },
       rules2: {
-        time: [ 
-          { required: true,validator: timePass,  trigger: "blur,change" }
-        ], 
-        duihuan: [
-          { required: true,  message: "请填写元宝兑换金币比例", trigger: "blur" } 
-        ], 
         manTotalChance: [
           { required: true,  message: "请填写每人免费游戏次数", trigger: "blur" } 
         ], 
         manDayChance: [
           { required: true,  message: "请填写每人每天免费游戏次数", trigger: "blur" } 
         ],
-        fenbi: [
-          { required: true,  message: "请填写每天游戏小号的粉币或积分", trigger: "blur" } 
-        ],
-        msg: [ 
-          { required: true}
-        ], 
         desc: [
           { required: true,  message: "请填写活动规则", trigger: "blur" } 
         ],
-        msgModel: [
-          { required: true, type: 'string',  message: "请选择消息模块", trigger: "blur" } 
-        ], 
+      
       },
       ruleForm3: {
         date:"",
@@ -286,7 +267,7 @@ export default {
         list: [{ required: true }],
         date: [{ required: true,type: 'array', message: "兑奖时间不能为空" }],
         type: [{ required: true,type: 'array', message: "兑奖方式不能为空", trigger: "blur" }], 
-        phone:[{ required: true,type: 'text', validator:iiPass,trigger: "blur" }], 
+        phone:[{ required: true,type: 'text', validator:iiPass,trigger: "blur" }],  
         desc: [{ required: true,message: "兑奖说明不能为空", trigger: "blur" }], 
       },
       options: [],
@@ -394,6 +375,7 @@ export default {
         this.ruleForm4.splice(val, 1); 
     },
     next(formName) {
+      console.log(this.ruleForm3)
       this.$refs[formName].validate(valid => {
         if (valid) { 
           this.active++;

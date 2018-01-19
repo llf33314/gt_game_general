@@ -53,12 +53,7 @@ getQuesbank,removeStandQuesbank
         showDetailData:[]
       };
     },
-    methods: {
-        showDetailBtn(val){
-            this.showDetail=true
-            this.showDetailData=val
-            console.log(this.showDetailData,852222); 
-        },
+    methods: { 
       //题库列表---------------------------star
       getData(){ 
         getQuesbank().then(data=>{
@@ -95,7 +90,10 @@ getQuesbank,removeStandQuesbank
       },
       addAskBtn(){
         this.$router.push({path:'/standStill/addQuest'});
-      },      
+      },    
+      showDetailBtn(val){
+           this.$router.push({path: '/standStill/editQuest', query: {id: val}}); 
+      },  
       test(){
         console.log(123)
       },

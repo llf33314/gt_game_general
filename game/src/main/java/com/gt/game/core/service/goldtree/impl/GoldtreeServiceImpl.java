@@ -380,6 +380,9 @@ public class GoldtreeServiceImpl implements GoldtreeService {
         GoldtreeMain GoldtreeMain = null;
         Double num = 0.0;
         int f = 0;
+        if(GoldtreeSaveReq.getCashPrizeBeginTime().getTime() < GoldtreeSaveReq.getActivityBeginTime().getTime()){
+            throw new GoldtreeException(ResponseEnums.COMMON_HAS16);
+        }
         if(GoldtreeSaveReq.getId() == 0){//新增
             GoldtreeMain = new GoldtreeMain();
             BeanUtils.copyProperties(GoldtreeSaveReq,GoldtreeMain);
@@ -436,7 +439,7 @@ public class GoldtreeServiceImpl implements GoldtreeService {
                 BeanUtils.copyProperties(GoldtreePrizeReq,GoldtreePrize);
                 GoldtreePrize.setActId(GoldtreeMain.getId());
                 goldtreePrizeService.insert(GoldtreePrize);
-                if(GoldtreePrizeReq.getGoldtreePrizeImgReqs().size() > 0){
+                if(CommonUtil.isNotEmpty(GoldtreePrizeReq.getGoldtreePrizeImgReqs()) && GoldtreePrizeReq.getGoldtreePrizeImgReqs().size() > 0){
                     for(GoldtreePrizeImgReq GoldtreePrizeImgReq : GoldtreePrizeReq.getGoldtreePrizeImgReqs()){
                         GoldtreePrizeImg GoldtreePrizeImg = new GoldtreePrizeImg();
                         BeanUtils.copyProperties(GoldtreePrizeImgReq,GoldtreePrizeImg);

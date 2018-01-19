@@ -29,8 +29,7 @@ public class MpGenerator {
     // 需要生成的表----------------------------------------------------------改这里
 //	public static final  String[] generatorTableName = new String[] {"t_wx_channels_main","t_wx_channels_type"};
     public static final  String[] generatorTableName = new String[] {
-    		"t_wx_activity_countmoney_courecord", "t_wx_activity_countmoney_detail", "t_wx_activity_countmoney_main",
-	         "t_wx_activity_countmoney_probabilityset","t_wx_activity_countmoney_record"};
+    		"t_wx_red_packets", "t_wx_red_packets_receiver"};
 //    public static final  String[] generatorTableName = new String[] {"t_wx_activity_vote_award_img", "t_wx_activity_vote_banner", "t_wx_activity_vote_detil",
 //			"t_wx_activity_vote_group", "t_wx_activity_vote_main", "t_wx_activity_vote_main_img", "t_wx_activity_vote_rank", "t_wx_activity_vote_rank_record",
 //			"t_wx_activity_vote_report", "t_wx_activity_vote_sign", "t_wx_activity_vote_sign_image", "t_wx_activity_vote_sign_music", "t_wx_activity_vote_sign_pic",
@@ -39,7 +38,7 @@ public class MpGenerator {
     // 作者
     private static final String   author             = "zwq";
     // 去除表前缀 例如：bus_user 填入bus 生成的 user
-    public static final  String[] tablePrefix        = new String[] {"t_wx_activity_"};
+    public static final  String[] tablePrefix        = new String[] {"t_wx_"};
     // 生成的包路径
     public static final  String   packagePath        = "com.gt.game.core1";
     public static final  String   moduleName         = "";

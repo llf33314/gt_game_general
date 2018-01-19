@@ -19,7 +19,7 @@
             <el-step title="新建完成"></el-step>
         </el-steps>
         <!-- 基础设置 -->
-        <div v-if="this.active==0" class="mt40">
+        <div v-show="this.active==0" class="mt40">
           <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="120px" class="demo-ruleForm">
                 <el-form-item label="活动名称：" prop="name">
                     <el-input class="w_demo"  placeholder="请输入活动名称" v-model="ruleForm1.name"></el-input>
@@ -53,7 +53,7 @@
         </el-form> 
         </div>
         <!-- 规则设置 -->
-        <div v-if="this.active==1" class="mt40">
+        <div v-show="this.active==1" class="mt40">
             <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="150px" class="mt40 demo-ruleForm">
                 <el-form-item label="关注二维码：" prop="code">
                   <gt-material prop="url" :url="ruleForm2.code" v-on:getChangeUrl="getChangeUrl2" width="72" height="72"></gt-material>
@@ -62,8 +62,8 @@
                 <el-form-item label="游戏总数：" prop="manTotalChance">
                     <el-input class="w25_demo mr10" type="number" v-model="ruleForm2.manTotalChance"></el-input>次/人
                 </el-form-item> 
-                <el-form-item label="每天次数：" prop="manDayChance">
-                    <el-input class="w25_demo mr10" type="number" v-model="ruleForm2.manDayChance"></el-input>次/人
+               <el-form-item label="每天次数：" prop="manDayChance">
+                    <el-input class="w25_demo mr10" type="number"   placeholder="请输入每天游戏次数" v-model="ruleForm2.manDayChance"></el-input>次/人
                 </el-form-item>    
                 <el-form-item label="活动规则：" prop="desc">
                     <el-input class="w_demo" :maxlength="300"  type="textarea" v-model="ruleForm2.desc" :rows="3" placeholder="请填写活动规则"></el-input>
@@ -72,7 +72,7 @@
             </el-form> 
         </div> 
         <!-- 兑奖设置 -->
-        <div v-if="this.active==2" class="mt40">
+        <div v-show="this.active==2" class="mt40">
             <el-form :model="ruleForm3" :rules="rules3" ref="ruleForm3" label-width="120px" class="mt40 demo-ruleForm">
                 <el-form-item label="兑奖时间：" prop="date">
                     <el-date-picker class="w_demo" v-model="ruleForm3.date" :picker-options="pickerOptions" type="daterange" placeholder="选择日期范围">
@@ -102,7 +102,7 @@
             </el-form> 
         </div>
         <!-- 奖项设置 -->
-        <div v-if="this.active==3" class="mt40">
+        <div v-show="this.active==3" class="mt40">
             <div>
                 <span style="color: #333; position:absolute;margin-top:0px;" >奖品说明：</span>
                 <el-input type="textarea" class="bw ml120"  :maxlength="300"  :rows="3" placeholder="请输入兑奖说明" v-model="explain">
@@ -190,11 +190,10 @@ import {
 export default {
   data() {
     let iiPass = (rule, value, callback) => {
-      if (!this.ruleForm3.phone) {
+      if (!value) {
         return callback(new Error("联系电话不能为空"));
       }else if(!(/^1[34578]\d{9}$/.test(value)) && !/^([0-9]{3,4}-)?[0-9]{7,8}$/.test(value)){ 
-        return callback("联系电话有误，请重填");  
-        return false; 
+        return callback("联系电话有误，请重填");   
       }  else {
         callback();
       }
@@ -230,15 +229,12 @@ export default {
         name1: [{required: true, type: "array",message: "游戏时间不能为空", trigger: "blur" }] 
       },
       ruleForm2: {
-        code: "",
+        code: "", 
         manTotalChance:"",
-        manDayChance:"", 
-        desc: "", 
+        manDayChance:"",  
+        desc: "",  
       },
-      rules2: {
-        time: [ 
-          { required: true,validator: timePass,  trigger: "blur,change" }
-        ],  
+      rules2: { 
         manTotalChance: [
           { required: true,  message: "请填写每人免费游戏次数", trigger: "blur" } 
         ], 
@@ -247,8 +243,7 @@ export default {
         ], 
         desc: [
           { required: true,  message: "请填写活动规则", trigger: "blur" } 
-        ],  
-        
+        ] 
       },
       ruleForm3: {
         date:"",
@@ -256,13 +251,13 @@ export default {
         addrRow:[{list:""},{list:""}],
         phone:"",
         desc:""
-      },
+      }, 
       rules3: {
         list: [{ required: true }],
         date: [{ required: true,type: 'array', message: "兑奖时间不能为空" }],
         type: [{ required: true,type: 'array', message: "兑奖方式不能为空", trigger: "blur" }], 
         phone:[{ required: true,type: 'text', validator:iiPass,trigger: "blur" }], 
-        desc: [{ required: true,message: "兑奖说明不能为空", trigger: "blur" }], 
+        desc: [{ required: true,message: "兑奖说明不能为空", trigger: "blur" }]
       },
       explain: "",
       options: [],

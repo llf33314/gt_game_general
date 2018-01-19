@@ -26,7 +26,7 @@ export const givePrize        = params => { return axios.post(`${base}/editSeago
 /*用户信息*/
 export const getUserList     = params => { return axios.post(`${base}/getStandJoinRecord`, params).then(res => res.data) }
 export const getUserDetail     = params => { return axios.post(`${base}/getStandJoinDetail`, params).then(res => res.data) }
-export const delUser     = params => { return axios.post(`${base}/getStandJoinDetail`, params).then(res => res.data) } 
+//export const delUser     = params => { return axios.post(`${base}/getStandJoinDetail`, params).then(res => res.data) } 
 
 /*新增，编辑*/
 export const saveAct      = params => { return axios.post(`${base}/saveStand`, params).then(res => res.data) }
@@ -38,7 +38,7 @@ export const getQuesbank     = params => { return axios.post(`${base}/getStandQu
 
 //保存题目
 export const saveStandQuestion    = params => { return axios.post(`${base}/saveStandQuestion`, params).then(res => res.data) }
-//删除题目 removeStandQuestion
+//删除题目  
 export const removeStandQuestion    = params => { return axios.post(`${base}/removeStandQuestion`, params).then(res => res.data) }
 
 // removeStandQuestion
