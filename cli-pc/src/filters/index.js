@@ -186,3 +186,61 @@ export function chioceName(key) {
       break;
   }
 }
+
+// 中奖记录 - 奖品类型
+export function prizeType (val) {
+  switch (val) {
+    case 1 :
+      return '粉币';
+      break;
+    case 2 :
+      return '手机流量';
+      break;
+    case 3 :
+      return '手机话费';
+      break;
+    case 4 :
+      return '实体物品';
+      break;
+    case 5 :
+      return '谢谢参与';
+      break;
+    case 6 :
+      return '积分';
+      break;
+    case 7 :
+      return '优惠券';
+      break;
+  }
+}
+
+// 中奖记录 - 兑奖状态
+export function prizeStatus (val) {
+  switch (val) {
+    case 1 :
+      return '未兑奖';
+      break;
+    case 2 :
+      return '已兑奖';
+      break;
+    case 3 :
+      return '已提交';
+      break;
+  }
+}
+// 中奖记录 - 领取方式
+export function drawingMethod(val) {
+  switch (val) {
+    case 1 :
+      return '到店领取';
+      break;
+    case 2 :
+      return '邮寄';
+      break;
+    case 3 :
+      return '直接兑奖';
+      break;
+  }
+
+}
+

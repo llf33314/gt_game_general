@@ -100,6 +100,15 @@ export default {
        // 分页获取元宵点灯中奖记录列表 13 
        getWinningList(params) {
         return post(`${base}/getWinningList`, params) 
+       },
+       // 导出中奖记录  /app/lantern/exportLantern
+       exportLantern(params) {
+        let url = `${base}/exportLantern` 
+                  + '?actId=' + params.actId 
+                  + '&status=' +  params.status 
+                  + '&type=' + params.type 
+                  + '&snCode=' + params.snCode
+        return url
        }
 }
 

@@ -11,46 +11,49 @@
     </el-breadcrumb> 
     <div class="gt-gray-region mb20">  
         <span class="padding-left-md ml30 mb10">
-            <el-select v-model="prizeType"  placeholder="请选择奖品类型" @change="test()"> 
-                <el-option label="粉币"       :value="1"></el-option>
-                <el-option label="手机流量"   :value="2"></el-option>
-                <el-option label="手机话费"   :value="3"></el-option>
-                <el-option label="实体物品"   :value="4"></el-option>
-                <el-option label="谢谢参与"   :value="5"></el-option> 
-                <el-option label="积分"       :value="6"></el-option> 
+            <el-select v-model="type"  placeholder="请选择奖品类型"> 
+                 <el-option  v-for="item in options.type" :label="item.label"  :value="item.value"></el-option>
             </el-select>
         </span> 
         <span class="padding-left-md ml10 mb10">
-                <el-select v-model="prizeState" placeholder="请选择状态"  @change="test()"> 
-                    <el-option label="已提交"   :value="1"></el-option>
-                    <el-option label="未兑奖"   :value="2"></el-option>
-                    <el-option label="已兑奖"   :value="3"></el-option> 
+                <el-select v-model="status" placeholder="请选择状态"> 
+                  <el-option  v-for="item in options.status" :label="item.label" :value="item.value"></el-option>
                 </el-select>
         </span> 
         <span class="padding-left-md ml10 mb10">
-            <el-input placeholder="请输入兑奖码" icon="search" v-model="keyWord" style="width:250px"  :on-icon-click="test" @blur="test($event)"> 
+            <el-input placeholder="请输入兑奖码" icon="search" v-model="snCode" style="width:250px"  @keyup.native.enter="searchFuc"  :on-icon-click="searchFuc" :maxlength="25"> 
             </el-input>
         </span> 
         <div class="h10"></div>
-        <el-button type="primary" @click="test()" class="ml30">导出</el-button> 
+        <el-button type="primary" @click="exportFuc" class="ml30">导出</el-button> 
     </div> 
     <div class="gt-content"> 
         <gt-null-data v-if="initRequest && tableData.length < 1">还没有相关中奖纪录</gt-null-data>  
         <el-table v-else :data="tableData">
-          <el-table-column prop="actName" label="奖项名称">              
+          <el-table-column prop="prizeName" label="奖项名称">              
           </el-table-column>
-          <el-table-column prop="startTime" label="奖品类型">             
+          <el-table-column prop="type" label="奖品类型">   
+            <template slot-scope="scope">
+                 {{ scope.row.type | prizeType }}  
+            </template>          
           </el-table-column>
-          <el-table-column prop="endTime" label="兑奖时间">            
+          <el-table-column prop="cashTime" label="兑奖时间">  
+            <template slot-scope="scope">
+                 {{ $util.DateFormat(scope.row.cashTime, 'yyyy-MM-dd hh:mm:ss') }}  
+            </template>           
           </el-table-column>
-          <el-table-column prop="state" label="状态">             
+          <el-table-column prop="status" label="状态">  
+            <template slot-scope="scope">
+              {{ scope.row.status | prizeStatus }}
+            </template>
+
           </el-table-column>
-          <el-table-column prop="state" label="兑奖码">             
+          <el-table-column prop="snCode" label="兑奖码">             
           </el-table-column>
           <el-table-column prop="order_option"  label="操作">
             <template slot-scope="scope"> 
-              <el-button class="gt-button-normal blue" @click="test(scope.row.id)">详情</el-button>  
-              <el-button class="gt-button-normal blue"      @click="test(scope.row.id)">发放奖品</el-button> 
+              <el-button class="gt-button-normal blue" @click="test(scope.row.id)" v-if="scope.row.status == 3">发放奖品</el-button>
+              <el-button class="gt-button-normal blue" @click="detail(scope.row)">详情</el-button>  
             </template>
           </el-table-column>
         </el-table> 
@@ -58,12 +61,17 @@
           <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pageSize" layout="prev, pager, next, jumper" :total="totalNums">
           </el-pagination>
         </div>
+
+        <!-- 详情 -->
+        <el-dialog title="详情" :visible.sync="DetailVisible" class="detail-dialog"> 
+            <gt-prize-detail :data="DetailData"></gt-prize-detail>
+        </el-dialog>
     </div>
 </div>
 </section>
 </template>
 <script>
-import api from '../api/api'
+import api from "../api/api";
 export default {
   data() {
     return {
@@ -73,24 +81,73 @@ export default {
       initPageSize: 10,
       pageSize: 10,
       totalNums: 0,
-      snCode: '',
+      snCode: "",
       status: -1,
       type: -1,
 
-      prizeType: "",
-      prizeState: "",
-      keyWord: "",
       tableData: [
-        
-      ]
+        {
+          address: "string",
+          addressName: "string",
+          cashTime: "1516341837149",
+          id: 0,
+          memberId: 0,
+          memberName: "string",
+          memberPhone: "string",
+          nickname: "string",
+          prizeName: "string",
+          prizeUnit: 0,
+          receiveType: 2,
+          score: 0,
+          snCode: "string",
+          status: 2,
+          type: 1
+        }
+      ],
+      options: {
+        type: [
+          { label: "全部", value: -1 },
+          { label: "粉币", value: 1 },
+          { label: "手机流量", value: 2 },
+          { label: "手机话费", value: 3 },
+          { label: "实体物品", value: 4 },
+          { label: "谢谢参与", value: 5 },
+          { label: "积分", value: 6 }
+        ],
+        status: [
+          { label: "全部", value: -1 },
+          { label: "已提交", value: 1 },
+          { label: "未兑奖", value: 2 },
+          { label: "已兑奖", value: 3 }
+        ]
+      },
+      // 详情
+      DetailVisible: false,
+      DetailData: {}
     };
   },
   methods: {
-    test() {
-      console.log(123);
+    searchFuc() {
+      this.currentPage = this.initCurrentPage;
+      this.fetchData();
+    },
+    exportFuc() {
+      let params = {
+        actId: this.$route.actId,
+        status: this.status,
+        type: this.type,
+        snCode: this.snCode
+      }
+      // location.href = api.exportLantern(params)
+       window.open(api.exportLantern(params));  
+    },
+    detail(row) {
+       this.DetailData = row 
+       this.DetailVisible = true
     },
     handleCurrentChange(val) {
-      console.log(val);
+      this.currentPage = val;
+      this.fetchData();
     },
     fetchData(initRequest) {
       initRequest ? (this.initRequest = true) : (this.initRequest = false);
@@ -104,12 +161,14 @@ export default {
       };
       api.getWinningList(params).then(res => {
         if (res.code == 100) {
+          // this.tableData = res.data
+          // this.totalNums = res.page.totalNums
         }
       });
     }
   },
   created() {
-    this.fetchData(true)
+    this.fetchData(true);
   },
   mounted() {},
   filters: {}
