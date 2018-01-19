@@ -359,6 +359,12 @@ public class GoldRushServiceImpl  implements GoldRushService {
         GoldRushMain GoldRushMain = null;
         Double num = 0.0;
         int f = 0;
+        if(GoldRushSaveReq.getActivityBeginTime() == null){
+            throw new GoldRushException(ResponseEnums.COMMON_HAS17);
+        }
+        if(GoldRushSaveReq.getCashPrizeBeginTime().getTime() < GoldRushSaveReq.getActivityBeginTime().getTime()){
+            throw new GoldRushException(ResponseEnums.COMMON_HAS16);
+        }
         if(GoldRushSaveReq.getId() == 0){//新增
             GoldRushMain = new GoldRushMain();
             BeanUtils.copyProperties(GoldRushSaveReq,GoldRushMain);
