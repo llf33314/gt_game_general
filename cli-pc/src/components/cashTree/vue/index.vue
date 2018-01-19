@@ -165,7 +165,7 @@ import {
       },
       //中奖记录
       record(val){
-         this.$router.push({path: '/robIngots/prizeRecord', query: {id: val}});
+         this.$router.push({path: '/cashTree/prizeRecord', query: {id: val}});
       },
       //核销授权
       impower(val){
