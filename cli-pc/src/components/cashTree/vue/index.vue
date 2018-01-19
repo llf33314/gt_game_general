@@ -149,7 +149,7 @@ import {
                     this.$message({ message: "操作成功", type: "success"}); 
                     this.getdata();
                 } else {
-                this.$message.errorthis.$message.error(data.msg);;
+                this.$message.error(data.msg);
                 }
             });
             }).catch(() => {
@@ -169,17 +169,14 @@ import {
       },
       //核销授权
       impower(val){
-         this.$router.push({path: '/robIngots/cancelOut', query: {id: val}});
+         this.$router.push({path: '/cashTree/cancelOut', query: {id: val}});
       },
       addActive(){
         this.$router.push('/cashTree/addAct')
       },
       editActive(val){
-        this.$router.push({path:'/robIngots/editAct', query: {id: val}});
+        this.$router.push({path:'/cashTree/editAct', query: {id: val}});
       },
-      test(){
-        console.log(123)
-      }
     },
     mounted() {
       this.getdata();

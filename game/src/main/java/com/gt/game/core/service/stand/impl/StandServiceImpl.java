@@ -386,8 +386,8 @@ public class StandServiceImpl implements StandService {
             BeanUtils.copyProperties(standSaveReq,standtotheendMain);
             standtotheendMain.setBusId(busUser.getId());
             standtotheendMain.setCreatetime(new Date());
-            standtotheendMain.setFollowQrCode(standtotheendMain.getFollowQrCode().split("/upload").length > 1
-                    ?standtotheendMain.getFollowQrCode().split("/upload")[1]:standtotheendMain.getFollowQrCode());
+//            standtotheendMain.setFollowQrCode(standtotheendMain.getFollowQrCode().split("/upload").length > 1
+//                    ?standtotheendMain.getFollowQrCode().split("/upload")[1]:standtotheendMain.getFollowQrCode());
             standtotheendMainService.insert(standtotheendMain);
         }else{//编辑
             standtotheendMain = standtotheendMainService.selectById(standSaveReq.getId());
@@ -401,8 +401,8 @@ public class StandServiceImpl implements StandService {
                 throw new StandException(ResponseEnums.DIFF_USER);
             }
             BeanUtils.copyProperties(standSaveReq,standtotheendMain);
-            standtotheendMain.setFollowQrCode(standtotheendMain.getFollowQrCode().split("/upload").length > 1
-                    ?standtotheendMain.getFollowQrCode().split("/upload")[1]:standtotheendMain.getFollowQrCode());
+//            standtotheendMain.setFollowQrCode(standtotheendMain.getFollowQrCode().split("/upload").length > 1
+//                    ?standtotheendMain.getFollowQrCode().split("/upload")[1]:standtotheendMain.getFollowQrCode());
             standtotheendMainService.updateById(standtotheendMain);
             //删除
             //兑奖地址

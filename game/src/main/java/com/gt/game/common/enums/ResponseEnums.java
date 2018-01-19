@@ -214,6 +214,8 @@ public enum ResponseEnums {
     LUCK_HAS3(403,"活动已经开始，不允许操作"),
     LUCK_HAS4(404,"请添加奖品"),
     LUCK_HAS5(405,"至少需要一个谢谢参与奖项"),
+    LUCK_HAS6(406,"活动还未开始"),
+    LUCK_HAS7(407,"活动已结束"),
 
     //端午赛龙舟响应
     DRAGONBOAT_HAS1(401,"删除活动失败！"),

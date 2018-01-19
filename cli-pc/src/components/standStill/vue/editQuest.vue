@@ -82,7 +82,8 @@
         <gt-null-data v-if="this.tableData.data.length==0">没有相关数据</gt-null-data> 
 
         <div class="h80"></div> 
-        <div class="btnRow"  v-if="this.active!=5">   
+        <div class="btnRow">   
+            <el-button   @click="backUrl()" >返回</el-button> 
             <el-button type="primary" @click="submit()" >保存</el-button>   
         </div>   
     </div>
@@ -91,7 +92,7 @@
 </template>
 <script>
 import {  
-getQuesbank,saveQuesbank,saveStandQuestion
+getQuesbank,saveQuesbank,saveStandQuestion,removeStandQuestion
 }from './../api/api'
   export default{
     data() {
@@ -146,15 +147,7 @@ getQuesbank,saveQuesbank,saveStandQuestion
         },
       };
     },
-    methods: {
-  // "bankId": 0,
-  // "id": 0,
-  // "optionA": "string",
-  // "optionB": "string",
-  // "optionC": "string",
-  // "optionD": "string",
-  // "quesTitle": "string",
-  // "rightAnswer": "string"
+    methods: { 
       saveBtn(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -173,6 +166,8 @@ getQuesbank,saveQuesbank,saveStandQuestion
               saveStandQuestion(params).then(data=>{
                 if (data.code == 100) { 
                     this.showAdd=false
+                    this.$message({ message: "操作成功", type: "success"}); 
+                    this.getData();
                   } else {
                     this.$message.error(data.msg);;
                   }
@@ -211,7 +206,34 @@ getQuesbank,saveQuesbank,saveStandQuestion
         }); 
       }, 
       submit(){
-        
+          var params={};
+          params.bankName=this.ruleForm.name
+          params.id=0
+          saveQuesbank(params).then(data=>{
+          if (data.code == 100) {  
+                this.$message({ message: "操作成功", type: "success"}); 
+                this.getData();
+            } else {
+              this.$message.error(data.msg);;
+            }
+          }).catch(() => {
+              this.$message({ type: "info", message: "网络问题，请刷新重试~" });
+          });
+      },
+      //删除
+      handOut(val){
+        var id=val
+        console.log(val);
+          removeStandQuestion({id}).then(data=>{
+          if (data.code == 100) {  
+                this.$message({ message: "操作成功", type: "success"}); 
+                this.getData();
+            } else {
+              this.$message.error(data.msg);;
+            }
+          }).catch(() => {
+              this.$message({ type: "info", message: "网络问题，请刷新重试~" });
+          });
       },
       //题库列表---------------------------star
       getData(){ 
@@ -231,6 +253,9 @@ getQuesbank,saveQuesbank,saveStandQuestion
       test(){
         console.log(123)
       },
+        backUrl(){
+         window.history.go(-1);
+    },
       handleCurrentChange(val){
         console.log(val)
       }
