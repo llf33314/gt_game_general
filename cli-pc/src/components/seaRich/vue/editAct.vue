@@ -462,9 +462,9 @@ export default {
                     probabiliy :this.ruleForm4[i].name4,  //概率
                     loveArrowPrizeImgReqs:[]//图片
                 }
-                 if (arr4.type == "粉币"){
+                if (arr4.type == "粉币"){
                     arr4.type =1
-                 }else if (arr4.type == "手机流量"){
+                }else if (arr4.type == "手机流量"){
                     arr4.type =2 
                 }else if (arr4.type == "实体物品"){
                     arr4.type =4 
@@ -509,10 +509,8 @@ export default {
              //奖项设置 
             loveArrowPrizeReqs:loveArrowPrizeReqs,  
         };
-        console.log(data,123); 
-        
-         saveAct(data).then(data=>{
-             
+        console.log(data,123);  
+         saveAct(data).then(data=>{ 
           if (data.code == 100) { 
               this.$message({ message: "操作成功", type: "success"}); 
           } else {

@@ -1,5 +1,4 @@
-<style lang="less">
-
+<style lang="less"> 
 </style>
 <template>
 <section>
@@ -7,17 +6,15 @@
     <el-breadcrumb separator="/" class="gt-crumbs">
       <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
       <el-breadcrumb-item :to="{ path:'/standStill/index' }">一站到底</el-breadcrumb-item>  
-      <el-breadcrumb-item>创建活动</el-breadcrumb-item>   
-    </el-breadcrumb> 
-
+      <el-breadcrumb-item>编辑活动</el-breadcrumb-item>   
+    </el-breadcrumb>  
     <div class="gt-content">
-        <el-steps :active="active" :center="true" :align-center="true" class="bbtom pb20">
-            <el-step title="基础设置"></el-step>
-            <el-step title="规则设置"></el-step>
-            <el-step title="兑奖设置"></el-step>
-            <el-step title="奖项设置"></el-step>
-            <el-step title="新建完成"></el-step>
-        </el-steps>
+        <el-tabs v-model="active" type="card">
+            <el-tab-pane label="基础设置" name="0"></el-tab-pane>
+            <el-tab-pane label="规则设置" name="1"></el-tab-pane>
+            <el-tab-pane label="兑奖设置" name="2"></el-tab-pane>
+            <el-tab-pane label="奖项设置" name="3"></el-tab-pane>
+        </el-tabs>
         <!-- 基础设置 -->
         <div v-show="this.active==0" class="mt40">
           <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="120px" class="demo-ruleForm">
@@ -65,7 +62,7 @@
                     <span class="el-upload__tip grey ml10">300个字以内</span>   
                 </el-form-item>   
             </el-form> 
-        </div> 
+        </div>  
         <!-- 兑奖设置 -->
         <div v-show="this.active==2" class="mt40">
             <el-form :model="ruleForm3" :rules="rules3" ref="ruleForm3" label-width="120px" class="mt40 demo-ruleForm">
@@ -147,7 +144,7 @@
                 </template>
                 </el-table-column>
                 <el-table-column label="奖品图片">
-                    <template slot-scope="scope"  v-if="scope.row.name0==4">  
+                    <template slot-scope="scope"   v-if="scope.row.name0==4||scope.row.name0=='实体物品'">  
                         <gt-material v-for="(item,index) in scope.row.name5" :key="index" :prop="scope" :sonIndex="index" selectType="radio" :url="item" @getChangeUrl="getAwardImgList" width="50" height="50" class="mr10"></gt-material>
                         <gt-material :prop="scope" selectType="select"  @getChangeUrl="addAwardImg" width="50" height="50" class="uploadBtn"></gt-material>
                     </template>
@@ -169,13 +166,11 @@
         </div>
         <!-- 按钮 -->
         <div class="h80"></div> 
-        <div class="btnRow"  v-if="this.active!=5">
-            <el-button   @click="upStep()" v-if="this.active!=0">上一步</el-button>
-            <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步1</el-button> 
-            <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
-            <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
-            <el-button type="primary" @click="lastStep()"    :disabled="this.isSubmit"     v-if="this.active==3">保存</el-button>   
-            <el-button type="primary" @click="submit()">打印</el-button>   
+        <div class="btnRow"  v-if="this.active!=5"> 
+            <el-button   @click="backUrl()">返回</el-button>
+            <el-button type="primary" @click="submit()"          v-if="this.active==0||this.active==1">保存</el-button>   
+            <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">保存</el-button>   
+            <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>   
         </div> 
     </div>   
 </div>
@@ -183,7 +178,7 @@
 </template>
 <script>
 import { 
- saveAct,getQuesbank,getPrizeType
+ saveAct,getQuesbank,getPrizeType,getAct
 }from './../api/api'
 export default {
   data() {
@@ -198,8 +193,7 @@ export default {
       }
     }; 
     return {
-      active:0, 
-      isSubmit:false,
+      active:0,  
       Quesbank:[],
       options:[],
       ruleForm1: {
@@ -303,7 +297,7 @@ export default {
       }else {
         callback();
       }
-    },
+    }, 
     addList(){
         this.ruleForm3.addrRow.push({list:""});
     },
@@ -353,7 +347,7 @@ export default {
     next(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) { 
-          this.active++;
+          this.submit();
         } else {
          console.log("error submit!!");
         }
@@ -379,10 +373,7 @@ export default {
       this.submit();
     }, 
     //表单提交--------------------------------------star
-    submit(){ 
-        if(this.isSubmit){
-             this.$message({type: "info", message: "请不要重复提交~" });
-        }else{ 
+    submit(){  
         //兑奖地址
         var newAddr=[];
         if(this.ruleForm3.addrRow){ 
@@ -406,6 +397,19 @@ export default {
                     // probabiliy :this.ruleForm4[i].name4,  //概率
                     standPrizeImgReqs :[]//图片
                 }
+                if (arr4.type == "粉币"){
+                    arr4.type =1
+                }else if (arr4.type == "手机流量"){
+                    arr4.type =2 
+                }else if (arr4.type == "实体物品"){
+                    arr4.type =4 
+                }
+                else if (arr4.type == "积分"){
+                    arr4.type =6
+                }
+                else if (arr4.type == "优惠券"){
+                    arr4.type =7 
+                } 
                 if(arr4.type==4){
                     for(var j=0;j<this.ruleForm4[i].name5.length;j++){
                         var imgarr={
@@ -418,7 +422,7 @@ export default {
             } 
         } 
         const data = {
-            id:0, 
+            id:this.$router.history.current.query.id,
             //基础设置  
             actName           :this.ruleForm1.name, 
             activityBegintime :this.ruleForm1.name1[0],
@@ -442,19 +446,15 @@ export default {
             standPrizeReqs:newPrize,   
         };
         console.log(data,123); 
-        saveAct(data).then(data=>{
-          this.isSubmit=true
+        saveAct(data).then(data=>{ 
           if (data.code == 100) {  
-              this.active=5
-          } else {
-              this.isSubmit=false
+              this.$message({ message: "操作成功", type: "success"}); 
+          } else { 
               this.$message.error(data.msg);
           }
-        }).catch(() => {
-            this.isSubmit=false
+        }).catch(() => { 
             this.$message({type: "info", message: "网络问题，请刷新重试~" });
-        }); 
-        }
+        });  
     },  
     backUrl(){
          window.history.go(-1);
@@ -487,11 +487,88 @@ export default {
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
         }); 
+    },
+     //初始化-------------------
+    getActData(){
+        var id=this.$router.history.current.query.id
+        getAct(id).then(data=>{
+          if (data.code == 100) {
+            //基础设置
+            this.ruleForm1.name=data.data.actName
+            this.ruleForm1.name1=[data.data.activityBegintime,data.data.activityEndtime]  
+            this.ruleForm1.musicUrl=data.data.musicUrl  
+            this.ruleForm1.library=data.data.bankId  
+            if(data.data.musicUrl){
+                this.ruleForm1.music = data.data.musicUrl.split("/")[data.data.musicUrl.split("/").length-1]
+            }              
+            //规则设置 
+            this.ruleForm2.manTotalChance=String(data.data.manDayTotalQuesChance)
+            this.ruleForm2.manDayChance  =String(data.data.manDayChance) 
+            this.ruleForm2.gametime      =String(data.data.answerTime) 
+            this.ruleForm2.jifen         =String(data.data.rightCount)
+            this.ruleForm2.desc         =data.data.actRule
+            //兑奖设置 
+            this.ruleForm3.date=data.data.standCashDay
+            this.ruleForm3.type=data.data.receiveType.split(',')
+            this.ruleForm3.phone=data.data.phone
+            this.ruleForm3.desc=data.data.cashPrizeInstruction 
+            //兑奖地址  
+            var newaddr = [];
+            for (var i = 0; i < data.data.standPrizeReqs.length; i++) {
+                var newabc1 = {
+                list  : data.data.standPrizeReqs[i].address,  
+                };
+                newaddr.push(newabc1);  
+            } 
+            this.ruleForm3.addrRow= newaddr
+            //奖项设置  
+            var newPraise = [];//兑奖
+            for (var i = 0; i < data.data.standPrizeReqs.length; i++) {
+                var newabc1 = {
+                    name0  : data.data.standPrizeReqs[i].type, 
+                    name1  : data.data.standPrizeReqs[i].prizeUnit, 
+                    name2  : data.data.standPrizeReqs[i].prizeName, 
+                    name3  : String(data.data.standPrizeReqs[i].num), 
+                    name4  : data.data.standPrizeReqs[i].probabiliy, 
+                    name5  :[] 
+                };
+                if (newabc1.name0 == 1) {
+                newabc1.name0  = "粉币";
+                }else if(newabc1.name0  == 2){
+                newabc1.name0  = "手机流量"; 
+                }else if(newabc1.name0  == 3){
+                newabc1.name0  = "手机话费"; 
+                }else if(newabc1.name0  == 4){
+                newabc1.name0  = "实体物品";
+                }  else if(newabc1.name0  == 6){
+                newabc1.name0  = "积分";
+                } else if(newabc1.name0  == 7){
+                newabc1.name0  = "优惠券";
+                } 
+                if(newabc1.name0=="实体物品"){
+                    for(var j = 0; j < data.data.standPrizeReqs[i].loveArrowPrizeImgReqs.length; j++){
+                        var imgarr={
+                             url:window.IMAGEURL+data.data.standPrizeReqs[i].loveArrowPrizeImgReqs[j].imgUrl
+                        }
+                        newabc1.name5.push(imgarr.url)
+                    }
+                }
+               newPraise.push(newabc1);  
+            } 
+            this.ruleForm4=newPraise 
+            this.explain=data.data.cashPrizeInstruction  
+          } else {
+              this.$message.error(data.msg);
+          }
+        }).catch(() => {
+            this.$message({type: "info", message: "网络问题，请刷新重试~" });
+        }); 
     }, 
   },
   mounted() {
     this.getPrizeTypeData()
     this.getQuesbankData()
+    this.getActData()
   }
 };
 </script>

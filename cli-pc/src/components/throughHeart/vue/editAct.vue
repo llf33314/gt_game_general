@@ -230,12 +230,6 @@ export default {
         msgModel:"",
         msg:1
       },
-            // 时间的筛选
-      pickerOptions: {
-          disabledDate(time) {
-            return time.getTime() < Date.now() - 8.64e7;
-          }
-      },
       rules2: {
         time: [ 
           { required: true,validator: timePass,  trigger: "blur,change" }
@@ -469,6 +463,19 @@ export default {
                     probabiliy :this.ruleForm4[i].name4,  //概率
                     loveArrowPrizeImgReqs:[]//图片
                 }
+                if (arr4.type == "粉币"){
+                    arr4.type =1
+                }else if (arr4.type == "手机流量"){
+                    arr4.type =2 
+                }else if (arr4.type == "实体物品"){
+                    arr4.type =4 
+                }
+                else if (arr4.type == "积分"){
+                    arr4.type =6
+                }
+                else if (arr4.type == "优惠券"){
+                    arr4.type =7 
+                } 
                 if(arr4.type==4){
                     for(var j=0;j<this.ruleForm4[i].name5.length;j++){
                         var imgarr={
@@ -569,13 +576,13 @@ export default {
             this.ruleForm3.addrRow= newaddr
             //奖项设置  
             var newPraise = [];//兑奖
-            for (var i = 0; i < data.data.loveArrowPrizeReqs .length; i++) {
+            for (var i = 0; i < data.data.loveArrowPrizeReqs.length; i++) {
                 var newabc1 = {
-                    name0  : data.data.loveArrowPrizeReqs [i].type, 
-                    name1  : data.data.loveArrowPrizeReqs [i].prizeUnit, 
-                    name2  : data.data.loveArrowPrizeReqs [i].prizeName, 
-                    name3  : String(data.data.loveArrowPrizeReqs [i].num), 
-                    name4  : data.data.loveArrowPrizeReqs [i].probabiliy, 
+                    name0  : data.data.loveArrowPrizeReqs[i].type, 
+                    name1  : data.data.loveArrowPrizeReqs[i].prizeUnit, 
+                    name2  : data.data.loveArrowPrizeReqs[i].prizeName, 
+                    name3  : String(data.data.loveArrowPrizeReqs[i].num), 
+                    name4  : data.data.loveArrowPrizeReqs[i].probabiliy, 
                     name5  :[] 
                 };
                 if (newabc1.name0 == 1) {
@@ -592,9 +599,9 @@ export default {
                 newabc1.name0  = "优惠券";
                 } 
                 if(newabc1.name0=="实体物品"){
-                    for(var j = 0; j < data.data.loveArrowPrizeReqs [i].loveArrowPrizeImgReqs.length; j++){
+                    for(var j = 0; j < data.data.loveArrowPrizeReqs[i].loveArrowPrizeImgReqs.length; j++){
                         var imgarr={
-                             url:window.IMAGEURL+data.data.loveArrowPrizeReqs [i].loveArrowPrizeImgReqs[j].imgUrl
+                             url:window.IMAGEURL+data.data.loveArrowPrizeReqs[i].loveArrowPrizeImgReqs[j].imgUrl
                         }
                         newabc1.name5.push(imgarr.url)
                     }
