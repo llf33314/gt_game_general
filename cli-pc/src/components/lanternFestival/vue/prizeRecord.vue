@@ -50,10 +50,11 @@
           </el-table-column>
           <el-table-column prop="snCode" label="兑奖码">             
           </el-table-column>
-          <el-table-column prop="order_option"  label="操作">
+          <el-table-column prop="order_option" width="260" label="操作">
             <template slot-scope="scope"> 
-              <el-button class="gt-button-normal blue" @click="test(scope.row.id)" v-if="scope.row.status == 3">发放奖品</el-button>
-              <el-button class="gt-button-normal blue" @click="detail(scope.row)">详情</el-button>  
+              <el-button class="gt-button-normal blue" @click="sendPrize(scope.row.id)" >发放奖品</el-button>
+              <el-button class="gt-button-normal blue" @click="detail(scope.row)">详情</el-button>
+              <el-button class="gt-button-normal" @click="delOne(scope.row.id)">删除</el-button>
             </template>
           </el-table-column>
         </el-table> 
@@ -137,13 +138,79 @@ export default {
         status: this.status,
         type: this.type,
         snCode: this.snCode
-      }
+      };
       // location.href = api.exportLantern(params)
-       window.open(api.exportLantern(params));  
+      window.open(api.exportLantern(params));
+    },
+    sendPrize(id) {
+      this.$confirm("确定要发送奖品?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        api.editLanternApply({ id: id }).then(res => {
+          if (res.code == 100) {
+            this.$message.success("发送奖品成功");
+          } else {
+            this.$message.error("发送奖品失败");
+          }
+        });
+      });
     },
     detail(row) {
-       this.DetailData = row 
-       this.DetailVisible = true
+      this.DetailData = row;
+      this.DetailVisible = true;
+    },
+    delOne(id) {
+      this.$confirm("确定要删除选中的核销员?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        let params = {
+          actId: this.$route.query.id,
+          id: [id]
+        };
+
+        api.delLanternAuthority(params).then(res => {
+          if (res.code == 100) {
+            this.$message.success("删除成功");
+            this.currentPage = this.initCurrentPage;
+            this.fetchData();
+          } else {
+            this.$message.error("删除失败");
+          }
+        });
+      });
+    },
+    delAll() {
+      if (this.multipleSelection.length < 1) {
+        this.$message.info("请勾选需要删除的核销员");
+        return;
+      }
+      let array = [];
+      this.$confirm("确定要删除选中的核销员?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        this.multipleSelection.forEach(function(item, index, arr) {
+          array.push(item.id);
+        }, this);
+        let params = {
+          actId: this.$route.query.id,
+          id: array
+        };
+        api.delLanternWinning(params).then(res => {
+          if (res.code == 100) {
+            this.$message.success("删除成功");
+            this.currentPage = this.initCurrentPage;
+            this.fetchData();
+          } else {
+            this.$message.error("删除失败");
+          }
+        });
+      });
     },
     handleCurrentChange(val) {
       this.currentPage = val;
