@@ -34,7 +34,18 @@ export const getAct           = params => { return axios.get(`${base}/getStand?i
 
 /*获取题库列表*/
 export const getQuesbank     = params => { return axios.post(`${base}/getStandQuesbankList`, params).then(res => res.data) }
-//保存题库
-export const saveQuesbank    = params => { return axios.post(`${base}/saveStandQuesbank`, params).then(res => res.data) }
+
+
 //保存题目
 export const saveStandQuestion    = params => { return axios.post(`${base}/saveStandQuestion`, params).then(res => res.data) }
+//删除题目 removeStandQuestion
+export const removeStandQuestion    = params => { return axios.post(`${base}/removeStandQuestion`, params).then(res => res.data) }
+
+// removeStandQuestion
+export const getStandQuesbank    = params => { return axios.post(`${base}/getStandQuesbank`, params).then(res => res.data) }
+
+
+//删除题库
+export const removeStandQuesbank    = params => { return axios.post(`${base}/removeStandQuesbank`, params).then(res => res.data) }
+//保存题库
+export const saveQuesbank    = params => { return axios.post(`${base}/saveStandQuesbank`, params).then(res => res.data) }

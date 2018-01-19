@@ -26,7 +26,7 @@
             </el-select>
         </span> 
         <span class="padding-left-md ml10 mb10">
-            <el-input placeholder="请输入兑奖码" icon="search" v-model="codeWord" style="width:250px"  :on-icon-click="test" @blur="test($event)">
+            <el-input placeholder="请输入兑奖码" icon="search" v-model="codeWord" style="width:250px"  :on-icon-click="getData"  @keyup.enter.native="getData()"  @blur="getData($event)">
             </el-input>
         </span> 
         <div class="h10"></div>
