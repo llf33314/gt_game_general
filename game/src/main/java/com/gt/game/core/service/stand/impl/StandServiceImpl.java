@@ -642,6 +642,18 @@ public class StandServiceImpl implements StandService {
         return ResponseDTO.createBySuccess("获取成功",standJoinRecordListResList);
     }
     /**
+     * 删除用户信息
+     * @param standRecordIdReq
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseDTO removeStandJoinRecord(BusUser busUser, StandRecordIdReq standRecordIdReq) {
+        standtotheendJoinRecordService.deleteById(standRecordIdReq.getId());
+        standtotheendJoinDetailService.delete(new EntityWrapper<StandtotheendJoinDetail>().eq("record_id",standRecordIdReq.getId()));
+        return ResponseDTO.createBySuccess("删除成功");
+    }
+    /**
      * 获取答题记录列表
      * @param standRecordIdReq
      * @return
@@ -869,6 +881,8 @@ public class StandServiceImpl implements StandService {
         standtotheendQuesbankService.updateById(bank);
         return ResponseDTO.createBySuccess("导入成功");
     }
+
+
 
     private HSSFWorkbook exportExcelForRecoding(List<Map<String, Object>> list, String title) {
         // 创建excel文件对象

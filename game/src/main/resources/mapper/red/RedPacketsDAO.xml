@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.game.core.dao.red.RedPacketsDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.game.core.entity.red.RedPackets">
+		<id column="id" property="id" />
+		<result column="public_id" property="publicId" />
+		<result column="sys_order_no" property="sysOrderNo" />
+		<result column="openid" property="openid" />
+		<result column="total_amount" property="totalAmount" />
+		<result column="total_num" property="totalNum" />
+		<result column="amt_type" property="amtType" />
+		<result column="wishing" property="wishing" />
+		<result column="act_name" property="actName" />
+		<result column="remark" property="remark" />
+		<result column="detail_id" property="detailId" />
+		<result column="status" property="status" />
+		<result column="send_type" property="sendType" />
+		<result column="hb_type" property="hbType" />
+		<result column="reason" property="reason" />
+		<result column="send_time" property="sendTime" />
+		<result column="refund_amount" property="refundAmount" />
+		<result column="start" property="start" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, public_id, sys_order_no, openid, total_amount, total_num, amt_type, wishing, act_name, remark, detail_id, status, send_type, hb_type, reason, send_time, refund_amount, start
+    </sql>
+
+</mapper>
