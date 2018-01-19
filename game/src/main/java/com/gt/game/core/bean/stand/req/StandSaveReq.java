@@ -2,6 +2,7 @@ package com.gt.game.core.bean.stand.req;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import java.util.Date;
 import java.util.List;
@@ -25,6 +26,7 @@ public class StandSaveReq {
 	private Integer id;
 
 	@ApiModelProperty("活动名称")
+	@NotEmpty(message = "请输入活动名称")
 	private String actName;
 
     /**

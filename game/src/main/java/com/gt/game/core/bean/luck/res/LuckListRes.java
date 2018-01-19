@@ -24,7 +24,7 @@ public class LuckListRes {
 	private Integer id;
 
 	@ApiModelProperty("活动名称")
-	private String name;
+	private String luckName;
     /**
      * 活动开始时间
      */
@@ -60,12 +60,12 @@ public class LuckListRes {
 		this.isEdit = isEdit;
 	}
 
-	public String getName() {
-		return name;
+	public String getLuckName() {
+		return luckName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setLuckName(String luckName) {
+		this.luckName = luckName;
 	}
 
 	public Integer getId() {

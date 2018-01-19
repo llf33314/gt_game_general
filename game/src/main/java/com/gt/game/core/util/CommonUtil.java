@@ -41,6 +41,7 @@ public class CommonUtil {
 //			BusUser busUser = new BusUser();
 //			busUser.setId(33);
 //			busUser.setLevel(4);
+//			return busUser;
 		} catch (Exception e) {
 			log.info(e.getLocalizedMessage());
 			e.printStackTrace();
