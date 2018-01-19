@@ -17,7 +17,7 @@ public class LuckStopIdReq {
 	@ApiModelProperty("活动id")
 	private Integer id;
 
-	@ApiModelProperty("活动z")
+	@ApiModelProperty("活动状态 暂停2 开始1")
 	private Integer luckStatus;
 
 	public Integer getId() {
@@ -26,5 +26,13 @@ public class LuckStopIdReq {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public Integer getLuckStatus() {
+		return luckStatus;
+	}
+
+	public void setLuckStatus(Integer luckStatus) {
+		this.luckStatus = luckStatus;
 	}
 }

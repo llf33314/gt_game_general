@@ -5,10 +5,7 @@ import com.gt.api.bean.session.BusUser;
 import com.gt.api.bean.session.WxPublicUsers;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.core.bean.luck.req.*;
-import com.gt.game.core.bean.luck.res.LuckCountRes;
-import com.gt.game.core.bean.luck.res.LuckListRes;
-import com.gt.game.core.bean.luck.res.LuckRes;
-import com.gt.game.core.bean.luck.res.LuckWinningListRes;
+import com.gt.game.core.bean.luck.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 import com.gt.game.core.entity.luck.LuckMain;
@@ -44,4 +41,7 @@ public interface LuckService{
 
     Map<String,Object> exports(Map<String, Object> params);
 
+    ResponseDTO stopLuck(WxPublicUsers busUser, LuckStopIdReq luckStopIdReq);
+
+    ResponseDTO<List<LuckPrizeTypeListRes>> getLuckPrizeType(BusUser busUser);
 }

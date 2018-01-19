@@ -6,10 +6,7 @@ import com.gt.api.bean.session.WxPublicUsers;
 import com.gt.game.common.base.BaseController;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.core.bean.luck.req.*;
-import com.gt.game.core.bean.luck.res.LuckCountRes;
-import com.gt.game.core.bean.luck.res.LuckListRes;
-import com.gt.game.core.bean.luck.res.LuckRes;
-import com.gt.game.core.bean.luck.res.LuckWinningListRes;
+import com.gt.game.core.bean.luck.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 import com.gt.game.core.exception.luck.LuckException;
@@ -255,25 +252,46 @@ public class LuckController  extends BaseController {
             return ResponseDTO.createByError();
         }
     }
-//
-//    @ApiResponses({
-//            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-//    })
-//    @ApiOperation(value = "暂停/开始活动", notes = "暂停/开始活动")
-//    @RequestMapping(value = "/stopLuck", method = RequestMethod.POST)
-//    protected ResponseDTO stopLuck(
-//            @RequestBody @ApiParam("请求参数") LuckIdReq luckIdReq,
-//            HttpServletRequest request) {
-//        try {
-//            WxPublicUsers busUser = CommonUtil.getLoginPbUser(request);
-//            ResponseDTO responseDTO = luckService.stopLuck(busUser, luckIdReq);
-//            return responseDTO;
-//        } catch (LuckException e){
-//            logger.error(e.getMessage(), e.fillInStackTrace());
-//            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
-//        } catch (Exception e){
-//            e.printStackTrace();
-//            return ResponseDTO.createByError();
-//        }
-//    }
+
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+    })
+    @ApiOperation(value = "暂停/开始活动", notes = "暂停/开始活动")
+    @RequestMapping(value = "/stopLuck", method = RequestMethod.POST)
+    protected ResponseDTO stopLuck(
+            @RequestBody @ApiParam("请求参数") LuckStopIdReq luckStopIdReq,
+            HttpServletRequest request) {
+        try {
+            WxPublicUsers busUser = CommonUtil.getLoginPbUser(request);
+            ResponseDTO responseDTO = luckService.stopLuck(busUser, luckStopIdReq);
+            return responseDTO;
+        } catch (LuckException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+            @ApiResponse(code = 1, message = "响应对象", response = LuckPrizeTypeListRes.class),
+    })
+    @ApiOperation(value = "获取奖品类型列表", notes = "获取奖品类型列表")
+    @RequestMapping(value = "/getLuckPrizeType", method = RequestMethod.POST)
+    protected ResponseDTO getLuckPrizeType(
+            HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO<List<LuckPrizeTypeListRes>> responseDTO = luckService.getLuckPrizeType(busUser);
+            return responseDTO;
+        } catch (LuckException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+
 }

@@ -7,22 +7,22 @@ import com.gt.api.bean.session.BusUser;
 import com.gt.api.bean.session.WxPublicUsers;
 import com.gt.axis.bean.member.member.MemberReq;
 import com.gt.axis.bean.member.member.MemberRes;
+import com.gt.axis.bean.wxmp.dict.DictApiReq;
+import com.gt.axis.bean.wxmp.dict.DictApiRes;
 import com.gt.axis.bean.wxmp.fenbiflow.FenbiFlowRecord;
 import com.gt.axis.bean.wxmp.fenbiflow.FenbiFlowRecordReq;
 import com.gt.axis.bean.wxmp.fenbiflow.FenbiSurplus;
 import com.gt.axis.bean.wxmp.fenbiflow.UpdateFenbiReduceReq;
 import com.gt.axis.content.AxisResult;
 import com.gt.axis.server.member.MemberServer;
+import com.gt.axis.server.wxmp.DictServer;
 import com.gt.axis.server.wxmp.FenbiflowServer;
 import com.gt.game.common.config.ApplyProperties;
 import com.gt.game.common.dto.PageDTO;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.common.enums.ResponseEnums;
 import com.gt.game.core.bean.luck.req.*;
-import com.gt.game.core.bean.luck.res.LuckCountRes;
-import com.gt.game.core.bean.luck.res.LuckListRes;
-import com.gt.game.core.bean.luck.res.LuckRes;
-import com.gt.game.core.bean.luck.res.LuckWinningListRes;
+import com.gt.game.core.bean.luck.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 import com.gt.game.core.dao.luck.LuckMainDAO;
@@ -471,6 +471,53 @@ public class LuckServiceImpl implements LuckService {
             msg.put("message", message);
         }
         return msg;
+    }
+    /*
+    *  暂停/开始活动
+    */
+    @Override
+    public ResponseDTO stopLuck(WxPublicUsers busUser, LuckStopIdReq luckStopIdReq) {
+        LuckMain luckMain = luckMainService.selectById(luckStopIdReq.getId());
+        if(CommonUtil.isNotEmpty(luckMain)){
+            if(luckMain.getLuckWxUserid().intValue() != busUser.getId().intValue()){
+                throw new LuckException(ResponseEnums.DIFF_USER);
+            }
+            Date date = new Date();
+            if(luckMain.getLuckBeginTime().getTime() > date.getTime()){
+                throw new LuckException(ResponseEnums.LUCK_HAS6);
+            }
+            if(luckMain.getLuckEndTime().getTime() > date.getTime()){
+                throw new LuckException(ResponseEnums.LUCK_HAS7);
+            }
+            luckMain.setLuckStatus(luckStopIdReq.getLuckStatus());
+            luckMainService.updateById(luckMain);
+        }
+        return ResponseDTO.createBySuccess("操作成功");
+    }
+    /**
+     * 获取奖品类型列表
+     *
+     */
+    @Override
+    public ResponseDTO<List<LuckPrizeTypeListRes>> getLuckPrizeType(BusUser busUser) {
+        DictApiReq dictApiReq = new DictApiReq();
+        dictApiReq.setStyle("1062");
+        AxisResult<List<DictApiRes>> axisResult = null;
+        try {
+            axisResult =  DictServer.getDictApi(dictApiReq);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        List<LuckPrizeTypeListRes> luckPrizeTypeListResList = new ArrayList<>();
+        if(CommonUtil.isNotEmpty(axisResult) && CommonUtil.isNotEmpty(axisResult.getData())){
+            for(DictApiRes dictApiRes : axisResult.getData()){
+                LuckPrizeTypeListRes luckPrizeTypeListRes = new LuckPrizeTypeListRes();
+                luckPrizeTypeListRes.setName(dictApiRes.getItemValue());
+                luckPrizeTypeListRes.setValue(dictApiRes.getItemKey());
+                luckPrizeTypeListResList.add(luckPrizeTypeListRes);
+            }
+        }
+        return ResponseDTO.createBySuccess("获取成功",luckPrizeTypeListResList);
     }
     public static HSSFWorkbook exportExcelForWinning(List<Map<String, Object>> winnLs,String title) {
         // 创建excel文件对象
