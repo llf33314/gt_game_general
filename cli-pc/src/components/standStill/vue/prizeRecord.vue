@@ -140,7 +140,7 @@ import {
             this.tableData=data
             console.log(data,'中奖列表');
           } else {
-              this.$message.errorthis.$message.error(data.msg);;
+              this.$message.error(data.msg);
           }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
@@ -162,7 +162,7 @@ import {
                 this.$message({ message: "发放成功", type: "success" });
                 this.getData();  
           } else {
-              this.$message.errorthis.$message.error(data.msg);;
+              this.$message.error(data.msg);
           }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });

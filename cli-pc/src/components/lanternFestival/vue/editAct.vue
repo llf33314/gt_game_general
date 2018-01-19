@@ -30,7 +30,7 @@
             <h1 class="mt30 mb20 pb10 bbtom" style="width:80%">广告设置</h1> 
             <el-button type="primary" class="mb20" @click="addlinks()">新增</el-button>  
             <span class="ml10 el-upload__tip grey">1.仅支持多粉与一点揩油的链接    2.广告图格式：1000*300px</span>
-            <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark" style="width:80%">
+            <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark" style="width:80%" class="mg-b20">
                 <el-table-column label="广告链接">
                   <template slot-scope="scope" >
                         <el-input v-model="scope.row.hrefUrl">
@@ -49,6 +49,13 @@
                   </template>
                 </el-table-column> 
              </el-table>  
+            <el-form-item>
+                <div class="mg-t40">
+                           <el-button type="primary" @click="Save('ruleForm1')" >保存</el-button>
+                           <el-button   @click="backUrl()">返回</el-button>
+                </div>
+            </el-form-item>
+            
         </el-form> 
         </div>
         <!-- 规则设置 -->
@@ -71,6 +78,12 @@
                     <el-input class="w_demo" :maxlength="300"  type="textarea" v-model="ruleForm2.desc" :rows="3" placeholder="请填写活动规则"></el-input>
                     <span class="el-upload__tip grey ml10">300个字以内</span>   
                 </el-form-item>   
+                 <el-form-item>
+                      <div class="mg-t40">
+                           <el-button type="primary" @click="Save('ruleForm2')" >保存</el-button>
+                           <el-button   @click="backUrl()">返回</el-button>
+                      </div>
+                </el-form-item>
             </el-form> 
         </div> 
         <!-- 兑奖设置 -->
@@ -100,7 +113,13 @@
 
                 <el-form-item label="兑奖说明：" prop="desc">
                     <el-input class="bw" type="textarea" v-model="ruleForm3.desc" :rows="5" placeholder="请输入兑奖说明"></el-input> 
-                </el-form-item>   
+                </el-form-item> 
+                 <el-form-item>
+                     <div class="mg-t40">
+                           <el-button type="primary" @click="Save('ruleForm3')" >保存</el-button>
+                           <el-button   @click="backUrl()">返回</el-button>
+                     </div>
+                 </el-form-item>  
             </el-form> 
         </div>
         <!-- 奖项设置 -->
@@ -161,7 +180,12 @@
                         <el-button class="gt-button-normal" v-if="scope.$index!=0" @click="delForm4(scope.$index)">删除</el-button>
                     </template>
                 </el-table-column>
+               
             </el-table> 
+            <div class="mg-t60 pd-l20">
+                <el-button type="primary" @click="Save('ruleForm4')" >保存</el-button>
+                <el-button   @click="backUrl()">返回</el-button>
+            </div>
         </div>       
         <!-- 新建完成 -->
         <div v-if="active==5" class="gt-content complete"> 
@@ -174,117 +198,135 @@
         <!-- 按钮 -->
         <div class="h80"></div> 
         <div class="btnRow"  v-if="this.active!=5">
-            <el-button   @click="backUrl()">返回</el-button>
+            <!-- <el-button   @click="backUrl()">返回</el-button>
             <el-button type="primary" @click="submit()" v-if="this.active==0">保存</el-button> 
             <el-button type="primary" @click="submit()" v-if="this.active==1">保存</el-button>
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">保存</el-button>   
-            <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button> 
+            <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>  -->
         </div> 
     </div>   
 </div>
 </section>
 </template>
 <script>
-import api from './../api/api'
+import api from "./../api/api";
 export default {
   data() {
     let iiPass = (rule, value, callback) => {
       if (!this.ruleForm3.phone) {
         return callback(new Error("联系电话不能为空"));
-      }else if(!(/^1[34578]\d{9}$/.test(value)) && !/^([0-9]{3,4}-)?[0-9]{7,8}$/.test(value)){ 
-        return callback("联系电话有误，请重填");  
-        return false; 
-      }  else {
+      } else if (
+        !/^1[34578]\d{9}$/.test(value) &&
+        !/^([0-9]{3,4}-)?[0-9]{7,8}$/.test(value)
+      ) {
+        return callback("联系电话有误，请重填");
+        return false;
+      } else {
         callback();
       }
-    }; 
+    };
     let timePass = (rule, value, callback) => {
-       const time = window.parseInt(value) 
-       if (!time) {
+      const time = window.parseInt(value);
+      if (!time) {
         callback(new Error("游戏时长不能为空"));
-       } else if (time<10 || time>30) {
+      } else if (time < 10 || time > 30) {
         callback(new Error("游戏时长有误，请重填"));
       } else {
         callback();
       }
-    }; 
+    };
     return {
       active: 0,
       ruleForm1: {
         name: "",
-        name1: "", 
-        links:[
-          {url:"",hrefUrl:""},
-          {url:"",hrefUrl:""}
-        ]
+        name1: "",
+        links: [{ hrefUrl: "", url: "" }, { hrefUrl: "", url: "" }]
       },
       rules1: {
-        name: [{ required: true, message: "活动名称不能为空", trigger: "blur" }],
-        name1: [{required: true, type: "array",message: "游戏时间不能为空", trigger: "blur" }] 
+        name: [
+          { required: true, message: "活动名称不能为空", trigger: "blur" }
+        ],
+        name1: [
+          {
+            required: true,
+            type: "array",
+            message: "游戏时间不能为空",
+            trigger: "blur"
+          }
+        ]
       },
       ruleForm2: {
         code: "",
-        manTotalChance:"",
-        manDayChance:"", 
-        gameTime: '',
+        manTotalChance: "",
+        manDayChance: "",
+        gameTime: "",
         desc: ""
       },
       rules2: {
-        time: [ 
-          { required: true,validator: timePass,  trigger: "blur,change" }
-        ],  
+        time: [{ required: true, validator: timePass, trigger: "blur,change" }],
         manTotalChance: [
-          { required: true,  message: "请填写每人免费游戏次数", trigger: "blur" } 
-        ], 
-        manDayChance: [
-          { required: true,  message: "请填写每人每天免费游戏次数", trigger: "blur" } 
-        ], 
-        gameTime: [
-          { required: true,  message: "请输入时长（60~100秒）", trigger: "blur" }   
+          { required: true, message: "请填写每人免费游戏次数", trigger: "blur" }
         ],
-        desc: [
-          { required: true,  message: "请填写活动规则", trigger: "blur" } 
-        ],  
-        
+        manDayChance: [
+          {
+            required: true,
+            message: "请填写每人每天免费游戏次数",
+            trigger: "blur"
+          }
+        ],
+        gameTime: [
+          { required: true, message: "请输入时长（60~100秒）", trigger: "blur" }
+        ],
+        desc: [{ required: true, message: "请填写活动规则", trigger: "blur" }]
       },
       ruleForm3: {
-        date:"",
-        type: [], 
-        addrRow:[{list:""},{list:""}],
-        phone:"",
-        desc:""
+        date: "",
+        type: [],
+        addrRow: [{ list: "" }, { list: "" }],
+        phone: "",
+        desc: ""
       },
       rules3: {
         list: [{ required: true }],
-        date: [{ required: true,type: 'array', message: "兑奖时间不能为空" }],
-        type: [{ required: true,type: 'array', message: "兑奖方式不能为空", trigger: "blur" }], 
-        phone:[{ required: true,type: 'text', validator:iiPass,trigger: "blur" }], 
-        desc: [{ required: true,message: "兑奖说明不能为空", trigger: "blur" }], 
+        date: [{ required: true, type: "array", message: "兑奖时间不能为空" }],
+        type: [
+          {
+            required: true,
+            type: "array",
+            message: "兑奖方式不能为空",
+            trigger: "blur"
+          }
+        ],
+        phone: [
+          { required: true, type: "text", validator: iiPass, trigger: "blur" }
+        ],
+        desc: [{ required: true, message: "兑奖说明不能为空", trigger: "blur" }]
       },
       explain: "",
-       options: [],
-      ruleForm4: [{ 
-          name0: "",
-          name1: "",
-          name2: "",
-          name3: "",
-          name5:[]
-        },
-        { 
+      options: [],
+      ruleForm4: [
+        {
           name0: "",
           name1: "",
           name2: "",
           name3: "",
           name5: []
-        }],  
+        },
+        {
+          name0: "",
+          name1: "",
+          name2: "",
+          name3: "",
+          name5: []
+        }
+      ]
     };
   },
-  methods: { 
-  
+  methods: {
     addrPass(rule, value, callback) {
       if (!value) {
-       callback(new Error("到店领取地址不能为空"));
-      }else {
+        callback(new Error("到店领取地址不能为空"));
+      } else {
         callback();
       }
     },
@@ -297,296 +339,412 @@ export default {
         callback();
       }
     },
-    addList(){
-        this.ruleForm3.addrRow.push({list:""});
+    addList() {
+      this.ruleForm3.addrRow.push({ list: "" });
     },
-    delList(val){
-        this.ruleForm3.addrRow.splice(val, 1);
+    delList(val) {
+      this.ruleForm3.addrRow.splice(val, 1);
     },
     upStep() {
       this.active--;
     },
     //广告设置的新增&删除
-    addlinks(){
-      this.ruleForm1.links.push({url:"",imgUrl:""},)
+    addlinks() {
+      this.ruleForm1.links.push({ url: "", imgUrl: "" });
     },
-    delLinks(val) { 
-          this.ruleForm1.links.splice(val, 1); 
+    delLinks(val) {
+      this.ruleForm1.links.splice(val, 1);
     },
-    getChangeUrl(i,e) {  
-      this.ruleForm1.links[i].url=e.url
-    }, 
-    getChangeUrl2(e) { 
-      this.ruleForm2.code=e.url
-    },  
-    // 添加实物图 
+    getChangeUrl(i, e) {
+      this.ruleForm1.links[i].url = e.url;
+    },
+    getChangeUrl2(e) {
+      this.ruleForm2.code = e.url;
+    },
+    // 添加实物图
     addAwardImg(val) {
-         JSON.parse(val.url).forEach(function (item, index, arr) {
-               this.ruleForm4[val.prop.$index].name5.push(item.url)
-         }, this)
+      JSON.parse(val.url).forEach(function(item, index, arr) {
+        this.ruleForm4[val.prop.$index].name5.push(item.url);
+      }, this);
     },
     getAwardImgList(val) {
       // 删除图片
-      if(!val.url) {
-        this.ruleForm4[val.prop.$index].name5.splice(val.sonIndex, 1)
-        return
+      if (!val.url) {
+        this.ruleForm4[val.prop.$index].name5.splice(val.sonIndex, 1);
+        return;
       }
-    }, 
-    addForm4(){ 
-        this.ruleForm4.push({ name0: "", name1: "", name2: "", name3: "", name5: []},)
     },
-    delForm4(val){
-        this.ruleForm4.splice(val, 1); 
-    },
-    next(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) { 
-          this.active++;
-        } else {
-         console.log("error submit!!");
-        }
+    addForm4() {
+      this.ruleForm4.push({
+        name0: "",
+        name1: "",
+        name2: "",
+        name3: "",
+        name5: []
       });
-    }, 
+    },
+    delForm4(val) {
+      this.ruleForm4.splice(val, 1);
+    },
+    Save(formName) {
+      if (formName == "ruleForm4") {
+        if (!this.lastStep()) {
+          return;
+        }
+        //奖品
+        var newYearPrizeReqs = [];
+        if (this.ruleForm4) {
+          for (let i = 0; i < this.ruleForm4.length; i++) {
+            var arr4 = {
+              imgInstruction: "",
+              type: this.ruleForm4[i].name0, //类型
+              prizeUnit: this.ruleForm4[i].name1, //单位
+              prizeName: this.ruleForm4[i].name2, //名称
+              num: Number(this.ruleForm4[i].name3), //数量
+              imgUrl: [] //图片
+            };
+            if (arr4.type == 4) {
+              for (var j = 0; j < this.ruleForm4[i].name5.length; j++) {
+                arr4.imgUrl.push(this.ruleForm4[i].name5[j]);
+              }
+            }
+            newYearPrizeReqs.push(arr4);
+          }
+        }
+        let params4 = {
+          prizeDescription: this.explain,
+          prizeSetList: newYearPrizeReqs
+        };
+
+        api.modfiyAwardsLantern(params4).then(res => {
+          if (res.code == 100) {
+            this.$message.success("保存成功");
+          } else {
+            this.$message.error((res && res.msg) || "保存失败");
+          }
+        });
+      } else {
+        this.$refs[formName].validate(valid => {
+          if (valid) {
+            if (formName == "ruleForm1") {
+              //广告
+              var newadv = [];
+              for (let i = 0; i < this.ruleForm1.links.length; i++) {
+                var arr = {
+                  hrefUrl: this.ruleForm1.links[i].hrefUrl,
+                  url: this.ruleForm1.links[i].url
+                };
+                newadv.push(arr);
+              }
+
+              let params1 = {
+                id: this.$route.query.id,
+                //基础设置
+                name: this.ruleForm1.name,
+                activityBeginTime: this.ruleForm1.name1[0],
+                activityEndTime: this.ruleForm1.name1[1],
+                advertisingPictureList: newadv
+              };
+              api.modfiyBasicsLantern(params1).then(res => {
+                if (res.code == 100) {
+                  this.$message.success("保存成功");
+                } else {
+                  this.$message.error((res && res.msg) || "保存失败");
+                }
+              });
+              return;
+            }
+
+            if (formName == "ruleForm2") {
+              let params2 = {
+                //规则设置
+                followQrCode: this.ruleForm2.code,
+                bgmSp: this.ruleForm2.bgmSp, // 背景音乐名
+                musicUrl: this.ruleForm2.musicUrl, // 背景音乐地址
+                manTotalChance: Number(this.ruleForm2.manTotalChance),
+                manDayChance: Number(this.ruleForm2.manDayChance),
+                gameTime: this.ruleForm2.gameTime,
+                actRule: this.ruleForm2.desc
+              };
+              api.modfiyRuleLantern(params2).then(res => {
+                if (res.code == 100) {
+                  this.$message.success("保存成功");
+                } else {
+                  this.$message.error((res && res.msg) || "保存失败");
+                }
+              });
+              return;
+            }
+
+            if (formName == "ruleForm3") {
+              //兑奖地址
+              var newYearAddressReqs = [];
+              if (this.ruleForm3.addrRow) {
+                for (let i = 0; i < this.ruleForm3.addrRow.length; i++) {
+                  newYearAddressReqs.push(this.ruleForm3.addrRow[i].list);
+                }
+              }
+              let params3 = {
+                cashPrizeBeginTime: this.ruleForm3.date[0],
+                cashPrizeEndTime: this.ruleForm3.date[1],
+                receiveTypeList: this.ruleForm3.type,
+                phone: this.ruleForm3.phone,
+                cashPrizeInstruction: this.ruleForm3.desc,
+                addressList: newYearAddressReqs
+              };
+              api.modfiyExpiryLantern(params3).then(res => {
+                if (res.code == 100) {
+                  this.$message.success("保存成功");
+                } else {
+                  this.$message.error((res && res.msg) || "保存失败");
+                }
+              });
+              return;
+            }
+          } else {
+            return false;
+          }
+        });
+      }
+    },
     lastStep() {
-      for (let i = 0; i < this.ruleForm4.length; i++) { 
-        var regu =/^[1-9]\d*$/;
-        if(!this.ruleForm4[i].name0||!this.ruleForm4[i].name1||!this.ruleForm4[i].name2||!this.ruleForm4[i].name3){
-            this.$message.error("表单不能留空，请填写完整~");
-            return false
-        }else if (!regu.test(this.ruleForm4[i].name1)) {
-            this.$message.error("奖品单位填写有误，请重新填写~");
-            return false
-        }else if (!regu.test(this.ruleForm4[i].name3)) {
-            this.$message.error("奖项数量填写有误，请重新填写~");
-            return false
-        }else if (this.ruleForm4[i].name0==4&&this.ruleForm4[i].name5.length==0) { 
-            this.$message.error("当奖品为实物时，请上传实物图片~");
-            return false 
+      for (let i = 0; i < this.ruleForm4.length; i++) {
+        var regu = /^[1-9]\d*$/;
+        if (
+          !this.ruleForm4[i].name0 ||
+          !this.ruleForm4[i].name1 ||
+          !this.ruleForm4[i].name2 ||
+          !this.ruleForm4[i].name3
+        ) {
+          this.$message.error("表单不能留空，请填写完整~");
+          return false;
+        } else if (!regu.test(this.ruleForm4[i].name1)) {
+          this.$message.error("奖品单位填写有误，请重新填写~");
+          return false;
+        } else if (!regu.test(this.ruleForm4[i].name3)) {
+          this.$message.error("奖项数量填写有误，请重新填写~");
+          return false;
+        } else if (
+          this.ruleForm4[i].name0 == 4 &&
+          this.ruleForm4[i].name5.length == 0
+        ) {
+          this.$message.error("当奖品为实物时，请上传实物图片~");
+          return false;
+        } else {
+          return true;
         }
       }
-       this.submit();
-    }, 
-
-          submit11(){
-          console.log(this.ruleForm4,665544)
-      }, 
-    //表单提交--------------------------------------star
-    submit(){
-        //广告
-        var newadv=[];
-        for(let i =0;i< this.ruleForm1.links.length;i++){ 
-            var arr={
-                hrefUrl:this.ruleForm1.links[i].url, 
-                url:this.ruleForm1.links[i].imgUrl, 
-            } 
-            newadv.push(arr)
-        }
-       //兑奖地址
-        var newYearAddressReqs=[];
-        if(this.ruleForm3.addrRow){ 
-            for(let i =0;i< this.ruleForm3.addrRow.length;i++){ 
-                // var arraddr={
-                //     address:this.ruleForm3.addrRow[i].list,  
-                // } 
-                // newYearAddressReqs.push(arraddr)
-                newYearAddressReqs.push(this.ruleForm3.addrRow[i].list)
-            }    
-        } 
-        //奖品
-        var newYearPrizeReqs=[];
-         if(this.ruleForm4){
-            for(let i =0;i< this.ruleForm4.length;i++){
-                var arr4={
-                    imgInstruction :"",
-                    type :this.ruleForm4[i].name0,//类型
-                    prizeUnit :this.ruleForm4[i].name1,//单位
-                    prizeName :this.ruleForm4[i].name2,//名称
-                    num :Number(this.ruleForm4[i].name3),//数量
-                    // probabiliy :this.ruleForm4[i].name4,  //概率
-                    imgUrl :[]//图片
-                }
-                if(arr4.type==4){
-                    for(var j=0;j<this.ruleForm4[i].name5.length;j++){
-                    //     var imgarr={
-                    //         imgUrl:this.ruleForm4[i].name5[j]
-                    //     }
-                    // arr4.newYearPrizeImgReqs.push(imgarr)
-                    arr4.imgUrl.push(this.ruleForm4[i].name5[j])
-                    } 
-                } 
-                newYearPrizeReqs.push(arr4)
-            } 
-        } 
-        const data = {
-            id :0,
-            //基础设置 
-            name  : this.ruleForm1.name, 
-            activityBeginTime: this.ruleForm1.name1[0], 
-            activityEndTime  : this.ruleForm1.name1[1], 
-            advertisingPictureList: newadv, 
-            //规则设置
-            followQrCode  : this.ruleForm2.code, 
-            bgmSp: this.ruleForm2.bgmSp, // 背景音乐名
-            musicUrl: this.ruleForm2.musicUrl, // 背景音乐地址 
-            manTotalChance: Number(this.ruleForm2.manTotalChance), 
-            manDayChance  :  Number(this.ruleForm2.manDayChance), 
-            gameTime: this.ruleForm2.gameTime, 
-            actRule  : this.ruleForm2.desc,  
-            //兑奖设置 
-            cashPrizeBeginTime: this.ruleForm3.date[0], 
-            cashPrizeEndTime : this.ruleForm3.date[1], 
-            // receiveType  : this.ruleForm3.type.toString(), //兑奖方式
-            receiveTypeList : this.ruleForm3.type, // 兑奖方式
-            phone  : this.ruleForm3.phone,  
-            cashPrizeInstruction : this.ruleForm3.desc,  
-            // newYearAddressReqs  : newYearAddressReqs , 
-            addressList : newYearAddressReqs,
-            //奖项设置 
-            // prizeSetInstruction : this.explain, 
-            prizeDescription: this.explain,
-            // newYearPrizeReqs: newYearPrizeReqs, 
-            prizeSetList:  newYearPrizeReqs
-        };
-        console.log(data,123); 
-        api.addLantern(data).then(data=>{
-          this.isSubmit=true
-          if (data.code == 100) { 
-              console.log(12336666)
-              this.active=5
-          } else {
-              this.isSubmit=false
-              this.$message.error(data.msg + "错误码：[" + data.code + "]");
-          }
-        }).catch(() => {
-            this.isSubmit=false
-            this.$message({type: "info", message: "网络问题，请刷新重试~" });
-        }); 
-    },  
-    backUrl(){
-         window.history.go(-1);
     },
-    test(){
-        console.log(1122);
+    //表单提交--------------------------------------star
+    submit() {
+      //广告
+      var newadv = [];
+      for (let i = 0; i < this.ruleForm1.links.length; i++) {
+        var arr = {
+          hrefUrl: this.ruleForm1.links[i].hrefUrl,
+          url: this.ruleForm1.links[i].url
+        };
+        newadv.push(arr);
+      }
+      //兑奖地址
+      var newYearAddressReqs = [];
+      if (this.ruleForm3.addrRow) {
+        for (let i = 0; i < this.ruleForm3.addrRow.length; i++) {
+          // var arraddr={
+          //     address:this.ruleForm3.addrRow[i].list,
+          // }
+          // newYearAddressReqs.push(arraddr)
+          newYearAddressReqs.push(this.ruleForm3.addrRow[i].list);
+        }
+      }
+      //奖品
+      var newYearPrizeReqs = [];
+      if (this.ruleForm4) {
+        for (let i = 0; i < this.ruleForm4.length; i++) {
+          var arr4 = {
+            imgInstruction: "",
+            type: this.ruleForm4[i].name0, //类型
+            prizeUnit: this.ruleForm4[i].name1, //单位
+            prizeName: this.ruleForm4[i].name2, //名称
+            num: Number(this.ruleForm4[i].name3), //数量
+            // probabiliy :this.ruleForm4[i].name4,  //概率
+            imgUrl: [] //图片
+          };
+          if (arr4.type == 4) {
+            for (var j = 0; j < this.ruleForm4[i].name5.length; j++) {
+              //     var imgarr={
+              //         imgUrl:this.ruleForm4[i].name5[j]
+              //     }
+              // arr4.newYearPrizeImgReqs.push(imgarr)
+              arr4.imgUrl.push(this.ruleForm4[i].name5[j]);
+            }
+          }
+          newYearPrizeReqs.push(arr4);
+        }
+      }
+      const data = {
+        id: this.$route.query.id,
+        //基础设置
+        name: this.ruleForm1.name,
+        activityBeginTime: this.ruleForm1.name1[0],
+        activityEndTime: this.ruleForm1.name1[1],
+        advertisingPictureList: newadv,
+        //规则设置
+        followQrCode: this.ruleForm2.code,
+        bgmSp: this.ruleForm2.bgmSp, // 背景音乐名
+        musicUrl: this.ruleForm2.musicUrl, // 背景音乐地址
+        manTotalChance: Number(this.ruleForm2.manTotalChance),
+        manDayChance: Number(this.ruleForm2.manDayChance),
+        gameTime: this.ruleForm2.gameTime,
+        actRule: this.ruleForm2.desc,
+        //兑奖设置
+        cashPrizeBeginTime: this.ruleForm3.date[0],
+        cashPrizeEndTime: this.ruleForm3.date[1],
+        // receiveType  : this.ruleForm3.type.toString(), //兑奖方式
+        receiveTypeList: this.ruleForm3.type, // 兑奖方式
+        phone: this.ruleForm3.phone,
+        cashPrizeInstruction: this.ruleForm3.desc,
+        // newYearAddressReqs  : newYearAddressReqs ,
+        addressList: newYearAddressReqs,
+        //奖项设置
+        // prizeSetInstruction : this.explain,
+        prizeDescription: this.explain,
+        // newYearPrizeReqs: newYearPrizeReqs,
+        prizeSetList: newYearPrizeReqs
+      };
+      console.log(data, 123);
+      api
+        .addLantern(data)
+        .then(data => {
+          this.isSubmit = true;
+          if (data.code == 100) {
+            this.$message.success("保存成功");
+          } else {
+            this.isSubmit = false;
+            this.$message.error(data.msg + "错误码：[" + data.code + "]");
+          }
+        })
+        .catch(() => {
+          this.isSubmit = false;
+          this.$message({ type: "info", message: "网络问题，请刷新重试~" });
+        });
+    },
+    backUrl() {
+      window.history.go(-1);
+    },
+    test() {
+      console.log(1122);
     },
     //获取奖品类型-----------star
-    getPrizeTypeData(){
-        api.getLanternPrizeType().then(data=>{
-            if (data.code == 100) {
-            console.log(data,1233);
-            this.options=data.data
-                console.log(this.options,'获取奖品类型');
-            } else {
-                this.$message.error(data.msg + "错误码：[" + data.code + "]");
-            }
-        }).catch(() => {
-            this.$message({ type: "info", message: "网络问题，请刷新重试~" });
-        }); 
-    }, 
+    getPrizeTypeData() {
+      api
+        .getLanternPrizeType()
+        .then(data => {
+          if (data.code == 100) {
+            console.log(data, 1233);
+            this.options = data.data;
+            console.log(this.options, "获取奖品类型");
+          } else {
+            this.$message.error(data.msg + "错误码：[" + data.code + "]");
+          }
+        })
+        .catch(() => {
+          this.$message({ type: "info", message: "网络问题，请刷新重试~" });
+        });
+    }
   },
   created() {
-      api.getActivityById({ id: this.$route.query.id }).then(res => {
-          if (res.code == 200) {
-            //基础设置 
-            this.ruleForm1.name = res.data.name,
-            this.ruleForm1.name1= [res.data.activityBeginTime, res.data.activityEndTime] 
-            //广告设置 
-            var newadv = [];//兑奖地址 
-            if(data.data.qixiAdReqs.length!=0){  
-                for (var i = 0; i < data.data.qixiAdReqs.length; i++) {
-                    var newabc1 = {
-                        url  : data.data.qixiAdReqs[i].hrefUrl,  
-                        imgUrl  : window.IMAGEURL+data.data.qixiAdReqs[i].url,  
-                    };
-                    newadv.push(newabc1);  
-                }  
-            }
-            this.ruleForm1.links= newadv 
-            //规则设置 
-            this.ruleForm2.code= window.IMAGEURL + res.data.followQrCode
-            this.ruleForm2.bgmSp = res.data.bgmSp
-            this.ruleForm2.musicUrl = res.data.musicUrl
-            this.ruleForm2.manTotalChance= String(res.data.manTotalChance)
-            this.ruleForm2.manDayChance= String(res.data.manDayChance)
-            this.ruleForm2.desc = res.data.actRule
-            //兑奖设置 
-            this.ruleForm3.date=[res.data.cashPrizeBeginTime, res.data.cashPrizeEndTime]
-            this.ruleForm3.type=res.data.receiveType.split(',')
-            this.ruleForm3.phone=res.data.phone
-            this.ruleForm3.desc=res.data.cashPrizeInstruction
-             //兑奖地址  
-            var newaddr = [];
-            for (var i = 0; i < data.data.qixiAddressReqs.length; i++) {
-                var newabc1 = {
-                list  : data.data.qixiAddressReqs[i].address,  
-                };
-                newaddr.push(newabc1);  
-            } 
-            this.ruleForm3.addrRow= newaddr  
-            //奖项设置 
-            var newPraise = [];//兑奖地址
-            for (var i = 0; i < data.data.qixiPrizeReqs.length; i++) {
-                var newabc1 = {
-                    name0  : data.data.qixiPrizeReqs[i].type, 
-                    name1  : data.data.qixiPrizeReqs[i].prizeUnit, 
-                    name2  : data.data.qixiPrizeReqs[i].prizeName, 
-                    name3  : String(data.data.qixiPrizeReqs[i].num),  
-                    name5  :[] 
-                };
-                if (newabc1.name0 == 1) {
-                    newabc1.name0  = "粉币";
-                }else if(newabc1.name0  == 2){
-                    newabc1.name0  = "手机流量"; 
-                }else if(newabc1.name0  == 3){
-                    newabc1.name0  = "手机话费";
-                }else if(newabc1.name0  == 4){
-                    newabc1.name0  = "实体物品";
-                }  else if(newabc1.name0  == 6){
-                    newabc1.name0  = "积分";
-                } else if(newabc1.name0  == 7){
-                    newabc1.name0  = "优惠券";
-                } 
-                if(newabc1.name0=="实体物品"){
-                    for(var j = 0; j < data.data.qixiPrizeReqs[i].qixiPrizeImgReqs.length; j++){
-                        var imgarr={
-                             url:window.IMAGEURL+data.data.qixiPrizeReqs[i].qixiPrizeImgReqs[j].imgUrl
-                        }
-                        newabc1.name5.push(imgarr.url)
-                    }
-                } 
-               newPraise.push(newabc1);  
-            } 
-            this.ruleForm4=newPraise
-            // name  : this.ruleForm1.name, 
-            // activityBeginTime: this.ruleForm1.name1[0], 
-            // activityEndTime  : this.ruleForm1.name1[1], 
-            // advertisingPictureList: newadv, 
-            //规则设置
-            // followQrCode  : this.ruleForm2.code, 
-            // bgmSp: '', // 背景音乐名
-            // musicUrl: '', // 背景音乐地址 
-            // manTotalChance: Number(this.ruleForm2.manTotalChance), 
-            // manDayChance  :  Number(this.ruleForm2.manDayChance), 
-            // gameTime: '', 
-            // actRule  : this.ruleForm2.desc,  
-            //兑奖设置 
-            // cashPrizeBeginTime: this.ruleForm3.date[0], 
-            // cashPrizeEndTime : this.ruleForm3.date[1], 
-            // // receiveType  : this.ruleForm3.type.toString(), //兑奖方式
-            // receiveTypeList : this.ruleForm3.type, // 兑奖方式
-            // phone  : this.ruleForm3.phone,  
-            // cashPrizeInstruction : this.ruleForm3.desc,  
-            // newYearAddressReqs  : newYearAddressReqs , 
-            // addressList : newYearAddressReqs,
-            // //奖项设置 
-            // // prizeSetInstruction : this.explain, 
-            // prizeDescription: this.explain,
-            // // newYearPrizeReqs: newYearPrizeReqs, 
-            // prizeSetList:  newYearPrizeReqs
-          } else {
-            this.$message.error('获取编辑数据失败');
+    api.getActivityById({ id: this.$route.query.id }).then(res => {
+      if (res.code == 100) {
+        //基础设置
+        (this.ruleForm1.name = res.data.name),
+          (this.ruleForm1.name1 = [
+            res.data.activityBeginTime,
+            res.data.activityEndTime
+          ]);
+        //广告设置
+        var newadv = [];
+        if (res.data.advertisingPictureList.length != 0) {
+          for (var i = 0; i < res.data.advertisingPictureList.length; i++) {
+            var newabc1 = {
+              hrefUrl: res.data.advertisingPictureList[i].hrefUrl,
+              url: res.data.advertisingPictureList[i].url
+            };
+            newadv.push(newabc1);
           }
-      })
-        this.getPrizeTypeData()
+        }
+        this.ruleForm1.links = newadv;
+        console.log("this.ruleForm1", this.ruleForm1);
+        //规则设置
+        this.ruleForm2.code = res.data.followQrCode;
+        this.ruleForm2.bgmSp = res.data.bgmSp;
+        this.ruleForm2.musicUrl = res.data.musicUrl;
+        this.ruleForm2.manTotalChance = String(res.data.manTotalChance);
+        this.ruleForm2.manDayChance = String(res.data.manDayChance);
+        this.ruleForm2.gameTime = res.data.gameTime;
+        this.ruleForm2.desc = res.data.actRule;
+        console.log("this.ruleForm2", this.ruleForm2);
+        //兑奖设置
+        this.ruleForm3.date = [
+          res.data.cashPrizeBeginTime,
+          res.data.cashPrizeEndTime
+        ];
+        this.ruleForm3.type = res.data.receiveTypeList;
+        this.ruleForm3.phone = res.data.phone;
+        this.ruleForm3.desc = res.data.cashPrizeInstruction;
+
+        //兑奖地址
+        var newaddr = [];
+        for (var i = 0; i < res.data.addressList.length; i++) {
+          var newabc1 = {
+            list: res.data.addressList[i].address
+          };
+          newaddr.push(newabc1);
+        }
+        this.ruleForm3.addrRow = newaddr;
+        console.log("this.ruleForm3", this.ruleForm3);
+        //奖项设置
+        var newPraise = []; //兑奖地址
+        for (var i = 0; i < res.data.prizeSetList.length; i++) {
+          var newabc1 = {
+            name0: res.data.prizeSetList[i].type + "",
+            name1: res.data.prizeSetList[i].prizeUnit,
+            name2: res.data.prizeSetList[i].prizeName,
+            name3: String(res.data.prizeSetList[i].num),
+            name5: []
+          };
+          if (newabc1.name0 == 1) {
+            newabc1.typeName = "粉币";
+          } else if (newabc1.name0 == 2) {
+            newabc1.typeName = "手机流量";
+          } else if (newabc1.name0 == 3) {
+            newabc1.typeName = "手机话费";
+          } else if (newabc1.name0 == 4) {
+            newabc1.typeName = "实体物品";
+          } else if (newabc1.name0 == 6) {
+            newabc1.typeName = "积分";
+          } else if (newabc1.name0 == 7) {
+            newabc1.typeName = "优惠券";
+          }
+          if (newabc1.typeName == "实体物品") {
+            // for(var j = 0; j < res.data.prizeSetList[i].imgUrl.length; j++){
+            //     // var imgarr={
+            //     //      url:window.IMAGEURL+res.data.prizeSetList[i].imgUrl[j]
+            //     // }
+
+            // }
+            newabc1.name5 = res.data.prizeSetList[i].imgUrl;
+            console.log(newabc1.name5);
+          }
+          newPraise.push(newabc1);
+        }
+        this.ruleForm4 = newPraise;
+        console.log("this.ruleForm4", this.ruleForm4);
+      } else {
+        this.$message.error("获取编辑数据失败");
+      }
+    });
+    this.getPrizeTypeData();
   }
 };
 </script>

@@ -542,7 +542,7 @@ export default {
               this.active=5
             } else {
               this.isSubmit=false
-              this.$message.errorthis.$message.error(data.msg);;
+              this.$message.error(data.msg);
             }
         }).catch(() => {
             this.isSubmit=false
@@ -564,7 +564,7 @@ export default {
             this.options=data.data
              console.log(this.options,444);
           } else {
-              this.$message.errorthis.$message.error(data.msg);;
+              this.$message.error(data.msg);
           }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
@@ -577,7 +577,7 @@ export default {
                console.log(data,1233);
             this.msgModel=data.data 
           } else {
-              this.$message.errorthis.$message.error(data.msg);;
+              this.$message.error(data.msg);
           }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });

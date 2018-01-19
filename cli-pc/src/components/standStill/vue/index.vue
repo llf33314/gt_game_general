@@ -104,7 +104,7 @@ import {
             this.tableData=data
             console.log(data,'获取首页');
           } else {
-              this.$message.errorthis.$message.error(data.msg);;
+              this.$message.error(data.msg);
           }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
@@ -120,7 +120,7 @@ import {
             this.countNum.started=data.data.count3 
             this.countNum.over   =data.data.count4             
           } else {
-              this.$message.errorthis.$message.error(data.msg);;
+              this.$message.error(data.msg);
           }
         }).catch(() => {
             this.$message({type: "info", message: "网络问题，请刷新重试~" });
@@ -138,7 +138,7 @@ import {
             });
             this.copeData.copyUrlVisible = true;
           } else {
-            this.$message.errorthis.$message.error(data.msg);;
+            this.$message.error(data.msg);
           }
         });
       },
@@ -154,7 +154,7 @@ import {
                     this.$message({ message: "操作成功", type: "success"}); 
                     this.getdata();
                 } else {
-                this.$message.errorthis.$message.error(data.msg);;
+                this.$message.error(data.msg);
                 }
             });
             }).catch(() => {

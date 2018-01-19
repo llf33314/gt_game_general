@@ -72,7 +72,23 @@ export default {
        // 通过活动id查询元宵点灯活动 
        getActivityById(params) {
         return post(`${base}/getActivityById`, params) 
-       }
+       },
+       // 编辑元宵点灯活动基础设置  
+       modfiyBasicsLantern(params) {
+        return post(`${base}/modfiyBasicsLantern`, params) 
+       },
+       // 编辑元宵点灯活动规则设置  
+       modfiyRuleLantern(params) {
+        return post(`${base}/modfiyRuleLantern`, params) 
+       },
+       // 编辑元宵点灯活动兑奖设置
+       modfiyExpiryLantern(params) {
+        return post(`${base}/modfiyExpiryLantern`, params) 
+       },
+       // 编辑元宵点灯活动奖项设置 
+       modfiyAwardsLantern(params) {
+        return post(`${base}/modfiyAwardsLantern`, params) 
+       },
 }
 
 

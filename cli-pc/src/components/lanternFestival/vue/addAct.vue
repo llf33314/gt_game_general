@@ -216,8 +216,8 @@ export default {
         name: "",
         name1: "", 
         links:[
-          {url:"",hrefUrl:""},
-          {url:"",hrefUrl:""}
+          {hrefUrl:"", url:"",},
+          {hrefUrl:"", url:"",}
         ]
       },
       rules1: {
@@ -378,8 +378,8 @@ export default {
         var newadv=[];
         for(let i =0;i< this.ruleForm1.links.length;i++){ 
             var arr={
-                hrefUrl:this.ruleForm1.links[i].url, 
-                url:this.ruleForm1.links[i].imgUrl, 
+                hrefUrl:this.ruleForm1.links[i].hrefUrl, 
+                url:this.ruleForm1.links[i].url, 
             } 
             newadv.push(arr)
         }
@@ -432,7 +432,7 @@ export default {
             musicUrl: '', // 背景音乐地址 
             manTotalChance: Number(this.ruleForm2.manTotalChance), 
             manDayChance  :  Number(this.ruleForm2.manDayChance), 
-            gameTime: '', 
+            gameTime: this.ruleForm2.gameTime, 
             actRule  : this.ruleForm2.desc,  
             //兑奖设置 
             cashPrizeBeginTime: this.ruleForm3.date[0], 

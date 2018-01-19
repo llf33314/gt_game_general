@@ -1,6 +1,4 @@
-<style lang="less">
 
-</style>
 <template>
 <section>
 <div class="hd-common">
@@ -23,8 +21,8 @@
                 <el-form-item label="活动名称：" prop="name">
                     <el-input class="w_demo" v-model="ruleForm1.name"></el-input>
                 </el-form-item> 
-                <el-form-item label="游戏时间：" prop="name1">
-                    <el-date-picker class="w_demo" v-model="ruleForm1.name1"   type="datetimerange"  placeholder="选择时间范围">
+                <el-form-item label="游戏时间：" prop="gtTime">
+                    <el-date-picker class="w_demo" v-model="ruleForm1.gtTime"   type="datetimerange"  placeholder="选择时间范围">
                     </el-date-picker>
                 </el-form-item>  
             <h1 class="mt30 mb20 pb10 bbtom">广告设置</h1> 
@@ -34,30 +32,30 @@
             <span class="ml10 el-upload__tip grey mr10">3.最多添加3个广告</span>
             <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark">
                 <el-table-column label="广告链接">
-                  <template slot-scope="scope" >
-                        <el-input v-model="scope.row.url">
-                          <template slot="prepend">Http://</template>
+                    <template slot-scope="scope" >
+                        <el-input v-model="scope.row.url" :class="{ 'bd1px-red': checked && !scope.row.url}">
+                            <template slot="prepend">Http://</template>
                         </el-input>
-                  </template>
+                    </template>
                 </el-table-column> 
                 <el-table-column label="选择图片">
-                  <template slot-scope="scope">
-                      <gt-material prop="url" :url="scope.row.img" v-on:getChangeUrl="getChangeUrl(scope.row.id, $event)" width="60" height="60"></gt-material>
-                  </template>
+                    <template slot-scope="scope">
+                        <gt-material prop="url" :url="scope.row.imgUrl" v-on:getChangeUrl="getChangeUrl(scope.$index, $event)" width="60" height="60" :class="{ 'bd1px-red': checked && !scope.row.imgUrl}"></gt-material>
+                    </template>
                 </el-table-column> 
                 <el-table-column label="操作">
-                  <template slot-scope="scope">
+                    <template slot-scope="scope">
                         <el-button class="gt-button-normal" @click="delLinks(scope.$index)">删除</el-button>
-                  </template>
+                    </template>
                 </el-table-column> 
-             </el-table> 
+            </el-table> 
           </el-form> 
         </div>
         <!-- 规则设置 -->
         <div v-if="this.active==1" class="mt40">
             <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="150px" class="mt40 demo-ruleForm">
-                <el-form-item label="关注二维码：" prop="code">
-                  <gt-material prop="url" :url="ruleForm2.code" v-on:getChangeUrl="getChangeUrl2" width="72" height="72"></gt-material>
+                <el-form-item label="关注二维码：" prop="followQrCode">
+                  <gt-material prop="url" :url="ruleForm2.followQrCode" v-on:getChangeUrl="getChangeUrl2" width="72" height="72"></gt-material>
                   <span class="el-upload__tip grey ml10">上传1:1二维码，将会在活动规则中显示商家二维码</span>  
                 </el-form-item>
                 <el-form-item label="游戏时长：" prop="time">
@@ -79,8 +77,8 @@
                     <el-input class="w25_demo ml10 mr10" v-model="ruleForm2.jifen"></el-input>积分
                 </el-form-item>  
                  
-                <el-form-item label="中奖消息：" prop="msg">
-                  <el-switch on-text="开启" :on-value="0" off-text="关闭" :off-value="1" v-model="ruleForm2.msg"></el-switch>
+                <el-form-item label="中奖消息：" prop="isMsgTemplate">
+                  <el-switch on-text="开启" :on-value="1" off-text="关闭" :off-value="0" v-model="ruleForm2.isMsgTemplate"></el-switch>
                   <span class="el-upload__tip grey">
                         <el-tooltip placement="right" effect="light">
                         <div slot="content">
@@ -92,14 +90,12 @@
                         </el-tooltip> 
                     </span> 
                 </el-form-item>
-                <div class="bb bw pt20 mb20 ml150" v-if="ruleForm2.msg==0">
-                    <el-form-item label="消息模块：" prop="msgModel">
-                        <el-select v-model="ruleForm2.msgModel" placeholder="请选择">
-                            <el-option label="模块一"  value="0"></el-option>
-                            <el-option label="模块二"  value="1"></el-option>
-                            <el-option label="模块三"  value="2"></el-option>
-                        </el-select> 
-                    </el-form-item> 
+                <div class="bb bw pt20 mb20 ml150" v-if="ruleForm2.isMsgTemplate==1">
+                    <el-form-item class="Prompt" prop="msgTemplateId" label-width="10px" >                       
+                            <el-select v-model="ruleForm2.msgTemplateId" placeholder="请选择模块"  >
+                                <el-option v-for="(item, index) in textArray"  :key="index" :label="item.title" :value="item.id"></el-option>
+                            </el-select>
+                    </el-form-item>
                 </div>  
                 <el-form-item label="活动规则：" prop="desc">
                     <el-input class="w_demo" :maxlength="300"  type="textarea" v-model="ruleForm2.desc" :rows="3" placeholder="请填写活动规则"></el-input>
@@ -208,7 +204,7 @@
         <div class="h80"></div> 
         <div class="btnRow"  v-if="this.active!=5">
             <el-button   @click="upStep()" v-if="this.active!=0">上一步</el-button>
-            <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步1</el-button> 
+            <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步</el-button> 
             <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
             <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>   
@@ -219,265 +215,335 @@
 </section>
 </template>
 <script>
+import { saveAct,getTemplateList,}from './../api/api'
 export default {
   data() {
-    let iiPass = (rule, value, callback) => {
-      if (!this.ruleForm3.phone) {
-        return callback(new Error("联系电话不能为空"));
-      }else if(!(/^1[34578]\d{9}$/.test(value)) && !/^([0-9]{3,4}-)?[0-9]{7,8}$/.test(value)){ 
-        return callback("联系电话有误，请重填");  
-        return false; 
-      }  else {
-        callback();
-      }
-    }; 
-    let timePass = (rule, value, callback) => {
-       const time = window.parseInt(value) 
-       if (!time) {
-        callback(new Error("游戏时长不能为空"));
-       } else if (time<10 || time>30) {
-        callback(new Error("游戏时长有误，请重填"));
-      } else {
-        callback();
-      }
-    }; 
+    //联系电话===============================================
+        let iiPass = (rule, value, callback) => {
+        if (!this.ruleForm3.phone) {
+            return callback(new Error("联系电话不能为空"));
+        } else if (
+            !/^1[34578]\d{9}$/.test(value) &&
+            !/^([0-9]{3,4}-)?[0-9]{7,8}$/.test(value)
+        ) {
+            return callback("联系电话有误，请重填");
+            return false;
+        } else {
+            callback();
+        }
+        };
+    //游戏时长===================================================
+        let timePass = (rule, value, callback) => {
+        const time = window.parseInt(value);
+        if (!time) {
+            callback(new Error("游戏时长不能为空"));
+        } else if (time < 10 || time > 30) {
+            callback(new Error("游戏时长有误，请重填"));
+        } else {
+            callback();
+        }
+        };
     return {
-      active: 0,
-      ruleForm1: {
-        name: "",
-        name1: "",
-        name4:"",
-       links:[
-          {url:"",img:""},
-          {url:"",img:""}
-        ]
-      },
-      rules1: {
-        name: [{ required: true, message: "活动名称不能为空", trigger: "blur" }],
-        name1: [{required: true, type: "array",message: "游戏时间不能为空", trigger: "blur" }] 
-      },
-      ruleForm2: {
-        code: "",
-        time: "",
-        duihuan:"",
-        manTotalChance:"",
-        manDayChance:"", 
-        fenbi:"",
-        jifen:"",
-        desc: "", 
-        msgModel:"",
-        msg:1
-      },
-      rules2: {
-        time: [ 
-          { required: true,validator: timePass,  trigger: "blur,change" }
-        ], 
-        duihuan: [
-          { required: true,  message: "请填写元宝兑换金币比例", trigger: "blur" } 
-        ], 
-        manTotalChance: [
-          { required: true,  message: "请填写每人免费游戏次数", trigger: "blur" } 
-        ], 
-        manDayChance: [
-          { required: true,  message: "请填写每人每天免费游戏次数", trigger: "blur" } 
-        ],
-        fenbi: [
-          { required: true,  message: "请填写每天游戏小号的粉币或积分", trigger: "blur" } 
-        ],
-        msg: [ 
-          { required: true}
-        ], 
-        desc: [
-          { required: true,  message: "请填写活动规则", trigger: "blur" } 
-        ],
-        msgModel: [
-          { required: true, type: 'string',  message: "请选择消息模块", trigger: "blur" } 
-        ],
-         
-        
-      },
-      ruleForm3: {
-        date:"",
-        type: [], 
-        addrRow:[{list:""},{list:""}],
-        phone:"",
-        desc:""
-      },
-      rules3: {
-        list: [{ required: true }],
-        date: [{ required: true,type: 'array', message: "兑奖时间不能为空" }],
-        type: [{ required: true,type: 'array', message: "兑奖方式不能为空", trigger: "blur" }], 
-        phone:[{ required: true,type: 'text', validator:iiPass,trigger: "blur" }], 
-        desc: [{ required: true,message: "兑奖说明不能为空", trigger: "blur" }], 
-      },
-      explain: "",
-      ruleForm4: [{ 
-          name0: 1,
-          name1: "",
-          name2: "",
-          name3: "",
-          name4: ""
+    active: 2,
+    //第一步-------------------------------------
+        ruleForm1: {
+            name: "",
+            gtTime: "",
+            name4: "",
+            links:[
+                {url:"",imgUrl:""},
+                {url:"",imgUrl:""}
+            ]
         },
-        { 
-          name0: 1,
-          name1: "",
-          name2: "",
-          name3: "",
-          name4: ""
-        }],  
+        rules1: {
+            name: [{ required: true, message: "活动名称不能为空", trigger: "blur" }],
+            gtTime: [{ required: true, type: "array", message: "游戏时间不能为空", trigger: "blur" }]
+        },
+        checked: false, // 是否检验table的内容
+    //第二步-------------------------------------
+        ruleForm2: {
+            followQrCode: "",
+            time: "",
+            duihuan: "",
+            manTotalChance: "",
+            manDayChance: "",
+            fenbi: "",
+            jifen: "",
+            desc: "",
+            msgTemplateId: "",
+            isMsgTemplate: 0
+        },
+        rules2: {
+            time: [{ required: true, validator: timePass, trigger: "blur,change" }],
+            duihuan: [{ required: true, message: "请填写元宝兑换金币比例", trigger: "blur" }],
+            manTotalChance: [
+                { required: true, message: "请填写每人免费游戏次数", trigger: "blur" }
+            ],
+            manDayChance: [
+                { required: true, message: "请填写每人每天免费游戏次数", trigger: "blur" }
+            ],
+            fenbi: [
+                { required: true, message: "请填写每天游戏小号的粉币或积分", trigger: "blur" }
+            ],
+            isMsgTemplate: [{ required: true }],
+            desc: [{ required: true, message: "请填写活动规则", trigger: "blur" }],
+            msgTemplateId: [
+                {required: true,message: "请选择消息模块"}
+            ]
+        },
+        textArray:[],//中奖数组
+    //第三步-------------------------------------
+        ruleForm3: {
+            date: "",
+            type: [],
+            addrRow: [{ list: "" }, { list: "" }],
+            phone: "",
+            desc: ""
+        },
+        rules3: {
+            list: [{ required: true }],
+            date: [{ required: true, type: "array", message: "兑奖时间不能为空" }],
+            type: [
+            {
+                required: true,
+                type: "array",
+                message: "兑奖方式不能为空",
+                trigger: "blur"
+            }
+            ],
+            phone: [
+            { required: true, type: "text", validator: iiPass, trigger: "blur" }
+            ],
+            desc: [{ required: true, message: "兑奖说明不能为空", trigger: "blur" }]
+        },
+        explain: "",
+        ruleForm4: [
+            {
+            name0: 1,
+            name1: "",
+            name2: "",
+            name3: "",
+            name4: ""
+            },
+            {
+            name0: 1,
+            name1: "",
+            name2: "",
+            name3: "",
+            name4: ""
+            }
+        ]
     };
   },
-  methods: {    
-    addrPass(rule, value, callback) {
-      if (!value) {
-       callback(new Error("到店领取地址不能为空"));
-      }else {
-        callback();
-      }
-    },
-    phoneCheck(rule, value, callback) {
-      if (!value) {
-        callback(new Error("联系电话不能为空"));
-      } else if (!value.match(/^1[3|4|5|6|7|8][0-9][0-9]{8}$/)) {
-        callback(new Error("请输入正确的手机号码"));
-      } else {
-        callback();
-      }
-    },
-    addList(){
-        this.ruleForm3.addrRow.push({list:""});
-    },
-    delList(val){
-        this.ruleForm3.addrRow.splice(val, 1);
-    },
-    upStep() {
-      this.active--;
-    },
-    //广告设置的新增&删除
-    addlinks(){
-      this.linksId++
-      this.ruleForm1.links.push({id:this.linksId,url:"",img:""},)
-    },
-    delLinks(val) { 
-          this.ruleForm1.links.splice(val, 1); 
-    },
-    getChangeUrl(i,e) { 
-      //console.log(i)
-      this.ruleForm1.links[i].img=e.url
-    }, 
-    getChangeUrl2(e) { 
-      this.ruleForm2.code=e.url
-    }, 
-    getChangeUrl4(i,e) {   
-      this.ruleForm4[i].name4=e.url
-    }, 
-    addForm4(){ 
-        this.ruleForm4.push({ name0: 1, name1: "", name2: "", name3: "", name4: ""},)
-    },
-    delForm4(val){
-        this.ruleForm4.splice(val, 1); 
-    },
-    next(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) { 
-          this.active++;
+  methods: {
+    //兑奖地址===============================================
+        addrPass(rule, value, callback) {
+        if (!value) {
+            callback(new Error("到店领取地址不能为空"));
         } else {
-         console.log("error submit!!");
+            callback();
         }
-      });
-    },
-    lastStep() {
-      for (let i = 0; i < this.ruleForm4.length; i++) { 
-        var regu =/^[1-9]\d*$/;
-        if(!this.ruleForm4[i].name1||!this.ruleForm4[i].name2||!this.ruleForm4[i].name3){
-            this.$message.error("表单不能留空，请填写完整~");
-            return false
-        }else if (!regu.test(this.ruleForm4[i].name1)) {
-            this.$message.error("奖品单位填写有误，请重新填写~");
-            return false
-        }else if (!regu.test(this.ruleForm4[i].name3)) {
-            this.$message.error("奖项数量填写有误，请重新填写~");
-            return false
-        }else if (this.ruleForm4[i].name0==4&&this.ruleForm4[i].name4.length==0) { 
-                this.$message.error("当奖品为实物时，请上传实物图片~");
-                return false 
-        }else{
-            this.submit();
-        }  
-      }
-    }, 
-    //表单提交--------------------------------------star
-    submit(){
-        console.log(this.ruleForm3,123); 
-        var newarr=[];
-        for(let i =0;i< this.ruleForm1.links.length;i++){ 
-            var arr={
-                name0:this.ruleForm1.links[i].url, 
-                name1:this.ruleForm1.links[i].img, 
-            } 
-            newarr.push(arr)
-        }  
-         var newaddr=[];
-        if(this.ruleForm3.addrRow){ 
-            for(let i =0;i< this.ruleForm3.addrRow.length;i++){ 
-                var arraddr={
-                    address:this.ruleForm3.addrRow[i].list,  
-                } 
-                newaddr.push(arraddr)
-            }    
-        } 
-        var newarr4=[];
-        if(this.ruleForm4){
-            for(let i =0;i< this.ruleForm4.length;i++){
-                var arr4={
-                    name0:this.ruleForm4[i].name0,
-                    name1:this.ruleForm4[i].name1,
-                    name1:this.ruleForm4[i].name1,
-                    name3:this.ruleForm4[i].name3,
-                    name4:this.ruleForm4[i].name4  
-                }
-                newarr4.push(arr4)
-            }
-        } 
-        const data = {
-            //基础设置 
-            name  : this.ruleForm1.name, 
-            name1 : this.ruleForm1.name1, 
-            name3 : newarr, 
-            //规则设置
-            name6 : this.ruleForm2.code, 
-            name7 : this.ruleForm2.time, 
-            name8 : this.ruleForm2.duihuan, 
-            name9 : this.ruleForm2.manTotalChance, 
-            name10: this.ruleForm2.manDayChance, 
-            name11: this.ruleForm2.fenbi, 
-            name12: this.ruleForm2.jifen,  
-            name4 : this.ruleForm2.desc,  
-            name5 : this.ruleForm2.msgModel,  
-            name13: this.ruleForm2.msg,  
-            //兑奖设置 
-            name14:this.ruleForm3.date, 
-            name15:this.ruleForm3.type, 
-            name16:newaddr, 
-            name17:this.ruleForm3.phone, 
-            name18:this.ruleForm3.desc,  
-            //奖项设置 
-            name19:this.explain, 
-            name20:newarr4, 
+        },
 
-           
-        };
-        console.log(data,123); 
-    },  
-    backUrl(){
-         window.history.go(-1);
-    },
-    test(){
-        console.log(1122);
-    }
+    //兑奖地址添加===============================================
+        addList() {
+        this.ruleForm3.addrRow.push({ list: "" });
+        },
+    //兑奖地址删除===============================================
+        delList(val) {
+        this.ruleForm3.addrRow.splice(val, 1);
+        },
+    //步骤条
+        upStep() {
+        this.active--;
+        },
+    //第一步广告设置的新增======================================
+        addlinks(){ 
+            this.ruleForm1.links.push({url:"",imgUrl:""},)
+        },
+    //第一步广告设置删除======================================
+        delLinks(val) { 
+            this.ruleForm1.links.splice(val, 1); 
+        },
+    //基础设置--选择图片================================
+        getChangeUrl(i,e) { 
+            this.ruleForm1.links[i].imgUrl=e.url
+        }, 
+    //获取公众号消息模板列表==================================
+      fetchData() {
+        getTemplateList().then(result => {
+            if (result.code == 100) {
+            this.textArray = this.$util.isArray(result.data);
+          } else {
+            this.$message.error("获取评论列表失败");
+          }
+        })
+      },
+    //规则设置--关注二维码================================
+        getChangeUrl2(e) {
+        this.ruleForm2.followQrCode = e.url;
+        },
+    //奖项设置--奖品图片==============================================
+        getChangeUrl4(i, e) {
+        this.ruleForm4[i].name4 = e.url;
+        },
+    //奖项设置--新增奖品==============================================
+        addForm4() {
+        this.ruleForm4.push({
+            name0: 1,
+            name1: "",
+            name2: "",
+            name3: "",
+            name4: ""
+        });
+        },
+    //奖项设置--删除奖品==============================================
+        delForm4(val) {
+        this.ruleForm4.splice(val, 1);
+        },
+    //步骤条--下一步------------------------------------------------
+        next(formName) {
+            this.checked=true;
+            console.log(this.ruleForm1.links,8787848548)
+            this.$refs[formName].validate(valid => {
+            if (valid) {  
+                if(formName=='ruleForm1'){
+                    console.log(this)
+                    for(let i =0;i< this.ruleForm1.links.length;i++){      
+                        if(!this.ruleForm1.links[i].imgUrl){
+                            this.$message.error('图片不能为空 ');
+                            return false;
+                        }
+                        if(!this.ruleForm1.links[i].url){
+                            this.$message.error('广告链接不能为空');
+                            return false;
+                        }
+                    }
+                }    
+            this.active++;
+            } else {
+            console.log("error submit!!");
+            }
+        });
+        },
+    //最后保存=====================================================
+        lastStep() {
+        for (let i = 0; i < this.ruleForm4.length; i++) {
+            var regu = /^[1-9]\d*$/;
+            if (
+            !this.ruleForm4[i].name1 ||
+            !this.ruleForm4[i].name2 ||
+            !this.ruleForm4[i].name3
+            ) {
+            this.$message.error("表单不能留空，请填写完整~");
+            return false;
+            } else if (!regu.test(this.ruleForm4[i].name1)) {
+            this.$message.error("奖品单位填写有误，请重新填写~");
+            return false;
+            } else if (!regu.test(this.ruleForm4[i].name3)) {
+            this.$message.error("奖项数量填写有误，请重新填写~");
+            return false;
+            } else if (
+            this.ruleForm4[i].name0 == 4 &&
+            this.ruleForm4[i].name4.length == 0
+            ) {
+            this.$message.error("当奖品为实物时，请上传实物图片~");
+            return false;
+            } else {
+            this.submit();
+            }
+        }
+        },
+    //表单提交--------------------------------------star
+        submit() {
+            //广告设置
+                var newadv=[];
+                for(let i =0;i< this.ruleForm1.links.length;i++){ 
+                    var arr={
+                        hrefUrl:this.ruleForm1.links[i].url, 
+                        url:this.ruleForm1.links[i].imgUrl, 
+                    } 
+                    newadv.push(arr)
+                } 
+            //兑奖地址
+                var newaddr = [];
+                if (this.ruleForm3.addrRow) {
+                    for (let i = 0; i < this.ruleForm3.addrRow.length; i++) {
+                    var arraddr = {
+                        address: this.ruleForm3.addrRow[i].list
+                    };
+                    newaddr.push(arraddr);
+                    }
+                }
+            //奖项设置--新增奖品==============================================
+                var newarr4 = [];
+                if (this.ruleForm4) {
+                    for (let i = 0; i < this.ruleForm4.length; i++) {
+                    var arr4 = {
+                        name0: this.ruleForm4[i].name0,
+                        name1: this.ruleForm4[i].name1,
+                        name1: this.ruleForm4[i].name1,
+                        name3: this.ruleForm4[i].name3,
+                        name4: this.ruleForm4[i].name4
+                    };
+                    newarr4.push(arr4);
+                    }
+                }
+            const data = {
+            //基础设置
+                name              : this.ruleForm1.name,
+                activityBeginTime : this.ruleForm1.gtTime[0],
+                activityEndTime   : this.ruleForm1.gtTime[1],
+                goldtreeAdReqs    : newadv,
+            //规则设置
+                followQrCode      : this.ruleForm2.followQrCode,
+                gameTime          : this.ruleForm2.time,
+                ingotMoney        : this.ruleForm2.duihuan,
+                freeTimes         : this.ruleForm2.manTotalChance,
+                dayFreeTimes      : this.ruleForm2.manDayChance,
+                gameFb            : this.ruleForm2.fenbi,
+                gameJf            : this.ruleForm2.jifen,
+                actRule           : this.ruleForm2.desc,
+                msgTemplateId     : this.ruleForm2.msgTemplateId,
+                isMsgTemplate     : this.ruleForm2.isMsgTemplate,
+            //兑奖设置
+                cashPrizeBeginTime      :this.ruleForm3.date[0], 
+                cashPrizeEndTime        :this.ruleForm3.date[1], 
+                receiveType             :this.ruleForm3.type.toString(), //兑奖方式
+                phone                   :this.ruleForm3.phone,  
+                cashPrizeInstruction    :this.ruleForm3.desc,  
+                qixiAddressReqs         :newAddr, 
+            //奖项设置
+                name19: this.explain,
+                name20: newarr4
+            };
+            console.log(data, 123);
+            saveAct(data).then(data => {
+                //添加预约管理接口
+                if (data.code == 100) {
+                this.active = 5;
+                } else {
+                this.$message.error(data.msg + "[错误码：" + data.code + "]");
+                }
+            })
+        },
+    //返回活动列表=============================================
+        backUrl() {
+            window.history.go(-1);
+        },
   },
   mounted() {
-    
+      this.fetchData()//获取公众号消息模板列表
   }
 };
 </script>
+<style lang="less">
+.bd1px-red{
+      .plus-box,textarea{
+        border-color: #FF4949 !important;
+      }
+      .el-input__inner{
+          border-color: #FF4949 !important;
+      }
+    }
+</style>
