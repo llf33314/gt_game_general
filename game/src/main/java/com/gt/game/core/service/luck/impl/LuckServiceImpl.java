@@ -131,7 +131,7 @@ public class LuckServiceImpl implements LuckService {
             }else if(LuckListRes.getLuckEndTime().getTime() < date.getTime()){
                 LuckListRes.setIsEdit(0);
                 LuckListRes.setStatus(2);
-            }else if(LuckListRes.getLuckEndTime().getTime() > date.getTime() && LuckListRes.getStatus() == 1){
+            }else if(LuckListRes.getLuckEndTime().getTime() > date.getTime() && LuckListRes.getLuckStatus() == 1){
                 LuckListRes.setIsEdit(0);
                 LuckListRes.setStatus(1);
             }else {
