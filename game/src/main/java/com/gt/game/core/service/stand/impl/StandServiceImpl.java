@@ -39,6 +39,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -438,7 +439,7 @@ public class StandServiceImpl implements StandService {
                         StandtotheendPrizeImgUrl standtotheendPrizeImgUrl = new StandtotheendPrizeImgUrl();
                         BeanUtils.copyProperties(StandPrizeImgReq,standtotheendPrizeImgUrl);
                         standtotheendPrizeImgUrl.setPrizeId(standtotheendPrize.getId());
-                        standtotheendPrizeImgUrl.setPicUrl(standtotheendPrizeImgUrl.getPicUrl().split("/upload").length>1?
+                        if(CommonUtil.isNotEmpty(standtotheendPrizeImgUrl.getPicUrl())) standtotheendPrizeImgUrl.setPicUrl(standtotheendPrizeImgUrl.getPicUrl().split("/upload").length>1?
                                 standtotheendPrizeImgUrl.getPicUrl().split("/upload")[1]:standtotheendPrizeImgUrl.getPicUrl());
                         standtotheendPrizeImgUrlService.insert(standtotheendPrizeImgUrl);
                     }
