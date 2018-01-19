@@ -42,7 +42,7 @@
     </sql>
 
 	<select id="getCount" resultType="map" parameterType="map">
-		SELECT  t1.count2 ,t2.count3 , t3.count4
+		SELECT  t1.count2 ,t2.count3 , t3.count4,t4.count5
 		FROM (SELECT  count(m1.id) AS count2 FROM  t_wx_activity_luck_main m1
 		WHERE m1.luck_wx_userid = #{busId,jdbcType=INTEGER} AND UNIX_TIMESTAMP(m1.luck_beginTime) > UNIX_TIMESTAMP(#{nowTime})) t1
 		JOIN
@@ -53,10 +53,10 @@
 		WHERE m3.luck_wx_userid = #{busId,jdbcType=INTEGER} AND  UNIX_TIMESTAMP(m3.luck_endTime) &lt; UNIX_TIMESTAMP(#{nowTime})) t3
 		JOIN
 		(SELECT count(m4.id) AS count5 FROM  t_wx_activity_luck_main m4
-		WHERE m4.luck_wx_userid = #{busId,jdbcType=INTEGER} AND luck_status = 2 and UNIX_TIMESTAMP(m3.luck_endTime) >= UNIX_TIMESTAMP(#{nowTime}))) t4
+		WHERE m4.luck_wx_userid = #{busId,jdbcType=INTEGER} AND luck_status = 2 and UNIX_TIMESTAMP(m4.luck_endTime) >= UNIX_TIMESTAMP(#{nowTime})) t4
 	</select>
 
-	<select id="getLoveArrowList" resultMap="BaseResultMap1" parameterType="Map">
+	<select id="getLuckList" resultMap="BaseResultMap1" parameterType="Map">
 		SELECT  id,luck_beginTime, luck_endTime, luck_name,luck_status
 		FROM t_wx_activity_luck_main
 		WHERE luck_wx_userid = #{busId,jdbcType=INTEGER}
