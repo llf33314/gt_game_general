@@ -439,7 +439,7 @@ public class GoldtreeServiceImpl implements GoldtreeService {
                 BeanUtils.copyProperties(GoldtreePrizeReq,GoldtreePrize);
                 GoldtreePrize.setActId(GoldtreeMain.getId());
                 goldtreePrizeService.insert(GoldtreePrize);
-                if(GoldtreePrizeReq.getGoldtreePrizeImgReqs().size() > 0){
+                if(CommonUtil.isNotEmpty(GoldtreePrizeReq.getGoldtreePrizeImgReqs()) && GoldtreePrizeReq.getGoldtreePrizeImgReqs().size() > 0){
                     for(GoldtreePrizeImgReq GoldtreePrizeImgReq : GoldtreePrizeReq.getGoldtreePrizeImgReqs()){
                         GoldtreePrizeImg GoldtreePrizeImg = new GoldtreePrizeImg();
                         BeanUtils.copyProperties(GoldtreePrizeImgReq,GoldtreePrizeImg);
