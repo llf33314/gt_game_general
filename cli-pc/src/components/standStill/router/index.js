@@ -6,7 +6,8 @@ const prizeRecord = ()=>import( '@/components/standStill/vue/prizeRecord')
 const user = ()=>import( '@/components/standStill/vue/user') 
 const question = ()=>import( '@/components/standStill/vue/question') 
 const addQuest = ()=>import( '@/components/standStill/vue/addQuest') 
-const editQuest = ()=>import( '@/components/standStill/vue/editQuest') 
+const editQuest = ()=>import( '@/components/standStill/vue/editQuest')  
+const editAct = ()=>import( '@/components/standStill/vue/editAct')
 export const standStill = [
     {
         path:'/standStill/index',
@@ -27,6 +28,11 @@ export const standStill = [
         path:'/standStill/addAct',
         component: addAct,
         name:'standStill_addAct'
+    },
+    {
+        path:'/standStill/editAct',
+        component: editAct,
+        name:'standStill_editAct'
     },
     {
         path:'/standStill/cancelOut',
