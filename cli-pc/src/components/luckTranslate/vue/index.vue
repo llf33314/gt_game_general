@@ -9,88 +9,76 @@
       <el-breadcrumb-item>好运翻翻看</el-breadcrumb-item>  
     </el-breadcrumb>
     <div class="gt-gray-region mb20"> 
-      <span class="padding-left-md ml30 mb10" v-if="this.tableData.data.length!=0">
-        <el-input placeholder="输入标题关键字查询" icon="search" v-model="keyWord" style="width:250px" @change="getdata()"> 
+      <span class="padding-left-md ml30 mb10">
+        <el-input placeholder="输入标题关键字查询" icon="search" v-model="keyWord" style="width:250px" @keyup.native.enter="getdata" :on-icon-click="getdata" @blur="getdata($event)"> 
         </el-input>
       </span> 
        <gt-video-btn videoId="22" class="gt-video-btn mr70"></gt-video-btn> 
-      <div class="h10"  v-if="this.tableData.data.length!=0"></div>
+      <div class="h10"></div>
       <el-button type="primary" @click="addActive()" class="ml30">新建活动</el-button> 
     </div> 
-    <div class="gt-content"> 
-        <gt-null-data>还没有创建相关活动，
+    <div class="gt-content">  
+        <el-tabs v-model="activeName" type="card" @tab-click="handleClick" >
+          <el-tab-pane :label="'全部  ('+countNum.all+')'"      name="-1"></el-tab-pane>
+          <el-tab-pane :label="'未开始('+countNum.nostar+')'"   name="0"></el-tab-pane> 
+          <el-tab-pane :label="'进行中('+countNum.started+')'"  name="1"></el-tab-pane> 
+          <el-tab-pane :label="'已暂停('+countNum.stop+')'"     name="3"></el-tab-pane> 
+          <el-tab-pane :label="'已结束('+countNum.over+')'"     name="2"></el-tab-pane>
+        </el-tabs>
+        <gt-null-data v-if="this.tableData.page.totalNums==0">还没有创建相关活动，
           <span  @click="addActive()">点击这里</span>创建活动吧
         </gt-null-data>
-        <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-          <el-tab-pane :label="'全部  ('+countNum.first+')'"   name="0"></el-tab-pane>
-          <el-tab-pane :label="'未开始('+countNum.second+')'"  name="2"></el-tab-pane> 
-          <el-tab-pane :label="'进行中('+countNum.third+')'"   name="3"></el-tab-pane> 
-          <el-tab-pane :label="'已结束('+countNum.fifth+')'"   name="5"></el-tab-pane>
-        </el-tabs>
-        <el-table :data="tableData.data">
-          <el-table-column prop="actName" label="活动名称"></el-table-column>
-          <el-table-column prop="startTime" label="活动开始时间">
+        <el-table :data="tableData.data"  v-if="this.tableData.page.totalNums!=0">
+          <el-table-column prop="luckName" label="活动名称"></el-table-column>
+          <el-table-column prop="luckBeginTime" label="活动开始时间">
             <template slot-scope="scope">
-              {{scope.row.startTime|parseTime('{y}-{m}-{d} {h}:{i}')}}
+              {{scope.row.luckBeginTime|parseTime('{y}-{m}-{d}')}}
             </template>
           </el-table-column>
-          <el-table-column prop="endTime" label="活动结束时间">
+          <el-table-column prop="luckEndTime" label="活动结束时间">
             <template slot-scope="scope">
-              {{scope.row.endTime|parseTime('{y}-{m}-{d} {h}:{i}')}}
+              {{scope.row.luckEndTime |parseTime('{y}-{m}-{d}')}}
             </template>
           </el-table-column>
-          <el-table-column prop="state" label="活动状态">
+          <el-table-column prop="status" label="活动状态">
             <template slot-scope="scope">
-              {{scope.row.state|actStatus(scope.row.state)}} 
+              {{scope.row.status |actStatus(scope.row.status)}} 
             </template> 
           </el-table-column>
-          <el-table-column prop="order_option" width="450" label="操作">
+          <el-table-column  width="450" label="操作">
             <template slot-scope="scope"> 
-              <el-button class="gt-button-normal blue" @click="test(scope.row.id)">编辑</el-button>
-              <el-button class="gt-button-normal blue" @click="askPreview(scope.row.id)">预览链接</el-button>              
-              <el-button class="gt-button-normal blue" @click="test(scope.row.id)">核销授权</el-button>
-              <el-button class="gt-button-normal blue" @click="test(scope.row.id)">中奖纪录</el-button>   
-              <el-button class="gt-button-normal"      @click="delBtn(scope.row.id)">删除</el-button> 
+              <el-button class="gt-button-normal blue"  v-if="scope.row.isEdit==1" @click="editActive(scope.row.id)">编辑</el-button>
+              <el-button class="gt-button-normal blue"  v-if="scope.row.status!=0" @click="record(scope.row.id)">中奖纪录</el-button>
+              <el-button class="gt-button-normal blue"  @click="askPreview(scope.row.id)">预览链接</el-button> 
+              <el-button class="gt-button-normal"       @click="delBtn(scope.row.id)">删除</el-button> 
             </template>
           </el-table-column>
         </el-table>
         <div class="public-page-fr">
-            <el-pagination @current-change="handleCurrentChange"  :page-size="10" 
+            <el-pagination @current-change="handleCurrentChange"  :current-page.sync="current" :page-size="10"  v-if="this.tableData.page.totalNums!=0"
             layout="prev, pager, next, jumper" :total="tableData.page.totalNums">
             </el-pagination>
         </div> 
-    </div>
-    <!-- 删除 -->
-    <!-- <gt-del-tip :showTip.sync="dialogTip" :confirmFuc="delEmployee">
-      <p>确定删除该活动吗</p> 
-      <p class="grey mt10">点击确定后，将不可以回复哦~</p> 
-    </gt-del-tip> -->
+    </div> 
     <!-- 链接 -->
-    <gt-copy-url :copeData="copeData"></gt-copy-url>    
+    <gt-copy-url :copeData="copeData"></gt-copy-url> 
 </div>
 </section>
 </template>
 <script>
+import { 
+  getActList,getMobileUrl,getShortUrl,delAct,getActCount
+}from './../api/api'
   export default{
     data() {
       return { 
         keyWord:"",
-        activeName:0, 
-        countNum:{first:"10",second:"20",third:"30",fourth:"40",fifth:"2"},
-        tableData:{
-          data:[
-            {
-              actName:"活动名称",
-              state:1,
-              startTime:1513008000000,
-              endTime:1514476800000,
-            }
-          ], 
-          page:{
-            totalNums:31,
-            totalPages:4
-          }
-        }, 
+        activeName:"-1",
+        dialogTip:false, 
+        // countNum:{first:"10",second:"20",third:"30",fourth:"40",fifth:"2"},
+        countNum:{all:"",nostar:"",started:"",stop:"",over:""},
+        tableData:{data:[], page:{}}, 
+        current:1,
         //预览连接
         copeData: { 
           url: "",
@@ -100,99 +88,119 @@
       };
     },
     methods: { 
+      //初始化数据-----------------------------------star
       getdata(){
-        console.log(3);
+        var params    ={};
+        params.status =Number(this.activeName);
+        params.name   =this.keyWord;
+        params.current=this.current;
+        params.size   =10;
+        console.log(params,77)
+        getActList(params).then(data=>{
+          if (data.code == 100) {
+            this.tableData=data
+            console.log(data,'获取首页');
+          } else {
+              this.$message.error(data.msg);
+          }
+        }).catch(() => {
+            this.$message({ type: "info", message: "网络问题，请刷新重试~" });
+        }); 
       },
-      delEmployee(hide) {
-        console.log("删除触发事件");
-        this.dialogTip=false
+      //获取数量--------------------------------------star
+      getCount(){
+        getActCount().then(data=>{
+          if (data.code == 100) {
+            console.log(data,'数量')
+            this.countNum.all    =data.data.count1 
+            this.countNum.nostar =data.data.count2 
+            this.countNum.started=data.data.count3 
+            this.countNum.over   =data.data.count4 
+            this.countNum.stop   =data.data.count5            
+          } else {
+              this.$message.error(data.msg);
+          }
+        }).catch(() => {
+            this.$message({type: "info", message: "网络问题，请刷新重试~" });
+        }); 
       },
-      askPreview(){
-        this.copeData.copyUrlVisible = true
+      //预览连接--------------------------------------------------------------star
+      askPreview(mainId) { 
+        getMobileUrl({mainId}).then(data => {
+          if (data.code == 100) {  
+             console.log(data,'连接')
+            this.copeData.url = data.data.mobileUrl; 
+            getShortUrl(data.data.mobileUrl).then(res => {
+               console.log(res,'短链接')
+              this.copeData.shortUrl = res;
+            });
+            this.copeData.copyUrlVisible = true;
+          } else {
+            this.$message.error(data.msg);
+          }
+        });
       },
-      //删除------------------------------------------------------------star
+      //删除--------------------------------------star
       delBtn(val) {
-        this.$confirm('此操作将永久删除该活动, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
-        });
+            this.$confirm("确定要永久删除此活动吗?", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning" 
+            }).then(() => {  
+            delAct({id:val}).then(data => {  
+                if (data.code == 100) { 
+                    this.$message({ message: "操作成功", type: "success"}); 
+                    this.getdata();
+                } else {
+                this.$message.error(data.msg);
+                }
+            });
+            }).catch(() => {
+                this.$message({ type: "info", message: "已取消删除" });
+            });    
       },
-      //开始------------------------------------------------------------star 
-       actBtn(val) {
-        this.$confirm('确定要开启该活动吗？', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '成功!'
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消'
-          });          
-        });
-      },
-      //暂停------------------------------------------------------------star
-      stopBtn(val) {
-        this.$confirm('确定要暂停该活动吗？', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '成功!'
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消'
-          });          
-        });
-      },
+      // askPreview(){
+      //   this.copeData.copyUrlVisible = true
+      // },
       //切换------------------------------------------------------------star
-      handleClick() {
-        console.log(this.activeName,11); 
-        this.current=1;
+      handleClick() { 
         this.getdata();
       },
       handleCurrentChange(val){
-        console.log(val)
+        this.getdata();
+      },
+      //中奖记录
+      record(val){
+         this.$router.push({path: '/luckTranslate/prizeRecord', query: {id: val}});
+      },
+      //核销授权
+      impower(val){
+         this.$router.push({path: '/luckTranslate/cancelOut', query: {id: val}});
       },
       addActive(){
         this.$router.push('/luckTranslate/addAct')
+      },
+      editActive(val){
+        this.$router.push({path:'/luckTranslate/editAct', query: {id: val}});
       },
       test(){
         console.log(123)
       }
     },
     mounted() {
-    
+      this.getdata();
+      this.getCount();
     },
     filters: {
       actStatus(val) {
         if (val == 0) {
           val = "未开始";
         }else if(val == 1){
-          val = "进行中";
+          val = "进行中"; 
         }else if(val == 2){
-          val = "已暂停";
-        }else if(val == 3){
           val = "已结束";
+        }else if(val == 3){
+          val = "已暂停";
         }  
         return val;
       },
