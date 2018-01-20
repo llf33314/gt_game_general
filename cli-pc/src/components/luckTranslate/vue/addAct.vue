@@ -1,3 +1,4 @@
+ 
 <template>
 <section>
 <div class="hd-common turnPlate">
@@ -17,8 +18,8 @@
         <!-- 基础设置 -->
         <div v-show="this.active==0" class="mt40">
             <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="160px" class="demo-ruleForm"> 
-                <el-form-item label="活动名称：" prop="name">
-                    <el-input class="w_demo" :maxlength="20"  placeholder="请输入活动名称"  v-model="ruleForm1.name"></el-input>
+                <el-form-item label="活动名称：" prop="luckName">
+                    <el-input class="w_demo" :maxlength="20"  placeholder="请输入活动名称"  v-model="ruleForm1.luckName"></el-input>
                     <span class="el-upload__tip grey" >
                        20个字数以内
                     </span>
@@ -28,34 +29,34 @@
                     </el-date-picker>
                 </el-form-item>  
 
-                <el-form-item label="活动说明：" prop="desc1">
-                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.desc1" :rows="3" placeholder="请输入活动说明"></el-input>
+                <el-form-item label="活动说明：" prop="luckBeforeTxt">
+                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.luckBeforeTxt" :rows="3" placeholder="请输入活动说明"></el-input>
                     <span class="el-upload__tip grey" >
                         描述活动详情，能让粉丝了解此次活动
                     </span>
                 </el-form-item> 
 
-                 <el-form-item label="活动未开始提示：" prop="desc2">
-                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.desc2" :rows="3" placeholder="如：活动尚未开始，敬请期待!"></el-input>
+                 <el-form-item label="活动未开始提示：" prop="luckDescribe">
+                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.luckDescribe" :rows="3" placeholder="如：活动尚未开始，敬请期待!"></el-input>
                     <span class="el-upload__tip grey" >
                         活动未开始提示限制在100个字数以内
                     </span>
                 </el-form-item>   
                 
-                 <el-form-item label="参与人员："  prop="resource">
-                    <el-radio-group v-model="ruleForm1.resource">
+                 <el-form-item label="参与人员："  prop="luckLuckPartaker">
+                    <el-radio-group v-model="ruleForm1.luckLuckPartaker">
                     <el-radio :label="1">所有粉丝</el-radio>
                     <el-radio :label="2">仅会员(持有会员卡的粉丝)</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <div class="pd20 bw pt10 bb ml150 mb20" v-show="ruleForm1.resource==2">
-                    <el-form-item label="参与方式：" label-width="100px" prop="way">
-                          <el-radio-group v-model="ruleForm1.way">
+                <div class="pd20 bw pt10 bb ml150 mb20" v-show="ruleForm1.luckLuckPartaker==2">
+                    <el-form-item label="参与方式：" label-width="100px" prop="luckPway">
+                          <el-radio-group v-model="ruleForm1.luckPway">
                             <el-radio :label="1">所有会员不需要积分</el-radio><br><br>
-                            <el-radio :label="2">会员卡积分满<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.way!="2"' v-model="ruleForm1.name1"></el-input>即可参加（抽奖不扣除积分）</el-radio><br><br>
-                            <el-radio :label="3">每次抽奖扣除<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.way!="3"' v-model="ruleForm1.name2"></el-input>积分</el-radio><br><br>
-                            <el-radio :label="4">会员卡积分满<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.way!="4"' v-model="ruleForm1.name3"></el-input>分，
-                                                 每次抽奖扣除<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.way!="4"' v-model="ruleForm1.name4"></el-input>分</el-radio> 
+                            <el-radio :label="2">会员卡积分满<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.luckPway!="2"' v-model="ruleForm1.name1"></el-input>即可参加（抽奖不扣除积分）</el-radio><br><br>
+                            <el-radio :label="3">每次抽奖扣除<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.luckPway!="3"' v-model="ruleForm1.name2"></el-input>积分</el-radio><br><br>
+                            <el-radio :label="4">会员卡积分满<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.luckPway!="4"' v-model="ruleForm1.name3"></el-input>分，
+                                                 每次抽奖扣除<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.luckPway!="4"' v-model="ruleForm1.name4"></el-input>分</el-radio> 
                           </el-radio-group> 
                     </el-form-item>
                 </div> 
@@ -73,25 +74,26 @@
         <!-- 规则设置 -->
         <div v-show="this.active==1" class="mt40">
             <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="120px" class="mt40 demo-ruleForm">  
-                    <el-form-item label="游戏总数：" prop="cishu">
-                        <el-input class="w_demo mr10" v-model="ruleForm2.cishu" placeholder="请输入每人抽奖总次数"></el-input> 次/人
+                    <el-form-item label="游戏总数：" prop="luckCountOfDay">
+                        <el-input class="w_demo mr10" type="number" v-model="ruleForm2.luckCountOfDay" placeholder="请输入每人抽奖总次数"></el-input> 次/人
                     </el-form-item>
-                    <el-form-item label="每天次数：" prop="zongshu">
-                        <el-input class="w_demo mr10" v-model="ruleForm2.zongshu" placeholder="请输入每人/每天抽奖总数"></el-input>次/人
+                    <el-form-item label="每天次数：" prop="luckCountOfAll">
+                        <el-input class="w_demo mr10" type="number"  v-model="ruleForm2.luckCountOfAll" placeholder="请输入每人/每天抽奖总数"></el-input>次/人
                     </el-form-item>   
             </el-form> 
         </div> 
         <!-- 兑奖设置 -->
         <div v-show="this.active==2" class="mt40">
             <el-form :model="ruleForm3" :rules="rules3" ref="ruleForm3" label-width="120px" class="mt40 demo-ruleForm">
-                <el-form-item label="兑奖期限：" prop="days">
-                    <el-input class="w_demo mr10" type="number" v-model="ruleForm3.days" placeholder="请输入兑奖期限"></el-input>天
+                <el-form-item label="兑奖期限：" prop="luckCashDay">
+                    <el-input class="w_demo mr10" type="number" v-model="ruleForm3.luckCashDay" placeholder="请输入兑奖期限"></el-input>天
                     <span class="el-upload__tip grey">
                         从活动结束后开始计算
                     </span>
-                </el-form-item> 
-                <el-form-item label="兑奖地址：" prop="dizhi">
-                    <el-input class="w_demo"  type="textarea" v-model="ruleForm3.dizhi" :rows="5" placeholder="请输入兑奖地址"></el-input>
+                </el-form-item>  
+                
+                <el-form-item label="兑奖地址：" prop="luckAddress">
+                    <el-input class="w_demo"  type="textarea" v-model="ruleForm3.luckAddress" :rows="5" placeholder="请输入兑奖地址"></el-input>
                 </el-form-item>  
             </el-form> 
         </div>
@@ -147,7 +149,7 @@
                 </el-table-column>
                 <el-table-column label="操作">
                   <template slot-scope="scope">
-                      <el-button class="gt-button-normal blue" @click="test(scope.row.id)">指定中奖人</el-button>
+                      <el-button class="gt-button-normal blue" @click="shoeDialogFans(scope.$index)">指定中奖人</el-button>
                       <el-button class="gt-button-normal"  v-if="scope.$index!=0"  @click="delForm4(scope.$index)">删除</el-button>
                   </template>
                 </el-table-column>
@@ -172,68 +174,143 @@
             <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>   
             <el-button type="primary" @click="submit()">打印</el-button>   
         </div> 
+        <!-- 选择粉丝弹窗 -->
+<el-dialog title="粉丝列表"  :visible.sync="dialogFans">
+    <div class="mb10"> 
+      <el-input placeholder="请输入昵称" icon="search" v-model="memberName" style="width:250px" @change="test()"> 
+          </el-input>
+    </div>
+  <div style="width:100%;height:500px;">
+    <div style="width:75%;float:left;">
+      <el-table ref="multipleTable" :data="fansData.data"  tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="40">
+          </el-table-column>
+          <el-table-column label="头像" prop="headimgurl">   
+                <template slot-scope="scope">
+                  <img :src="scope.row.headimgurl" style="width:30px;height:30px"/>
+                </template>
+          </el-table-column>
+          <el-table-column label="昵称" prop="nickname">
+          </el-table-column>
+          <el-table-column label="性别" prop="sex">
+            <template slot-scope="scope">{{ scope.row.sex|sexStatus(scope.row.sex) }}</template>
+          </el-table-column>
+          <el-table-column label="所在城市" prop="city">
+          </el-table-column>
+          <el-table-column label="关注时间" prop="jointime">
+            <template slot-scope="scope">{{scope.row.jointime|parseTime('{y}-{m}-{d}')}}</template>
+          </el-table-column>
+          <el-table-column label="组别" prop="name">
+          </el-table-column>
+      </el-table>
+      <div class="public-page-fr">
+           <el-pagination @current-change="handleCurrentChange"  :current-page.sync="current" :page-size="8"
+            layout="prev, pager, next, jumper" :total="fansData.page.totalNums">
+            </el-pagination> 
+      </div>  
+      <div class="h20"></div> 
+    </div>
+
+    <div style="width:24%;float:right;height:450px;background:#f2f2f2;border:1px solid #dfe6ec">
+        <div style="height:40px;line-height:40px; background:#EEF1F6;padding-left:10px;border-bottom:1px solid #dfe6ec">
+          已选择：{{this.prizeData.length}}
+        </div> 
+        <div v-for="(item,index) in  prizeData" class="prizeItem" >  
+            <p style="width:100%;">
+                <div class="prizeName">
+                  {{item.nickname}} 
+                </div>
+                <span @click="delPrize(index)" class="blueee mr10 pull-right mt20" >删除</span>  
+            </p>
+        </div> 
+    </div>
+    <div style="float:right"> 
+    <span slot="footer" class="dialog-footer">
+        <div class="h20"></div>
+      <el-button @click="dialogFans = false">取 消</el-button>
+      <el-button type="primary" @click="prizeSubmit()">确 定</el-button>
+    </span>
+  </div> 
+  </div>
+
+  
+</el-dialog>
     </div>   
 </div>
 </section>
 </template>
 <script>
+import { 
+    getMembers
+}from './../api/api' 
 export default {
   data() {
     let numPass = (rule, value, callback) => { 
-        if(this.ruleForm1.way==2&&this.ruleForm1.name1==''){
+        if(this.ruleForm1.luckPway==2&&this.ruleForm1.name1==''){
            callback(new Error("不能为空"));
-        }else if(this.ruleForm1.way==3&&this.ruleForm1.name2==''){
-          callback(new Error("不能为空"));
-        }else if((this.ruleForm1.way==4&&this.ruleForm1.name3=='')||(this.ruleForm1.way==4&&this.ruleForm1.name4=='')){
-          callback(new Error("不能为空"));
-        }
-        
+        }else if(this.ruleForm1.luckPway==2&&this.ruleForm1.name1<0){
+           callback(new Error("请输入大于0的整数")); 
+        }else if(this.ruleForm1.luckPway==3&&this.ruleForm1.name2==''){
+           callback(new Error("不能为空"));
+        }else if(this.ruleForm1.luckPway==3&&this.ruleForm1.name2<0){
+           callback(new Error("请输入大于0的整数")); 
+        }else if((this.ruleForm1.luckPway==4&&this.ruleForm1.name3=='')||(this.ruleForm1.luckPway==4&&this.ruleForm1.name4=='')){
+           callback(new Error("不能为空"));
+        }else if(this.ruleForm1.luckPway==4&&this.ruleForm1.name3<0){
+           callback(new Error("请输入大于0的整数")); 
+        }else if(this.ruleForm1.luckPway==4&&this.ruleForm1.name4<0){
+           callback(new Error("请输入大于0的整数")); 
+        }         
+    }; 
+    let numberPass = (rule, value, callback) => { 
+        if(!value){
+            callback(new Error("每天抽奖次数不能为空")); 
+        }else if(value<0){
+           callback(new Error("请输入大于0的整数")); 
+        }else{
+           callback(); 
+        }         
     }; 
     return {
-      active:0,
+      active:3,
       ruleForm1: {
         type:1,
-        name: "",
-        acttime: "", 
-        resource: 1,
-        desc1: "",
-        desc2: "",
+        luckName: "",
+        acttime: [], 
+        luckLuckPartaker: 1,
+        luckBeforeTxt: "",
+        luckDescribe: "",
         music: "暂无上传音乐",
         musicUrl: "",
-        way:1,
+        luckPway:1,
         name1:"", 
         name2:"", 
         name3:"", 
-        name4:"", 
-        name5:"", 
+        name4:""  
       },
       rules1: {
-        name: [{ required: true, message: "活动名称不能为空", trigger: "blur" }],
-        desc1: [{ required: true, message: "活动说明不能为空", trigger: "blur" }],
-        desc2: [{ required: true, message: "活动未开始提示不能为空", trigger: "blur" }],
-        resource:[{ required: true, }],
-        acttime: [
-          { required: true, type: "date", message: "开始时间不能为空", trigger: "blur" }
-        ] ,
-        way:[{validator:numPass, trigger: "blur" }]
+        luckName: [{ required: true, message: "活动名称不能为空", trigger: "blur" }],
+        luckBeforeTxt: [{ required: true, message: "活动说明不能为空", trigger: "blur" }],
+        luckDescribe: [{ required: true, message: "活动未开始提示不能为空", trigger: "blur" }],
+        luckLuckPartaker:[{ required: true, }],
+        acttime: [{ required: true, type: "array", message: "开始时间不能为空", trigger: "blur" }] ,
+        luckPway:[{validator:numPass, trigger: "blur" }]
       },
       ruleForm2: { 
-        cishu: "",
-        zongshu: "" ,       
+        luckCountOfDay: "",
+        luckCountOfAll: "" ,       
       },
       rules2: { 
-        cishu: [{ required: true, message: "每天抽奖次数不能为空", trigger: "blur" }],
-        zongshu: [{ required: true, message: "抽奖总数不能为空", trigger: "blur" }]
+        luckCountOfDay:[{required: true,validator:numberPass,trigger: "blur" }],
+        luckCountOfAll:[{required: true,validator:numberPass,  trigger: "blur" }]
       },
       ruleForm3: {
-        days:"",
-        dizhi: "",
-        tishi: "",
-        ticketWay:2,
+        luckCashDay:"",
+        luckAddress: "", 
       }, 
       rules3: {
-        days: [{ required: true,  message: "兑奖期限不能为空", trigger: "blur" }],
-        dizhi: [{ required: true, message: "兑奖地址不能为空", trigger: "blur" }]
+        luckCashDay: [{ required: true,  message: "兑奖期限不能为空", trigger: "blur" }],
+        luckAddress: [{ required: true, message: "兑奖地址不能为空", trigger: "blur" }]
       },  
       ruleForm4:[
         { 
@@ -242,12 +319,85 @@ export default {
           name2: "",
           name3: "",
           name4: "",
-          winners:"大大，小小",
+          nickname:"",
+          openid:"",
         }
       ],
+      dialogFans:false,
+      memberName:"",
+      current:1,
+      fansData:{
+        data:[], 
+        page:{}        
+      },
+      prizeData:[],
+      key:"",
     };
   },
-  methods: {  
+  methods: { 
+    shoeDialogFans(val){
+        this.key=val
+        this.dialogFans=true
+        //alert(this.key)
+    },
+    
+
+    delPrize(index){
+      this.prizeData.splice(index, 1); 
+    }, 
+    //多选名单
+    handleSelectionChange(val) {
+      // console.log(val,111)
+        // this.multipleSelection = val; 
+        this.prizeData = val;  
+        
+    },
+    //指定中奖人确定按钮
+    prizeSubmit(){ 
+        if(this.prizeData.length>4){
+            this.$message.error("指定中奖人不能超过5个");
+        }else{
+            var i=this.key; 
+            for(var i=0;i<this.prizeData.length;i++){
+                var arr1={
+                    nickname:this.prizeData[i].nickname,
+                    openid  :this.prizeData[i].openid
+                } 
+            } 
+            this.ruleForm4[i].nickname.push(arr1.nickname)
+            this.ruleForm4[i].openid.push(arr1.openid)
+            console.log(arr1,852);
+            console.log(this.ruleForm4,852) 
+            //this.ruleForm2.name21=arr+''
+            this.dialogFans=false
+        } 
+    },    
+    //获取中奖名单
+    getMembersData(){ 
+        var params={}
+        params.current=this.current
+        params.size=8
+        params.memberName=this.memberName
+        console.log(params)
+        getMembers(params).then(data=>{
+          if (data.code == 100) {
+            this.fansData=data           
+          } else {
+              this.$message.error(data.msg);
+          }
+        }).catch(() => {
+            this.$message({type: "info", message: "网络问题，请刷新重试~" });
+        }); 
+    },
+    //翻页
+    handleCurrentChange(val){
+      this.getMembersData() 
+    },
+
+
+
+
+
     test() {
       console.log(123); 
       this.active=5
@@ -263,7 +413,7 @@ export default {
       this.ruleForm4.splice(index, 1);
     },
     addForm4(){  
-      this.ruleForm4.push({name0: 1, name1: "", name2: "", name3: "", name4: ""},)
+      this.ruleForm4.push({name0: "", name1: "", name2: "", name3: "", name4: "",nickname:"",openid:"",})
     },
     upStep() {
       this.active--;
@@ -306,26 +456,35 @@ export default {
             }
             newarr.push(arr)
         } 
+        var luckMan,luckKou;
+        if(this.ruleForm1.luckPway==2){
+             luckMan = this.ruleForm1.name1
+        }else if(this.ruleForm1.luckPway==3){
+             luckKou = this.ruleForm1.name2 
+        }else if(this.ruleForm1.luckPway==4){
+             luckMan = this.ruleForm1.name3
+             luckKou = this.ruleForm1.name4
+        }
         const data = {
             id:0,
             //基础设置 
             luckName     :this.ruleForm1.luckName, 
             luckBeginTime:this.ruleForm1.acttime[0], 
             luckEndTime  :this.ruleForm1.acttime[1], 
-            luckBgm      : this.ruleForm1.musicUrl, 
-            luckBgmName  : this.ruleForm1.music, 
-            luckDescribe : this.ruleForm1.desc2, 
-            name61 : this.ruleForm1.wayJF, 
-            name62 : this.ruleForm1.wayJF1, 
-            name15: this.ruleForm1.musicUrl, 
+            luckBgm      :this.ruleForm1.musicUrl, 
+            luckBgmName  :this.ruleForm1.music, 
+            luckBeforeTxt:this.ruleForm1.luckBeforeTxt , 
+            luckDescribe :this.ruleForm1.luckDescribe, //活动说明
+            luckLuckPartaker:this.ruleForm1.luckLuckPartaker, 
+            luckPway     :this.ruleForm1.luckPway , 
+            luckKou      :luckKou, 
+            luckMan      :luckMan, 
             //规则设置
-            name6 : this.ruleForm2.cishu, 
-            name7 : this.ruleForm2.zongshu,
+            luckCountOfDay : this.ruleForm2.luckCountOfDay, 
+            luckCountOfAll : this.ruleForm2.luckCountOfAll,
             //兑奖设置
-            name9 : this.ruleForm3.days, 
-            name10: this.ruleForm3.dizhi, 
-            name11: this.ruleForm3.tishi, 
-            name12: this.ruleForm3.transfer,  
+            luckCashDay : this.ruleForm3.luckCashDay, 
+            luckAddress : this.ruleForm3.luckAddress, 
             //奖项设置 
             name13:this.awardKey,
             name14:newarr
@@ -337,8 +496,18 @@ export default {
     },
   },
   mounted() { 
-  },
+  }, 
   filters: {
+      sexStatus(val) {
+        if (val == 2) {
+          val = "女";
+        }else if(val == 1){
+          val = "男"; 
+        }else if(val == 0){
+            val = "未知"; 
+        }
+        return val;
+      },
     prizeStatus(val) {
         if (val == 0) {
           val = "一等奖";
@@ -354,9 +523,10 @@ export default {
           val = "六等奖";
         }  
         return val;
+    }, 
+  },
+    mounted() {
+      this.getMembersData(); 
     },
-     
-
-  }
 };
 </script>
