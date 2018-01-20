@@ -247,7 +247,7 @@ public class LuckServiceImpl implements LuckService {
                 UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
                 updateFenbiReduceReq.setBusId(busUser.getId());
                 updateFenbiReduceReq.setFkId(luckMain.getId());
-                updateFenbiReduceReq.setFreType(38);
+                updateFenbiReduceReq.setFreType(34);
                 updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi-num));
                 AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
                 if(axisResult.getCode() != 0){
@@ -259,7 +259,7 @@ public class LuckServiceImpl implements LuckService {
                     throw new LuckException(ResponseEnums.COMMON_HAS7);
                 }
                 //构建冻结信息
-                FenbiFlowRecord ffr=CommonUtil.bulidFenFlow(busUser.getId(), fenbi.doubleValue(), luckMain.getId(), 38, 1, "一箭穿心活动支出", 0);
+                FenbiFlowRecord ffr=CommonUtil.bulidFenFlow(busUser.getId(), fenbi.doubleValue(), luckMain.getId(), 34, 1, "好运翻翻看活动支出", 0);
                 // 保存冻结信息
                 if(ffr!=null){
                     FenbiFlowRecordReq fenbiFlowRecordReq = new FenbiFlowRecordReq();
@@ -314,7 +314,7 @@ public class LuckServiceImpl implements LuckService {
                 FenbiSurplus fenbiSurplus = new FenbiSurplus();
                 fenbiSurplus.setBusId(busUser.getId());
                 fenbiSurplus.setFkId(luckMain.getId());
-                fenbiSurplus.setFre_type(38);
+                fenbiSurplus.setFre_type(34);
                 fenbiSurplus.setRec_type(1);
                 AxisResult<FenbiFlowRecord> ffr = FenbiflowServer.getFenbiFlowRecord(fenbiSurplus);
                 if(ffr!=null && ffr.getData() != null && ffr.getData().getRollStatus() == 1){//未回滚
@@ -323,7 +323,7 @@ public class LuckServiceImpl implements LuckService {
                     fenbiSurplus1.setBusId(busUser.getId());
                     fenbiSurplus1.setFkId(luckMain.getId());
                     fenbiSurplus1.setRec_type(1);
-                    fenbiSurplus1.setFre_type(38);
+                    fenbiSurplus1.setFre_type(34);
                     AxisResult axisResult = FenbiflowServer.rollbackFenbiRecord(fenbiSurplus1);
                     if(axisResult.getCode() != 0){
                         throw new LuckException(ResponseEnums.LOVEARROW_HAS13);
