@@ -1,15 +1,11 @@
-package com.gt.game.core.bean.lantern.req;
+package com.gt.game.core.bean.scratch.req;
 
 import com.gt.game.common.base.PageReq;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.Date;
-import java.util.List;
-
-
-@ApiModel("分页获取疯狂数钱中奖记录列表请求类")
-public class LanternGetWinningReq extends PageReq {
+@ApiModel("分页获取中奖记录列表请求类")
+public class EggsGetWinningReq extends PageReq {
 
 	@ApiModelProperty("活动id")
 	private Integer actId;

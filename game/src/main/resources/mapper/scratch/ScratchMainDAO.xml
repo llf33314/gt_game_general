@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.game.core.dao.scratch.ScratchMainDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.game.core.dao.scratch.ScratchMainDAO">
+		<id column="id" property="id" />
+		<result column="scr_name" property="scrName" />
+		<result column="scr_countOfDay" property="scrCountOfDay" />
+		<result column="scr_winning_txt" property="scrWinningTxt" />
+		<result column="scr_beginTime" property="scrBeginTime" />
+		<result column="scr_endTime" property="scrEndTime" />
+		<result column="scr_wx_userid" property="scrWxUserid" />
+		<result column="scr_describe" property="scrDescribe" />
+		<result column="scr_overdescribe" property="scrOverdescribe" />
+		<result column="scr_rule" property="scrRule" />
+		<result column="scr_calculateWay" property="scrCalculateWay" />
+		<result column="scr_countOfAll" property="scrCountOfAll" />
+		<result column="scr_before_txt" property="scrBeforeTxt" />
+		<result column="scr_is_give" property="scrIsGive" />
+		<result column="scr_cash_day" property="scrCashDay" />
+		<result column="scr_picture" property="scrPicture" />
+		<result column="scr_address" property="scrAddress" />
+		<result column="scr_bgm" property="scrBgm" />
+		<result column="scr_bgm_name" property="scrBgmName" />
+		<result column="scr_partaker" property="scrPartaker" />
+		<result column="scr_pway" property="scrPway" />
+		<result column="scr_man" property="scrMan" />
+		<result column="scr_kou" property="scrKou" />
+		<result column="scr_status" property="scrStatus" />
+		<result column="scr_cash_way" property="scrCashWay" />
+		<result column="scr_winning_notice" property="scrWinningNotice" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, scr_name, scr_countOfDay AS scrCountOfDay, scr_winning_txt, scr_beginTime AS scrBeginTime, scr_endTime AS scrEndTime, scr_wx_userid, scr_describe, scr_overdescribe, scr_rule, scr_calculateWay AS scrCalculateWay, scr_countOfAll AS scrCountOfAll, scr_before_txt, scr_is_give, scr_cash_day, scr_picture, scr_address, scr_bgm, scr_bgm_name, scr_partaker, scr_pway, scr_man, scr_kou, scr_status, scr_cash_way, scr_winning_notice
+    </sql>
+
+</mapper>

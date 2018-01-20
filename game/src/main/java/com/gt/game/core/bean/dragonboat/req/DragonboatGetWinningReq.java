@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 
-@ApiModel("分页获取中奖记录列表请求类")
+@ApiModel("分页获取端午赛龙舟活动中奖记录列表请求类")
 public class DragonboatGetWinningReq extends PageReq {
 
 	@ApiModelProperty("活动id")
