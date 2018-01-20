@@ -29,7 +29,7 @@
                     </el-date-picker>
                 </el-form-item>    
             <h1 class="mt30 mb20 pb10 bbtom" style="width:80%">广告设置</h1> 
-            <el-button type="primary" class="mb20" @click="addlinks()">新增</el-button>  
+            <el-button type="primary" class="mb20" @click="addlinks">新增</el-button>  
             <span class="ml10 el-upload__tip grey">1.仅支持多粉与一点揩油的链接    2.广告图格式：1000*300px</span>
             <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark" style="width:80%">
                 <el-table-column label="广告链接">
@@ -180,7 +180,7 @@
             <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
             <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>   
-            <el-button type="primary" @click="submit11()">打印</el-button>   
+            <el-button type="primary" @click="submit11">打印</el-button>   
         </div> 
     </div>   
 </div>
@@ -450,7 +450,7 @@ export default {
             prizeSetList:  newYearPrizeReqs
         };
         console.log(data,123); 
-        api.addLantern(data).then(data=>{
+        api.addActivity(data).then(data=>{
           this.isSubmit=true
           if (data.code == 100) { 
               console.log(12336666)
@@ -472,7 +472,7 @@ export default {
     },
     //获取奖品类型-----------star
     getPrizeTypeData(){
-        api.getLanternPrizeType().then(data=>{
+        api.getPrizeType().then(data=>{
             if (data.code == 100) {
             console.log(data,1233);
             this.options=data.data

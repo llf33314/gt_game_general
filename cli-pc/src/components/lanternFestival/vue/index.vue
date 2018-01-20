@@ -33,17 +33,17 @@
           <el-table-column prop="name" label="活动名称"></el-table-column>
           <el-table-column prop="activityBeginTime" label="活动开始时间">
             <template slot-scope="scope">
-              {{scope.row.activityBeginTime|parseTime('{y}-{m}-{d} {h}:{i}')}}
+              {{ scope.row.activityBeginTime | DateFormat('yyyy-MM-dd hh:mm:ss') }}
             </template>
           </el-table-column>
           <el-table-column prop="activityEndTime" label="活动结束时间">
             <template slot-scope="scope">
-              {{scope.row.activityEndTime|parseTime('{y}-{m}-{d} {h}:{i}')}}
+              {{ scope.row.activityEndTime | DateFormat('yyyy-MM-dd hh:mm:ss') }}
             </template>
           </el-table-column>
           <el-table-column prop="status" label="活动状态">
             <template slot-scope="scope">
-              {{scope.row.status|actStatus(scope.row.status)}}
+              {{scope.row.status | activityStatus }}
             </template>
           </el-table-column>
           <el-table-column prop="order_option" width="450" label="操作">
@@ -61,12 +61,6 @@
           </el-pagination>
         </div>
       </div>
-      <!-- 删除 -->
-      <!-- <gt-del-tip :showTip.sync="dialogTip" :confirmFuc="delEmployee">
-      <p>确定删除该活动吗</p> 
-      <p class="grey mt10">点击确定后，将不可以回复哦~</p> 
-    </gt-del-tip> -->
-      <!-- 链接 -->
       <gt-copy-url :copeData="copeData"></gt-copy-url>
     </div>
   </section>
@@ -189,7 +183,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          api.delLantern({
+          api.delActivity({
             id: idnex
           }).then(res => {
             if (res.code) {
@@ -243,12 +237,7 @@
       },
       //切换------------------------------------------------------------star
       handleClick() {
-        console.log(this.activeName, 11);
-        this.currentPage = this.initCurrentPage
         this.fetchData()
-      },
-      handleCurrentChange(val) {
-        console.log(val)
       },
       addActive() {
         this.$router.push('/lanternFestival/addAct')
@@ -264,6 +253,10 @@
       impower(val){
          this.$router.push({path: '/lanternFestival/cancelOut', query: {id: val}});
       },
+      handleCurrentChange(val) {
+        this.currentPage = val
+        this.fetchData()
+      },
       fetchData(initRequest) {
         initRequest ? (this.initRequest = true) : (this.initRequest = false);
         let params = {
@@ -272,7 +265,7 @@
           name: this.keyWord,
           status: parseFloat(this.activeName)
         }
-        api.getLanternList(params).then(res => {
+        api.getActivityList(params).then(res => {
           if (res.code == 100) {
             this.tableData = res.data
             this.totalNums = res.page.totalNums
@@ -281,24 +274,7 @@
       }
     },
     created() {
-      this.fetchData()
-    },
-    mounted() {
-
-    },
-    filters: {
-      actStatus(val) {
-        if (val == 0) {
-          val = "未开始";
-        } else if (val == 1) {
-          val = "进行中";
-        } else if (val == 2) {
-          val = "已暂停";
-        } else if (val == 3) {
-          val = "已结束";
-        }
-        return val;
-      },
+      this.fetchData(true)
     }
   }
 
