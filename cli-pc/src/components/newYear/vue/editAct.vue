@@ -18,7 +18,7 @@
             <el-tab-pane label="奖项设置" name="3"></el-tab-pane>
         </el-tabs> 
         <!-- 基础设置 -->
-        <div v-if="this.active==0" class="mt40">
+        <div v-show="this.active==0" class="mt40">
           <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="120px" class="demo-ruleForm">
                 <el-form-item label="活动名称：" prop="name">
                     <el-input class="w_demo"  placeholder="请输入活动名称" v-model="ruleForm1.name"></el-input>
@@ -52,7 +52,7 @@
         </el-form> 
         </div>
         <!-- 规则设置 -->
-        <div v-if="this.active==1" class="mt40">
+        <div v-show="this.active==1" class="mt40">
             <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="150px" class="mt40 demo-ruleForm">
                 <el-form-item label="关注二维码：" prop="code">
                   <gt-material prop="url" :url="ruleForm2.code" v-on:getChangeUrl="getChangeUrl2" width="72" height="72"></gt-material>
@@ -71,7 +71,7 @@
             </el-form> 
         </div> 
         <!-- 兑奖设置 -->
-        <div v-if="this.active==2" class="mt40">
+        <div v-show="this.active==2" class="mt40">
             <el-form :model="ruleForm3" :rules="rules3" ref="ruleForm3" label-width="120px" class="mt40 demo-ruleForm">
                 <el-form-item label="兑奖时间：" prop="date">
                     <el-date-picker class="w_demo" v-model="ruleForm3.date" :picker-options="pickerOptions" type="daterange" placeholder="选择日期范围">
@@ -101,7 +101,7 @@
             </el-form> 
         </div>
         <!-- 奖项设置 -->
-        <div v-if="this.active==3" class="mt40">
+        <div v-show="this.active==3" class="mt40">
             <div>
                 <span style="color: #333; position:absolute;margin-top:0px;" >奖品说明：</span>
                 <el-input type="textarea" class="bw ml120"  :maxlength="300"  :rows="3" placeholder="请输入兑奖说明" v-model="explain">
@@ -473,7 +473,7 @@ export default {
           if (data.code == 100) {  
               this.$message({ message: "操作成功", type: "success"}); 
           } else { 
-              this.$message.errorthis.$message.error(data.msg);;
+              this.$message.error(data.msg);
           }
         }).catch(() => { 
             this.$message({type: "info", message: "网络问题，请刷新重试~" });
@@ -560,7 +560,7 @@ export default {
             } 
             this.ruleForm4=newPraise 
             } else {
-                this.$message.errorthis.$message.error(data.msg);;
+                this.$message.error(data.msg);
             }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
@@ -573,7 +573,7 @@ export default {
                 this.options=data.data
                 console.log(this.options,'获取奖品类型');
             } else {
-                this.$message.errorthis.$message.error(data.msg);;
+                this.$message.error(data.msg);
             }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });

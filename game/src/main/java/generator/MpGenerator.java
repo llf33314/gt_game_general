@@ -29,7 +29,8 @@ public class MpGenerator {
     // 需要生成的表----------------------------------------------------------改这里
 //	public static final  String[] generatorTableName = new String[] {"t_wx_channels_main","t_wx_channels_type"};
     public static final  String[] generatorTableName = new String[] {
-    		"t_wx_activity_scratch_detail", "t_wx_activity_scratch_main", "t_wx_activity_scratch_winning"};
+    		"t_wx_activity_countmoney_courecord", "t_wx_activity_countmoney_detail", "t_wx_activity_countmoney_main",
+	         "t_wx_activity_countmoney_probabilityset","t_wx_activity_countmoney_record"};
 //    public static final  String[] generatorTableName = new String[] {"t_wx_activity_vote_award_img", "t_wx_activity_vote_banner", "t_wx_activity_vote_detil",
 //			"t_wx_activity_vote_group", "t_wx_activity_vote_main", "t_wx_activity_vote_main_img", "t_wx_activity_vote_rank", "t_wx_activity_vote_rank_record",
 //			"t_wx_activity_vote_report", "t_wx_activity_vote_sign", "t_wx_activity_vote_sign_image", "t_wx_activity_vote_sign_music", "t_wx_activity_vote_sign_pic",

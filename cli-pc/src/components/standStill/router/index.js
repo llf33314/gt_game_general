@@ -5,7 +5,9 @@ const cancelOut = ()=>import( '@/components/standStill/vue/cancelOut')
 const prizeRecord = ()=>import( '@/components/standStill/vue/prizeRecord') 
 const user = ()=>import( '@/components/standStill/vue/user') 
 const question = ()=>import( '@/components/standStill/vue/question') 
-const testBase = ()=>import( '@/components/standStill/vue/testBase') 
+const addQuest = ()=>import( '@/components/standStill/vue/addQuest') 
+const editQuest = ()=>import( '@/components/standStill/vue/editQuest')  
+const editAct = ()=>import( '@/components/standStill/vue/editAct')
 export const standStill = [
     {
         path:'/standStill/index',
@@ -13,14 +15,24 @@ export const standStill = [
         name:'standStill_index'
     },
     {
-        path:'/standStill/testBase',
-        component: testBase,
-        name:'standStill_testBase'
+        path:'/standStill/editQuest',
+        component: editQuest,
+        name:'standStill_editQuest'
+    },
+    {
+        path:'/standStill/addQuest',
+        component: addQuest,
+        name:'standStill_addQuest'
     },
     {
         path:'/standStill/addAct',
         component: addAct,
         name:'standStill_addAct'
+    },
+    {
+        path:'/standStill/editAct',
+        component: editAct,
+        name:'standStill_editAct'
     },
     {
         path:'/standStill/cancelOut',

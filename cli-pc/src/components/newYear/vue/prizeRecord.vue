@@ -26,7 +26,7 @@
             </el-select>
         </span> 
         <span class="padding-left-md ml10 mb10">
-            <el-input placeholder="请输入兑奖码" icon="search" v-model="codeWord" style="width:250px"  :on-icon-click="test" @blur="test($event)">
+            <el-input placeholder="请输入兑奖码" icon="search" v-model="codeWord" style="width:250px"  :on-icon-click="getData"  @keyup.enter.native="getData()"  @blur="getData($event)">
             </el-input>
         </span> 
         <div class="h10"></div>
@@ -126,7 +126,7 @@ import {
             this.tableData=data
             console.log(data,'中奖列表');
           } else {
-              this.$message.errorthis.$message.error(data.msg);;
+              this.$message.error(data.msg);
           }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
@@ -140,7 +140,7 @@ import {
             this.options=data.data
              console.log(this.options,444);
           } else {
-              this.$message.errorthis.$message.error(data.msg);;
+              this.$message.error(data.msg);
           }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
@@ -162,7 +162,7 @@ import {
                 this.$message({ message: "发放成功", type: "success" });
                 this.getData();  
           } else {
-              this.$message.errorthis.$message.error(data.msg);;
+              this.$message.error(data.msg);
           }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });

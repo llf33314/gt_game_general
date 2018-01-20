@@ -19,7 +19,7 @@
             <el-step title="新建完成"></el-step>
         </el-steps>
         <!-- 基础设置 -->
-        <div v-if="this.active==0" class="mt40">
+        <div v-show="this.active==0" class="mt40">
           <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="120px" class="demo-ruleForm">
                 <el-form-item label="活动名称：" prop="name">
                     <el-input class="w_demo"  placeholder="请输入活动名称" v-model="ruleForm1.name"></el-input>
@@ -29,7 +29,7 @@
                     </el-date-picker>
                 </el-form-item>    
             <h1 class="mt30 mb20 pb10 bbtom" style="width:80%">广告设置</h1> 
-            <el-button type="primary" class="mb20" @click="addlinks()">新增</el-button>  
+            <el-button type="primary" class="mb20" @click="addlinks">新增</el-button>  
             <span class="ml10 el-upload__tip grey">1.仅支持多粉与一点揩油的链接    2.广告图格式：1000*300px</span>
             <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark" style="width:80%">
                 <el-table-column label="广告链接">
@@ -53,7 +53,7 @@
         </el-form> 
         </div>
         <!-- 规则设置 -->
-        <div v-if="this.active==1" class="mt40">
+        <div v-show="this.active==1" class="mt40">
             <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="150px" class="mt40 demo-ruleForm">
                 <el-form-item label="关注二维码：" prop="code">
                   <gt-material prop="url" :url="ruleForm2.code" v-on:getChangeUrl="getChangeUrl2" width="72" height="72"></gt-material>
@@ -75,7 +75,7 @@
             </el-form> 
         </div> 
         <!-- 兑奖设置 -->
-        <div v-if="this.active==2" class="mt40">
+        <div v-show="this.active==2" class="mt40">
             <el-form :model="ruleForm3" :rules="rules3" ref="ruleForm3" label-width="120px" class="mt40 demo-ruleForm">
                 <el-form-item label="兑奖时间：" prop="date">
                     <el-date-picker class="w_demo" v-model="ruleForm3.date" type="daterange" placeholder="选择日期范围">
@@ -105,7 +105,7 @@
             </el-form> 
         </div>
         <!-- 奖项设置 -->
-        <div v-if="this.active==3" class="mt40">
+        <div v-show="this.active==3" class="mt40">
             <div>
                 <span style="color: #333; position:absolute;margin-top:0px;" >奖品说明：</span>
                 <el-input type="textarea" class="bw ml120"  :maxlength="300"  :rows="3" placeholder="请输入兑奖说明" v-model="explain">
@@ -180,7 +180,7 @@
             <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
             <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>   
-            <el-button type="primary" @click="submit11()">打印</el-button>   
+            <el-button type="primary" @click="submit11">打印</el-button>   
         </div> 
     </div>   
 </div>
@@ -216,8 +216,8 @@ export default {
         name: "",
         name1: "", 
         links:[
-          {url:"",hrefUrl:""},
-          {url:"",hrefUrl:""}
+          {hrefUrl:"", url:"",},
+          {hrefUrl:"", url:"",}
         ]
       },
       rules1: {
@@ -378,8 +378,8 @@ export default {
         var newadv=[];
         for(let i =0;i< this.ruleForm1.links.length;i++){ 
             var arr={
-                hrefUrl:this.ruleForm1.links[i].url, 
-                url:this.ruleForm1.links[i].imgUrl, 
+                hrefUrl:this.ruleForm1.links[i].hrefUrl, 
+                url:this.ruleForm1.links[i].url, 
             } 
             newadv.push(arr)
         }
@@ -432,7 +432,7 @@ export default {
             musicUrl: '', // 背景音乐地址 
             manTotalChance: Number(this.ruleForm2.manTotalChance), 
             manDayChance  :  Number(this.ruleForm2.manDayChance), 
-            gameTime: '', 
+            gameTime: this.ruleForm2.gameTime, 
             actRule  : this.ruleForm2.desc,  
             //兑奖设置 
             cashPrizeBeginTime: this.ruleForm3.date[0], 
@@ -450,7 +450,7 @@ export default {
             prizeSetList:  newYearPrizeReqs
         };
         console.log(data,123); 
-        api.addLantern(data).then(data=>{
+        api.addActivity(data).then(data=>{
           this.isSubmit=true
           if (data.code == 100) { 
               console.log(12336666)
@@ -472,7 +472,7 @@ export default {
     },
     //获取奖品类型-----------star
     getPrizeTypeData(){
-        api.getLanternPrizeType().then(data=>{
+        api.getPrizeType().then(data=>{
             if (data.code == 100) {
             console.log(data,1233);
             this.options=data.data

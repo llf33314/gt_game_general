@@ -1,6 +1,3 @@
-<style lang="less">
-
-</style>
 <template>
 <section>
 <div class="hd-common turnPlate">
@@ -18,61 +15,63 @@
             <el-step title="新建完成"></el-step>
         </el-steps>
         <!-- 基础设置 -->
-        <div v-if="this.active==0" class="mt40">
-            <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="145px" class="demo-ruleForm"> 
+        <div v-show="this.active==0" class="mt40">
+            <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="160px" class="demo-ruleForm"> 
                 <el-form-item label="活动名称：" prop="name">
-                    <el-input class="w_demo"  placeholder="请输入活动名称"  v-model="ruleForm1.name"></el-input>
+                    <el-input class="w_demo" :maxlength="20"  placeholder="请输入活动名称"  v-model="ruleForm1.name"></el-input>
+                    <span class="el-upload__tip grey" >
+                       20个字数以内
+                    </span>
                 </el-form-item>
-                 <el-form-item label="游戏时间：" prop="name1">
-                    <el-date-picker class="w_demo" v-model="ruleForm1.name1"   type="datetimerange"  placeholder="选择时间范围">
+                 <el-form-item label="游戏时间：" prop="acttime">
+                    <el-date-picker class="w_demo" v-model="ruleForm1.acttime"   type="datetimerange"  placeholder="选择时间范围">
                     </el-date-picker>
-                </el-form-item>   
-                
-                <el-form-item label="参与人员：">
-                    <el-radio-group v-model="ruleForm1.resource">
-                    <el-radio :label="1">所有粉丝</el-radio>
-                    <el-radio :label="2">仅会员(持有会员卡的粉丝)</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <div class="pd20 bw pt10 bb ml150 mb20" v-if="ruleForm1.resource==2">
-                    <el-form-item label="参与方式：" label-width="100px">
-                          <el-radio-group v-model="ruleForm1.way">
-                            <el-radio :label="1">所有会员不需要积分</el-radio><br><br>
-                            <el-radio :label="2">会员卡积分满<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.way!="2"' v-model="ruleForm1.wayJF"></el-input>即可参加（抽奖不扣除积分）</el-radio><br><br>
-                            <el-radio :label="3">每次抽奖扣除<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.way!="3"' v-model="ruleForm1.wayJF"></el-input>积分</el-radio><br><br>
-                            <el-radio :label="4">会员卡积分满<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.way!="4"' v-model="ruleForm1.wayJF"></el-input>分，
-                                                 每次抽奖扣除<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.way!="4"' v-model="ruleForm1.wayJF1"></el-input>分</el-radio> 
-                          </el-radio-group> 
-                    </el-form-item>
-                </div> 
+                </el-form-item>  
 
-                <el-form-item label="活动说明：" prop="desc">
+                <el-form-item label="活动说明：" prop="desc1">
                     <el-input class="w_demo"  type="textarea" v-model="ruleForm1.desc1" :rows="3" placeholder="请输入活动说明"></el-input>
                     <span class="el-upload__tip grey" >
                         描述活动详情，能让粉丝了解此次活动
                     </span>
                 </el-form-item> 
 
-                 <el-form-item label="活动未开始提示：" prop="desc">
+                 <el-form-item label="活动未开始提示：" prop="desc2">
                     <el-input class="w_demo"  type="textarea" v-model="ruleForm1.desc2" :rows="3" placeholder="如：活动尚未开始，敬请期待!"></el-input>
                     <span class="el-upload__tip grey" >
                         活动未开始提示限制在100个字数以内
                     </span>
-                </el-form-item>  
-
+                </el-form-item>   
+                
+                 <el-form-item label="参与人员："  prop="resource">
+                    <el-radio-group v-model="ruleForm1.resource">
+                    <el-radio :label="1">所有粉丝</el-radio>
+                    <el-radio :label="2">仅会员(持有会员卡的粉丝)</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <div class="pd20 bw pt10 bb ml150 mb20" v-show="ruleForm1.resource==2">
+                    <el-form-item label="参与方式：" label-width="100px" prop="way">
+                          <el-radio-group v-model="ruleForm1.way">
+                            <el-radio :label="1">所有会员不需要积分</el-radio><br><br>
+                            <el-radio :label="2">会员卡积分满<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.way!="2"' v-model="ruleForm1.name1"></el-input>即可参加（抽奖不扣除积分）</el-radio><br><br>
+                            <el-radio :label="3">每次抽奖扣除<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.way!="3"' v-model="ruleForm1.name2"></el-input>积分</el-radio><br><br>
+                            <el-radio :label="4">会员卡积分满<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.way!="4"' v-model="ruleForm1.name3"></el-input>分，
+                                                 每次抽奖扣除<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.way!="4"' v-model="ruleForm1.name4"></el-input>分</el-radio> 
+                          </el-radio-group> 
+                    </el-form-item>
+                </div> 
                 <el-form-item label="背景音乐：">
-                    <div class="pd20 bb bw">
-                        <el-button size="small" type="primary">点击上传</el-button>
+                    <div class="pd20 bb bw bgMusic">
+                        <gt-material :prop="''" :isMusic="true" :index="2" btnContent="点击上传"  v-on:getChangeUrl="getMusic" width="72" height="72"></gt-material>
                         <span class="el-upload__tip grey ml20">{{ruleForm1.music}}</span> 
                         <div class="el-upload__tip grey" style="line-height:25px">
                             音频文件的格式为mp3、wma、wav,大小不超过3M
                         </div>
                     </div>
-                </el-form-item>
+                </el-form-item>  
             </el-form> 
         </div>
         <!-- 规则设置 -->
-        <div v-if="this.active==1" class="mt40">
+        <div v-show="this.active==1" class="mt40">
             <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="120px" class="mt40 demo-ruleForm">  
                     <el-form-item label="游戏总数：" prop="cishu">
                         <el-input class="w_demo mr10" v-model="ruleForm2.cishu" placeholder="请输入每人抽奖总次数"></el-input> 次/人
@@ -83,7 +82,7 @@
             </el-form> 
         </div> 
         <!-- 兑奖设置 -->
-        <div v-if="this.active==2" class="mt40">
+        <div v-show="this.active==2" class="mt40">
             <el-form :model="ruleForm3" :rules="rules3" ref="ruleForm3" label-width="120px" class="mt40 demo-ruleForm">
                 <el-form-item label="兑奖期限：" prop="days">
                     <el-input class="w_demo mr10" type="number" v-model="ruleForm3.days" placeholder="请输入兑奖期限"></el-input>天
@@ -97,7 +96,7 @@
             </el-form> 
         </div>
         <!-- 奖项设置 -->
-        <div v-if="this.active==3" class="mt40">
+        <div v-show="this.active==3" class="mt40">
             <div class="gt-gray-region" style="color:#666;line-height:20px">
                 <p>奖品数额：奖品的数量或内容；奖项数量：该奖品的可领取次数；中奖概率：每种奖项在转盘中的中奖概率</p>
                 <p>如：奖品类型：粉币；奖品数额：2；奖项名称：粉币；奖项数量：3；中奖概率：12</p>
@@ -180,34 +179,47 @@
 <script>
 export default {
   data() {
+    let numPass = (rule, value, callback) => { 
+        if(this.ruleForm1.way==2&&this.ruleForm1.name1==''){
+           callback(new Error("不能为空"));
+        }else if(this.ruleForm1.way==3&&this.ruleForm1.name2==''){
+          callback(new Error("不能为空"));
+        }else if((this.ruleForm1.way==4&&this.ruleForm1.name3=='')||(this.ruleForm1.way==4&&this.ruleForm1.name4=='')){
+          callback(new Error("不能为空"));
+        }
+        
+    }; 
     return {
-      active:3,
+      active:0,
       ruleForm1: {
-          type:1,
+        type:1,
         name: "",
-        name1: "",
-        endTime: "",
+        acttime: "", 
         resource: 1,
         desc1: "",
         desc2: "",
         music: "暂无上传音乐",
+        musicUrl: "",
         way:1,
-        wayJF:"", 
-        wayJF1:"",
+        name1:"", 
+        name2:"", 
+        name3:"", 
+        name4:"", 
+        name5:"", 
       },
       rules1: {
         name: [{ required: true, message: "活动名称不能为空", trigger: "blur" }],
-        name1: [
+        desc1: [{ required: true, message: "活动说明不能为空", trigger: "blur" }],
+        desc2: [{ required: true, message: "活动未开始提示不能为空", trigger: "blur" }],
+        resource:[{ required: true, }],
+        acttime: [
           { required: true, type: "date", message: "开始时间不能为空", trigger: "blur" }
-        ],
-        endTime: [
-          { required: true, type: "date", message: "结束时间不能为空", trigger: "blur" }
-        ]
+        ] ,
+        way:[{validator:numPass, trigger: "blur" }]
       },
       ruleForm2: { 
         cishu: "",
-        zongshu: "" ,
-       
+        zongshu: "" ,       
       },
       rules2: { 
         cishu: [{ required: true, message: "每天抽奖次数不能为空", trigger: "blur" }],
@@ -239,6 +251,12 @@ export default {
     test() {
       console.log(123); 
       this.active=5
+    },
+    //背景音乐
+    getMusic(e) {
+        console.log(e);
+        this.ruleForm1.music    = e.music.name
+        this.ruleForm1.musicUrl = e.music.url
     },
 
     delForm4(index){
@@ -289,16 +307,17 @@ export default {
             newarr.push(arr)
         } 
         const data = {
+            id:0,
             //基础设置 
-            name1 : this.ruleForm1.name, 
-            name2 : this.ruleForm1.name1, 
-            name3 : this.ruleForm1.endTime, 
-            name4 : this.ruleForm1.resource, 
-            name51 : this.ruleForm1.desc1, 
-            name52 : this.ruleForm1.desc2, 
+            luckName     :this.ruleForm1.luckName, 
+            luckBeginTime:this.ruleForm1.acttime[0], 
+            luckEndTime  :this.ruleForm1.acttime[1], 
+            luckBgm      : this.ruleForm1.musicUrl, 
+            luckBgmName  : this.ruleForm1.music, 
+            luckDescribe : this.ruleForm1.desc2, 
             name61 : this.ruleForm1.wayJF, 
             name62 : this.ruleForm1.wayJF1, 
-            name15: this.ruleForm1.music, 
+            name15: this.ruleForm1.musicUrl, 
             //规则设置
             name6 : this.ruleForm2.cishu, 
             name7 : this.ruleForm2.zongshu,

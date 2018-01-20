@@ -99,7 +99,7 @@ import {
             this.tableData=data
             console.log(data,123);
           } else {
-              this.$message.errorthis.$message.error(data.msg);;
+              this.$message.error(data.msg);
           }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
@@ -114,7 +114,7 @@ import {
                 this.cancelCode=true 
                 console.log(data.data.mobileUrl,123);
             } else {
-                this.$message.errorthis.$message.error(data.msg);;
+                this.$message.error(data.msg);
             }
             }).catch(() => {
                 this.$message({ type: "info", message: "网络问题，请刷新重试~" });
@@ -138,7 +138,7 @@ import {
                     this.$message({ message: "操作成功", type: "success"}); 
                     this.getData();
                 } else {
-                this.$message.errorthis.$message.error(data.msg);;
+                this.$message.error(data.msg);
                 }
             });
             }).catch(() => {
@@ -167,7 +167,7 @@ import {
                     this.$message({ message: "操作成功", type: "success"}); 
                     this.getData();
             } else {
-            this.$message.errorthis.$message.error(data.msg);;
+            this.$message.error(data.msg);
             }
         });
         }).catch(() => {

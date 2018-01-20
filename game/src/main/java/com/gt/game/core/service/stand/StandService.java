@@ -65,4 +65,6 @@ public interface StandService{
     ResponseDTO removeStandQuestion(BusUser busUser, StandQuesbankIdReq standQuesbankIdReq);
 
     ResponseDTO uploadStandQuestion(BusUser busUser, MultipartFile file, Integer bankId);
+
+    ResponseDTO removeStandJoinRecord(BusUser busUser, StandRecordIdReq standRecordIdReq);
 }
