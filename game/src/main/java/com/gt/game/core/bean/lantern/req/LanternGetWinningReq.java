@@ -7,15 +7,8 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 import java.util.List;
 
-/**
- * <p>
- * 元宵点灯主表
- * </p>
- *
- * @author zwq
- * @since 2017-12-25
- */
-@ApiModel("分页获取中奖记录列表请求类")
+
+@ApiModel("分页获取疯狂数钱中奖记录列表请求类")
 public class LanternGetWinningReq extends PageReq {
 
 	@ApiModelProperty("活动id")

@@ -31,22 +31,22 @@ export default {
            return post(`${base}/getNinelatticeList`, params)
        },
        // 删除活动
-       delActivity(params) {
+       delActivity(params) { 
            return post(`${base}/delLantern`, params) 
        }, 
        // 获取手机端链接 
        getMobileUrl(params) {
            return post(`${base}/getMobileUrl`, params)   
        },
-       // 统计元宵点灯活动总数 17 
+       // 统计活动总数 
        countActivity(params) {
-        return post(`${base}/countActivity`, params) 
+        return post(`${base}/countNinelattice`, params) 
        },
 
        /* 修改/编辑活动 - 接口 */ 
        // 获取奖品类型列表 
        getPrizeType(params) {
-           return post(`${base}/getActivityById`, params)    
+           return post(`${base}/getNinelatticePrizeType`, params)    
        },
        // 新增活动 
        addActivity(params) {
@@ -57,19 +57,19 @@ export default {
         return post(`${base}/getActivityById`, params) 
        },
 
-       // 编辑元宵点灯活动基础设置  
+       // 编辑活动基础设置  
        modfiyBasicsLantern(params) {
         return post(`${base}/modfiyBasicsLantern`, params) 
        },
-       // 编辑元宵点灯活动规则设置  
+       // 编辑活动规则设置  
        modfiyRuleLantern(params) {
         return post(`${base}/modfiyRuleLantern`, params) 
        },
-       // 编辑元宵点灯活动兑奖设置 
+       // 编辑活动兑奖设置 
        modfiyExpiryLantern(params) {
         return post(`${base}/modfiyExpiryLantern`, params) 
        },
-       // 编辑元宵点灯活动奖项设置  
+       // 编辑活动奖项设置  
        modfiyAwardsLantern(params) {
         return post(`${base}/modfiyAwardsLantern`, params) 
        }, 
@@ -86,7 +86,7 @@ export default {
 
 
        /* 中奖记录 - 接口 */ 
-       // 分页获取元宵点灯中奖记录列表 
+       // 分页获取中奖记录列表 
        getWinningList(params) {
         return post(`${base}/getWinningList`, params) 
        },
@@ -99,7 +99,7 @@ export default {
                   + '&snCode=' + params.snCode
         return url
        },
-       // 批量删除元宵点灯中奖记录 
+       // 批量删除中奖记录 
        delWinning(params) {
         return post(`${base}/delNinelatticeWinning`, params) 
        },
