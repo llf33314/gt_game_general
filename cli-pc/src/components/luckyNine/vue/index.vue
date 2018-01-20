@@ -30,18 +30,18 @@
           <span @click="addActive">点击这里</span>创建活动吧
         </gt-null-data>
         <el-table :data="tableData" v-else>
-          <el-table-column prop="name" label="活动名称"></el-table-column>
-          <el-table-column prop="activityBeginTime" label="活动开始时间">
-            <template slot-scope="scope">
+          <el-table-column prop="name" label="活动名称" min-width="160" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="activityBeginTime" label="活动开始时间" min-width="200">
+            <template slot-scope="scope" >
               {{ scope.row.activityBeginTime | DateFormat('yyyy-MM-dd hh:mm:ss') }}
             </template>
           </el-table-column>
-          <el-table-column prop="activityEndTime" label="活动结束时间">
+          <el-table-column prop="activityEndTime" label="活动结束时间" min-width="200">
             <template slot-scope="scope">
               {{ scope.row.activityEndTime | DateFormat('yyyy-MM-dd hh:mm:ss') }}
             </template>
           </el-table-column>
-          <el-table-column prop="status" label="活动状态">
+          <el-table-column prop="status" label="活动状态" min-width="100">
             <template slot-scope="scope">
               {{ scope.row.status | activityStatus }}
             </template>

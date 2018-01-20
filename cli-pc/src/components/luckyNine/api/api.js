@@ -46,7 +46,7 @@ export default {
        /* 修改/编辑活动 - 接口 */ 
        // 获取奖品类型列表 
        getPrizeType(params) {
-           return post(`${base}/getActivityById`, params)    
+           return post(`${base}/getNinelatticePrizeType`, params)    
        },
        // 新增活动 
        addActivity(params) {

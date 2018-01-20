@@ -65,9 +65,9 @@
                 <el-form-item label="每天次数：" prop="manDayChance">
                     <el-input class="w25_demo mr10" type="number" placeholder="请输入每天游戏次数）" v-model="ruleForm2.manDayChance"></el-input>次/人
                 </el-form-item>    
-                <el-form-item label="游戏时长：" prop="gameTime">
+                <!-- <el-form-item label="游戏时长：" prop="gameTime">
                     <el-input class="w25_demo mr10" type="number" placeholder="请输入时长（60~100秒）" v-model="ruleForm2.gameTime"></el-input>秒
-                </el-form-item> 
+                </el-form-item>  -->
                 <el-form-item label="活动规则：" prop="desc">
                     <el-input class="w_demo" :maxlength="300"  type="textarea" v-model="ruleForm2.desc" :rows="3" placeholder="请填写活动规则"></el-input>
                     <span class="el-upload__tip grey ml10">300个字以内</span>   
@@ -228,7 +228,7 @@ export default {
         code: "",
         manTotalChance:"",
         manDayChance:"", 
-        gameTime: '',
+        // gameTime: '',
         desc: ""
       },
       rules2: {
@@ -241,9 +241,9 @@ export default {
         manDayChance: [
           { required: true,  message: "请填写每人每天免费游戏次数", trigger: "blur" } 
         ], 
-        gameTime: [
-          { required: true,  message: "请输入时长（60~100秒）", trigger: "blur" }   
-        ],
+        // gameTime: [
+        //   { required: true,  message: "请输入时长（60~100秒）", trigger: "blur" }   
+        // ],
         desc: [
           { required: true,  message: "请填写活动规则", trigger: "blur" } 
         ],  
@@ -432,7 +432,7 @@ export default {
             musicUrl: '', // 背景音乐地址 
             manTotalChance: Number(this.ruleForm2.manTotalChance), 
             manDayChance  :  Number(this.ruleForm2.manDayChance), 
-            gameTime: this.ruleForm2.gameTime, 
+            // gameTime: this.ruleForm2.gameTime, 
             actRule  : this.ruleForm2.desc,  
             //兑奖设置 
             cashPrizeBeginTime: this.ruleForm3.date[0], 

@@ -12,12 +12,12 @@
     <div class="gt-gray-region mb20">  
         <span class="padding-left-md ml30 mb10">
             <el-select v-model="type"  placeholder="请选择奖品类型"> 
-                 <el-option  v-for="item in options.type" :label="item.label"  :value="item.value"></el-option>
+                 <el-option  v-for="(item, index) in options.type"  :key="index"  :label="item.label"  :value="item.value"></el-option>
             </el-select>
         </span> 
         <span class="padding-left-md ml10 mb10">
                 <el-select v-model="status" placeholder="请选择状态"> 
-                  <el-option  v-for="item in options.status" :label="item.label" :value="item.value"></el-option>
+                  <el-option  v-for="(item, index) in options.status" :key="index" :label="item.label" :value="item.value"></el-option>
                 </el-select>
         </span> 
         <span class="padding-left-md ml10 mb10">
