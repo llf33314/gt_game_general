@@ -228,6 +228,7 @@ export function prizeStatus (val) {
       break;
   }
 }
+
 // 中奖记录 - 领取方式
 export function drawingMethod(val) {
   switch (val) {
@@ -244,3 +245,47 @@ export function drawingMethod(val) {
 
 }
 
+// 游戏 - 活动状态 
+export function activityStatus(val) {
+  switch (val) {
+    case 0 :
+      return '未开始';
+      break;
+    case 1 :
+      return '进行中';
+      break;
+    case 2 :
+      return '已暂停';
+      break;
+    case 3 :
+      return '已结束';
+      break;
+  }
+
+}
+
+// 格式话时间戳
+// @dome01 DateFormat('yyyy/MM/dd hh:mm:ss')  => 2017/10/09 09:50:00
+// @dome02 DateFormat('yyyy-MM-dd hh:mm:ss')  => 2017-10-09 09:50:00
+// @dome03 DateFormat('yyyy.MM.dd , hh-mm-ss') => 2017.10.09 , 09-50-00
+
+export function DateFormat(date, fmt) {
+ if(!(date && true)) {
+   return date
+ }
+ date = new Date(parseInt(date))
+ var o = {
+   'M+': date.getMonth() + 1,
+   'd+': date.getDate(),
+   'h+': date.getHours(),
+   'm+': date.getMinutes(),
+   's+': date.getSeconds(),
+   'q+': Math.floor((date.getMonth() + 3) / 3),
+   'S': date.getMilliseconds()
+ }
+ if(/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
+ for(var k in o) {
+   if(new RegExp('(' + k + ')').test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)))
+ }
+ return fmt
+}

@@ -28,7 +28,7 @@
                     </el-date-picker>
                 </el-form-item>    
             <h1 class="mt30 mb20 pb10 bbtom" style="width:80%">广告设置</h1> 
-            <el-button type="primary" class="mb20" @click="addlinks()">新增</el-button>  
+            <el-button type="primary" class="mb20" @click="addlinks">新增</el-button>  
             <span class="ml10 el-upload__tip grey">1.仅支持多粉与一点揩油的链接    2.广告图格式：1000*300px</span>
             <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark" style="width:80%" class="mg-b20">
                 <el-table-column label="广告链接">
@@ -52,7 +52,7 @@
             <el-form-item>
                 <div class="mg-t40">
                            <el-button type="primary" @click="Save('ruleForm1')" >保存</el-button>
-                           <el-button   @click="backUrl()">返回</el-button>
+                           <el-button   @click="backUrl">返回</el-button>
                 </div>
             </el-form-item>
             
@@ -81,7 +81,7 @@
                  <el-form-item>
                       <div class="mg-t40">
                            <el-button type="primary" @click="Save('ruleForm2')" >保存</el-button>
-                           <el-button   @click="backUrl()">返回</el-button>
+                           <el-button   @click="backUrl">返回</el-button>
                       </div>
                 </el-form-item>
             </el-form> 
@@ -117,7 +117,7 @@
                  <el-form-item>
                      <div class="mg-t40">
                            <el-button type="primary" @click="Save('ruleForm3')" >保存</el-button>
-                           <el-button   @click="backUrl()">返回</el-button>
+                           <el-button   @click="backUrl">返回</el-button>
                      </div>
                  </el-form-item>  
             </el-form> 
@@ -136,7 +136,7 @@
                  <p>当奖品为实物时，请上传实物图片，实物图片建议尺寸1160px*64px</p> 
             </div> 
             <div class="mt20 mb20">
-                <el-button   @click="addForm4()"  type="primary">新增奖品</el-button> 
+                <el-button   @click="addForm4"  type="primary">新增奖品</el-button> 
                 <span class="el-upload__tip grey ml10">下列奖品根据排名由上至下顺序分配</span> 
             </div> 
             <el-tooltip placement="top" effect="light">
@@ -184,7 +184,7 @@
             </el-table> 
             <div class="mg-t60 pd-l20">
                 <el-button type="primary" @click="Save('ruleForm4')" >保存</el-button>
-                <el-button   @click="backUrl()">返回</el-button>
+                <el-button   @click="backUrl">返回</el-button>
             </div>
         </div>       
         <!-- 新建完成 -->
@@ -192,7 +192,7 @@
             <div class="addOk"> 
                 <div class="el-icon-circle-check green" style="font-size:40px"></div>
                 <div class="complete-info">活动添加成功</div>
-                <el-button class="mt80" type="primary" @click="backUrl()">返回活动列表</el-button>  
+                <el-button class="mt80" type="primary" @click="backUrl">返回活动列表</el-button>  
             </div> 
         </div>
         <!-- 按钮 -->
@@ -614,7 +614,7 @@ export default {
       };
       console.log(data, 123);
       api
-        .addLantern(data)
+        .addActivity(data)
         .then(data => {
           this.isSubmit = true;
           if (data.code == 100) {
@@ -638,7 +638,7 @@ export default {
     //获取奖品类型-----------star
     getPrizeTypeData() {
       api
-        .getLanternPrizeType()
+        .getPrizeType()
         .then(data => {
           if (data.code == 100) {
             console.log(data, 1233);

@@ -39,7 +39,7 @@
           </el-table-column>
           <el-table-column prop="cashTime" label="兑奖时间">  
             <template slot-scope="scope">
-                 {{ $util.DateFormat(scope.row.cashTime, 'yyyy-MM-dd hh:mm:ss') }}  
+                 {{ scope.row.cashTime | DateFormat('yyyy-MM-dd hh:mm:ss') }}  
             </template>           
           </el-table-column>
           <el-table-column prop="status" label="状态">  
@@ -140,7 +140,7 @@ export default {
         snCode: this.snCode
       };
       // location.href = api.exportLantern(params)
-      window.open(api.exportLantern(params));
+      window.open(api.exportPrizeRecord(params));
     },
     sendPrize(id) {
       this.$confirm("确定要发送奖品?", "提示", {
@@ -148,7 +148,7 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        api.editLanternApply({ id: id }).then(res => {
+        api.sendWinning({ id: id }).then(res => {
           if (res.code == 100) {
             this.$message.success("发送奖品成功");
           } else {
@@ -172,7 +172,7 @@ export default {
           id: [id]
         };
 
-        api.delLanternAuthority(params).then(res => {
+        api.delWinning(params).then(res => {
           if (res.code == 100) {
             this.$message.success("删除成功");
             this.currentPage = this.initCurrentPage;
@@ -201,7 +201,7 @@ export default {
           actId: this.$route.query.id,
           id: array
         };
-        api.delLanternWinning(params).then(res => {
+        api.delWinning(params).then(res => {
           if (res.code == 100) {
             this.$message.success("删除成功");
             this.currentPage = this.initCurrentPage;
@@ -238,6 +238,5 @@ export default {
     this.fetchData(true);
   },
   mounted() {},
-  filters: {}
 };
 </script>
