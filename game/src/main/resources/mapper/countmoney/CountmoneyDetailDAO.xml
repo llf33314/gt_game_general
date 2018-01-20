@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.game.core.dao.countmoney.CountmoneyDetailDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.game.core.dao.countmoney.CountmoneyDetailDAO">
+		<id column="id" property="id" />
+		<result column="tur_prize_name" property="turPrizeName" />
+		<result column="tur_prize_type" property="turPrizeType" />
+		<result column="tur_prize_unit" property="turPrizeUnit" />
+		<result column="tur_prize_nums" property="turPrizeNums" />
+		<result column="tur_image_url" property="turImageUrl" />
+		<result column="act_id" property="actId" />
+		<result column="freeze_id" property="freezeId" />
+		<result column="openid" property="openid" />
+		<result column="nickname" property="nickname" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, tur_prize_name, tur_prize_type, tur_prize_unit, tur_prize_nums, tur_image_url, act_id, freeze_id, openid, nickname
+    </sql>
+
+</mapper>

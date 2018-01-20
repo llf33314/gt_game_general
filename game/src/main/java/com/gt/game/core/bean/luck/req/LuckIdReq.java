@@ -12,7 +12,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @author zwq
  * @since 2017-12-25
  */
-@ApiModel("好运翻翻看活动id")
+@ApiModel("好运翻翻看活动删除id")
 public class LuckIdReq{
 
 	@ApiModelProperty("活动id")

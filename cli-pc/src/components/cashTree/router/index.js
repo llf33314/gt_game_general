@@ -1,5 +1,6 @@
 const index = ()=>import( '@/components/cashTree/vue/index')
 const addAct = ()=>import( '@/components/cashTree/vue/addAct')
+const editAct = ()=>import( '@/components/cashTree/vue/editAct')
 const cancelOut = ()=>import( '@/components/cashTree/vue/cancelOut')
 const prizeRecord = ()=>import( '@/components/cashTree/vue/prizeRecord') 
 export const cashTree = [
@@ -13,6 +14,11 @@ export const cashTree = [
         component: addAct,
         name:'cashTree_addAct'
     },
+    {
+        path:'/cashTree/editAct',
+        component: editAct,
+        name:'cashTree_editAct'
+    }  ,
     {
         path:'/cashTree/cancelOut',
         component: cancelOut,

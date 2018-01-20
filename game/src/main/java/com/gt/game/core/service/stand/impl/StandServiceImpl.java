@@ -39,6 +39,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -266,6 +267,9 @@ public class StandServiceImpl implements StandService {
                 for (StandtotheendPrize StandtotheendPrize : StandtotheendPrizes) {
                     StandPrizeReq StandPrizeReq = new StandPrizeReq();
                     BeanUtils.copyProperties(StandtotheendPrize, StandPrizeReq);
+                    StandPrizeReq.setType(StandtotheendPrize.getPrizeType());
+                    StandPrizeReq.setPrizeUnit(StandtotheendPrize.getPrizePer());
+                    StandPrizeReq.setNum(StandtotheendPrize.getPrizeCount());
                     List<StandtotheendPrizeImgUrl> StandtotheendPrizeImgList = standtotheendPrizeImgUrlService.selectList(new EntityWrapper<StandtotheendPrizeImgUrl>().eq("prize_id", StandtotheendPrize.getId()));
                     List<StandPrizeImgReq> StandPrizeImgReqs = new ArrayList<>();
                     for (StandtotheendPrizeImgUrl standtotheendPrizeImgUrl : StandtotheendPrizeImgList) {
@@ -310,7 +314,7 @@ public class StandServiceImpl implements StandService {
                 throw new StandException(ResponseEnums.STAND_HAS12);
             }
             List<StandtotheendCashPrizeApply> StandtotheendCashPrizeApplies = standtotheendCashPrizeApplyService.selectList(
-                    new EntityWrapper<StandtotheendCashPrizeApply>().eq("act_id",standIdReq.getId()).eq("status",3));
+                    new EntityWrapper<StandtotheendCashPrizeApply>().eq("act_id",standIdReq.getId()).eq("apply_status",3));
             if(StandtotheendCashPrizeApplies.size() > 0 ){
                 throw new StandException(ResponseEnums.STAND_HAS11);
 
@@ -386,8 +390,8 @@ public class StandServiceImpl implements StandService {
             BeanUtils.copyProperties(standSaveReq,standtotheendMain);
             standtotheendMain.setBusId(busUser.getId());
             standtotheendMain.setCreatetime(new Date());
-            standtotheendMain.setFollowQrCode(standtotheendMain.getFollowQrCode().split("/upload").length > 1
-                    ?standtotheendMain.getFollowQrCode().split("/upload")[1]:standtotheendMain.getFollowQrCode());
+//            standtotheendMain.setFollowQrCode(standtotheendMain.getFollowQrCode().split("/upload").length > 1
+//                    ?standtotheendMain.getFollowQrCode().split("/upload")[1]:standtotheendMain.getFollowQrCode());
             standtotheendMainService.insert(standtotheendMain);
         }else{//编辑
             standtotheendMain = standtotheendMainService.selectById(standSaveReq.getId());
@@ -401,8 +405,8 @@ public class StandServiceImpl implements StandService {
                 throw new StandException(ResponseEnums.DIFF_USER);
             }
             BeanUtils.copyProperties(standSaveReq,standtotheendMain);
-            standtotheendMain.setFollowQrCode(standtotheendMain.getFollowQrCode().split("/upload").length > 1
-                    ?standtotheendMain.getFollowQrCode().split("/upload")[1]:standtotheendMain.getFollowQrCode());
+//            standtotheendMain.setFollowQrCode(standtotheendMain.getFollowQrCode().split("/upload").length > 1
+//                    ?standtotheendMain.getFollowQrCode().split("/upload")[1]:standtotheendMain.getFollowQrCode());
             standtotheendMainService.updateById(standtotheendMain);
             //删除
             //兑奖地址
@@ -432,13 +436,16 @@ public class StandServiceImpl implements StandService {
                 StandtotheendPrize standtotheendPrize = new StandtotheendPrize();
                 BeanUtils.copyProperties(StandPrizeReq,standtotheendPrize);
                 standtotheendPrize.setActId(standtotheendMain.getId());
+                standtotheendPrize.setPrizeType(StandPrizeReq.getType());
+                standtotheendPrize.setPrizePer(StandPrizeReq.getPrizeUnit());
+                standtotheendPrize.setPrizeCount(StandPrizeReq.getNum());
                 standtotheendPrizeService.insert(standtotheendPrize);
                 if(StandPrizeReq.getStandPrizeImgReqs().size() > 0){
                     for(StandPrizeImgReq StandPrizeImgReq : StandPrizeReq.getStandPrizeImgReqs()){
                         StandtotheendPrizeImgUrl standtotheendPrizeImgUrl = new StandtotheendPrizeImgUrl();
                         BeanUtils.copyProperties(StandPrizeImgReq,standtotheendPrizeImgUrl);
                         standtotheendPrizeImgUrl.setPrizeId(standtotheendPrize.getId());
-                        standtotheendPrizeImgUrl.setPicUrl(standtotheendPrizeImgUrl.getPicUrl().split("/upload").length>1?
+                        if(CommonUtil.isNotEmpty(standtotheendPrizeImgUrl.getPicUrl())) standtotheendPrizeImgUrl.setPicUrl(standtotheendPrizeImgUrl.getPicUrl().split("/upload").length>1?
                                 standtotheendPrizeImgUrl.getPicUrl().split("/upload")[1]:standtotheendPrizeImgUrl.getPicUrl());
                         standtotheendPrizeImgUrlService.insert(standtotheendPrizeImgUrl);
                     }
@@ -633,6 +640,18 @@ public class StandServiceImpl implements StandService {
             standJoinRecordListResList.add(standJoinRecordListRes);
         }
         return ResponseDTO.createBySuccess("获取成功",standJoinRecordListResList);
+    }
+    /**
+     * 删除用户信息
+     * @param standRecordIdReq
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseDTO removeStandJoinRecord(BusUser busUser, StandRecordIdReq standRecordIdReq) {
+        standtotheendJoinRecordService.deleteById(standRecordIdReq.getId());
+        standtotheendJoinDetailService.delete(new EntityWrapper<StandtotheendJoinDetail>().eq("record_id",standRecordIdReq.getId()));
+        return ResponseDTO.createBySuccess("删除成功");
     }
     /**
      * 获取答题记录列表
@@ -862,6 +881,8 @@ public class StandServiceImpl implements StandService {
         standtotheendQuesbankService.updateById(bank);
         return ResponseDTO.createBySuccess("导入成功");
     }
+
+
 
     private HSSFWorkbook exportExcelForRecoding(List<Map<String, Object>> list, String title) {
         // 创建excel文件对象

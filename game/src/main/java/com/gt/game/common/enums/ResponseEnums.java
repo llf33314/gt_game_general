@@ -124,6 +124,8 @@ public enum ResponseEnums {
     COMMON_HAS13(413,"回滚粉币失败，删除失败"),
     COMMON_HAS14(414,"请输入正确的粉币数量"),
     COMMON_HAS15(415,"修改粉币数量失败"),
+    COMMON_HAS16(416,"兑奖开始时间需在活动开始之后"),
+    COMMON_HAS17(417,"请选择活动开始时间"),
     //升国旗响应
     RAISEFLAG_HAS1(401,"该奖品已发放!"),
     RAISEFLAG_HAS2(402,"手动发放只能选择[已提交]状态的数据！!"),
@@ -214,6 +216,8 @@ public enum ResponseEnums {
     LUCK_HAS3(403,"活动已经开始，不允许操作"),
     LUCK_HAS4(404,"请添加奖品"),
     LUCK_HAS5(405,"至少需要一个谢谢参与奖项"),
+    LUCK_HAS6(406,"活动还未开始"),
+    LUCK_HAS7(407,"活动已结束"),
 
     //端午赛龙舟响应
     DRAGONBOAT_HAS1(401,"删除活动失败！"),
@@ -231,11 +235,19 @@ public enum ResponseEnums {
     NINELATTICE_HAS5(405,"活动为空!"),
     NINELATTICE_HAS6(401,"删除活动失败！"),
 
-    //圣诞大礼包
+    //圣诞大礼包响应
     TREE_HAS1(401,"未到兑奖时间!"),
     TREE_HAS2(402,"已过兑奖时间!"),
     TREE_HAS3(403,"该奖品已发放!"),
     TREE_HAS4(404,"手动发放只能选择[已提交]状态的数据！!"),
+
+    //砸金蛋响应
+    EGGS_HAS1(401,"未到兑奖时间!"),
+    EGGS_HAS2(402,"已过兑奖时间!"),
+    EGGS_HAS3(403,"该奖品已发放!"),
+    EGGS_HAS4(404,"手动发放只能选择[已提交]状态的数据！!"),
+    EGGS_HAS5(405,"活动为空!"),
+    EGGS_HAS6(401,"删除活动失败！"),
     ;
 
     private final int code;

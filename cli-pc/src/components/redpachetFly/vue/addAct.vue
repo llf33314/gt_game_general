@@ -20,7 +20,7 @@
             <el-step title="新建完成"></el-step>
         </el-steps>
         <!-- 基础设置 -->
-        <div v-if="this.active==0" class="mt40">
+        <div v-show="this.active==0" class="mt40">
             <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="120px" class="demo-ruleForm">
                 <el-form-item label="商户名称：" prop="name">
                     <el-input class="w_demo" v-model="ruleForm1.name"></el-input>
@@ -38,7 +38,7 @@
             </el-form> 
         </div>
         <!-- 规则设置 -->
-        <div v-if="this.active==1" class="mt40">
+        <div v-show="this.active==1" class="mt40">
             <div class="gt-gray-region" style="color:#666;line-height:20px">
                 <p>1.每分钟发放红包数量不得超过1800个。</p>
                 <p>2.北京时间0:00-8:00不可赠送红包。</p>

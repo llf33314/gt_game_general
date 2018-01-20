@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 
-@ApiModel("分页获取中奖记录列表返回类")
+@ApiModel("分页获取端午赛龙舟活动中奖记录列表返回类")
 public class DragonboatGetWinningRes {
 
 	/**

@@ -19,10 +19,66 @@
 		<result column="luck_name" property="luckName" />
 		<result column="luck_cashtime" property="luckCashtime" />
 	</resultMap>
-
+	<resultMap id="BaseResultMap1" type="com.gt.game.core.bean.luck.res.LuckWinningListRes">
+		<id column="id" property="id" />
+		<result column="luck_prize_name" property="luckPrizeName" />
+		<result column="luck_prize_limit" property="luckPrizeLimit" />
+		<result column="luck_prize_type" property="luckPrizeType" />
+		<result column="luck_status" property="luckStatus" />
+		<result column="luck_memberId" property="luckMemberId" />
+		<result column="luck_create_time" property="luckCreateTime" />
+		<result column="luck_user_id" property="luckUserId" />
+		<result column="luck_exchangeCode" property="luckExchangeCode" />
+		<result column="luck_cash_memberId" property="luckCashMemberId" />
+		<result column="luck_way" property="luckWay" />
+		<result column="luck_phone" property="luckPhone" />
+		<result column="luck_address" property="luckAddress" />
+		<result column="luck_name" property="luckName" />
+		<result column="luck_cashtime" property="luckCashtime" />
+		<result column="address" property="address" />
+	</resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, luck_act_id, luck_prize_id, luck_status, luck_memberId AS luckMemberId, luck_create_time, luck_user_id, luck_exchangeCode AS luckExchangeCode, luck_cash_memberId AS luckCashMemberId, luck_way, luck_phone, luck_address, luck_name, luck_cashtime
     </sql>
-
+	<select id="queryRecodList" resultMap="BaseResultMap1" parameterType="com.gt.game.core.bean.luck.req.LuckWinningPageReq">
+		SELECT t1.id ,t2.luck_prize_name,t2.luck_prize_limit,t2.luck_prize_type,t1.luck_status,t1.luck_memberId,t1.luck_create_time,t1.luck_user_id,t1.luck_exchangeCode
+		,t1.luck_cash_memberId,t1.luck_way,t1.luck_phone,t1.luck_address,t1.luck_name,t1.luck_cashtime,t3.luck_address AS address
+		FROM t_wx_activity_luck_winning t1
+	    LEFT JOIN t_wx_activity_luck_detail t2 ON  t1.luck_prize_id= t2.id
+	    LEFT JOIN t_wx_activity_luck_main t3 ON  t1.luck_act_id = t3.id
+	    WHERE t1.luck_act_id = #{actId}
+		<if test="snCode != null and snCode != ''">
+			and t1.luck_exchangeCode = #{snCode}
+		</if>
+		<if test="luckPrizeType != -1 ">
+			and t2.luck_prize_type = #{luckPrizeType}
+		</if>
+		<if test="luckStatus != -1">
+			and t1.luck_status = #{luckStatus}
+		</if>
+		and t2.luck_prize_type != 5
+		ORDER BY t1.id DESC
+	</select>
+	<!-- 获取导出记录 -->
+	<select id="findExports" parameterType="Map" resultType="Map">
+		SELECT t.id,d.luck_prize_name,d.luck_prize_limit,t.luck_status,t.luck_exchangeCode,t.luck_create_time,t.luck_memberId,t.luck_phone,d.luck_prize_type,d.luck_prize_name
+		FROM t_wx_activity_luck_winning t
+		LEFT JOIN t_wx_activity_luck_detail d ON t.luck_prize_id = d.id
+		<where>
+			<if test="actId != null">
+				t.luck_act_id = #{actId}
+			</if>
+			<if test="snCode != null and snCode != ''">
+				and t.luck_exchangeCode = #{snCode}
+			</if>
+			<if test="luckPrizeType != -1">
+				and luck_prize_type = #{luckPrizeType}
+			</if>
+			<if test="luckStatus != -1">
+				and t.luck_status = #{luckStatus}
+			</if>
+		</where>
+		and d.luck_prize_type != 5
+	</select>
 </mapper>

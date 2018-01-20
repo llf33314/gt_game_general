@@ -14,7 +14,10 @@
     </div> 
     <div class="gt-content">  
         <el-table :data="tableData.data"  v-if="this.tableData.data.length!=0">
-          <el-table-column prop="quesAmount" label="题库序号">              
+          <el-table-column prop="quesAmount" label="题库序号">   
+              <template slot-scope="scope"> 
+                {{scope.$index+1}}
+              </template>           
           </el-table-column>
           <el-table-column prop="bankName" label="题库名称">   
           </el-table-column>
@@ -37,7 +40,7 @@
 </template>
 <script>
 import {  
-getQuesbank
+getQuesbank,removeStandQuesbank
 }from './../api/api'
   export default{
     data() {
@@ -50,12 +53,7 @@ getQuesbank
         showDetailData:[]
       };
     },
-    methods: {
-        showDetailBtn(val){
-            this.showDetail=true
-            this.showDetailData=val
-            console.log(this.showDetailData,852222); 
-        },
+    methods: { 
       //题库列表---------------------------star
       getData(){ 
         getQuesbank().then(data=>{
@@ -63,14 +61,39 @@ getQuesbank
             this.tableData=data
             console.log(data,'题库列表');
           } else {
-              this.$message.errorthis.$message.error(data.msg);;
+              this.$message.error(data.msg);
           }
         }).catch(() => {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
         }); 
       },
-   
-      
+      //删除题库---------------------------star
+      handOut(val){ 
+        this.$confirm('此操作将永久删除该题库, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          removeStandQuesbank({id:val}).then(data=>{
+            if (data.code == 100) {
+                this.$message({ message: "操作成功", type: "success"}); 
+                this.getData();
+            } else {
+                this.$message.error(data.msg);
+            }
+          }).catch(() => {
+            this.$message({ type: "info", message: "网络问题，请刷新重试~" });
+          }); 
+        }).catch(() => {
+          this.$message({type: 'info',message: '已取消删除'});          
+        });   
+      },
+      addAskBtn(){
+        this.$router.push({path:'/standStill/addQuest'});
+      },    
+      showDetailBtn(val){
+           this.$router.push({path: '/standStill/editQuest', query: {id: val}}); 
+      },  
       test(){
         console.log(123)
       },
