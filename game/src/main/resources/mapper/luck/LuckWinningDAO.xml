@@ -57,7 +57,7 @@
 		<if test="luckStatus != -1">
 			and t1.luck_status = #{luckStatus}
 		</if>
-		and d.luck_prize_type != 5
+		and t2.luck_prize_type != 5
 		ORDER BY t1.id DESC
 	</select>
 	<!-- 获取导出记录 -->
