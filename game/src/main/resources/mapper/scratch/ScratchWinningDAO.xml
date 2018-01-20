@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.game.core.dao.scratch.ScratchWinningDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.game.core.dao.scratch.ScratchWinningDAO">
+		<id column="id" property="id" />
+		<result column="win_act_id" property="winActId" />
+		<result column="win_prize_id" property="winPrizeId" />
+		<result column="win_status" property="winStatus" />
+		<result column="win_memberId" property="winMemberId" />
+		<result column="win_create_time" property="winCreateTime" />
+		<result column="win_user_id" property="winUserId" />
+		<result column="win_exchangeCode" property="winExchangeCode" />
+		<result column="win_cash_memberId" property="winCashMemberId" />
+		<result column="win_way" property="winWay" />
+		<result column="win_phone" property="winPhone" />
+		<result column="win_address" property="winAddress" />
+		<result column="win_name" property="winName" />
+		<result column="win_cashtime" property="winCashtime" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, win_act_id, win_prize_id, win_status, win_memberId AS winMemberId, win_create_time, win_user_id, win_exchangeCode AS winExchangeCode, win_cash_memberId AS winCashMemberId, win_way, win_phone, win_address, win_name, win_cashtime
+    </sql>
+
+</mapper>

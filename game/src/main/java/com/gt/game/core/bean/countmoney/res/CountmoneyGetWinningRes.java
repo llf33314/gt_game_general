@@ -1,12 +1,20 @@
-package com.gt.game.core.bean.dragonboat.res;
+package com.gt.game.core.bean.countmoney.res;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 
-@ApiModel("分页获取端午赛龙舟活动中奖记录列表返回类")
-public class DragonboatGetWinningRes {
+/**
+ * <p>
+ * 元宵点灯 主表
+ * </p>
+ *
+ * @author zwq
+ * @since 2017-12-25
+ */
+@ApiModel("分页获取中奖记录列表返回类")
+public class CountmoneyGetWinningRes {
 
 	/**
 	 * 主键

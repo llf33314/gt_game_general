@@ -1,12 +1,13 @@
-package com.gt.game.core.bean.dragonboat.res;
+package com.gt.game.core.bean.scratch.res;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 
-@ApiModel("分页获取端午赛龙舟活动中奖记录列表返回类")
-public class DragonboatGetWinningRes {
+
+@ApiModel("分页获取中奖记录列表返回类")
+public class EggsGetWinningRes {
 
 	/**
 	 * 主键
@@ -40,9 +41,6 @@ public class DragonboatGetWinningRes {
 
 	@ApiModelProperty("兑奖码")
 	private String snCode;
-
-	@ApiModelProperty("成绩")
-	private Double score;
 
 	@ApiModelProperty("中奖人")
 	private String nickname;
@@ -170,11 +168,4 @@ public class DragonboatGetWinningRes {
 		this.snCode = snCode;
 	}
 
-	public Double getScore() {
-		return score;
-	}
-
-	public void setScore(Double score) {
-		this.score = score;
-	}
 }
