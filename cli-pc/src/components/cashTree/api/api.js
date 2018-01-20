@@ -2,6 +2,7 @@ import axios from './../../../http'
 let base = window.BASEDOMAIN + '/app/goldtree'
 
 
+
 /*连接*/
 export const getShortUrl = params => { return axios.get(`${window.BASEDOMAIN}/app/link/getShorUrl?url=${params}`).then(res => res.data) }
 export const getMobileUrl= params => { return axios.post(`${base}/getMobileUrl`, params).then(res => res.data) }
