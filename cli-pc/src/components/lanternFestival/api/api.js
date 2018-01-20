@@ -36,7 +36,7 @@ export default {
        getMobileUrl(params) {
            return post(`${base}/getMobileUrl`, params)   
        },
-       // 统计元宵点灯活动总数 
+       // 统计活动总数 
        countActivity(params) {
         return post(`${base}/countActivity`, params) 
        },
@@ -55,19 +55,19 @@ export default {
         return post(`${base}/getActivityById`, params) 
        },
 
-       // 编辑元宵点灯活动基础设置  
+       // 编辑活动基础设置  
        modfiyBasicsLantern(params) {
         return post(`${base}/modfiyBasicsLantern`, params) 
        },
-       // 编辑元宵点灯活动规则设置  
+       // 编辑活动规则设置  
        modfiyRuleLantern(params) {
         return post(`${base}/modfiyRuleLantern`, params) 
        },
-       // 编辑元宵点灯活动兑奖设置 
+       // 编辑活动兑奖设置 
        modfiyExpiryLantern(params) {
         return post(`${base}/modfiyExpiryLantern`, params) 
        },
-       // 编辑元宵点灯活动奖项设置  
+       // 编辑活动奖项设置  
        modfiyAwardsLantern(params) {
         return post(`${base}/modfiyAwardsLantern`, params) 
        }, 
@@ -85,7 +85,7 @@ export default {
 
 
        /* 中奖记录 - 接口 */ 
-       // 分页获取元宵点灯中奖记录列表 
+       // 分页获取中奖记录列表 
        getWinningList(params) {
         return post(`${base}/getWinningList`, params) 
        },
@@ -98,7 +98,7 @@ export default {
                   + '&snCode=' + params.snCode
         return url
        },
-       // 批量删除元宵点灯中奖记录 
+       // 批量删除中奖记录 
        delWinning(params) {
         return post(`${base}/delLanternWinning`, params) 
        },

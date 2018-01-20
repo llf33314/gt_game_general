@@ -51,7 +51,7 @@
               <el-button class="gt-button-normal blue" @click="askPreview(scope.row.id)">预览链接</el-button>
               <el-button class="gt-button-normal blue" @click="impower(scope.row.id)">核销授权</el-button>
               <el-button class="gt-button-normal blue" @click="record(scope.row.id)">中奖纪录</el-button>
-              <el-button class="gt-button-normal" @click="delBtn(scope.row.id)">删除</el-button>
+              <el-button class="gt-button-normal" @click="delOne(scope.row.id)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -178,7 +178,7 @@ export default {
       });
     },
     //删除------------------------------------------------------------star
-    delBtn(id) {
+    delOne(id) {
       this.$confirm("此操作将永久删除该活动, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
