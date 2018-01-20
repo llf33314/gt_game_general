@@ -19,22 +19,22 @@
             <el-step title="新建完成"></el-step>
         </el-steps>
         <!-- 基础设置 -->
-        <div v-show="this.active==0" class="mt40">
+        <div v-if="this.active==0" class="mt40">
           <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="120px" class="demo-ruleForm">
                 <el-form-item label="活动名称：" prop="name">
-                    <el-input class="w_demo"  placeholder="请输入活动名称" v-model="ruleForm1.name"></el-input>
+                    <el-input class="w_demo"  placeholder="请输入活动名称" v-model="ruleForm1.name" :maxlength="25"></el-input>
                 </el-form-item> 
                 <el-form-item label="游戏时间：" prop="name1">
                     <el-date-picker class="w_demo" v-model="ruleForm1.name1" :editable="false"  type="datetimerange"  placeholder="选择时间范围">
                     </el-date-picker>
                 </el-form-item>    
             <h1 class="mt30 mb20 pb10 bbtom" style="width:80%">广告设置</h1> 
-            <el-button type="primary" class="mb20" @click="addlinks()">新增</el-button>  
+            <el-button type="primary" class="mb20" @click="addlinks">新增</el-button>  
             <span class="ml10 el-upload__tip grey">1.仅支持多粉与一点揩油的链接    2.广告图格式：1000*300px</span>
             <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark" style="width:80%">
                 <el-table-column label="广告链接">
                   <template slot-scope="scope" >
-                        <el-input v-model="scope.row.hrefUrl">
+                        <el-input v-model="scope.row.hrefUrl" :maxlength="100">
                           <template slot="prepend">Http://</template>
                         </el-input>
                   </template>
@@ -53,20 +53,29 @@
         </el-form> 
         </div>
         <!-- 规则设置 -->
-        <div v-show="this.active==1" class="mt40">
+        <div v-if="this.active==1" class="mt40">
             <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="150px" class="mt40 demo-ruleForm">
                 <el-form-item label="关注二维码：" prop="code">
                   <gt-material prop="url" :url="ruleForm2.code" v-on:getChangeUrl="getChangeUrl2" width="72" height="72"></gt-material>
                   <span class="el-upload__tip grey ml10">上传1:1二维码，将会在活动规则中显示商家二维码</span>  
                 </el-form-item>  
+                <el-form-item label="背景音乐：">
+                    <div class="pd20 bb bw bgMusic">
+                        <gt-material class="va-m" :prop="''" :isMusic="true" btnContent="点击上传"  v-on:getChangeUrl="getMusic" width="72" height="72"></gt-material>
+                        <span class="el-upload__tip c333 ml20">{{ruleForm2.bgmSp}}</span> 
+                        <div class="el-upload__tip grey" style="line-height:25px">
+                            音频文件的格式为mp3、wma、wav,大小不超过3M
+                        </div>
+                    </div>
+                </el-form-item> 
                 <el-form-item label="游戏总数：" prop="manTotalChance">
-                    <el-input class="w25_demo mr10" type="number" placeholder="请输入游戏总数" v-model="ruleForm2.manTotalChance"></el-input>次/人
+                    <el-input class="w25_demo mr10" type="number" placeholder="请输入游戏总数"  v-model="ruleForm2.manTotalChance" :maxlength="10" @keydown.native="$util.KeydownNumber"></el-input>次/人
                 </el-form-item> 
                 <el-form-item label="每天次数：" prop="manDayChance">
-                    <el-input class="w25_demo mr10" type="number" placeholder="请输入每天游戏次数）" v-model="ruleForm2.manDayChance"></el-input>次/人
+                    <el-input class="w25_demo mr10" type="number" placeholder="请输入每天游戏次数）" v-model="ruleForm2.manDayChance" :maxlength="10" @keydown.native="$util.KeydownNumber"></el-input>次/人
                 </el-form-item>    
                 <el-form-item label="游戏时长：" prop="gameTime">
-                    <el-input class="w25_demo mr10" type="number" placeholder="请输入时长（60~100秒）" v-model="ruleForm2.gameTime"></el-input>秒
+                    <el-input class="w25_demo mr10" type="number" placeholder="请输入时长（60~100秒）" v-model="ruleForm2.gameTime" :maxlength="3" @keydown.native="$util.KeydownNumber"></el-input>秒
                 </el-form-item> 
                 <el-form-item label="活动规则：" prop="desc">
                     <el-input class="w_demo" :maxlength="300"  type="textarea" v-model="ruleForm2.desc" :rows="3" placeholder="请填写活动规则"></el-input>
@@ -75,7 +84,7 @@
             </el-form> 
         </div> 
         <!-- 兑奖设置 -->
-        <div v-show="this.active==2" class="mt40">
+        <div v-if="this.active==2" class="mt40">
             <el-form :model="ruleForm3" :rules="rules3" ref="ruleForm3" label-width="120px" class="mt40 demo-ruleForm">
                 <el-form-item label="兑奖时间：" prop="date">
                     <el-date-picker class="w_demo" v-model="ruleForm3.date" type="daterange" placeholder="选择日期范围">
@@ -91,21 +100,21 @@
                     <span style="margin-left:30px;color: #333;" ><span style="color:#ff4949;margin-right:3px">*</span>兑奖地址：</span>
                     <el-button  class="mb10"  type="primary" @click="addList()">添加</el-button>  
                     <el-form-item v-for="(item,index) in ruleForm3.addrRow" :key="item.key"  :prop="'addrRow.' + index + '.list'" :rules="{required:true,validator:addrPass,trigger: 'blur'}">
-                        <el-input class="w_demo mr10" prop="list" v-model="item.list" placeholder="请输入到店领取地址"></el-input> 
+                        <el-input class="w_demo mr10" prop="list" v-model="item.list" placeholder="请输入到店领取地址" :maxlength="100"></el-input> 
                         <span class="blueee"  @click="delList(index)" v-if="index!=0" >删除</span> 
                     </el-form-item>
                 </div>  
                 <el-form-item label="联系电话：" prop="phone">
-                      <el-input  class="w_demo" v-model="ruleForm3.phone" placeholder="请输入联系电话(固话用-分割)"></el-input>    
+                      <el-input  class="w_demo" v-model="ruleForm3.phone" placeholder="请输入联系电话(固话用-分割)" :maxlength="20" @keydown.native="$util.KeydownNumber"></el-input>    
                 </el-form-item>  
 
                 <el-form-item label="兑奖说明：" prop="desc">
-                    <el-input class="bw" type="textarea" v-model="ruleForm3.desc" :rows="5" placeholder="请输入兑奖说明"></el-input> 
+                    <el-input class="bw" type="textarea" v-model="ruleForm3.desc" :rows="5" placeholder="请输入兑奖说明" :maxlength="200"></el-input> 
                 </el-form-item>   
             </el-form> 
         </div>
         <!-- 奖项设置 -->
-        <div v-show="this.active==3" class="mt40">
+        <div v-if="this.active==3" class="mt40">
             <div>
                 <span style="color: #333; position:absolute;margin-top:0px;" >奖品说明：</span>
                 <el-input type="textarea" class="bw ml120"  :maxlength="300"  :rows="3" placeholder="请输入兑奖说明" v-model="explain">
@@ -138,17 +147,17 @@
                 </el-table-column> 
                 <el-table-column label="奖品单位"  :width="240">
                     <template slot-scope="scope">
-                        <el-input class="w20_demo" type="number" v-model="scope.row.name1" placeholder="数值应大于0"></el-input>
+                        <el-input class="w20_demo" type="number" v-model="scope.row.name1" placeholder="数值应大于0" :maxlength="10" @keydown.native="$util.KeydownNumber"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="奖品名称" :width="240">
                 <template slot-scope="scope">
-                    <el-input class="w20_demo"  v-model="scope.row.name2" placeholder="请输入奖品名称"></el-input>
+                    <el-input class="w20_demo"  v-model="scope.row.name2" placeholder="请输入奖品名称" :maxlength="50"></el-input>
                 </template>
                 </el-table-column>
                 <el-table-column label="奖项数量" :width="240">
                 <template slot-scope="scope">
-                    <el-input class="w20_demo"  type="number"  v-model="scope.row.name3" placeholder="数值应大于0"></el-input>
+                    <el-input class="w20_demo"  type="number"  v-model="scope.row.name3" placeholder="数值应大于0" :maxlength="10" @keydown.native="$util.KeydownNumber"></el-input>
                 </template>
                 </el-table-column>
                 <el-table-column label="奖品图片" :width="160">
@@ -180,7 +189,7 @@
             <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
             <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>   
-            <el-button type="primary" @click="submit11()">打印</el-button>   
+            <el-button type="primary" @click="submit11">打印</el-button>   
         </div> 
     </div>   
 </div>
@@ -210,6 +219,15 @@ export default {
         callback();
       }
     }; 
+    let Gametime = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error("请输入时长（60~100秒）"));
+      } else if ( Number(value) && Number(value)< 60 || Number(value) && Number(value) > 100 ) {
+        callback(new Error("请输入时长（60~100秒）"));
+      } else {
+        callback();
+      }
+    };
     return {
       active: 0,
       ruleForm1: {
@@ -226,15 +244,14 @@ export default {
       },
       ruleForm2: {
         code: "",
+        bgmSp: '',
+        musicUrl: '',
         manTotalChance:"",
         manDayChance:"", 
         gameTime: '',
         desc: ""
       },
       rules2: {
-        time: [ 
-          { required: true,validator: timePass,  trigger: "blur,change" }
-        ],  
         manTotalChance: [
           { required: true,  message: "请填写每人免费游戏次数", trigger: "blur" } 
         ], 
@@ -242,7 +259,7 @@ export default {
           { required: true,  message: "请填写每人每天免费游戏次数", trigger: "blur" } 
         ], 
         gameTime: [
-          { required: true,  message: "请输入时长（60~100秒）", trigger: "blur" }   
+          { required: true,  validator: Gametime, trigger: "blur" }   
         ],
         desc: [
           { required: true,  message: "请填写活动规则", trigger: "blur" } 
@@ -282,7 +299,6 @@ export default {
     };
   },
   methods: { 
-  
     addrPass(rule, value, callback) {
       if (!value) {
        callback(new Error("到店领取地址不能为空"));
@@ -372,6 +388,11 @@ export default {
           submit11(){
           console.log(this.ruleForm4,665544)
       }, 
+    getMusic(e) {
+      console.log(e)
+      this.ruleForm2.bgmSp = e.music.name
+      this.ruleForm2.musicUrl = e.music.url
+    },
     //表单提交--------------------------------------star
     submit(){
         //广告
@@ -428,8 +449,8 @@ export default {
             advertisingPictureList: newadv, 
             //规则设置
             followQrCode  : this.ruleForm2.code, 
-            bgmSp: '', // 背景音乐名
-            musicUrl: '', // 背景音乐地址 
+            bgmSp: this.ruleForm2.bgmSp, // 背景音乐名
+            musicUrl: this.ruleForm2.musicUrl, // 背景音乐地址 
             manTotalChance: Number(this.ruleForm2.manTotalChance), 
             manDayChance  :  Number(this.ruleForm2.manDayChance), 
             gameTime: this.ruleForm2.gameTime, 
@@ -450,7 +471,7 @@ export default {
             prizeSetList:  newYearPrizeReqs
         };
         console.log(data,123); 
-        api.addLantern(data).then(data=>{
+        api.addActivity(data).then(data=>{
           this.isSubmit=true
           if (data.code == 100) { 
               console.log(12336666)
@@ -472,7 +493,7 @@ export default {
     },
     //获取奖品类型-----------star
     getPrizeTypeData(){
-        api.getLanternPrizeType().then(data=>{
+        api.getPrizeType().then(data=>{
             if (data.code == 100) {
             console.log(data,1233);
             this.options=data.data

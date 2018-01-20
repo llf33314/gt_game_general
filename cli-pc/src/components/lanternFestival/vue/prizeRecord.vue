@@ -12,12 +12,12 @@
     <div class="gt-gray-region mb20">  
         <span class="padding-left-md ml30 mb10">
             <el-select v-model="type"  placeholder="请选择奖品类型"> 
-                 <el-option  v-for="item in options.type" :label="item.label"  :value="item.value"></el-option>
+                 <el-option  v-for="(item, index) in options.type"  :key="index"  :label="item.label"  :value="item.value"></el-option>
             </el-select>
         </span> 
         <span class="padding-left-md ml10 mb10">
                 <el-select v-model="status" placeholder="请选择状态"> 
-                  <el-option  v-for="item in options.status" :label="item.label" :value="item.value"></el-option>
+                  <el-option  v-for="(item, index) in options.status" :key="index" :label="item.label" :value="item.value"></el-option>
                 </el-select>
         </span> 
         <span class="padding-left-md ml10 mb10">
@@ -39,7 +39,7 @@
           </el-table-column>
           <el-table-column prop="cashTime" label="兑奖时间">  
             <template slot-scope="scope">
-                 {{ $util.DateFormat(scope.row.cashTime, 'yyyy-MM-dd hh:mm:ss') }}  
+                 {{ scope.row.cashTime | DateFormat('yyyy-MM-dd hh:mm:ss') }}  
             </template>           
           </el-table-column>
           <el-table-column prop="status" label="状态">  
@@ -134,13 +134,13 @@ export default {
     },
     exportFuc() {
       let params = {
-        actId: this.$route.actId,
+        actId: this.$route.query.id,
         status: this.status,
         type: this.type,
         snCode: this.snCode
       };
       // location.href = api.exportLantern(params)
-      window.open(api.exportLantern(params));
+      window.open(api.exportPrizeRecord(params));
     },
     sendPrize(id) {
       this.$confirm("确定要发送奖品?", "提示", {
@@ -148,7 +148,7 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        api.editLanternApply({ id: id }).then(res => {
+        api.sendWinning({ id: id }).then(res => {
           if (res.code == 100) {
             this.$message.success("发送奖品成功");
           } else {
@@ -172,7 +172,7 @@ export default {
           id: [id]
         };
 
-        api.delLanternAuthority(params).then(res => {
+        api.delWinning(params).then(res => {
           if (res.code == 100) {
             this.$message.success("删除成功");
             this.currentPage = this.initCurrentPage;
@@ -201,7 +201,7 @@ export default {
           actId: this.$route.query.id,
           id: array
         };
-        api.delLanternWinning(params).then(res => {
+        api.delWinning(params).then(res => {
           if (res.code == 100) {
             this.$message.success("删除成功");
             this.currentPage = this.initCurrentPage;
@@ -228,8 +228,8 @@ export default {
       };
       api.getWinningList(params).then(res => {
         if (res.code == 100) {
-          // this.tableData = res.data
-          // this.totalNums = res.page.totalNums
+          this.tableData = res.data
+          this.totalNums = res.page.totalNums
         }
       });
     }
@@ -238,6 +238,5 @@ export default {
     this.fetchData(true);
   },
   mounted() {},
-  filters: {}
 };
 </script>

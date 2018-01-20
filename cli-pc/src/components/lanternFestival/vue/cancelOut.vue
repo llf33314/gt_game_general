@@ -11,11 +11,11 @@
     </el-breadcrumb> 
     <div class="gt-gray-region mb20">  
        <gt-video-btn videoId="22" class="gt-video-btn mr70"></gt-video-btn>  
-      <el-button type="primary" @click="add()" class="ml30">新增授权</el-button> 
+      <el-button type="primary" @click="add" class="ml30">新增授权</el-button> 
     </div> 
     <div class="gt-content"> 
         <gt-null-data v-if="initRequest && tableData.length < 1">还没有相关数据，
-          <span  @click="add()">点击这里</span>新增核销员吧
+          <span  @click="add">点击这里</span>新增核销员吧
         </gt-null-data>  
 
         <el-table v-else ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
@@ -26,7 +26,7 @@
             </el-table-column>
             <el-table-column prop="createtime" label="创建时间">
                 <template slot-scope="scope">
-                    {{ scope.row.createtime| parseTime('{y}-{m}-{d} {h}:{i}')}}
+                    {{ scope.row.createtime | DateFormat('yyyy-MM-dd hh:mm:ss') }}
                 </template>
             </el-table-column>
             <el-table-column prop="address" label="操作" show-overflow-tooltip>
@@ -146,7 +146,7 @@ export default {
           id: [id]
         };
 
-        api.delLanternAuthority(params).then(res => {
+        api.delAuthority(params).then(res => {
           if (res.code == 100) {
             this.$message.success("删除成功");
             this.currentPage = this.initCurrentPage;
@@ -175,7 +175,7 @@ export default {
           actId: this.$route.query.id,
           id: array
         };
-        api.delLanternAuthority(params).then(res => {
+        api.delAuthority(params).then(res => {
           if (res.code == 100) {
             this.$message.success("删除成功");
             this.currentPage = this.initCurrentPage;
@@ -197,9 +197,9 @@ export default {
         current: this.currentPage,
         size: this.pageSize
       };
-      api.getLanternAuthorityList(params).then(res => {
+      api.getAuthorityList(params).then(res => {
         if (res.code == 100) {
-          //   this.tableData = res.data;
+          this.tableData = res.data;
           this.totalNums = res.page.totalNums;
         }
       });
