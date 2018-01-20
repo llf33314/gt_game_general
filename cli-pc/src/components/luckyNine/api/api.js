@@ -31,16 +31,16 @@ export default {
            return post(`${base}/getNinelatticeList`, params)
        },
        // 删除活动
-       delActivity(params) {
+       delActivity(params) { 
            return post(`${base}/delLantern`, params) 
        }, 
        // 获取手机端链接 
        getMobileUrl(params) {
            return post(`${base}/getMobileUrl`, params)   
        },
-       // 统计元宵点灯活动总数 17 
+       // 统计元宵点灯活动总数 
        countActivity(params) {
-        return post(`${base}/countActivity`, params) 
+        return post(`${base}/countNinelattice`, params) 
        },
 
        /* 修改/编辑活动 - 接口 */ 

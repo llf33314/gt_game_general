@@ -134,7 +134,7 @@ export default {
     },
     exportFuc() {
       let params = {
-        actId: this.$route.actId,
+        actId: this.$route.query.id,
         status: this.status,
         type: this.type,
         snCode: this.snCode
@@ -228,8 +228,8 @@ export default {
       };
       api.getWinningList(params).then(res => {
         if (res.code == 100) {
-          // this.tableData = res.data
-          // this.totalNums = res.page.totalNums
+          this.tableData = res.data
+          this.totalNums = res.page.totalNums
         }
       });
     }

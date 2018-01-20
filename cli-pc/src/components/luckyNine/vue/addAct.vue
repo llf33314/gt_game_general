@@ -6,7 +6,7 @@
 <div class="hd-common">
     <el-breadcrumb separator="/" class="gt-crumbs">
       <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
-      <el-breadcrumb-item :to="{ path:'/lanternFestival/index' }">元宵点灯</el-breadcrumb-item>  
+      <el-breadcrumb-item :to="{ path:'/luckyNine/index' }">幸运九宫格</el-breadcrumb-item>   
       <el-breadcrumb-item>创建活动</el-breadcrumb-item>   
     </el-breadcrumb> 
 

@@ -199,7 +199,7 @@ export default {
       };
       api.getAuthorityList(params).then(res => {
         if (res.code == 100) {
-          //   this.tableData = res.data;
+          this.tableData = res.data;
           this.totalNums = res.page.totalNums;
         }
       });

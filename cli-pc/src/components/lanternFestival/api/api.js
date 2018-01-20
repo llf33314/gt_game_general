@@ -1,5 +1,5 @@
 import axios from './../../../http' 
-let base = window.BASEDOMAIN + '/app/ninelattice' 
+let base = window.BASEDOMAIN + '/app/lantern'
 
 // let base = 'http://192.168.3.68:8080'
 function post(url, params) {
@@ -36,7 +36,7 @@ export default {
        getMobileUrl(params) {
            return post(`${base}/getMobileUrl`, params)   
        },
-       // 统计元宵点灯活动总数 17 
+       // 统计元宵点灯活动总数 
        countActivity(params) {
         return post(`${base}/countActivity`, params) 
        },
@@ -81,6 +81,7 @@ export default {
        delAuthority(params) { 
         return post(`${base}/delLanternAuthority`, params) 
        },
+       // 获取授权二维码
 
 
        /* 中奖记录 - 接口 */ 

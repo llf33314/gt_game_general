@@ -6,7 +6,7 @@
 <div class="hd-common turnPlate">
     <el-breadcrumb separator="/" class="gt-crumbs">
       <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
-      <el-breadcrumb-item :to="{ path:'/lanternFestival/index' }">元宵点灯</el-breadcrumb-item>  
+      <el-breadcrumb-item :to="{ path:'/luckyNine/index' }">幸运九宫格</el-breadcrumb-item>    
       <el-breadcrumb-item>中奖纪录</el-breadcrumb-item>   
     </el-breadcrumb> 
     <div class="gt-gray-region mb20">  
@@ -228,8 +228,8 @@ export default {
       };
       api.getWinningList(params).then(res => {
         if (res.code == 100) {
-          // this.tableData = res.data
-          // this.totalNums = res.page.totalNums
+          this.tableData = res.data
+          this.totalNums = res.page.totalNums
         }
       });
     }
