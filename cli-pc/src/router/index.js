@@ -25,7 +25,7 @@ Vue.use(Router)
 var routes = [
   {
       path: '/',
-      redirect: '/lanternFestival/index',
+      redirect: '/luckTranslate/index',
   },
   ...bigTurnplate,
   ...cashTree,

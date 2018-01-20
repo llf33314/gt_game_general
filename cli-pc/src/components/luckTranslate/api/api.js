@@ -12,6 +12,9 @@ export const getPrizeType     = params => { return axios.post(`${base}/getLuckPr
 export const getActList      = params => { return axios.post(`${base}/getLuckList`, params).then(res => res.data) }
 export const delAct          = params => { return axios.post(`${base}/removeLuck`, params).then(res => res.data) }
 export const getActCount     = params => { return axios.post(`${base}/getLuckCount`, params).then(res => res.data) }
+/*暂停*/
+export const stopLuck          = params => { return axios.post(`${base}/stopLuck`, params).then(res => res.data) }
+
 
 /*中奖*/
 export const getPrizeList     = params => { return axios.post(`${base}/getLuckWinningList`, params).then(res => res.data) }
@@ -20,6 +23,7 @@ export const givePrize        = params => { return axios.post(`${base}/editLuckW
 /*新增，编辑*/
 export const saveAct          = params => { return axios.post(`${base}/saveNewYear`, params).then(res => res.data) }
 export const getAct           = params => { return axios.get(`${base}/getNewYear?id=${params}`).then(res => res.data) }
+
 
 // /*核销*/
 // export const getVerifierList = params => { return axios.post(`${base}/getNewYearAuthorityList`, params).then(res => res.data) }

@@ -49,6 +49,8 @@
             <template slot-scope="scope"> 
               <el-button class="gt-button-normal blue"  v-if="scope.row.isEdit==1" @click="editActive(scope.row.id)">编辑</el-button>
               <el-button class="gt-button-normal blue"  v-if="scope.row.status!=0" @click="record(scope.row.id)">中奖纪录</el-button>
+              <el-button class="gt-button-normal blue"  v-if="scope.row.status==3" @click="handleActive1(scope.row.id)">开始活动</el-button>
+              <el-button class="gt-button-normal blue"  v-if="scope.row.status==1" @click="handleActive2(scope.row.id)">暂停活动</el-button>
               <el-button class="gt-button-normal blue"  @click="askPreview(scope.row.id)">预览链接</el-button> 
               <el-button class="gt-button-normal"       @click="delBtn(scope.row.id)">删除</el-button> 
             </template>
@@ -67,7 +69,7 @@
 </template>
 <script>
 import { 
-  getActList,getMobileUrl,getShortUrl,delAct,getActCount
+  getActList,getMobileUrl,getShortUrl,delAct,getActCount,stopLuck
 }from './../api/api'
   export default{
     data() {
@@ -159,9 +161,24 @@ import {
                 this.$message({ type: "info", message: "已取消删除" });
             });    
       },
-      // askPreview(){
-      //   this.copeData.copyUrlVisible = true
-      // },
+      //暂停按钮
+      handleActive1(val){
+        var params={}
+        params.id=val
+        params.luckStatus=1
+        console.log(params,12345);
+        stopLuck().then(data=>{
+          if (data.code == 100) {
+            console.log(data,'数量')           
+          } else {
+              this.$message.error(data.msg);
+          }
+        }).catch(() => {
+            this.$message({type: "info", message: "网络问题，请刷新重试~" });
+        }); 
+
+
+      },
       //切换------------------------------------------------------------star
       handleClick() { 
         this.getdata();
