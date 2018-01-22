@@ -1,7 +1,5 @@
 package com.gt.game.core.bean.dragonboat.req;
 
-import com.gt.game.core.bean.lantern.req.LanternAdvertisingPictureReq;
-import com.gt.game.core.bean.lantern.req.LanternPrizeSetReq;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -16,8 +14,11 @@ import java.util.List;
  * @author zwq
  * @since 2017-12-25
  */
-@ApiModel("新增端午赛龙舟活动请求类")
-public class DragonboatAddReq {
+@ApiModel("编辑端午赛龙舟活动基础设置请求类")
+public class DragonboatModfiyReq {
+
+	@ApiModelProperty("活动主键id")
+	private Integer id;
 
 	@ApiModelProperty("活动名称")
 	private String name;
@@ -73,6 +74,14 @@ public class DragonboatAddReq {
 	@ApiModelProperty("奖品设置")
 	private List<DragonboatPrizeSetReq> prizeSetList;
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -97,12 +106,12 @@ public class DragonboatAddReq {
 		this.activityEndTime = activityEndTime;
 	}
 
-	public String getFollowQrCode() {
-		return followQrCode;
+	public String getBgmSp() {
+		return bgmSp;
 	}
 
-	public void setFollowQrCode(String followQrCode) {
-		this.followQrCode = followQrCode;
+	public void setBgmSp(String bgmSp) {
+		this.bgmSp = bgmSp;
 	}
 
 	public String getMusicUrl() {
@@ -113,12 +122,12 @@ public class DragonboatAddReq {
 		this.musicUrl = musicUrl;
 	}
 
-	public String getBgmSp() {
-		return bgmSp;
+	public String getFollowQrCode() {
+		return followQrCode;
 	}
 
-	public void setBgmSp(String bgmSp) {
-		this.bgmSp = bgmSp;
+	public void setFollowQrCode(String followQrCode) {
+		this.followQrCode = followQrCode;
 	}
 
 	public Integer getManTotalChance() {

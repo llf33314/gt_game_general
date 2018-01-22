@@ -309,6 +309,7 @@ public class LanternServiceImpl implements LanternService {
             list3.add(lanternAdvertisingPictureReq);
         }
         lanternGetActivityRes.setAdvertisingPictureList(list3);  //TODO  广告轮播图
+
         EntityWrapper<LanternPrize> entityWrapper4 = new EntityWrapper();
         entityWrapper4.eq("act_id", lanternMain.getId());
         List<LanternPrize> lanternPrizeList = lanternPrizeService.selectList(entityWrapper4);

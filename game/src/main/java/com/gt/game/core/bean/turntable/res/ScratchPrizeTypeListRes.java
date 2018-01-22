@@ -1,10 +1,10 @@
-package com.gt.game.core.bean.scratch.res;
+package com.gt.game.core.bean.turntable.res;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel("奖品类型返回类")
-public class EggsPrizeTypeListRes {
+public class ScratchPrizeTypeListRes {
 
 	@ApiModelProperty("value")
 	private String value;

@@ -1,22 +1,15 @@
-package com.gt.game.core.bean.dragonboat.req;
+package com.gt.game.core.bean.turntable.res;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 
-/**
- * <p>
- * 端午赛龙舟主表
- * </p>
- *
- * @author zwq
- * @since 2017-12-25
- */
-@ApiModel("编辑端午赛龙舟活动基础设置请求类")
-public class DragonboatModfiyBasicsReq {
 
-	@ApiModelProperty("活动主键id")
+@ApiModel("分页查询大转盘活动返回类")
+public class TurntableListRes {
+
+	@ApiModelProperty("主键id")
 	private Integer id;
 
 	@ApiModelProperty("活动名称")
@@ -27,6 +20,10 @@ public class DragonboatModfiyBasicsReq {
 
 	@ApiModelProperty("活动结束时间")
 	private Date activityEndTime;
+
+
+	@ApiModelProperty("活动状态  0 未开始 1 进行中 2 已结束 3.已暂停")
+	private Integer status;
 
 	public Integer getId() {
 		return id;
@@ -58,5 +55,13 @@ public class DragonboatModfiyBasicsReq {
 
 	public void setActivityEndTime(Date activityEndTime) {
 		this.activityEndTime = activityEndTime;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 }

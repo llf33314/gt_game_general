@@ -1,7 +1,7 @@
-package com.gt.game.core.bean.dragonboat.req;
+package com.gt.game.core.bean.dragonboat.res;
 
-import com.gt.game.core.bean.lantern.req.LanternAdvertisingPictureReq;
-import com.gt.game.core.bean.lantern.req.LanternPrizeSetReq;
+import com.gt.game.core.bean.dragonboat.req.DragonboatAdvertisingPictureReq;
+import com.gt.game.core.bean.dragonboat.req.DragonboatPrizeSetReq;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -16,8 +16,8 @@ import java.util.List;
  * @author zwq
  * @since 2017-12-25
  */
-@ApiModel("新增端午赛龙舟活动请求类")
-public class DragonboatAddReq {
+@ApiModel("通过活动id查询端午赛龙舟活动")
+public class DragonboatGetActivityRes {
 
 	@ApiModelProperty("活动名称")
 	private String name;
