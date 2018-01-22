@@ -206,11 +206,11 @@ export default {
       this.fetchData();
     },
     addActive() {
-      this.$router.push("/christmasGift/index");
+      this.$router.push("/christmasGift/addAct");
     },
     edit(id) {
       this.$router.push({
-        path: "/lanternFestival/editAct",
+        path: "/christmasGift/editAct",
         query: { id: id }
       });
     },

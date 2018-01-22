@@ -23,10 +23,10 @@ import { standStill }    from '@/components/standStill/router/index.js'
 import { throughHeart }  from '@/components/throughHeart/router/index.js'
 Vue.use(Router)
 var routes = [
-  // {
-  //     path: '/',
-  //     redirect: '/luckTranslate/index',
-  // },
+  {
+      path: '/',
+      redirect: '/eggSmash/index',
+  },
   ...bigTurnplate,
   ...cashTree,
   ...christmasGift,
