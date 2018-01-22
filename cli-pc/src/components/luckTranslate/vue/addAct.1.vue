@@ -173,13 +173,66 @@
             <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>   
             <el-button type="primary" @click="submit()">打印</el-button>   
         </div> 
-        <!-- 选择粉丝弹窗 --> 
-        <gt-Fans-detail :fansKey="key+''" :visible="dialogFans"   v-on:getFansData="getFansData"></gt-Fans-detail>  
+<!-- 选择粉丝弹窗 -->
+<el-dialog title="粉丝列表"  :visible.sync="dialogFans">
+    <div class="mb10"> 
+      <el-input placeholder="请输入昵称" icon="search" v-model="memberName" style="width:250px" @change="test()"> 
+          </el-input>
+    </div>
+    <div class="dialogFansAll">
+        <div class="pull-left" style="width:75%">
+        <el-table ref="multipleTable" :data="fansData.data"  tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="40">
+            </el-table-column>
+            <el-table-column label="头像" prop="headimgurl">   
+                    <template slot-scope="scope">
+                    <img :src="scope.row.headimgurl" style="width:30px;height:30px"/>
+                    </template>
+            </el-table-column>
+            <el-table-column label="昵称" prop="nickname">
+            </el-table-column>
+            <el-table-column label="性别" prop="sex">
+                <template slot-scope="scope">{{ scope.row.sex|sexStatus(scope.row.sex) }}</template>
+            </el-table-column>
+            <el-table-column label="所在城市" prop="city">
+            </el-table-column>
+            <el-table-column label="关注时间" prop="jointime">
+                <template slot-scope="scope">{{scope.row.jointime|parseTime('{y}-{m}-{d}')}}</template>
+            </el-table-column>
+            <el-table-column label="组别" prop="name">
+            </el-table-column>
+        </el-table>
+        <div class="public-page-fr">
+            <el-pagination @current-change="handleCurrentChange"  :current-page.sync="current" :page-size="8"
+                layout="prev, pager, next, jumper" :total="fansData.page.totalNums">
+                </el-pagination> 
+        </div>  
+        <div class="h20"></div> 
+        </div>
 
+        <div class="pull-right dialogFans_r">
+            <div class="dialogFans_r_chose">
+            已选择：{{this.prizeData.length}}
+            </div> 
+            <div v-for="(item,index) in  prizeData" class="prizeItem" >  
+                <p style="width:100%;">
+                    <div class="prizeName">
+                    {{item.nickname}} 
+                    </div>
+                    <span @click="delPrize(index)" class="blueee mr10 pull-right mt20" >删除</span>  
+                </p>
+            </div> 
+        </div>
+        <div  class="pull-right" > 
+            <span slot="footer" class="dialog-footer">
+                <div class="h20"></div>
+            <el-button @click="dialogFans = false">取 消</el-button>
+            <el-button type="primary" @click="prizeSubmit()">确 定</el-button>
+            </span>
+        </div> 
+    </div> 
+</el-dialog>
 
-        <!-- <el-dialog title="粉丝列表"  :visible.sync="dialogFans"> 
-            <gt-Fans-detail :fansKey="key+''" :visible.sync="dialogFans" v-on:getFansData="getFansData"></gt-Fans-detail> 
-        </el-dialog> -->
 </div>   
 </div>
 </section>
@@ -217,7 +270,7 @@ export default {
         }         
     }; 
     return {
-      active:3,
+      active:0,
       ruleForm1: {
         type:1,
         luckName: "",
@@ -269,36 +322,80 @@ export default {
         }
       ],
       dialogFans:false,
-      key:0,
-      
-        // fansData:{
-        //     data:[], 
-        //     page:{}        
-        // }, 
-        // current:1,
-        // memberName:"",
-        // prizeData:[],
-       
+      memberName:"",
+      current:1,
+      fansData:{
+        data:[], 
+        page:{}        
+      },
+      prizeData:[],
+      key:"",
     };
   },
   methods: { 
     shoeDialogFans(val){
         this.key=val
         this.dialogFans=true 
-        console.log(this.key);
     }, 
-    getFansData(e){ 
-        console.log(e,'子组件的信息')
-        this.dialogFans=false
-    },
-    
-
-
-
-
     delPrize(index){
       this.prizeData.splice(index, 1); 
-    },  
+    }, 
+    //多选名单
+    handleSelectionChange(val) {
+        // console.log(val,111)
+        // this.multipleSelection = val; 
+        this.prizeData = val;  
+        // console.log(this.prizeData,222)
+        
+    },
+    //指定中奖人确定按钮
+    prizeSubmit(){  
+        if(this.prizeData.length>4){
+            this.$message.error("指定中奖人不能超过5个");
+        }else{
+            var k  =this.key;  
+            var nickname=[];
+            var openid=[];
+            console.log(k,7788)
+            for(var i=0;i<this.prizeData.length;i++){
+                var arr1={
+                 nickname:this.prizeData[i].nickname,
+                 openid:this.prizeData[i].openid
+                }
+                nickname.push(arr1.nickname);
+                openid.push(arr1.openid);
+            }  
+            this.ruleForm4[k].nickname=nickname+'' 
+            this.ruleForm4[k].openid=openid+''  
+            this.dialogFans=false
+        } 
+    },    
+    //获取中奖名单
+    getMembersData(){ 
+        var params={}
+        params.current=this.current
+        params.size=8
+        params.memberName=this.memberName
+        console.log(params)
+        getMembers(params).then(data=>{
+          if (data.code == 100) {
+            this.fansData=data           
+          } else {
+              this.$message.error(data.msg);
+          }
+        }).catch(() => {
+            this.$message({type: "info", message: "网络问题，请刷新重试~" });
+        }); 
+    },
+    //翻页
+    handleCurrentChange(val){
+      this.getMembersData() 
+    },
+
+
+
+
+
     test() {
       console.log(123); 
       this.active=5
@@ -308,7 +405,8 @@ export default {
         console.log(e);
         this.ruleForm1.music    = e.music.name
         this.ruleForm1.musicUrl = e.music.url
-    }, 
+    },
+
     delForm4(index){
       this.ruleForm4.splice(index, 1);
     },
@@ -395,34 +493,38 @@ export default {
          window.history.go(-1);
     },
   },
-   
-    filters: {
-        sexStatus(val) {
-            if (val == 2) {
-            val = "女";
-            }else if(val == 1){
-            val = "男"; 
-            }else if(val == 0){
-                val = "未知"; 
-            }
-            return val;
-        },
-        prizeStatus(val) {
-            if (val == 0) {
-            val = "一等奖";
-            }else if(val == 1){
-            val = "二等奖";
-            }else if(val == 2){
-            val = "三等奖";
-            }else if(val == 3){
-            val = "四等奖";
-            }else if(val == 4){
-            val = "五等奖";
-            }else if(val == 5){
-            val = "六等奖";
-            }  
-            return val;
-        }, 
+  mounted() { 
+  }, 
+  filters: {
+      sexStatus(val) {
+        if (val == 2) {
+          val = "女";
+        }else if(val == 1){
+          val = "男"; 
+        }else if(val == 0){
+            val = "未知"; 
+        }
+        return val;
+      },
+    prizeStatus(val) {
+        if (val == 0) {
+          val = "一等奖";
+        }else if(val == 1){
+          val = "二等奖";
+        }else if(val == 2){
+          val = "三等奖";
+        }else if(val == 3){
+          val = "四等奖";
+        }else if(val == 4){
+          val = "五等奖";
+        }else if(val == 5){
+          val = "六等奖";
+        }  
+        return val;
     }, 
+  },
+    mounted() {
+      this.getMembersData(); 
+    },
 };
 </script>

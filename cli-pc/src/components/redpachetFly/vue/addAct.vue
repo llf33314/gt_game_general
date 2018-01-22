@@ -1,7 +1,3 @@
-<style lang="less">
-.hd-common{ 
-}
-</style>
 <template>
 <section>
 <div class="hd-common redpack">
@@ -47,7 +43,7 @@
             <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="140px" class="mt40 demo-ruleForm">
                 <el-form-item label="指定粉丝：" prop="name21">
                     <el-input class="w_demo" v-model="ruleForm2.name21" placeholder="请选择粉丝"></el-input>
-                    <span class="ml10"><el-button  @click="prizeBtn()"  type="primary">选择粉丝</el-button ></span>
+                    <span class="ml10"><el-button  @click="shoeDialogFans()"  type="primary">选择粉丝</el-button ></span>
                 </el-form-item>
                 <el-form-item label="发放总人数：" prop="name22">
                     <el-input class="w_demo mr10" type="number" v-model="ruleForm2.name22" placeholder="发放总人数设置在3-20人之间"></el-input>人
@@ -66,65 +62,67 @@
                 </el-form-item>      
             </el-form> 
         </div> 
-        <!-- 选择粉丝弹窗 -->
-<el-dialog title="粉丝列表"  style="width:60%" :visible.sync="dialogFans">
+<!-- 选择粉丝弹窗 -->  
+        <gt-Fans-detail :fansKey="key+''" :visible="dialogFans"   v-on:getFansData="getFansData"></gt-Fans-detail>  
+
+<!-- <el-dialog title="粉丝列表"  :visible.sync="dialogFans">
     <div class="mb10"> 
-      <el-input placeholder="请输入昵称" icon="search" v-model="keyWord" style="width:250px" @change="test()"> 
+      <el-input placeholder="请输入昵称" icon="search" v-model="memberName" style="width:250px" @change="test()"> 
           </el-input>
     </div>
-  <div style="width:100%;height:500px;">
-    <div style="width:75%;float:left;">
-      <el-table ref="multipleTable" :data="fansData.data"  tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="40">
-          </el-table-column>
-          <el-table-column label="头像" prop="photo">   
-                <template slot-scope="scope">
-                  <img :src="scope.row.photo" style="width:30px;height:30px"/>
-                </template>
-          </el-table-column>
-          <el-table-column label="昵称" prop="name">
-          </el-table-column>
-          <el-table-column label="性别" prop="sex">
-            <template slot-scope="scope">{{ scope.row.sex|sexStatus(scope.row.sex) }}</template>
-          </el-table-column>
-          <el-table-column label="所在城市" prop="city">
-          </el-table-column>
-          <el-table-column label="关注时间" prop="time">
-            <template slot-scope="scope">{{scope.row.time|parseTime('{y}-{m}-{d}')}}</template>
-          </el-table-column>
-          <el-table-column label="组别" prop="group">
-          </el-table-column>
-      </el-table>
-      <div class="public-page-fr">
-          <el-pagination @current-change="handleCurrentChange"  :page-size="10" 
-          layout="prev, pager, next, jumper" :total="fansData.page.totalNums">
-          </el-pagination>
-      </div>  
-      <div class="h20"></div> 
-    </div> 
-    <div style="width:24%;float:right;height:550px;background:#f2f2f2;border:1px solid #dfe6ec">
-        <div style="height:40px;line-height:40px; background:#EEF1F6;padding-left:10px;border-bottom:1px solid #dfe6ec">
-          已选择：{{this.prizeData.length}}
-        </div> 
-        <div v-for="(item,index) in  prizeData" class="prizeItem" >  
-            <p style="width:100%;">
-                <div class="prizeName">
-                  {{item.name}} 
-                </div>
-                <span @click="delPrize(index)" class="blueee mr10 pull-right mt20" >删除</span>  
-            </p>
-        </div> 
-    </div>
-  </div>
+    <div class="dialogFansAll">
+        <div class="pull-left" style="width:75%">
+        <el-table ref="multipleTable" :data="fansData.data"  tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="40">
+            </el-table-column>
+            <el-table-column label="头像" prop="headimgurl">   
+                    <template slot-scope="scope">
+                    <img :src="scope.row.headimgurl" style="width:30px;height:30px"/>
+                    </template>
+            </el-table-column>
+            <el-table-column label="昵称" prop="nickname">
+            </el-table-column>
+            <el-table-column label="性别" prop="sex">
+                <template slot-scope="scope">{{ scope.row.sex|sexStatus(scope.row.sex) }}</template>
+            </el-table-column>
+            <el-table-column label="所在城市" prop="city">
+            </el-table-column>
+            <el-table-column label="关注时间" prop="jointime">
+                <template slot-scope="scope">{{scope.row.jointime|parseTime('{y}-{m}-{d}')}}</template>
+            </el-table-column>
+            <el-table-column label="组别" prop="name">
+            </el-table-column>
+        </el-table>
+        <div class="public-page-fr">
+            <el-pagination @current-change="handleCurrentChange"  :current-page.sync="current" :page-size="8"
+                layout="prev, pager, next, jumper" :total="fansData.page.totalNums">
+                </el-pagination> 
+        </div>  
+        <div class="h20"></div> 
+        </div>
 
-  <div style="float:right">
-    <div class="h20"></div> 
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="dialogFans = false">取 消</el-button>
-      <el-button type="primary" @click="prizeSubmit()">确 定</el-button>
-    </span>
-  </div> 
-</el-dialog>
+        <div class="pull-right dialogFans_r">
+            <div style="height:40px;line-height:40px; background:#EEF1F6;padding-left:10px;border-bottom:1px solid #dfe6ec">
+            已选择：{{this.prizeData.length}}
+            </div> 
+            <div v-for="(item,index) in  prizeData" class="prizeItem" >  
+                <p style="width:100%;">
+                    <div class="prizeName">
+                    {{item.nickname}} 
+                    </div>
+                    <span @click="delPrize(index)" class="blueee mr10 pull-right mt20" >删除</span>  
+                </p>
+            </div> 
+        </div>
+        <div  class="pull-right" > 
+            <span slot="footer" class="dialog-footer">
+                <div class="h20"></div>
+            <el-button @click="dialogFans = false">取 消</el-button>
+            <el-button type="primary" @click="prizeSubmit()">确 定</el-button>
+            </span>
+        </div> 
+    </div> 
+</el-dialog> -->
         <!-- 兑奖设置 --> 
         <!-- 奖项设置 -->    
         <!-- 新建完成 -->
@@ -173,90 +171,12 @@ export default {
       }
     }; 
     return {
-      active: 1,
-      dialogFans:true,
+      active: 1, 
       keyWord:"",
-      fansData:{
-         data:[
-           {
-            photo:"http://maint.deeptel.com.cn/upload//image/3/gt123/3/20171208/939131F19C762122A62B663A81315559.jpg",
-            name:"哈哈",
-            sex:1,
-            city:"珠海",
-            time:1513008000000,
-            group:"未分组"
-          }, {
-            photo:"http://maint.deeptel.com.cn/upload//image/3/gt123/3/20171208/939131F19C762122A62B663A81315559.jpg",
-            name:"啊few",
-            sex:0,
-            city:"广州",
-            time:1513008000000,
-            group:"未分组"
-          },{
-             photo:"http://maint.deeptel.com.cn/upload//image/3/gt123/3/20171208/939131F19C762122A62B663A81315559.jpg",
-            name:"各位范围",
-            sex:1,
-            city:"湛江",
-            time:1513008000000,
-            group:"未分组"
-          }, {
-             photo:"http://maint.deeptel.com.cn/upload//image/3/gt123/3/20171208/939131F19C762122A62B663A81315559.jpg",
-            name:"热热热",
-            sex:0,
-            city:"广州",
-            time:1513008000000,
-            group:"未分组"
-          }, {
-             photo:"http://maint.deeptel.com.cn/upload//image/3/gt123/3/20171208/939131F19C762122A62B663A81315559.jpg",
-            name:"好好好日",
-            sex:0,
-            city:"广州",
-            time:1513008000000,
-            group:"未分组"
-          },{
-             photo:"http://maint.deeptel.com.cn/upload//image/3/gt123/3/20171208/939131F19C762122A62B663A81315559.jpg",
-            name:"呃呃呃",
-            sex:1,
-            city:"北京",
-            time:1513008000000,
-            group:"未分组"
-          }, {
-             photo:"http://maint.deeptel.com.cn/upload//image/3/gt123/3/20171208/939131F19C762122A62B663A81315559.jpg",
-            name:"蒙多多",
-            sex:0,
-            city:"广州",
-            time:1513008000000,
-            group:"未分组"
-          }, {
-             photo:"http://maint.deeptel.com.cn/upload//image/3/gt123/3/20171208/939131F19C762122A62B663A81315559.jpg",
-            name:"寄交接",
-            sex:0,
-            city:"广州",
-            time:1513008000000,
-            group:"未分组"
-          },{
-             photo:"http://maint.deeptel.com.cn/upload//image/3/gt123/3/20171208/939131F19C762122A62B663A81315559.jpg",
-            name:"用用",
-            sex:1,
-            city:"珠海",
-            time:1513008000000,
-            group:"未分组"
-          }, {
-             photo:"http://maint.deeptel.com.cn/upload//image/3/gt123/3/20171208/939131F19C762122A62B663A81315559.jpg",
-            name:"天天",
-            sex:1,
-            city:"广州",
-            time:1513008000000,
-            group:"未分组"
-          }
-        ], 
-        page:{
-            totalNums:31,
-            totalPages:4
-        }        
-      },
-      prizeData:[],
 
+      dialogFans:false,
+      key:0,
+       
       ruleForm1: {
         name: "",
         name1: "",  
@@ -281,31 +201,41 @@ export default {
     };
   },
   methods: {  
-    delPrize(index){
-      this.prizeData.splice(index, 1); 
+    // delPrize(index){
+    //   this.prizeData.splice(index, 1); 
+    // },
+    // prizeBtn(){
+    //   this.dialogFans=true
+    // },
+
+    shoeDialogFans(val){
+        // this.key=val
+        this.dialogFans=true 
+        console.log(this.key);
+    }, 
+     getFansData(e){ 
+        console.log(e,'子组件的信息')
+        this.dialogFans=false
     },
-    prizeBtn(){
-      this.dialogFans=true
-    },
-    //多选名单
-    handleSelectionChange(val) {
-      // console.log(val,111)
-        // this.multipleSelection = val; 
-        this.prizeData = val;  
+    // //多选名单
+    // handleSelectionChange(val) {
+    //   // console.log(val,111)
+    //     // this.multipleSelection = val; 
+    //     this.prizeData = val;  
         
-    },
-    prizeSubmit(){ 
-      var arr=[];
-      for(var i=0;i<this.prizeData.length;i++){
-        var arr1={
-          name:this.prizeData[i].name
-        }
-        arr.push(arr1.name);
-      }
-      //  console.log(this.ruleForm2.name21); 
-      this.ruleForm2.name21=arr+''
-      this.dialogFans=false
-    },
+    // },
+    // prizeSubmit(){ 
+    //   var arr=[];
+    //   for(var i=0;i<this.prizeData.length;i++){
+    //     var arr1={
+    //       name:this.prizeData[i].name
+    //     }
+    //     arr.push(arr1.name);
+    //   }
+    //   //  console.log(this.ruleForm2.name21); 
+    //   this.ruleForm2.name21=arr+''
+    //   this.dialogFans=false
+    // },
    
     handleCurrentChange(){
       console.log(123);  
