@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.game.core.dao.turntable.TurntableMainDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.game.core.dao.turntable.TurntableMainDAO">
+		<id column="id" property="id" />
+		<result column="act_name" property="actName" />
+		<result column="act_isShowNums" property="actIsShowNums" />
+		<result column="act_countOfDay" property="actCountOfDay" />
+		<result column="act_totalOfAct" property="actTotalOfAct" />
+		<result column="act_exceedTxt" property="actExceedTxt" />
+		<result column="act_beginTime" property="actBeginTime" />
+		<result column="act_endTime" property="actEndTime" />
+		<result column="act_wx_userid" property="actWxUserid" />
+		<result column="act_describe" property="actDescribe" />
+		<result column="act_type" property="actType" />
+		<result column="act_overdescribe" property="actOverdescribe" />
+		<result column="act_calculateWay" property="actCalculateWay" />
+		<result column="act_cashday" property="actCashday" />
+		<result column="act_address" property="actAddress" />
+		<result column="act_cashtext" property="actCashtext" />
+		<result column="act_isgive" property="actIsgive" />
+		<result column="act_bgm" property="actBgm" />
+		<result column="act_bgm_name" property="actBgmName" />
+		<result column="act_partaker" property="actPartaker" />
+		<result column="act_pway" property="actPway" />
+		<result column="act_man" property="actMan" />
+		<result column="act_kou" property="actKou" />
+		<result column="act_status" property="actStatus" />
+		<result column="act_cash_way" property="actCashWay" />
+		<result column="act_winning_notice" property="actWinningNotice" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, act_name, act_isShowNums AS actIsShowNums, act_countOfDay AS actCountOfDay, act_totalOfAct AS actTotalOfAct, act_exceedTxt AS actExceedTxt, act_beginTime AS actBeginTime, act_endTime AS actEndTime, act_wx_userid, act_describe, act_type, act_overdescribe, act_calculateWay AS actCalculateWay, act_cashday, act_address, act_cashtext, act_isgive, act_bgm, act_bgm_name, act_partaker, act_pway, act_man, act_kou, act_status, act_cash_way, act_winning_notice
+    </sql>
+
+</mapper>

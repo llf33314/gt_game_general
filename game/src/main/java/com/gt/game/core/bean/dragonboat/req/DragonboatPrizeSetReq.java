@@ -28,6 +28,10 @@ public class DragonboatPrizeSetReq {
 	@ApiModelProperty("奖品数量")
 	private  Integer num;
 
+	@ApiModelProperty("分数")
+	private  Integer score;
+
+
 	@ApiModelProperty("选择图片")
 	private List<String> imgUrl;
 
@@ -69,5 +73,13 @@ public class DragonboatPrizeSetReq {
 
 	public void setImgUrl(List<String> imgUrl) {
 		this.imgUrl = imgUrl;
+	}
+
+	public Integer getScore() {
+		return score;
+	}
+
+	public void setScore(Integer score) {
+		this.score = score;
 	}
 }

@@ -5,16 +5,9 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
-/**
- * <p>
- * 元宵点灯主表
- * </p>
- *
- * @author zwq
- * @since 2017-12-25
- */
-@ApiModel("批量删除元宵点灯请求类")
-public class LanternDelWinningReq {
+
+@ApiModel("批量删除疯狂数钱请求类")
+public class CountmoneyDelWinningReq {
 
 	@ApiModelProperty("主键id")
 	private List<Integer> id;

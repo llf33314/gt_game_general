@@ -3,16 +3,8 @@ package com.gt.game.core.bean.countmoney.res;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-/**
- * <p>
- * 拆礼盒主表
- * </p>
- *
- * @author zwq
- * @since 2017-12-25
- */
-@ApiModel("元宵点灯奖品类型返回类")
-public class LanternPrizeTypeListRes {
+@ApiModel("疯狂数钱奖品类型返回类")
+public class CountmoneyPrizeTypeListRes {
 
 	@ApiModelProperty("value")
 	private String value;

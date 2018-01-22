@@ -256,6 +256,14 @@ public enum ResponseEnums {
     SCRATCH_HAS4(404,"手动发放只能选择[已提交]状态的数据！!"),
     SCRATCH_HAS5(405,"活动为空!"),
     SCRATCH_HAS6(401,"删除活动失败！"),
+
+    //疯狂数钱
+    COUNTMONEY_HAS1(401,"未到兑奖时间!"),
+    COUNTMONEY_HAS2(402,"已过兑奖时间!"),
+    COUNTMONEY_HAS3(403,"该奖品已发放!"),
+    COUNTMONEY_HAS4(404,"手动发放只能选择[已提交]状态的数据！!"),
+    COUNTMONEY_HAS5(405,"活动为空!"),
+    COUNTMONEY_HAS6(401,"删除活动失败！"),
     ;
 
     private final int code;
