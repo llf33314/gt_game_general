@@ -60,10 +60,19 @@
                     </span>
                 </el-form-item>  
 
-                <el-form-item label="背景音乐：">
+                <!-- <el-form-item label="背景音乐：">
                     <div class="pd20 bb bw">
                         <el-button size="small" type="primary">点击上传</el-button>
                         <span class="el-upload__tip grey ml20">{{ruleForm1.music}}</span> 
+                        <div class="el-upload__tip grey" style="line-height:25px">
+                            音频文件的格式为mp3、wma、wav,大小不超过3M
+                        </div>
+                    </div>
+                </el-form-item> -->
+                 <el-form-item label="背景音乐：">
+                    <div class="pd20 bb bw bgMusic">
+                        <gt-material class="va-m" :prop="''" :isMusic="true" btnContent="点击上传"  v-on:getChangeUrl="getMusic" width="72" height="72"></gt-material>
+                        <span class="el-upload__tip c333 ml20">{{ruleForm2.bgmSp}}</span> 
                         <div class="el-upload__tip grey" style="line-height:25px">
                             音频文件的格式为mp3、wma、wav,大小不超过3M
                         </div>
@@ -197,12 +206,11 @@
 export default {
   data() {
     return {
-      active:3,
+      active:0,
       ruleForm1: {
-          type:1,
+        type:1,
         name: "",
         name1: "",
-        endTime: "",
         resource: 1,
         desc1: "",
         desc2: "",
@@ -214,11 +222,8 @@ export default {
       rules1: {
         name: [{ required: true, message: "活动名称不能为空", trigger: "blur" }],
         name1: [
-          { required: true, type: "date", message: "开始时间不能为空", trigger: "blur" }
+          { required: true, type: "array", message: "开始时间不能为空", trigger: "blur" }
         ],
-        endTime: [
-          { required: true, type: "date", message: "结束时间不能为空", trigger: "blur" }
-        ]
       },
       ruleForm2: { 
         cishu: "",
@@ -295,7 +300,13 @@ export default {
     upStep() {
       this.active--;
     },
+    getMusic(e) {
+      console.log(e)
+      this.ruleForm2.bgmSp = e.music.name
+      this.ruleForm2.musicUrl = e.music.url
+    },
     next(formName) {
+        console.log(!this.ruleForm4[i].name1)
       this.$refs[formName].validate(valid => {
         if (valid) { 
           this.active++;
@@ -305,6 +316,7 @@ export default {
       });
     },
     lastStep() {
+        
       for (let i = 0; i < this.ruleForm4.length; i++) { 
         var regu =/^[1-9]\d*$/;
         if(!this.ruleForm4[i].name1||!this.ruleForm4[i].name2||!this.ruleForm4[i].name3||!this.ruleForm4[i].name4){
@@ -335,23 +347,24 @@ export default {
         } 
         const data = {
             //基础设置 
-            name1 : this.ruleForm1.name, 
-            name2 : this.ruleForm1.name1, 
-            name3 : this.ruleForm1.endTime, 
-            name4 : this.ruleForm1.resource, 
-            name51 : this.ruleForm1.desc1, 
-            name52 : this.ruleForm1.desc2, 
-            name61 : this.ruleForm1.wayJF, 
-            name62 : this.ruleForm1.wayJF1, 
-            name15: this.ruleForm1.music, 
+            name: this.ruleForm1.name,  // 活动名称               
+            eggBeginTime: this.ruleForm1.name1[0], // 活动开始时间
+            eggEndTime: this.ruleForm1.name1[1],  // 活动结束时间
+            eggEggPartaker : this.ruleForm1.endTime,  // 所有粉丝 2.仅会员(持有会员卡的粉丝) 
+            eggDescribe: this.ruleForm1.resource,  // 活动说明/描述
+            eggBeforeTxt : this.ruleForm1.desc1,   // 活动未开始提示
+            bgmSp: '',       // 背景音乐名称    
+            musicUrl: '',   // 背景音乐链接
             //规则设置
-            name6 : this.ruleForm2.cishu, 
-            name7 : this.ruleForm2.zongshu,
+            eggCountOfDay: this.ruleForm2.cishu,   // 抽奖次数
+            eggCountOfAll: this.ruleForm2.zongshu, // 抽奖总数
             //兑奖设置
-            name9 : this.ruleForm3.days, 
-            name10: this.ruleForm3.dizhi, 
-            name11: this.ruleForm3.tishi, 
-            name12: this.ruleForm3.transfer,  
+            eggCashDay: this.ruleForm3.days,      // 兑奖期限
+            eggAddress: this.ruleForm3.dizhi,     // 兑奖地址
+            // name11: this.ruleForm3.tishi,     // 兑奖时间
+            eggCashWay: this.ruleForm3.transfer,  // 兑奖方式
+            eggWinningTxt: this.ruleForm3.eggWinningTxt, // 兑奖提示
+            eggWinningNotice: this.ruleForm3.eggWinningNotice,// 中奖须知
             //奖项设置 
             name13:this.awardKey,
             name14:newarr
