@@ -7,6 +7,9 @@ export const getMobileUrl   = params => { return axios.post(`${base}/getMobileUr
 
 /*获取奖品类型*/
 export const getPrizeType     = params => { return axios.post(`${base}/getLuckPrizeType`, params).then(res => res.data) }
+/*指定中奖人*/
+export const getMembers     = params => { return axios.post(`${window.BASEDOMAIN}/app/member/getMemberList`, params).then(res => res.data) }
+
 
 /*index*/
 export const getActList      = params => { return axios.post(`${base}/getLuckList`, params).then(res => res.data) }

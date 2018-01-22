@@ -3,7 +3,7 @@ let base = window.BASEDOMAIN + '/app/Dragonboat'
 // let base = 'http://192.168.3.68:8080'+ '/app/Dragonboat'
 
 /*新增端午赛龙舟活动*/
-export const addDragonboat  = params => { return axios.post(`${base}/addDragonboat`, params).then(res => res.data) }
+export const saveAct  = params => { return axios.post(`${base}/addDragonboat`, params).then(res => res.data) }
 
 /*删除端午赛龙舟活动*/
 export const delDragonboat  = params => { return axios.post(`${base}/delDragonboat`, params).then(res => res.data) }
@@ -33,7 +33,7 @@ export const getDragonboatCount  = params => { return axios.post(`${base}/getDra
 export const getDragonboatList = params => { return axios.post(`${base}/getDragonboatList`, params).then(res => res.data) }
 
 /*获取奖品类型列表*/
-export const getDragonboatPrizeType = params => { return axios.post(`${base}/getDragonboatPrizeType`, params).then(res => res.data) }
+export const getPrizeType = params => { return axios.post(`${base}/getDragonboatPrizeType`, params).then(res => res.data) }
 
 /*获取手机端链接*/
 export const getMobileUrl = params => { return axios.post(`${base}/getMobileUrl`, params).then(res => res.data) }

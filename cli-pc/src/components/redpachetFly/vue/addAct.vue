@@ -1,8 +1,5 @@
 <style lang="less">
-.redpack{ 
-  .prizeItem{ width:100%;height:40px; overflow: hidden}
-  .prizeItem span{ cursor: pointer}
-  .prizeName{max-width:60%;text-overflow:ellipsis;overflow:hidden;white-space:nowrap; margin-left:12px; float:left; margin-top:20px;}
+.hd-common{ 
 }
 </style>
 <template>
@@ -70,7 +67,7 @@
             </el-form> 
         </div> 
         <!-- 选择粉丝弹窗 -->
-<el-dialog title="粉丝列表"  :visible.sync="dialogFans">
+<el-dialog title="粉丝列表"  style="width:60%" :visible.sync="dialogFans">
     <div class="mb10"> 
       <el-input placeholder="请输入昵称" icon="search" v-model="keyWord" style="width:250px" @change="test()"> 
           </el-input>
@@ -104,8 +101,7 @@
           </el-pagination>
       </div>  
       <div class="h20"></div> 
-    </div>
-
+    </div> 
     <div style="width:24%;float:right;height:550px;background:#f2f2f2;border:1px solid #dfe6ec">
         <div style="height:40px;line-height:40px; background:#EEF1F6;padding-left:10px;border-bottom:1px solid #dfe6ec">
           已选择：{{this.prizeData.length}}
