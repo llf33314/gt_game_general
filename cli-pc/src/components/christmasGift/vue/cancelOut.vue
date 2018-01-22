@@ -6,7 +6,7 @@
 <div class="hd-common">
     <el-breadcrumb separator="/" class="gt-crumbs">
       <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
-      <el-breadcrumb-item  :to="{ path:'/eggSmash/index' }">砸金蛋</el-breadcrumb-item>  
+      <el-breadcrumb-item  :to="{ path:'/christmasGift/index' }">圣诞大礼包</el-breadcrumb-item>   
       <el-breadcrumb-item>核销授权</el-breadcrumb-item>   
     </el-breadcrumb> 
     <div class="gt-gray-region mb20">  

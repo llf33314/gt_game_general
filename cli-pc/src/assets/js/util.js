@@ -1,5 +1,9 @@
-import { Region } from "./region.js"
-import { Message } from 'element-ui'
+import {
+  Region
+} from "./region.js"
+import {
+  Message
+} from 'element-ui'
 export default {
   /**
    * @Created by xiandan on 2017-10-09
@@ -11,7 +15,7 @@ export default {
    * @dome03 DateFormat(1507513800642, 'yyyy.MM.dd , hh-mm-ss') => 2017.10.09 , 09-50-00
    */
   DateFormat(date, fmt) {
-    if(!(date && true)) {
+    if (!(date && true)) {
       return date
     }
     date = new Date(parseInt(date))
@@ -24,9 +28,9 @@ export default {
       'q+': Math.floor((date.getMonth() + 3) / 3),
       'S': date.getMilliseconds()
     }
-    if(/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
-    for(var k in o) {
-      if(new RegExp('(' + k + ')').test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)))
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
+    for (var k in o) {
+      if (new RegExp('(' + k + ')').test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)))
     }
     return fmt
   },
@@ -58,32 +62,36 @@ export default {
     parent.window.postMessage("closeMask()", "http://localhost:8099/index.html");
   },
   /**
-  * @desc 数字验证
-  * @param { number }  
-  * @return  { Boolean }
-  */
+   * @desc 数字验证
+   * @param { number }  
+   * @return  { Boolean }
+   */
   isNumber(val) {
     let result = true;
     let isNumber = /^\d+$/;
-    if(!isNumber.test(val)) {result = false;}
+    if (!isNumber.test(val)) {
+      result = false;
+    }
     return result;
   },
   /**
-  * @desc 正整数验证
-  * @param { number }  
-  * @return  { Boolean }
-  */
+   * @desc 正整数验证
+   * @param { number }  
+   * @return  { Boolean }
+   */
   isIntger(val) {
     let result = true;
     let isIntger = /^[1-9]\d*$/;
-    if(!isIntger.test(val)) {result = false;}
+    if (!isIntger.test(val)) {
+      result = false;
+    }
     return result;
   },
   /**
-  * @desc QQ验证
-  * @param { number }  
-  * @return  { Boolean }
-  */
+   * @desc QQ验证
+   * @param { number }  
+   * @return  { Boolean }
+   */
   isQQ(aQQ) {
     var bValidate = RegExp(/^[1-9][0-9]{4,9}$/).test(aQQ);
     return bValidate;
@@ -96,7 +104,7 @@ export default {
   Mobilephone(obj) {
     var result = true;
     var isPhone = /^((\+?86)|(\(\+86\)))?(13[0123456789][0-9]{8}|15[0123456789][0-9]{8}|17[0123456789][0-9]{8}|18[0123456789][0-9]{8}|147[0-9]{8}|1349[0-9]{7})$/;
-    if(isPhone.test(obj)) {
+    if (isPhone.test(obj)) {
 
     } else {
       result = false;
@@ -104,14 +112,14 @@ export default {
     return result;
   },
   /**
-  * @desc 固话验证
-  * @param { number }  
-  * @return  { Boolean }
-  */
+   * @desc 固话验证
+   * @param { number }  
+   * @return  { Boolean }
+   */
   fixedtelephone(obj) {
     var result = true;
     var isfixed = /^([0-9]{3,4})?[0-9]{7,8}$/;
-    if(isfixed.test(obj)) {
+    if (isfixed.test(obj)) {
 
     } else {
       result = false;
@@ -119,15 +127,15 @@ export default {
     return result;
   },
   /**
-  * @desc 固话验证&手机验证
-  * @param { number }  
-  * @return  { Boolean }
-  */
+   * @desc 固话验证&手机验证
+   * @param { number }  
+   * @return  { Boolean }
+   */
   phone(obj) {
     var result = true;
     var isPhone = /^((\+?86)|(\(\+86\)))?(13[0123456789][0-9]{8}|15[0123456789][0-9]{8}|17[0123456789][0-9]{8}|18[0123456789][0-9]{8}|147[0-9]{8}|1349[0-9]{7})$/;
     var isfixed = /^([0-9]{3,4})?[0-9]{7,8}$/;
-    if(isPhone.test(obj) || isfixed.test(obj)) {
+    if (isPhone.test(obj) || isfixed.test(obj)) {
 
     } else {
       result = false;
@@ -142,19 +150,19 @@ export default {
   MapAddressCode(obj) {
     let addressObj = {}
     Region.forEach(function (item) {
-      if(item.cityName == obj.province) {
+      if (item.cityName == obj.province) {
         addressObj.province = obj.province;
         addressObj.provinceId = item.id;
 
-        if(item.ticketCityRes) {
+        if (item.ticketCityRes) {
           item.ticketCityRes.forEach(function (child) {
-            if(child.cityName == obj.city) {
+            if (child.cityName == obj.city) {
               addressObj.city = obj.city;
               addressObj.cityId = child.id;
             }
-            if(child.ticketCityRes) {
+            if (child.ticketCityRes) {
               child.ticketCityRes.forEach(function (child2) {
-                if(child2.cityName == obj.district) {
+                if (child2.cityName == obj.district) {
                   addressObj.district = obj.district;
                   addressObj.districtId = child2.id;
                 }
@@ -166,15 +174,45 @@ export default {
     });
     return addressObj;
   },
-   // 获取短信链接  
-   getShortUrl(url) {
+  // 获取短信链接  
+  getShortUrl(url) {
     return axios.get(window.BASEDOMAIN + '/app/link/getShorUrl?url=' + url)
-     .then(res => {
-         return res.data
-     })
-     .catch(error => {
-       Message.error('获取短信链接失败')
-       return {code: 400}
-     })
-   },
+      .then(res => {
+        return res.data
+      })
+      .catch(error => {
+        Message.error('获取短信链接失败')
+        return {
+          code: 400
+        }
+      })
+  },
+  // 控制键盘只能输入数字包含小数
+  KeydownFloatNumber() {
+    if (!(event.keyCode == 46) &&
+      !(event.keyCode == 8) &&
+      !(event.keyCode == 37) &&
+      !(event.keyCode == 39) &&
+      !(event.keyCode == 110)
+    )
+      if (!(
+          (event.keyCode >= 48 && event.keyCode <= 57) ||
+          (event.keyCode >= 96 && event.keyCode <= 105)
+        ))
+        event.returnValue = false;
+  },
+  // 控制键盘只能输入整数数字
+  KeydownNumber() {
+    if (!(event.keyCode == 46) &&
+      !(event.keyCode == 8) &&
+      !(event.keyCode == 37) &&
+      !(event.keyCode == 39)
+    )
+      if (!(
+          (event.keyCode >= 48 && event.keyCode <= 57) ||
+          (event.keyCode >= 96 && event.keyCode <= 105)
+        ))
+        event.returnValue = false;
+  },
+
 }

@@ -22,7 +22,7 @@
         <div v-show="this.active==0" class="mt40">
           <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="120px" class="demo-ruleForm">
                 <el-form-item label="活动名称：" prop="name">
-                    <el-input class="w_demo"  placeholder="请输入活动名称" v-model="ruleForm1.name"></el-input>
+                    <el-input class="w_demo"  placeholder="请输入活动名称" v-model="ruleForm1.name" :maxlength="25"></el-input>
                 </el-form-item> 
                 <el-form-item label="游戏时间：" prop="name1">
                     <el-date-picker class="w_demo" v-model="ruleForm1.name1" :editable="false"  type="datetimerange"  placeholder="选择时间范围">
@@ -34,7 +34,7 @@
             <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark" style="width:80%">
                 <el-table-column label="广告链接">
                   <template slot-scope="scope" >
-                        <el-input v-model="scope.row.hrefUrl">
+                        <el-input v-model="scope.row.hrefUrl" :maxlength="100">
                           <template slot="prepend">Http://</template>
                         </el-input>
                   </template>
@@ -60,10 +60,10 @@
                   <span class="el-upload__tip grey ml10">上传1:1二维码，将会在活动规则中显示商家二维码</span>  
                 </el-form-item>  
                 <el-form-item label="游戏总数：" prop="manTotalChance">
-                    <el-input class="w25_demo mr10" type="number" placeholder="请输入游戏总数" v-model="ruleForm2.manTotalChance"></el-input>次/人
+                    <el-input class="w25_demo mr10" type="number" placeholder="请输入游戏总数" v-model="ruleForm2.manTotalChance" @keydown.native="$util.KeydownNumber" :maxlength="10"></el-input>次/人
                 </el-form-item> 
                 <el-form-item label="每天次数：" prop="manDayChance">
-                    <el-input class="w25_demo mr10" type="number" placeholder="请输入每天游戏次数）" v-model="ruleForm2.manDayChance"></el-input>次/人
+                    <el-input class="w25_demo mr10" type="number" placeholder="请输入每天游戏次数）" v-model="ruleForm2.manDayChance" @keydown.native="$util.KeydownNumber" :maxlength="10"></el-input>次/人
                 </el-form-item>    
                 <!-- <el-form-item label="游戏时长：" prop="gameTime">
                     <el-input class="w25_demo mr10" type="number" placeholder="请输入时长（60~100秒）" v-model="ruleForm2.gameTime"></el-input>秒
@@ -91,16 +91,16 @@
                     <span style="margin-left:30px;color: #333;" ><span style="color:#ff4949;margin-right:3px">*</span>兑奖地址：</span>
                     <el-button  class="mb10"  type="primary" @click="addList()">添加</el-button>  
                     <el-form-item v-for="(item,index) in ruleForm3.addrRow" :key="item.key"  :prop="'addrRow.' + index + '.list'" :rules="{required:true,validator:addrPass,trigger: 'blur'}">
-                        <el-input class="w_demo mr10" prop="list" v-model="item.list" placeholder="请输入到店领取地址"></el-input> 
+                        <el-input class="w_demo mr10" prop="list" v-model="item.list" placeholder="请输入到店领取地址" :maxlength="200"></el-input> 
                         <span class="blueee"  @click="delList(index)" v-if="index!=0" >删除</span> 
                     </el-form-item>
                 </div>  
                 <el-form-item label="联系电话：" prop="phone">
-                      <el-input  class="w_demo" v-model="ruleForm3.phone" placeholder="请输入联系电话(固话用-分割)"></el-input>    
+                      <el-input  class="w_demo" v-model="ruleForm3.phone" placeholder="请输入联系电话(固话用-分割)" @keydown.native="$util.KeydownNumber" :maxlength="20"></el-input>    
                 </el-form-item>  
 
                 <el-form-item label="兑奖说明：" prop="desc">
-                    <el-input class="bw" type="textarea" v-model="ruleForm3.desc" :rows="5" placeholder="请输入兑奖说明"></el-input> 
+                    <el-input class="bw" type="textarea" v-model="ruleForm3.desc" :rows="5" placeholder="请输入兑奖说明" :maxlength="200"></el-input> 
                 </el-form-item>   
             </el-form> 
         </div>
@@ -138,17 +138,17 @@
                 </el-table-column> 
                 <el-table-column label="奖品单位"  :width="240">
                     <template slot-scope="scope">
-                        <el-input class="w20_demo" type="number" v-model="scope.row.name1" placeholder="数值应大于0"></el-input>
+                        <el-input class="w20_demo" type="number" v-model="scope.row.name1" placeholder="数值应大于0" @keydown.native="$util.KeydownNumber" :maxlength="10"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column label="奖品名称" :width="240">
                 <template slot-scope="scope">
-                    <el-input class="w20_demo"  v-model="scope.row.name2" placeholder="请输入奖品名称"></el-input>
+                    <el-input class="w20_demo"  v-model="scope.row.name2" placeholder="请输入奖品名称" :maxlength="50"></el-input>
                 </template>
                 </el-table-column>
                 <el-table-column label="奖项数量" :width="240">
                 <template slot-scope="scope">
-                    <el-input class="w20_demo"  type="number"  v-model="scope.row.name3" placeholder="数值应大于0"></el-input>
+                    <el-input class="w20_demo"  type="number"  v-model="scope.row.name3" placeholder="数值应大于0" @keydown.native="$util.KeydownNumber" :maxlength="10"></el-input>
                 </template>
                 </el-table-column>
                 <el-table-column label="奖品图片" :width="160">

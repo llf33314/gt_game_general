@@ -189,9 +189,7 @@
 </section>
 </template>
 <script>
-import { 
- saveAct,getPrizeType
-}from './../api/api'
+import {saveAct,getPrizeType}from './../api/api'
 export default {
   data() {
     let iiPass = (rule, value, callback) => {
@@ -478,7 +476,7 @@ export default {
             } 
         }
         const data = {
-            id:0,
+            // id:0,
             //基础设置 
             name             : this.ruleForm1.name, 
             activityBeginTime: this.ruleForm1.name1[0], 
