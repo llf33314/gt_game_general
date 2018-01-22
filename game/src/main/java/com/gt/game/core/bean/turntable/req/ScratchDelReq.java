@@ -1,12 +1,12 @@
-package com.gt.game.core.bean.scratch.req;
+package com.gt.game.core.bean.turntable.req;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
-@ApiModel("批量删除圣诞大礼包请求类")
-public class EggsDelWinningReq {
+@ApiModel("批量删除刮刮乐请求类")
+public class ScratchDelReq {
 
 	@ApiModelProperty("主键id")
 	private List<Integer> id;

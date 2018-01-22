@@ -5,13 +5,13 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 
-@ApiModel("分页查询砸金蛋活动请求类")
+@ApiModel("分页查询刮刮乐活动请求类")
 public class ScratchListReq extends PageReq{
 
 	@ApiModelProperty("活动名称")
 	private  String name;
 
-	@ApiModelProperty("活动状态 -1 全部 0 未开始 1 进行中 2 已结束")
+	@ApiModelProperty("活动状态 -1 全部 0 未开始 1 进行中 2 已结束 3.已暂停")
 	private Integer status;
 
 	public String getName() {
