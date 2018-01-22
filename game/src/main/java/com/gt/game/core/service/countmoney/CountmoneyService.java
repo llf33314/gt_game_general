@@ -5,15 +5,15 @@ import com.gt.api.bean.session.BusUser;
 import com.gt.api.bean.session.WxPublicUsers;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.core.bean.countmoney.req.*;
-import com.gt.game.core.bean.countmoney.res.CountmoneyGetWinningRes;
-import com.gt.game.core.bean.countmoney.res.CountmoneyListRes;
-import com.gt.game.core.bean.countmoney.res.CountmoneyCountActivityRes;
-import com.gt.game.core.bean.countmoney.res.CountmoneyGetActivityRes;
+import com.gt.game.core.bean.countmoney.res.*;
 import com.gt.game.core.bean.lantern.req.LanternDelReq;
+import com.gt.game.core.bean.lantern.req.LanternDelWinningReq;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -85,4 +85,33 @@ public interface CountmoneyService {
      * @return
      */
     ResponseDTO<List<CountmoneyGetWinningRes>> getWinningList(BusUser busUser, CountmoneyGetWinningReq countmoneyGetWinningReq);
+
+    /**
+     * 疯狂数钱活动中奖记录发放奖品
+     * @param busUser
+     * @param countmoneyEditApplyReq
+     * @return
+     */
+    ResponseDTO editCountmoneyApply(BusUser busUser, CountmoneyEditApplyReq countmoneyEditApplyReq);
+
+    /**
+     * 导出疯狂数钱活动中奖记录
+     * @param params
+     * @return
+     */
+    Map<String,Object> exportCountmoney(Map<String, Object> params, BusUser busUser);
+
+    /**
+     * 批量删除疯狂数钱活动中奖记录
+     * @param busUser
+     * @param countmoneyDelWinningReq
+     */
+    void delCountmoneyWinning(BusUser busUser, CountmoneyDelWinningReq countmoneyDelWinningReq);
+
+    /**
+     * 获取奖品类型列表
+     * @param busUser
+     * @return
+     */
+    ResponseDTO<List<CountmoneyPrizeTypeListRes>> getCountmoneyPrizeType(BusUser busUser);
 }

@@ -157,7 +157,7 @@ public class DragonboatServiceImpl implements DragonboatService {
             dragonboatListResList.add(dragonboatListRes);
         }
         PageDTO pageDTO = new PageDTO(page.getPages(), page.getTotal());
-        return ResponseDTO.createBySuccessPage("分页获取元宵点灯活动列表成功", dragonboatListResList, pageDTO);
+        return ResponseDTO.createBySuccessPage("分页获取端午赛龙舟活动列表成功", dragonboatListResList, pageDTO);
     }
 
     /**
@@ -206,6 +206,7 @@ public class DragonboatServiceImpl implements DragonboatService {
     public void addDragonboat(BusUser busUser, DragonboatAddReq dragonboatAddReq) {
 
         DragonboatraceMain dragonboatraceMain = new DragonboatraceMain();
+        dragonboatraceMain.setBusId(busUser.getId());
         dragonboatraceMain.setCreatetime(new Date());
         dragonboatraceMain.setName(dragonboatAddReq.getName());
         dragonboatraceMain.setActivityBeginTime(dragonboatAddReq.getActivityBeginTime());
@@ -346,6 +347,7 @@ public class DragonboatServiceImpl implements DragonboatService {
             dragonboatPrizeSetReq.setPrizeUnit(dragonboatracePrize.getPrizeUnit());
             dragonboatPrizeSetReq.setPrizeName(dragonboatracePrize.getPrizeName());
             dragonboatPrizeSetReq.setNum(dragonboatracePrize.getNum());
+            dragonboatPrizeSetReq.setScore(dragonboatracePrize.getScore());
 
             EntityWrapper<DragonboatracePrizeImg> entityWrapper5 = new EntityWrapper();
             entityWrapper5.eq("prize_id",dragonboatracePrize.getId());
