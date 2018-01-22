@@ -189,9 +189,7 @@
 </section>
 </template>
 <script>
-import { 
- saveAct,getPrizeType
-}from './../api/api'
+import {saveAct,getPrizeType}from './../api/api'
 export default {
   data() {
     let iiPass = (rule, value, callback) => {
