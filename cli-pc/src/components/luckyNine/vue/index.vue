@@ -22,9 +22,9 @@
       <div class="gt-content">
         <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
           <el-tab-pane :label="'全部  ('+countNum.count1+')'" name="-1"></el-tab-pane>
-          <el-tab-pane :label="'未开始('+countNum.count1+')'" name="0"></el-tab-pane>
-          <el-tab-pane :label="'进行中('+countNum.count1+')'" name="1"></el-tab-pane>
-          <el-tab-pane :label="'已结束('+countNum.count1+')'" name="2"></el-tab-pane>
+          <el-tab-pane :label="'未开始('+countNum.count2+')'" name="0"></el-tab-pane>
+          <el-tab-pane :label="'进行中('+countNum.count3+')'" name="1"></el-tab-pane>
+          <el-tab-pane :label="'已结束('+countNum.count4+')'" name="2"></el-tab-pane>
         </el-tabs>
         <gt-null-data v-if="initRequest && tableData.length < 1">还没有创建相关活动，
           <span @click="addActive">点击这里</span>创建活动吧
