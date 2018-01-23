@@ -1,0 +1,32 @@
+package com.gt.game.core.bean.turntable.req;
+
+import com.gt.game.common.base.PageReq;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+
+@ApiModel("分页查询大转盘活动请求类")
+public class TurntableListReq extends PageReq{
+
+	@ApiModelProperty("活动名称")
+	private  String name;
+
+	@ApiModelProperty("活动状态 -1 全部 0 未开始 1 进行中 2 已结束")
+	private Integer status;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+}

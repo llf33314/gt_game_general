@@ -28,14 +28,14 @@ public class DragonboatAddReq {
 	@ApiModelProperty("活动结束时间")
 	private Date activityEndTime;
 
-	@ApiModelProperty("关注二维码")
-	private String followQrCode;
+	@ApiModelProperty("背景音乐名")
+	private String bgmSp;
 
 	@ApiModelProperty("背景音乐URL")
 	private String musicUrl;
 
-	@ApiModelProperty("背景音乐名")
-	private String bgmSp;
+	@ApiModelProperty("关注二维码")
+	private String followQrCode;
 
 	@ApiModelProperty("游戏总数")
 	private Integer manTotalChance;

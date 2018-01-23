@@ -1,6 +1,3 @@
-<style lang="less">
-
-</style>
 <template>
 <section>
 <div class="hd-common">
@@ -31,7 +28,7 @@
                 <el-form-item label="背景音乐：">
                     <div class="pd20 bb bw bgMusic">
                         <gt-material :prop="''" :isMusic="true" :index="2" btnContent="点击上传"  v-on:getChangeUrl="getMusic" width="72" height="72"></gt-material>
-                        <span class="el-upload__tip grey ml20">{{ruleForm1.music}}</span> 
+                        <span class="el-upload__tip grey ml20">{{ruleForm1.bgmSp}}</span> 
                         <div class="el-upload__tip grey" style="line-height:25px">
                             音频文件的格式为mp3、wma、wav,大小不超过3M
                         </div>
@@ -42,23 +39,23 @@
             <span class="ml10 el-upload__tip grey">1.仅支持多粉与翼粉开头的链接    2.广告图格式：1000*300px</span>
             <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark">
                 <el-table-column label="广告链接">
-                  <template slot-scope="scope" >
-                        <el-input v-model="scope.row.url">
-                          <template slot="prepend">Http://</template>
+                    <template slot-scope="scope" >
+                        <el-input v-model="scope.row.url" :class="{ 'bd1px-red': checked && !scope.row.url}">
+                            <template slot="prepend">Http://</template>
                         </el-input>
-                  </template>
+                    </template>
                 </el-table-column> 
                 <el-table-column label="选择图片">
-                  <template slot-scope="scope">
-                      <gt-material prop="url" :url="scope.row.imgUrl" v-on:getChangeUrl="getChangeUrl(scope.$index, $event)" width="60" height="60"></gt-material>
-                  </template>
+                    <template slot-scope="scope">
+                        <gt-material prop="url" :url="scope.row.imgUrl" v-on:getChangeUrl="getChangeUrl(scope.$index, $event)" width="60" height="60" :class="{ 'bd1px-red': checked && !scope.row.imgUrl}"></gt-material>
+                    </template>
                 </el-table-column> 
                 <el-table-column label="操作">
-                  <template slot-scope="scope">
+                    <template slot-scope="scope">
                         <el-button class="gt-button-normal" @click="delLinks(scope.$index)">删除</el-button>
-                  </template>
+                    </template>
                 </el-table-column> 
-             </el-table> 
+            </el-table>  
           </el-form> 
         </div>
         <!-- 规则设置 -->
@@ -227,22 +224,17 @@ export default {
             name: "",
             name1: "",
             musicUrl:"",//音乐链接
-            music: "暂无上传音乐",
-        links:[
-            {url:"",imgUrl:""},
-            {url:"",imgUrl:""}
-            ]
-        },
-                // 时间的筛选
-        pickerOptions: {
-            disabledDate(time) {
-                return time.getTime() < Date.now() - 8.64e7;
-            }
+            bgmSp: "暂无上传音乐",
+            links:[
+                {url:"",imgUrl:""},
+                {url:"",imgUrl:""}
+                ]
         },
         rules1: {
             name: [{ required: true, message: "活动名称不能为空", trigger: "blur" }],
             name1: [{required: true, type: "array",message: "游戏时间不能为空", trigger: "blur" }] 
         },
+        checked: false, // 是否检验table的内容
     //第二步==========================
         ruleForm2: {
             code: "", 
@@ -353,7 +345,7 @@ export default {
     //背景音乐=====================================
         getMusic(e) {
             console.log(e);
-            this.ruleForm1.music = e.music.name
+            this.ruleForm1.bgmSp = e.music.name
             this.ruleForm1.musicUrl = e.music.url
         },  
     // 添加实物图 ================================================
@@ -393,9 +385,22 @@ export default {
         },
     //下一步=====================================
         next(formName) {
-        console.log(this.ruleForm3)
-        this.$refs[formName].validate(valid => {
-            if (valid) { 
+        this.checked=true;
+            this.$refs[formName].validate(valid => {
+            if (valid) {  
+                if(formName=='ruleForm1'){
+                    console.log(this)
+                    for(let i =0;i< this.ruleForm1.links.length;i++){      
+                        if(!this.ruleForm1.links[i].imgUrl){
+                            this.$message.error('图片不能为空 ');
+                            return false;
+                        }
+                        if(!this.ruleForm1.links[i].url){
+                            this.$message.error('广告链接不能为空');
+                            return false;
+                        }
+                    }
+                }    
             this.active++;
             } else {
             console.log("error submit!!");
@@ -466,10 +471,7 @@ export default {
                 var newAddr=[];
                 if(this.ruleForm3.addrRow){ 
                     for(let i =0;i< this.ruleForm3.addrRow.length;i++){ 
-                        var arraddr={
-                            address:this.ruleForm3.addrRow[i].list,  
-                        } 
-                        newAddr.push(arraddr)
+                        newAddr.push(this.ruleForm3.addrRow[i].list)
                     }    
                 } 
             //奖品
@@ -477,7 +479,7 @@ export default {
                 if(this.ruleForm4){
                     for(let i =0;i< this.ruleForm4.length;i++){
                         var arr4={
-                            // imgInstruction :"",
+                            imgInstruction :"",
                             type :this.ruleForm4[i].name0,//类型
                             prizeUnit :Number(this.ruleForm4[i].name1),//单位
                             prizeName :this.ruleForm4[i].name2,//名称
@@ -487,13 +489,10 @@ export default {
                         }
                         if(arr4.type==4){
                             for(var j=0;j<this.ruleForm4[i].name5.length;j++){
-                                var imgarr={
-                                    imgUrl:this.ruleForm4[i].name5[j]
-                                }
-                            arr4.imgUrl.push(imgarr)
+                            arr4.imgUrl.push(this.ruleForm4[i].name5[j])
                             } 
                         } 
-                        prizeSetList.push(arr4)
+                         prizeSetList.push(arr4)
                     } 
                 }
             const data = {
@@ -502,7 +501,8 @@ export default {
                 name             : this.ruleForm1.name, 
                 activityBeginTime: this.ruleForm1.name1[0], 
                 activityEndTime  : this.ruleForm1.name1[1], 
-                bgmSp            : this.ruleForm1.musicUrl, 
+                bgmSp            : this.ruleForm1.bgmSp, 
+                musicUrl         : this.ruleForm1.musicUrl, 
                 advertisingPictureList  : newadv, 
             //规则设置 
                 followQrCode  : this.ruleForm2.code, 
@@ -512,7 +512,7 @@ export default {
             //兑奖设置  
                 cashPrizeBeginTime  :this.ruleForm3.date[0], 
                 cashPrizeEndTime    :this.ruleForm3.date[1], 
-                receiveTypeList     :this.ruleForm3.type.toString(), //兑奖方式
+                receiveTypeList     :this.ruleForm3.type, //兑奖方式
                 phone               :this.ruleForm3.phone,  
                 prizeDescription    :this.ruleForm3.desc,  
                 addressList         :newAddr ,   
@@ -544,3 +544,13 @@ export default {
   }
 };
 </script>
+<style lang="less">
+.bd1px-red{
+      .plus-box,textarea{
+        border-color: #FF4949 !important;
+      }
+      .el-input__inner{
+          border-color: #FF4949 !important;
+      }
+    }
+</style>

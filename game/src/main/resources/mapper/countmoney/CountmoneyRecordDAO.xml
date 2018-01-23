@@ -27,9 +27,62 @@
 		<result column="win_cash_memberId" property="winCashMemberId" />
 	</resultMap>
 
+	<resultMap id="BaseResultMap1" type="com.gt.game.core.bean.countmoney.res.CountmoneyGetWinningRes">
+		<id column="id" property="id" />
+		<result column="tur_prize_name" property="prizeName" />
+		<result column="tur_prize_type" property="type" />
+		<result column="tur_prize_unit" property="prizeUnit" />
+		<result column="win_cashtime" property="cashTime" />
+		<result column="win_phone" property="memberPhone" />
+		<result column="win_wx_member_id" property="memberId" />
+		<result column="win_status" property="status" />
+		<result column="win_exchangeCode" property="snCode" />
+		<result column="win_address" property="address" />
+		<result column="act_awardingAddress" property="addressName" />
+		<result column="win_way" property="receiveType" />
+	</resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, win_act_type, win_prize_type, win_prize_limit, win_prize_id, win_prize_name, win_act_id, win_act_name, win_wx_member_id, win_wx_oppen_id, win_status, win_createtime, win_overtime, win_name, win_phone, fenbi_num_max, win_exchangeCode AS winExchangeCode, win_way, win_address, win_cashtime, win_cash_memberId AS winCashMemberId
     </sql>
 
+	<select id="queryRecodList" resultMap="BaseResultMap1" parameterType="com.gt.game.core.bean.countmoney.req.CountmoneyGetWinningReq" >
+		SELECT t1.id,t4.tur_prize_name,t4.tur_prize_type,t4.tur_prize_unit,t1.win_cashtime as cashTime,t1.win_phone,t1.win_status,t1.win_exchangeCode,t1.win_wx_member_id,t5.act_awardingAddress AS  addressName ,t1.win_address,t1.win_way,t1.fenbi_num_max
+		from  t_wx_activity_countmoney_record t1
+		LEFT JOIN t_wx_activity_countmoney_detail t4 ON t1.win_prize_id = t4.id
+		LEFT JOIN t_wx_activity_countmoney_main t5 ON t1.win_act_id = t5.id
+		WHERE t1.win_act_id = #{actId}
+		<if test="snCode != null and snCode != '' ">
+			and t1.win_exchangeCode = #{snCode}
+		</if>
+		<if test="type != -1">
+			and t4.tur_prize_type = #{type}
+		</if>
+		<if test="status != -1">
+			and t1.win_status = #{status}
+		</if>
+		and t4.tur_prize_type != 5
+		ORDER BY t1.fenbi_num_max DESC,t1.win_createtime
+	</select>
+
+
+	<select id="findExports" resultType="map" parameterType="map" >
+		SELECT t1.id,t4.tur_prize_name,t4.tur_prize_type,t4.tur_prize_unit,t1.win_cashtime as cashTime,t1.win_phone,t1.win_status,t1.win_exchangeCode,t1.win_wx_member_id,t5.act_awardingAddress AS  addressName ,t1.win_address,t1.win_way,t1.fenbi_num_max
+		from  t_wx_activity_countmoney_record t1
+		LEFT JOIN t_wx_activity_countmoney_detail t4 ON t1.win_prize_id = t4.id
+		LEFT JOIN t_wx_activity_countmoney_main t5 ON t1.win_act_id = t5.id
+		WHERE t1.win_act_id = #{actId}
+		<if test="snCode != null and snCode != '' ">
+			and t1.win_exchangeCode = #{snCode}
+		</if>
+		<if test="type != -1">
+			and t4.tur_prize_type = #{type}
+		</if>
+		<if test="status != -1">
+			and t1.win_status = #{status}
+		</if>
+		and t4.tur_prize_type != 5
+		ORDER BY t1.fenbi_num_max DESC,t1.win_createtime
+	</select>
 </mapper>

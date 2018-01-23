@@ -6,13 +6,8 @@ import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.core.bean.eggs.res.EggsListRes;
 import com.gt.game.core.bean.qixi.req.*;
 import com.gt.game.core.bean.qixi.res.*;
-import com.gt.game.core.bean.scratch.req.ScratchAddReq;
-import com.gt.game.core.bean.scratch.req.ScratchCountActivityReq;
-import com.gt.game.core.bean.scratch.req.ScratchGetActivityReq;
-import com.gt.game.core.bean.scratch.req.ScratchListReq;
-import com.gt.game.core.bean.scratch.res.ScratchCountActivityRes;
-import com.gt.game.core.bean.scratch.res.ScratchGetActivityRes;
-import com.gt.game.core.bean.scratch.res.ScratchListRes;
+import com.gt.game.core.bean.scratch.req.*;
+import com.gt.game.core.bean.scratch.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 
@@ -62,4 +57,71 @@ public interface ScratchService {
      * @return
      */
     ScratchGetActivityRes getActivityById(BusUser busUser, ScratchGetActivityReq scratchGetActivityReq);
+
+    /**
+     * 编辑刮刮乐活动设置
+     * @param busUser
+     * @param scratchModfiyReq
+     */
+    void modfiyScratch(BusUser busUser, ScratchModfiyReq scratchModfiyReq);
+
+    /**
+     * 刮刮乐开始活动
+     * @param busUser
+     * @param scratchStartReq
+     */
+    void startScratch(BusUser busUser, ScratchStartReq scratchStartReq);
+
+    /**
+     * 刮刮乐暂停活动
+     * @param busUser
+     * @param scratchStopReq
+     */
+    void stopScratch(BusUser busUser, ScratchStopReq scratchStopReq);
+
+    /**
+     * 批量删除刮刮乐活动
+     * @param busUser
+     * @param scratchDelReq
+     */
+    void delScratch(BusUser busUser, ScratchDelReq scratchDelReq);
+
+
+    /**
+     * 分页获取砸金蛋中奖记录列表
+     * @param busUser
+     * @param scratchGetWinningReq
+     * @return
+     */
+    ResponseDTO<List<ScratchGetWinningRes>> getWinningList(BusUser busUser, ScratchGetWinningReq scratchGetWinningReq);
+
+    /**
+     * 中奖记录发放奖品
+     * @param busUser
+     * @param scratchEditApplyReq
+     * @return
+     */
+    ResponseDTO editScratchApply(BusUser busUser, ScratchEditApplyReq scratchEditApplyReq);
+
+    /**
+     * 导出刮刮乐中奖记录
+     * @param params
+     * @param busUser
+     * @return
+     */
+    Map<String,Object> exportScratch(Map<String, Object> params, BusUser busUser);
+
+    /**
+     * 批量删除刮刮乐活动中奖记录
+     * @param busUser
+     * @param scratchDelWinningReq
+     */
+    void delScratchWinning(BusUser busUser, ScratchDelWinningReq scratchDelWinningReq);
+
+    /**
+     * 获取奖品类型列表
+     * @param busUser
+     * @return
+     */
+    ResponseDTO<List<ScratchPrizeTypeListRes>> getScratchPrizeType(BusUser busUser);
 }

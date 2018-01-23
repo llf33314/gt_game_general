@@ -18,7 +18,10 @@
             defalut: function() {
                 return {}
             }
-        }
+        },
+         methods: {
+             
+         }
     }
 </script>
 

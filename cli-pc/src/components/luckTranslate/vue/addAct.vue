@@ -1,4 +1,3 @@
- 
 <template>
 <section>
 <div class="hd-common turnPlate">
@@ -53,11 +52,12 @@
                     <el-form-item label="参与方式：" label-width="100px" prop="luckPway">
                           <el-radio-group v-model="ruleForm1.luckPway">
                             <el-radio :label="1">所有会员不需要积分</el-radio><br><br>
-                            <el-radio :label="2">会员卡积分满<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.luckPway!="2"' v-model="ruleForm1.name1"></el-input>即可参加（抽奖不扣除积分）</el-radio><br><br>
+                            <el-radio :label="2">会员卡积分满<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.luckPway!="2"' v-model="ruleForm1.luckKou"></el-input>即可参加（抽奖不扣除积分）</el-radio><br><br>
                             <el-radio :label="3">每次抽奖扣除<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.luckPway!="3"' v-model="ruleForm1.name2"></el-input>积分</el-radio><br><br>
                             <el-radio :label="4">会员卡积分满<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.luckPway!="4"' v-model="ruleForm1.name3"></el-input>分，
                                                  每次抽奖扣除<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.luckPway!="4"' v-model="ruleForm1.name4"></el-input>分</el-radio> 
                           </el-radio-group> 
+                          
                     </el-form-item>
                 </div> 
                 <el-form-item label="背景音乐：">
@@ -103,7 +103,7 @@
                 <p>奖品数额：奖品的数量或内容；奖项数量：该奖品的可领取次数；中奖概率：每种奖项在转盘中的中奖概率</p>
                 <p>如：奖品类型：粉币；奖品数额：2；奖项名称：粉币；奖项数量：3；中奖概率：12</p>
                 <p>此次游戏活动设置了六个奖项：其中一个奖项为粉币(奖项名称)，该奖项出现3次(中奖数量)，中了该奖项会得到2个(奖品数额)粉币（奖品类型）。</p>
-                 <p>当奖品为实物时，请上传实物图片，实物图片建议尺寸1160px*64px</p> 
+                <p>当奖品为实物时，请上传实物图片，实物图片建议尺寸1160px*64px</p> 
             </div>  
             <div class="mt20 mb20">
                 <el-button   @click="addForm4()" :disabled='ruleForm4.length>4'  type="primary">新增奖品</el-button> 
@@ -144,7 +144,7 @@
                 </el-table-column>
                 <el-table-column label="中奖人"> 
                      <template slot-scope="scope">
-                      {{scope.row.winners}}
+                      {{scope.row.nickname}}
                     </template>
                 </el-table-column>
                 <el-table-column label="操作">
@@ -171,77 +171,18 @@
             <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步1</el-button> 
             <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
-            <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>   
+            <el-button type="primary" @click="lastStep()"     :disabled="this.isSubmit"    v-if="this.active==3">保存</el-button>   
             <el-button type="primary" @click="submit()">打印</el-button>   
         </div> 
-        <!-- 选择粉丝弹窗 -->
-<el-dialog title="粉丝列表"  :visible.sync="dialogFans">
-    <div class="mb10"> 
-      <el-input placeholder="请输入昵称" icon="search" v-model="memberName" style="width:250px" @change="test()"> 
-          </el-input>
-    </div>
-  <div style="width:100%;height:500px;">
-    <div style="width:75%;float:left;">
-      <el-table ref="multipleTable" :data="fansData.data"  tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="40">
-          </el-table-column>
-          <el-table-column label="头像" prop="headimgurl">   
-                <template slot-scope="scope">
-                  <img :src="scope.row.headimgurl" style="width:30px;height:30px"/>
-                </template>
-          </el-table-column>
-          <el-table-column label="昵称" prop="nickname">
-          </el-table-column>
-          <el-table-column label="性别" prop="sex">
-            <template slot-scope="scope">{{ scope.row.sex|sexStatus(scope.row.sex) }}</template>
-          </el-table-column>
-          <el-table-column label="所在城市" prop="city">
-          </el-table-column>
-          <el-table-column label="关注时间" prop="jointime">
-            <template slot-scope="scope">{{scope.row.jointime|parseTime('{y}-{m}-{d}')}}</template>
-          </el-table-column>
-          <el-table-column label="组别" prop="name">
-          </el-table-column>
-      </el-table>
-      <div class="public-page-fr">
-           <el-pagination @current-change="handleCurrentChange"  :current-page.sync="current" :page-size="8"
-            layout="prev, pager, next, jumper" :total="fansData.page.totalNums">
-            </el-pagination> 
-      </div>  
-      <div class="h20"></div> 
-    </div>
-
-    <div style="width:24%;float:right;height:450px;background:#f2f2f2;border:1px solid #dfe6ec">
-        <div style="height:40px;line-height:40px; background:#EEF1F6;padding-left:10px;border-bottom:1px solid #dfe6ec">
-          已选择：{{this.prizeData.length}}
-        </div> 
-        <div v-for="(item,index) in  prizeData" class="prizeItem" >  
-            <p style="width:100%;">
-                <div class="prizeName">
-                  {{item.nickname}} 
-                </div>
-                <span @click="delPrize(index)" class="blueee mr10 pull-right mt20" >删除</span>  
-            </p>
-        </div> 
-    </div>
-    <div style="float:right"> 
-    <span slot="footer" class="dialog-footer">
-        <div class="h20"></div>
-      <el-button @click="dialogFans = false">取 消</el-button>
-      <el-button type="primary" @click="prizeSubmit()">确 定</el-button>
-    </span>
-  </div> 
-  </div>
-
-  
-</el-dialog>
-    </div>   
+        <!-- 选择粉丝弹窗 --> 
+        <gt-Fans-detail  :visible="dialogFans"   v-on:getFansData="getFansData"></gt-Fans-detail>  
+</div>   
 </div>
 </section>
 </template>
 <script>
 import { 
-    getMembers
+saveAct
 }from './../api/api' 
 export default {
   data() {
@@ -272,7 +213,7 @@ export default {
         }         
     }; 
     return {
-      active:3,
+      active:0,
       ruleForm1: {
         type:1,
         luckName: "",
@@ -324,80 +265,97 @@ export default {
         }
       ],
       dialogFans:false,
-      memberName:"",
-      current:1,
-      fansData:{
-        data:[], 
-        page:{}        
-      },
-      prizeData:[],
-      key:"",
+      key:0, 
+      isSubmit:false
     };
   },
   methods: { 
     shoeDialogFans(val){
         this.key=val
-        this.dialogFans=true
-        //alert(this.key)
-    },
-    
-
-    delPrize(index){
-      this.prizeData.splice(index, 1); 
+        this.dialogFans=true 
+        console.log(this.key);
     }, 
-    //多选名单
-    handleSelectionChange(val) {
-      // console.log(val,111)
-        // this.multipleSelection = val; 
-        this.prizeData = val;  
-        
-    },
-    //指定中奖人确定按钮
-    prizeSubmit(){ 
-        if(this.prizeData.length>4){
-            this.$message.error("指定中奖人不能超过5个");
-        }else{
-            var i=this.key; 
-            for(var i=0;i<this.prizeData.length;i++){
-                var arr1={
-                    nickname:this.prizeData[i].nickname,
-                    openid  :this.prizeData[i].openid
-                } 
+    getFansData(e){ 
+        console.log(e,'子组件的信息')
+        this.dialogFans=false
+        var k = this.key;
+        var nickname = [];
+        var openid = [];
+        // console.log(k, 7788);
+        for (var i = 0; i < e.length; i++) {
+          var arr1 = {
+            nickname:e[i].nickname,
+            openid:e[i].openid
+          };
+          nickname.push(arr1.nickname);
+          openid.push(arr1.openid);
+        }
+        this.ruleForm4[k].nickname = nickname + "";
+        this.ruleForm4[k].openid = openid + "";
+        // console.log(this.ruleForm4,852);
+    }, 
+    //保存活动
+    submit(){
+        if(this.isSubmit){
+             this.$message({type: "info", message: "请不要重复提交~" });
+        }else{ 
+            var newarr=[];
+            for(let i =0;i< this.ruleForm4.length;i++){
+                var arr={
+                    name0:this.ruleForm4[i].name0,
+                    name1:this.ruleForm4[i].name1,
+                    name2:this.ruleForm4[i].name2, 
+                }
+                newarr.push(arr)
             } 
-            this.ruleForm4[i].nickname.push(arr1.nickname)
-            this.ruleForm4[i].openid.push(arr1.openid)
-            console.log(arr1,852);
-            console.log(this.ruleForm4,852) 
-            //this.ruleForm2.name21=arr+''
-            this.dialogFans=false
-        } 
-    },    
-    //获取中奖名单
-    getMembersData(){ 
-        var params={}
-        params.current=this.current
-        params.size=8
-        params.memberName=this.memberName
-        console.log(params)
-        getMembers(params).then(data=>{
-          if (data.code == 100) {
-            this.fansData=data           
-          } else {
-              this.$message.error(data.msg);
-          }
-        }).catch(() => {
-            this.$message({type: "info", message: "网络问题，请刷新重试~" });
-        }); 
-    },
-    //翻页
-    handleCurrentChange(val){
-      this.getMembersData() 
-    },
-
-
-
-
-
+            var luckMan,luckKou;
+            if(this.ruleForm1.luckPway==2){
+                luckMan = this.ruleForm1.name1
+            }else if(this.ruleForm1.luckPway==3){
+                luckKou = this.ruleForm1.name2 
+            }else if(this.ruleForm1.luckPway==4){
+                luckMan = this.ruleForm1.name3
+                luckKou = this.ruleForm1.name4
+            }
+            const data = {
+                id:0,
+                //基础设置 
+                luckName     :this.ruleForm1.luckName, 
+                luckBeginTime:this.ruleForm1.acttime[0], 
+                luckEndTime  :this.ruleForm1.acttime[1], 
+                luckBgm      :this.ruleForm1.musicUrl, 
+                luckBgmName  :this.ruleForm1.music, 
+                luckBeforeTxt:this.ruleForm1.luckBeforeTxt , 
+                luckDescribe :this.ruleForm1.luckDescribe, //活动说明
+                luckLuckPartaker:this.ruleForm1.luckLuckPartaker, 
+                luckPway     :this.ruleForm1.luckPway , 
+                luckKou      :luckKou, 
+                luckMan      :luckMan, 
+                //规则设置
+                luckCountOfDay : this.ruleForm2.luckCountOfDay, 
+                luckCountOfAll : this.ruleForm2.luckCountOfAll,
+                //兑奖设置
+                luckCashDay : this.ruleForm3.luckCashDay, 
+                luckAddress : this.ruleForm3.luckAddress, 
+                //奖项设置 
+                name13:this.awardKey,
+                name14:newarr
+            };
+            console.log(data,123); 
+            saveAct(data).then(data=>{
+            this.isSubmit=true
+            if (data.code == 100) {  
+                this.active=5
+            } else {
+                this.isSubmit=false
+                this.$message.error(data.msg);
+            }
+            }).catch(() => {
+                this.isSubmit=false
+                this.$message({type: "info", message: "网络问题，请刷新重试~" });
+            }); 
+        }
+    },  
     test() {
       console.log(123); 
       this.active=5
@@ -407,8 +365,7 @@ export default {
         console.log(e);
         this.ruleForm1.music    = e.music.name
         this.ruleForm1.musicUrl = e.music.url
-    },
-
+    }, 
     delForm4(index){
       this.ruleForm4.splice(index, 1);
     },
@@ -418,15 +375,30 @@ export default {
     upStep() {
       this.active--;
     },
-    next(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) { 
-          this.active++;
-        } else {
-          console.log("error submit!!");
-        }
-      });
-    },
+
+     next(formName) {
+         console.log(formName,'formName');
+        this.$refs[formName].validate((valid) => {
+             console.log(valid,'valid ');
+          if (valid) {
+            this.active++;
+            console.log(88552233)
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
+      
+    // next(formName) {
+    //   this.$refs[formName].validate(valid => {
+    //     if (valid) { 
+    //       this.active++;
+    //     } else {
+    //       console.log("error submit!!");
+    //     }
+    //   });
+    // },
     lastStep() {
       for (let i = 0; i < this.ruleForm4.length; i++) { 
         var regu =/^[1-9]\d*$/;
@@ -444,89 +416,39 @@ export default {
             this.submit();
         }  
       }
-    },
-    //表单提交--------------------------------------star
-    submit(){
-        var newarr=[];
-        for(let i =0;i< this.ruleForm4.length;i++){
-            var arr={
-                name0:this.ruleForm4[i].name0,
-                name1:this.ruleForm4[i].name1,
-                name2:this.ruleForm4[i].name2, 
-            }
-            newarr.push(arr)
-        } 
-        var luckMan,luckKou;
-        if(this.ruleForm1.luckPway==2){
-             luckMan = this.ruleForm1.name1
-        }else if(this.ruleForm1.luckPway==3){
-             luckKou = this.ruleForm1.name2 
-        }else if(this.ruleForm1.luckPway==4){
-             luckMan = this.ruleForm1.name3
-             luckKou = this.ruleForm1.name4
-        }
-        const data = {
-            id:0,
-            //基础设置 
-            luckName     :this.ruleForm1.luckName, 
-            luckBeginTime:this.ruleForm1.acttime[0], 
-            luckEndTime  :this.ruleForm1.acttime[1], 
-            luckBgm      :this.ruleForm1.musicUrl, 
-            luckBgmName  :this.ruleForm1.music, 
-            luckBeforeTxt:this.ruleForm1.luckBeforeTxt , 
-            luckDescribe :this.ruleForm1.luckDescribe, //活动说明
-            luckLuckPartaker:this.ruleForm1.luckLuckPartaker, 
-            luckPway     :this.ruleForm1.luckPway , 
-            luckKou      :luckKou, 
-            luckMan      :luckMan, 
-            //规则设置
-            luckCountOfDay : this.ruleForm2.luckCountOfDay, 
-            luckCountOfAll : this.ruleForm2.luckCountOfAll,
-            //兑奖设置
-            luckCashDay : this.ruleForm3.luckCashDay, 
-            luckAddress : this.ruleForm3.luckAddress, 
-            //奖项设置 
-            name13:this.awardKey,
-            name14:newarr
-        };
-        console.log(data,123); 
-    },    
+    },   
     backUrl(){
          window.history.go(-1);
     },
   },
-  mounted() { 
-  }, 
-  filters: {
-      sexStatus(val) {
-        if (val == 2) {
-          val = "女";
-        }else if(val == 1){
-          val = "男"; 
-        }else if(val == 0){
-            val = "未知"; 
-        }
-        return val;
-      },
-    prizeStatus(val) {
-        if (val == 0) {
-          val = "一等奖";
-        }else if(val == 1){
-          val = "二等奖";
-        }else if(val == 2){
-          val = "三等奖";
-        }else if(val == 3){
-          val = "四等奖";
-        }else if(val == 4){
-          val = "五等奖";
-        }else if(val == 5){
-          val = "六等奖";
-        }  
-        return val;
+   
+    filters: {
+        sexStatus(val) {
+            if (val == 2) {
+            val = "女";
+            }else if(val == 1){
+            val = "男"; 
+            }else if(val == 0){
+                val = "未知"; 
+            }
+            return val;
+        },
+        prizeStatus(val) {
+            if (val == 0) {
+            val = "一等奖";
+            }else if(val == 1){
+            val = "二等奖";
+            }else if(val == 2){
+            val = "三等奖";
+            }else if(val == 3){
+            val = "四等奖";
+            }else if(val == 4){
+            val = "五等奖";
+            }else if(val == 5){
+            val = "六等奖";
+            }  
+            return val;
+        }, 
     }, 
-  },
-    mounted() {
-      this.getMembersData(); 
-    },
 };
 </script>

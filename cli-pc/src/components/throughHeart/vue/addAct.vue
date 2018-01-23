@@ -431,7 +431,7 @@ export default {
         if(this.isSubmit){
              this.$message({type: "info", message: "请不要重复提交~" });
         }else{ 
-        console.log(this.ruleForm3,123); 
+        //console.log(this.ruleForm3,123); 
         //广告
         var newadv=[];
         for(let i =0;i< this.ruleForm1.links.length;i++){ 

@@ -8,13 +8,8 @@ import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.core.bean.eggs.req.*;
 import com.gt.game.core.bean.eggs.res.*;
 import com.gt.game.core.bean.ninelattice.res.NinelatticeGetActivityRes;
-import com.gt.game.core.bean.scratch.req.ScratchAddReq;
-import com.gt.game.core.bean.scratch.req.ScratchCountActivityReq;
-import com.gt.game.core.bean.scratch.req.ScratchGetActivityReq;
-import com.gt.game.core.bean.scratch.req.ScratchListReq;
-import com.gt.game.core.bean.scratch.res.ScratchCountActivityRes;
-import com.gt.game.core.bean.scratch.res.ScratchGetActivityRes;
-import com.gt.game.core.bean.scratch.res.ScratchListRes;
+import com.gt.game.core.bean.scratch.req.*;
+import com.gt.game.core.bean.scratch.res.*;
 import com.gt.game.core.bean.tree.res.TreeGetWinningRes;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
@@ -172,21 +167,21 @@ public class ScratchController extends BaseController {
         }
     }
 
-    /* // TODO  编辑砸金蛋活动基础设置
+    // TODO  编辑刮刮乐活动设置
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
     })
-    @ApiOperation(value = "编辑砸金蛋活动基础设置", notes = "编辑砸金蛋活动基础设置")
-    @RequestMapping(value = "/modfiyBasicsEggs", method = RequestMethod.POST)
-    protected ResponseDTO modfiyBasicsEggs(@RequestBody @ApiParam(value = "请求对象") EggsModfiyBasicsReq eggsModfiyBasicsReq, BindingResult bindingResult,
-                                           HttpServletRequest request) {
+    @ApiOperation(value = "编辑刮刮乐活动设置", notes = "编辑刮刮乐活动设置")
+    @RequestMapping(value = "/modfiyScratch", method = RequestMethod.POST)
+    protected ResponseDTO modfiyScratch(@RequestBody @ApiParam(value = "请求对象") ScratchModfiyReq scratchModfiyReq, BindingResult bindingResult,
+                                        HttpServletRequest request) {
         InvalidParameter(bindingResult);
         try {
-            logger.debug(eggsModfiyBasicsReq.toString());
+            logger.debug(scratchModfiyReq.toString());
             BusUser busUser = CommonUtil.getLoginUser(request);
-            eggsService.modfiyBasicsEggs(busUser,eggsModfiyBasicsReq);
-            return ResponseDTO.createBySuccessMessage("编辑砸金蛋活动基础设置成功");
-        } catch (EggsException e){
+            scratchService.modfiyScratch(busUser,scratchModfiyReq);
+            return ResponseDTO.createBySuccessMessage("编辑刮刮乐活动设置成功");
+        } catch (ScratchException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
         } catch (Exception e){
@@ -195,89 +190,19 @@ public class ScratchController extends BaseController {
         }
     }
 
-    // TODO  编辑砸金蛋活动规则设置
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
     })
-    @ApiOperation(value = "编辑砸金蛋活动规则设置", notes = "编辑砸金蛋活动规则设置")
-    @RequestMapping(value = "/modfiyRuleEggs", method = RequestMethod.POST)
-    protected ResponseDTO modfiyRuleEggs(@RequestBody @ApiParam(value = "请求对象") EggsModfiyRuleReq eggsModfiyRuleReq, BindingResult bindingResult,
-                                         HttpServletRequest request) {
-        InvalidParameter(bindingResult);
-        try {
-            logger.debug(eggsModfiyRuleReq.toString());
-            BusUser busUser = CommonUtil.getLoginUser(request);
-            eggsService.modfiyRuleEggs(busUser, eggsModfiyRuleReq);
-            return ResponseDTO.createBySuccessMessage("编辑砸金蛋活动规则设置成功");
-        } catch (EggsException e){
-            logger.error(e.getMessage(), e.fillInStackTrace());
-            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
-        } catch (Exception e){
-            e.printStackTrace();
-            return ResponseDTO.createByError();
-        }
-    }
-
-    // TODO  编辑砸金蛋活动兑奖设置
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-    })
-    @ApiOperation(value = "编辑砸金蛋活动兑奖设置", notes = "编辑砸金蛋活动兑奖设置")
-    @RequestMapping(value = "/modfiyExpiryEggs", method = RequestMethod.POST)
-    protected ResponseDTO modfiyExpiryEggs(@RequestBody @ApiParam(value = "请求对象") EggsModfiyExpiryReq eggsModfiyExpiryReq, BindingResult bindingResult,
-                                           HttpServletRequest request) {
-        InvalidParameter(bindingResult);
-        try {
-            logger.debug(eggsModfiyExpiryReq.toString());
-            BusUser busUser = CommonUtil.getLoginUser(request);
-            eggsService.modfiyExpiryEggs(busUser, eggsModfiyExpiryReq);
-            return ResponseDTO.createBySuccessMessage("编辑砸金蛋活动兑奖设置成功");
-        } catch (EggsException e){
-            logger.error(e.getMessage(), e.fillInStackTrace());
-            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
-        } catch (Exception e){
-            e.printStackTrace();
-            return ResponseDTO.createByError();
-        }
-    }
-
-    // TODO  编辑砸金蛋奖项设置
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-    })
-    @ApiOperation(value = "编辑砸金蛋奖项设置", notes = "编辑砸金蛋奖项设置")
-    @RequestMapping(value = "/modfiyAwardsEggs", method = RequestMethod.POST)
-    protected ResponseDTO modfiyAwardsEggs(@RequestBody @ApiParam(value = "请求对象") EggsModfiyAwardsReq eggsModfiyAwardsReq, BindingResult bindingResult,
-                                           HttpServletRequest request) {
-        InvalidParameter(bindingResult);
-        try {
-            logger.debug(eggsModfiyAwardsReq.toString());
-            BusUser busUser = CommonUtil.getLoginUser(request);
-            eggsService.modfiyAwardsEggs(busUser, eggsModfiyAwardsReq);
-            return ResponseDTO.createBySuccessMessage("编辑砸金蛋奖项设置成功");
-        } catch (EggsException e){
-            logger.error(e.getMessage(), e.fillInStackTrace());
-            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
-        } catch (Exception e){
-            e.printStackTrace();
-            return ResponseDTO.createByError();
-        }
-    }
-
-
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-    })
-    @ApiOperation(value = "批量删除砸金蛋活动", notes = "批量删除砸金蛋活动")
-    @RequestMapping(value = "/delEggs", method = RequestMethod.POST)
-    protected ResponseDTO delEggs(
-            @RequestBody @ApiParam("请求参数") EggsDelReq eggsDelReq,
+    @ApiOperation(value = "刮刮乐开始活动", notes = "刮刮乐开始活动")
+    @RequestMapping(value = "/startScratch", method = RequestMethod.POST)
+    protected ResponseDTO startScratch(
+            @RequestBody @ApiParam("请求参数") ScratchStartReq scratchStartReq,
             HttpServletRequest request) {
         try {
             BusUser busUser = CommonUtil.getLoginUser(request);
-            eggsService.delEggs(busUser, eggsDelReq);
-            return ResponseDTO.createBySuccessMessage("批量删除砸金蛋活动成功");
-        } catch (EggsException e){
+            scratchService.startScratch(busUser, scratchStartReq);
+            return ResponseDTO.createBySuccessMessage("刮刮乐开始活动成功");
+        } catch (ScratchException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
         } catch (Exception e){
@@ -286,23 +211,65 @@ public class ScratchController extends BaseController {
         }
     }
 
-    // TODO  分页获取砸金蛋中奖记录列表
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+    })
+    @ApiOperation(value = "刮刮乐暂停活动", notes = "刮刮乐暂停活动")
+    @RequestMapping(value = "/stopScratch", method = RequestMethod.POST)
+    protected ResponseDTO stopScratch(
+            @RequestBody @ApiParam("请求参数") ScratchStopReq scratchStopReq,
+            HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            scratchService.stopScratch(busUser, scratchStopReq);
+            return ResponseDTO.createBySuccessMessage("刮刮乐暂停活动成功");
+        } catch (ScratchException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+    })
+    @ApiOperation(value = "批量删除刮刮乐活动", notes = "批量删除刮刮乐活动")
+    @RequestMapping(value = "/delScratch", method = RequestMethod.POST)
+    protected ResponseDTO delScratch(
+            @RequestBody @ApiParam("请求参数") ScratchDelReq scratchDelReq,
+            HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            scratchService.delScratch(busUser, scratchDelReq);
+            return ResponseDTO.createBySuccessMessage("批量删除刮刮乐活动成功");
+        } catch (ScratchException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+
+    // TODO  分页获取刮刮乐中奖记录列表
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
             @ApiResponse(code = 1, message = "data对象（数组对象）", response = List.class),
             @ApiResponse(code = 2, message = "任务对象", response = TreeGetWinningRes.class),
     })
-    @ApiOperation(value = "分页获取砸金蛋中奖记录列表", notes = "分页获取砸金蛋中奖记录列表")
+    @ApiOperation(value = "分页获取刮刮乐中奖记录列表", notes = "分页获取刮刮乐中奖记录列表")
     @RequestMapping(value = "/getWinningList", method = RequestMethod.POST)
-    protected ResponseDTO getWinningList(@RequestBody @ApiParam(value = "请求对象") EggsGetWinningReq eggsGetWinningReq, BindingResult bindingResult,
+    protected ResponseDTO getWinningList(@RequestBody @ApiParam(value = "请求对象") ScratchGetWinningReq scratchGetWinningReq, BindingResult bindingResult,
                                          HttpServletRequest request) {
         InvalidParameter(bindingResult);
         try {
-            logger.debug(eggsGetWinningReq.toString());
+            logger.debug(scratchGetWinningReq.toString());
             BusUser busUser = CommonUtil.getLoginUser(request);
-            ResponseDTO<List<EggsGetWinningRes>> responseDTO = eggsService.getWinningList(busUser, eggsGetWinningReq);
+            ResponseDTO<List<ScratchGetWinningRes>> responseDTO = scratchService.getWinningList(busUser, scratchGetWinningReq);
             return responseDTO;
-        } catch (EggsException e){
+        } catch (ScratchException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
         } catch (Exception e){
@@ -311,19 +278,19 @@ public class ScratchController extends BaseController {
         }
     }
 
-    @ApiResponses({
+   @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
     })
     @ApiOperation(value = "中奖记录发放奖品", notes = "中奖记录发放奖品")
-    @RequestMapping(value = "/editEggsApply", method = RequestMethod.POST)
-    protected ResponseDTO editEggsApply(
-            @RequestBody @ApiParam("请求参数") EggsEditApplyReq eggsEditApplyReq,
+    @RequestMapping(value = "/editScratchApply", method = RequestMethod.POST)
+    protected ResponseDTO editScratchApply(
+            @RequestBody @ApiParam("请求参数") ScratchEditApplyReq scratchEditApplyReq,
             HttpServletRequest request) {
         try {
             BusUser busUser = CommonUtil.getLoginUser(request);
-            ResponseDTO responseDTO = eggsService.editEggsApply(busUser, eggsEditApplyReq);
+            ResponseDTO responseDTO = scratchService.editScratchApply(busUser, scratchEditApplyReq);
             return responseDTO;
-        } catch (EggsException e){
+        } catch (ScratchException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
         } catch (Exception e){
@@ -332,16 +299,16 @@ public class ScratchController extends BaseController {
         }
     }
 
-    *//**
-     * 导出圣诞大礼包中奖记录
+   /**
+     * 导出刮刮乐活动中奖记录
      * @param request
      * @param response
-     *//*
+     */
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
     })
     @ApiOperation(value = "导出中奖记录", notes = "导出中奖记录")
-    @RequestMapping(value = "/exportTree", method = RequestMethod.GET)
+    @RequestMapping(value = "/exportScratch", method = RequestMethod.GET)
     protected ResponseDTO exportTree(
             @RequestParam @ApiParam("活动id") Integer actId,
             @RequestParam @ApiParam("兑奖状态 -1 全部 1 未兑奖 2 已兑奖 3 已提交") Integer status,
@@ -355,7 +322,7 @@ public class ScratchController extends BaseController {
             params.put("status",status);
             params.put("type",type);
             params.put("snCode",snCode);
-            Map<String, Object> msg = eggsService.exportTree(params,busUser);
+            Map<String, Object> msg = scratchService.exportScratch(params,busUser);
             if ((boolean) msg.get("result")) {
                 HSSFWorkbook wb = (HSSFWorkbook) msg.get("book");
                 String filename = msg.get("fileName").toString() + ".xls";
@@ -373,7 +340,7 @@ public class ScratchController extends BaseController {
                 os.close();
             }
             return ResponseDTO.createBySuccess("导出成功");
-        } catch (TreeException e){
+        } catch (ScratchException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
         } catch (Exception e){
@@ -385,16 +352,16 @@ public class ScratchController extends BaseController {
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
     })
-    @ApiOperation(value = "批量删除砸金蛋中奖记录", notes = "批量删除砸金蛋中奖记录")
-    @RequestMapping(value = "/delEggsWinning", method = RequestMethod.POST)
-    protected ResponseDTO delEggsWinning(
-            @RequestBody @ApiParam("请求参数") EggsDelWinningReq eggsDelWinningReq,
+    @ApiOperation(value = "批量删除刮刮乐活动中奖记录", notes = "批量删除刮刮乐活动中奖记录")
+    @RequestMapping(value = "/delScratchWinning", method = RequestMethod.POST)
+    protected ResponseDTO delScratchWinning(
+            @RequestBody @ApiParam("请求参数") ScratchDelWinningReq scratchDelWinningReq,
             HttpServletRequest request) {
         try {
             BusUser busUser = CommonUtil.getLoginUser(request);
-            eggsService.delEggsWinning(busUser, eggsDelWinningReq);
-            return ResponseDTO.createBySuccessMessage("批量删除砸金蛋中奖记录");
-        } catch (EggsException e){
+            scratchService.delScratchWinning(busUser, scratchDelWinningReq);
+            return ResponseDTO.createBySuccessMessage("批量删除刮刮乐活动中奖记录成功");
+        } catch (ScratchException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
         } catch (Exception e){
@@ -405,22 +372,22 @@ public class ScratchController extends BaseController {
 
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-            @ApiResponse(code = 1, message = "响应对象", response = LanternPrizeTypeListRes.class),
+            @ApiResponse(code = 1, message = "响应对象", response = ScratchPrizeTypeListRes.class),
     })
     @ApiOperation(value = "获取奖品类型列表", notes = "获取奖品类型列表")
-    @RequestMapping(value = "/getEggsPrizeType", method = RequestMethod.POST)
-    protected ResponseDTO getEggsPrizeType(
+    @RequestMapping(value = "/getScratchPrizeType", method = RequestMethod.POST)
+    protected ResponseDTO getScratchPrizeType(
             HttpServletRequest request) {
         try {
             BusUser busUser = CommonUtil.getLoginUser(request);
-            ResponseDTO<List<EggsPrizeTypeListRes>> responseDTO = eggsService.getEggsPrizeType(busUser);
+            ResponseDTO<List<ScratchPrizeTypeListRes>> responseDTO = scratchService.getScratchPrizeType(busUser);
             return responseDTO;
-        } catch (TreeException e){
+        } catch (ScratchException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
         } catch (Exception e){
             e.printStackTrace();
             return ResponseDTO.createByError();
         }
-    }*/
+    }
 }
