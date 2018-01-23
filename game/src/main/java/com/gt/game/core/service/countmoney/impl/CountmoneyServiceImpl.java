@@ -450,7 +450,7 @@ public class CountmoneyServiceImpl implements CountmoneyService {
                 }
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("分页获取疯狂数钱中奖记录列表成功",countmoneyGetWinningResList,pageDTO);
     }
 

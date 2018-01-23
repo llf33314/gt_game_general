@@ -37,7 +37,7 @@ public class MemberServiceImpl implements MemberService {
         map.put("wxUserId",wxPublicUsers.getUserName());
         map.put("search",memberListPageReq.getMemberName());
         List<MemberListPageRes> listPageResList = fansInfoMapper.getMemberList(page,map);
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",listPageResList,pageDTO);
     }
 }

@@ -139,7 +139,7 @@ public class LuckServiceImpl implements LuckService {
                 LuckListRes.setStatus(3);
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",LuckListResList,pageDTO);
     }
     /**
@@ -376,7 +376,7 @@ public class LuckServiceImpl implements LuckService {
                 }
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",luckWinningListResList,pageDTO);
     }
     /**

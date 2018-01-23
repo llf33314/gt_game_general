@@ -85,13 +85,11 @@ public class LuckReq {
 	 * 音乐路径
 	 */
 	@ApiModelProperty("音乐路径")
-	@NotEmpty(message = "请选择背景音乐")
 	private String luckBgm;
 	/**
 	 * 音乐名称
 	 */
 	@ApiModelProperty("音乐名称")
-	@NotEmpty(message = "请选择背景音乐")
 	private String luckBgmName;
 	/**
 	 * 参与人员
