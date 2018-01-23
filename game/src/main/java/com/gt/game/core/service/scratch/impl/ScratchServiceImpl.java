@@ -477,7 +477,7 @@ public class ScratchServiceImpl implements ScratchService {
                 }
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("分页获取刮刮乐活动中奖记录列表成功",scratchGetWinningResList,pageDTO);
     }
 

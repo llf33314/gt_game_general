@@ -32,7 +32,7 @@
 		<result column="tur_prize_name" property="prizeName" />
 		<result column="tur_prize_type" property="type" />
 		<result column="tur_prize_unit" property="prizeUnit" />
-		<result column="win_cashtime" property="cashTime" />
+		<result column="win_createtime" property="cashTime" />
 		<result column="win_phone" property="memberPhone" />
 		<result column="win_wx_member_id" property="memberId" />
 		<result column="win_status" property="status" />
@@ -48,7 +48,7 @@
     </sql>
 
 	<select id="queryRecodList" resultMap="BaseResultMap1" parameterType="com.gt.game.core.bean.countmoney.req.CountmoneyGetWinningReq" >
-		SELECT t1.id,t4.tur_prize_name,t4.tur_prize_type,t4.tur_prize_unit,t1.win_cashtime as cashTime,t1.win_phone,t1.win_status,t1.win_exchangeCode,t1.win_wx_member_id,t5.act_awardingAddress AS  addressName ,t1.win_address,t1.win_way,t1.fenbi_num_max
+		SELECT t1.id,t4.tur_prize_name,t4.tur_prize_type,t4.tur_prize_unit,t1.win_createtime as cashTime,t1.win_phone,t1.win_status,t1.win_exchangeCode,t1.win_wx_member_id,t5.act_awardingAddress AS  addressName ,t1.win_address,t1.win_way,t1.fenbi_num_max
 		from  t_wx_activity_countmoney_record t1
 		LEFT JOIN t_wx_activity_countmoney_detail t4 ON t1.win_prize_id = t4.id
 		LEFT JOIN t_wx_activity_countmoney_main t5 ON t1.win_act_id = t5.id
@@ -68,7 +68,7 @@
 
 
 	<select id="findExports" resultType="map" parameterType="map" >
-		SELECT t1.id,t4.tur_prize_name,t4.tur_prize_type,t4.tur_prize_unit,t1.win_cashtime as cashTime,t1.win_phone,t1.win_status,t1.win_exchangeCode,t1.win_wx_member_id,t5.act_awardingAddress AS  addressName ,t1.win_address,t1.win_way,t1.fenbi_num_max
+		SELECT t1.id,t4.tur_prize_name,t4.tur_prize_type,t4.tur_prize_unit,t1.win_createtime as cashTime,t1.win_phone,t1.win_status,t1.win_exchangeCode,t1.win_wx_member_id,t5.act_awardingAddress AS  addressName ,t1.win_address,t1.win_way,t1.fenbi_num_max
 		from  t_wx_activity_countmoney_record t1
 		LEFT JOIN t_wx_activity_countmoney_detail t4 ON t1.win_prize_id = t4.id
 		LEFT JOIN t_wx_activity_countmoney_main t5 ON t1.win_act_id = t5.id

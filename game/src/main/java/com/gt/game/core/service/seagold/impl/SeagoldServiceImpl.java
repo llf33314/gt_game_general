@@ -136,7 +136,7 @@ public class SeagoldServiceImpl implements SeagoldService {
                 seagoldListRes.setStatus(1);
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",seagoldListResList,pageDTO);
     }
     /**
@@ -183,7 +183,7 @@ public class SeagoldServiceImpl implements SeagoldService {
                 }
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",seagoldApplyListResList,pageDTO);
     }
     /**
@@ -300,7 +300,7 @@ public class SeagoldServiceImpl implements SeagoldService {
             BeanUtils.copyProperties(seagoldAuthority,seagoldAuthorityListRes);
             seagoldAuthorityListResList.add(seagoldAuthorityListRes);
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",seagoldAuthorityListResList,pageDTO);
     }
     /**

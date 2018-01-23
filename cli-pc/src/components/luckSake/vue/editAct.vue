@@ -178,7 +178,7 @@
             <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">保存</el-button> 
             <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">保存</el-button>
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">保存</el-button>   
-            <el-button type="primary" @click="lastStep()"   :disabled="this.isSubmit"     v-if="this.active==3">保存</el-button>   
+            <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>   
             <!-- <el-button type="primary" @click="submit()">打印</el-button>    -->
         </div>  
 </div>   
@@ -417,10 +417,7 @@ export default {
        this.checkGL(); 
     }, 
     //表单提交--------------------------------------star
-    submit(){ 
-        if(this.isSubmit){
-             this.$message({type: "info", message: "请不要重复提交~" });
-        }else{  
+    submit(){  
         //广告
         var newadv=[];
         for(let i =0;i< this.ruleForm1.links.length;i++){ 
@@ -505,19 +502,15 @@ export default {
             shakeluckPrizeReqs:newPrize,  
         };
         console.log(data,123);         
-        saveAct(data).then(data=>{
-          this.isSubmit=true
+        saveAct(data).then(data=>{ 
           if (data.code == 100) {  
               this.$message({ message: "操作成功", type: "success"}); 
-          } else {
-              this.isSubmit=false
+          } else { 
               this.$message.error(data.msg);
           }
-        }).catch(() => {
-            this.isSubmit=false
+        }).catch(() => { 
             this.$message({type: "info", message: "网络问题，请刷新重试~" });
-        }); 
-    } 
+        });  
     },  
     backUrl(){
          window.history.go(-1);

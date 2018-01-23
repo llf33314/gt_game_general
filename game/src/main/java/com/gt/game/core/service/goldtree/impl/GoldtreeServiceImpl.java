@@ -159,7 +159,7 @@ public class GoldtreeServiceImpl implements GoldtreeService {
                 GoldtreeListRes.setStatus(1);
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",GoldtreeListResList,pageDTO);
     }
     /**
@@ -205,7 +205,7 @@ public class GoldtreeServiceImpl implements GoldtreeService {
                 }
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",GoldtreeApplyListResList,pageDTO);
     }
     /**
@@ -530,7 +530,7 @@ public class GoldtreeServiceImpl implements GoldtreeService {
             GoldtreeAuthorityListRes1.setCreatetime(GoldtreeAuthority.getCreateTime());
             GoldtreeAuthorityListRes.add(GoldtreeAuthorityListRes1);
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",GoldtreeAuthorityListRes,pageDTO);
     }
     /**
