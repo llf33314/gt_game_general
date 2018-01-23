@@ -1,6 +1,6 @@
 import axios from './../../../http' 
-// let base = window.BASEDOMAIN + '/app/Dragonboat'
-let base = 'http://192.168.3.68:8080'+ '/app/Dragonboat'
+let base = window.BASEDOMAIN + '/app/Dragonboat'
+// let base = 'http://192.168.3.68:8080'+ '/app/Dragonboat'
 
 /*新增端午赛龙舟活动*/
 export const saveAct  = params => { return axios.post(`${base}/addDragonboat`, params).then(res => res.data) }

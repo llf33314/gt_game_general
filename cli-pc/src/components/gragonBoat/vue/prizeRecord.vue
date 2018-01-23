@@ -85,7 +85,7 @@
 </section>
 </template>
 <script>
-import { getWinningList,getDragonboatPrizeType,editDragonboatApply}from './../api/api'
+import { getWinningList,getPrizeType,editDragonboatApply}from './../api/api'
   export default{
      data() {
       return { 
@@ -132,7 +132,7 @@ import { getWinningList,getDragonboatPrizeType,editDragonboatApply}from './../ap
       },
       //获取奖品类型-----------star
       getPrizeTypeData(){
-        getDragonboatPrizeType().then(data=>{
+        getPrizeType().then(data=>{
           if (data.code == 100) {
             console.log(data,1233);
             this.options=data.data
