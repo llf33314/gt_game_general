@@ -487,7 +487,7 @@ public class LuckServiceImpl implements LuckService {
             if(luckMain.getLuckBeginTime().getTime() > date.getTime()){
                 throw new LuckException(ResponseEnums.LUCK_HAS6);
             }
-            if(luckMain.getLuckEndTime().getTime() > date.getTime()){
+            if(luckMain.getLuckEndTime().getTime() < date.getTime()){
                 throw new LuckException(ResponseEnums.LUCK_HAS7);
             }
             luckMain.setLuckStatus(luckStopIdReq.getLuckStatus());
