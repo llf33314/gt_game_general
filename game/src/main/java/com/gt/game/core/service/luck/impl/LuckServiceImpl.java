@@ -177,7 +177,7 @@ public class LuckServiceImpl implements LuckService {
     @Override
    @Transactional(rollbackFor = Exception.class)
     public ResponseDTO saveLuck(WxPublicUsers busUser, BusUser user, LuckReq luckReq) {
-        if(CommonUtil.isNotEmpty(luckReq.getLuckBeginTime())){
+        if(CommonUtil.isEmpty(luckReq.getLuckBeginTime())){
             throw new LuckException(ResponseEnums.LUCK_HAS1);
         }
         if(CommonUtil.isEmpty(luckReq.getLuckDetailReqs())){
