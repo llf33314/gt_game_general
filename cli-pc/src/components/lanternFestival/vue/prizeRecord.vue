@@ -11,12 +11,12 @@
     </el-breadcrumb> 
     <div class="gt-gray-region mb20">  
         <span class="padding-left-md ml30 mb10">
-            <el-select v-model="type"  placeholder="请选择奖品类型"> 
+            <el-select v-model="type"  placeholder="请选择奖品类型" @change="changeType"> 
                  <el-option  v-for="(item, index) in options.type"  :key="index"  :label="item.label"  :value="item.value"></el-option>
             </el-select>
         </span> 
         <span class="padding-left-md ml10 mb10">
-                <el-select v-model="status" placeholder="请选择状态"> 
+                <el-select v-model="status" placeholder="请选择状态" @change="changeStatus"> 
                   <el-option  v-for="(item, index) in options.status" :key="index" :label="item.label" :value="item.value"></el-option>
                 </el-select>
         </span> 
@@ -52,7 +52,7 @@
           </el-table-column>
           <el-table-column prop="order_option" width="260" label="操作">
             <template slot-scope="scope"> 
-              <el-button class="gt-button-normal blue" @click="sendPrize(scope.row.id)" >发放奖品</el-button>
+              <el-button class="gt-button-normal blue" @click="sendPrize(scope.row.id)" v-if="scope.row.statu == 3" >发放奖品</el-button>
               <el-button class="gt-button-normal blue" @click="detail(scope.row)">详情</el-button>
               <el-button class="gt-button-normal" @click="delOne(scope.row.id)">删除</el-button>
             </template>
@@ -117,9 +117,9 @@ export default {
         ],
         status: [
           { label: "全部", value: -1 },
-          { label: "已提交", value: 1 },
-          { label: "未兑奖", value: 2 },
-          { label: "已兑奖", value: 3 }
+          { label: "未兑奖", value: 1 },
+          { label: "已兑奖", value: 2 },
+          { label: "已提交", value: 3 }
         ]
       },
       // 详情
@@ -131,6 +131,12 @@ export default {
     searchFuc() {
       this.currentPage = this.initCurrentPage;
       this.fetchData();
+    },
+    changeType() {
+      this.fetchData()
+    },
+    changeStatus() {
+      this.fetchData()
     },
     exportFuc() {
       let params = {
@@ -151,6 +157,7 @@ export default {
         api.sendWinning({ id: id }).then(res => {
           if (res.code == 100) {
             this.$message.success("发送奖品成功");
+            this.fetchData()
           } else {
             this.$message.error("发送奖品失败");
           }
