@@ -16,18 +16,18 @@ import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.common.enums.ResponseEnums;
 import com.gt.game.core.bean.dragonboat.req.*;
 import com.gt.game.core.bean.dragonboat.res.*;
-import com.gt.game.core.bean.lantern.res.LanternAuthorityListRes;
-import com.gt.game.core.bean.lantern.res.LanternPrizeTypeListRes;
+import com.gt.game.core.bean.lantern.req.LanternAdvertisingPictureReq;
+import com.gt.game.core.bean.lantern.req.LanternPrizeSetReq;
+import com.gt.game.core.bean.tree.res.TreeGetActivityRes;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 import com.gt.game.core.dao.dragonboat.DragonboatraceCashPrizeApplyDAO;
 import com.gt.game.core.entity.dragonboat.*;
-import com.gt.game.core.entity.lantern.LanternAuthority;
-import com.gt.game.core.entity.lantern.LanternMain;
-import com.gt.game.core.entity.ninelattice.NinelatticePrize;
-import com.gt.game.core.entity.ninelattice.NinelatticePrizeImg;
+import com.gt.game.core.entity.lantern.LanternAd;
+import com.gt.game.core.entity.lantern.LanternAddress;
+import com.gt.game.core.entity.lantern.LanternPrize;
+import com.gt.game.core.entity.lantern.LanternPrizeImg;
 import com.gt.game.core.exception.dragonboat.DragonboatException;
-import com.gt.game.core.exception.lantern.LanternException;
 import com.gt.game.core.service.dragonboat.*;
 import com.gt.game.core.util.CommonUtil;
 import com.gt.game.core.util.DateTimeKit;
@@ -87,7 +87,9 @@ public class DragonboatServiceImpl implements DragonboatService {
      */
     @Override
     public MobileUrlRes getMobileUrl(BusUser busUser, MobileUrlReq mobileUrlReq) {
-        return null;
+
+        String url = applyProperties.getMobileBaseUrl() + "dragonboatraceMobile/"+ mobileUrlReq.getMainId() + "/79B4DE7C/toPhoneIndex.do";
+        return new MobileUrlRes(url);
     }
 
     /**
@@ -98,46 +100,9 @@ public class DragonboatServiceImpl implements DragonboatService {
      */
     @Override
     public ResponseDTO<MobileUrlRes> getAuthorityUrl(BusUser busUser, MobileUrlReq mobileUrlReq) {
-       /* String url = applyProperties.getMobileBaseUrl() + "newYearGameMobile/"+ mobileUrlReq.getMainId() + "/79B4DE7C/saveAuthorizer.do";
-        return ResponseDTO.createBySuccess("获取新增授权链接成功",new MobileUrlRes(url));*/
-        return  null;
-    }
 
-    /**
-     * 获取端午赛龙舟活动数量
-     * @param busUser
-     * @return
-     */
-    @Override
-    public ResponseDTO<DragonboatCountRes> getDragonboatCount(BusUser busUser,DragonboatCountActivityReq dragonboatCountActivityReq) {
-
-        EntityWrapper<DragonboatraceMain> entityWrapper = new EntityWrapper();
-        entityWrapper.eq("bus_id", busUser.getId());
-        entityWrapper.orderBy("id", false);
-        entityWrapper.like(CommonUtil.isNotEmpty(dragonboatCountActivityReq.getName()), "name", dragonboatCountActivityReq.getName());
-
-        int count2 = 0;
-        int count3 = 0;
-        int count4 = 0;
-
-        List<DragonboatraceMain> dragonboatraceMainList = dragonboatraceMainService.selectList(entityWrapper);
-        Date date = new Date();
-        for (DragonboatraceMain DragonboatraceMain : dragonboatraceMainList) {
-            if (DragonboatraceMain.getActivityBeginTime().getTime() > date.getTime()) {
-                count2++; //  TODO    未开始
-            } else if (DragonboatraceMain.getActivityBeginTime().getTime() <= date.getTime() && DragonboatraceMain.getActivityEndTime().getTime() >= date.getTime()) {
-                count3++;  // TODO    进行中
-            } else if (DragonboatraceMain.getActivityEndTime().getTime() < date.getTime()) {
-                count4++;  // TODO    已结束
-            }
-        }
-        DragonboatCountRes dragonboatCountRes = new DragonboatCountRes();
-        dragonboatCountRes.setCount2(count2);
-        dragonboatCountRes.setCount3(count3);
-        dragonboatCountRes.setCount4(count4);
-        dragonboatCountRes.setCount1(count2+count3+count4);  //  TODO 全部
-
-        return ResponseDTO.createBySuccess("获取成功",dragonboatCountRes);
+        String url = applyProperties.getMobileBaseUrl() + "dragonboatraceMobile/"+ mobileUrlReq.getMainId() + "/79B4DE7C/saveAuthorizer.do";
+        return ResponseDTO.createBySuccess("获取新增授权链接成功",new MobileUrlRes(url));
     }
 
     /**
@@ -192,7 +157,44 @@ public class DragonboatServiceImpl implements DragonboatService {
             dragonboatListResList.add(dragonboatListRes);
         }
         PageDTO pageDTO = new PageDTO(page.getPages(), page.getTotal());
-        return ResponseDTO.createBySuccessPage("分页获取元宵点灯活动列表成功", dragonboatListResList, pageDTO);
+        return ResponseDTO.createBySuccessPage("分页获取端午赛龙舟活动列表成功", dragonboatListResList, pageDTO);
+    }
+
+    /**
+     * 获取端午赛龙舟活动数量
+     * @param busUser
+     * @return
+     */
+    @Override
+    public ResponseDTO<DragonboatCountRes> getDragonboatCount(BusUser busUser,DragonboatCountActivityReq dragonboatCountActivityReq) {
+
+        EntityWrapper<DragonboatraceMain> entityWrapper = new EntityWrapper();
+        entityWrapper.eq("bus_id", busUser.getId());
+        entityWrapper.orderBy("id", false);
+        entityWrapper.like(CommonUtil.isNotEmpty(dragonboatCountActivityReq.getName()), "name", dragonboatCountActivityReq.getName());
+
+        int count2 = 0;
+        int count3 = 0;
+        int count4 = 0;
+
+        List<DragonboatraceMain> dragonboatraceMainList = dragonboatraceMainService.selectList(entityWrapper);
+        Date date = new Date();
+        for (DragonboatraceMain DragonboatraceMain : dragonboatraceMainList) {
+            if (DragonboatraceMain.getActivityBeginTime().getTime() > date.getTime()) {
+                count2++; //  TODO    未开始
+            } else if (DragonboatraceMain.getActivityBeginTime().getTime() <= date.getTime() && DragonboatraceMain.getActivityEndTime().getTime() >= date.getTime()) {
+                count3++;  // TODO    进行中
+            } else if (DragonboatraceMain.getActivityEndTime().getTime() < date.getTime()) {
+                count4++;  // TODO    已结束
+            }
+        }
+        DragonboatCountRes dragonboatCountRes = new DragonboatCountRes();
+        dragonboatCountRes.setCount2(count2);
+        dragonboatCountRes.setCount3(count3);
+        dragonboatCountRes.setCount4(count4);
+        dragonboatCountRes.setCount1(count2+count3+count4);  //  TODO 全部
+
+        return ResponseDTO.createBySuccess("获取成功",dragonboatCountRes);
     }
 
     /**
@@ -204,10 +206,13 @@ public class DragonboatServiceImpl implements DragonboatService {
     public void addDragonboat(BusUser busUser, DragonboatAddReq dragonboatAddReq) {
 
         DragonboatraceMain dragonboatraceMain = new DragonboatraceMain();
+        dragonboatraceMain.setBusId(busUser.getId());
         dragonboatraceMain.setCreatetime(new Date());
         dragonboatraceMain.setName(dragonboatAddReq.getName());
         dragonboatraceMain.setActivityBeginTime(dragonboatAddReq.getActivityBeginTime());
         dragonboatraceMain.setActivityEndTime(dragonboatAddReq.getActivityEndTime());
+        dragonboatraceMain.setBgmSp(dragonboatAddReq.getBgmSp());
+        dragonboatraceMain.setMusicUrl(dragonboatAddReq.getMusicUrl());
         dragonboatraceMain.setFollowQrCode(dragonboatAddReq.getFollowQrCode());
         dragonboatraceMain.setManTotalChance(dragonboatAddReq.getManTotalChance());
         dragonboatraceMain.setManDayChance(dragonboatAddReq.getManDayChance());
@@ -275,61 +280,125 @@ public class DragonboatServiceImpl implements DragonboatService {
     }
 
     /**
-     *编辑端午赛龙舟活动基础设置
+     * 通过活动id查询端午赛龙舟活动
      * @param busUser
-     * @param dragonboatModfiyBasicsReq
+     * @param dragonboatGetActivityReq
+     * @return
      */
     @Override
-    public void modfiyBasicsDragonboat(BusUser busUser, DragonboatModfiyBasicsReq dragonboatModfiyBasicsReq) {
+    public  DragonboatGetActivityRes  getActivityById(BusUser busUser, DragonboatGetActivityReq dragonboatGetActivityReq) {
 
-        DragonboatraceMain dragonboatraceMain = new DragonboatraceMain();
-        dragonboatraceMain.setId(dragonboatModfiyBasicsReq.getId());
-        dragonboatraceMain.setName(dragonboatModfiyBasicsReq.getName());
-        dragonboatraceMain.setActivityBeginTime(dragonboatModfiyBasicsReq.getActivityBeginTime());
-        dragonboatraceMain.setActivityEndTime(dragonboatModfiyBasicsReq.getActivityEndTime());
+        DragonboatraceMain dragonboatraceMain = dragonboatraceMainService.selectById(dragonboatGetActivityReq.getId());
 
-        dragonboatraceMainService.updateById(dragonboatraceMain);
+        DragonboatGetActivityRes dragonboatGetActivityRes = new DragonboatGetActivityRes();
+        dragonboatGetActivityRes.setName(dragonboatraceMain.getName());
+        dragonboatGetActivityRes.setActivityBeginTime(dragonboatraceMain.getActivityBeginTime());
+        dragonboatGetActivityRes.setActivityEndTime(dragonboatraceMain.getActivityEndTime());
+        dragonboatGetActivityRes.setBgmSp(dragonboatraceMain.getBgmSp());
+        dragonboatGetActivityRes.setMusicUrl(dragonboatraceMain.getMusicUrl());
+        dragonboatGetActivityRes.setFollowQrCode(dragonboatraceMain.getFollowQrCode());
+        dragonboatGetActivityRes.setManTotalChance(dragonboatraceMain.getManTotalChance());
+        dragonboatGetActivityRes.setManDayChance(dragonboatraceMain.getManDayChance());
+        dragonboatGetActivityRes.setActRule(dragonboatraceMain.getActRule());
+        dragonboatGetActivityRes.setCashPrizeBeginTime(dragonboatraceMain.getCashPrizeBeginTime());
+        dragonboatGetActivityRes.setCashPrizeEndTime(dragonboatraceMain.getCashPrizeEndTime());
+
+        ArrayList<String> list = new ArrayList<>();
+        for (String s : dragonboatraceMain.getReceiveType().split(",")) {
+            list.add(s);
+        }
+        dragonboatGetActivityRes.setReceiveTypeList(list);   //  TODO  对奖方式
+
+        EntityWrapper<DragonboatraceAddress> entityWrapper2 = new EntityWrapper();
+        entityWrapper2.eq("act_id", dragonboatraceMain.getId());
+        List<DragonboatraceAddress> dragonboatraceAddressList = dragonboatraceAddressService.selectList(entityWrapper2);
+
+        List<String> list2 = new ArrayList<>();
+        for(DragonboatraceAddress dragonboatraceAddress :dragonboatraceAddressList){
+            list2.add(dragonboatraceAddress.getAddress());
+        }
+        dragonboatGetActivityRes.setAddressList(list2);    // TODO  兑奖地址
+
+        dragonboatGetActivityRes.setPhone(dragonboatraceMain.getPhone());
+        dragonboatGetActivityRes.setCashPrizeInstruction(dragonboatraceMain.getCashPrizeInstruction());
+        dragonboatGetActivityRes.setPrizeDescription(dragonboatraceMain.getPrizeDescription());
+
+
+        EntityWrapper<DragonboatraceAd> entityWrapper3 = new EntityWrapper();
+        entityWrapper3.eq("act_id", dragonboatraceMain.getId());
+        List<DragonboatraceAd> dragonboatraceAdList = dragonboatraceAdService.selectList(entityWrapper3);
+
+        List<DragonboatAdvertisingPictureReq> list3 = new ArrayList<>();
+        for(DragonboatraceAd dragonboatraceAd :dragonboatraceAdList){
+            DragonboatAdvertisingPictureReq dragonboatAdvertisingPictureReq = new DragonboatAdvertisingPictureReq();
+            dragonboatAdvertisingPictureReq.setHrefUrl(dragonboatraceAd.getHrefUrl());
+            dragonboatAdvertisingPictureReq.setUrl(dragonboatraceAd.getUrl());
+            list3.add(dragonboatAdvertisingPictureReq);
+        }
+        dragonboatGetActivityRes.setAdvertisingPictureList(list3);  //TODO  广告轮播图
+
+        EntityWrapper<DragonboatracePrize> entityWrapper4 = new EntityWrapper();
+        entityWrapper4.eq("act_id", dragonboatraceMain.getId());
+        List<DragonboatracePrize> dragonboatracePrizeList = dragonboatracePrizeService.selectList(entityWrapper4);
+        List<DragonboatPrizeSetReq> list4 = new ArrayList<>();
+        for(DragonboatracePrize dragonboatracePrize :dragonboatracePrizeList){
+            DragonboatPrizeSetReq dragonboatPrizeSetReq = new DragonboatPrizeSetReq();
+            dragonboatPrizeSetReq.setType(dragonboatracePrize.getType());
+            dragonboatPrizeSetReq.setPrizeUnit(dragonboatracePrize.getPrizeUnit());
+            dragonboatPrizeSetReq.setPrizeName(dragonboatracePrize.getPrizeName());
+            dragonboatPrizeSetReq.setNum(dragonboatracePrize.getNum());
+            dragonboatPrizeSetReq.setScore(dragonboatracePrize.getScore());
+
+            EntityWrapper<DragonboatracePrizeImg> entityWrapper5 = new EntityWrapper();
+            entityWrapper5.eq("prize_id",dragonboatracePrize.getId());
+            List<DragonboatracePrizeImg> dragonboatracePrizeImgList = dragonboatracePrizeImgService.selectList(entityWrapper5);
+            List<String> list5 = new ArrayList<>();
+            for(DragonboatracePrizeImg dragonboatracePrizeImg:dragonboatracePrizeImgList){
+                list5.add(dragonboatracePrizeImg.getImgUrl());
+            }
+            dragonboatPrizeSetReq.setImgUrl(list5);
+            list4.add(dragonboatPrizeSetReq);
+        }
+        dragonboatGetActivityRes.setPrizeSetList(list4); //TODO  奖品设置
+
+        return dragonboatGetActivityRes;
     }
 
     /**
-     *  编辑端午赛龙舟规则设置
+     *编辑端午赛龙舟活动设置
      * @param busUser
-     * @param dragonboatModfiyRuleReq
+     * @param dragonboatModfiyReq
      */
     @Override
-    public void modfiyRuleDragonboat(BusUser busUser, DragonboatModfiyRuleReq dragonboatModfiyRuleReq) {
+    public void modfiyDragonboat(BusUser busUser, DragonboatModfiyReq dragonboatModfiyReq) {
 
         DragonboatraceMain dragonboatraceMain = new DragonboatraceMain();
-        dragonboatraceMain.setId(dragonboatModfiyRuleReq.getId());
-        dragonboatraceMain.setFollowQrCode(dragonboatModfiyRuleReq.getFollowQrCode());
-        dragonboatraceMain.setManTotalChance(dragonboatModfiyRuleReq.getManTotalChance());
-        dragonboatraceMain.setManDayChance(dragonboatModfiyRuleReq.getManDayChance());
-        dragonboatraceMain.setActRule(dragonboatModfiyRuleReq.getActRule());
+        dragonboatraceMain.setId(dragonboatModfiyReq.getId());
+        //TODO 基础设置
+        dragonboatraceMain.setName(dragonboatModfiyReq.getName());
+        dragonboatraceMain.setActivityBeginTime(dragonboatModfiyReq.getActivityBeginTime());
+        dragonboatraceMain.setActivityEndTime(dragonboatModfiyReq.getActivityEndTime());
+        dragonboatraceMain.setBgmSp(dragonboatModfiyReq.getBgmSp());
+        dragonboatraceMain.setMusicUrl(dragonboatModfiyReq.getMusicUrl());
 
-        dragonboatraceMainService.updateById(dragonboatraceMain);
-    }
+        //TODO 规则设置
+        dragonboatraceMain.setFollowQrCode(dragonboatModfiyReq.getFollowQrCode());
+        dragonboatraceMain.setManTotalChance(dragonboatModfiyReq.getManTotalChance());
+        dragonboatraceMain.setManDayChance(dragonboatModfiyReq.getManDayChance());
+        dragonboatraceMain.setActRule(dragonboatModfiyReq.getActRule());
 
-    /**
-     * 编辑端午赛龙舟活动兑奖设置
-     * @param busUser
-     * @param dragonboatModfiyExpiryReq
-     */
-    @Override
-    public void modfiyExpiryDragonboat(BusUser busUser, DragonboatModfiyExpiryReq dragonboatModfiyExpiryReq) {
-
-        DragonboatraceMain dragonboatraceMain = new DragonboatraceMain();
-        dragonboatraceMain.setId(dragonboatModfiyExpiryReq.getId());
-        dragonboatraceMain.setCashPrizeBeginTime(dragonboatModfiyExpiryReq.getCashPrizeBeginTime());
-        dragonboatraceMain.setCashPrizeEndTime(dragonboatModfiyExpiryReq.getCashPrizeEndTime());
+        //TODO 兑奖设置
+        dragonboatraceMain.setCashPrizeBeginTime(dragonboatModfiyReq.getCashPrizeBeginTime());
+        dragonboatraceMain.setCashPrizeEndTime(dragonboatModfiyReq.getCashPrizeEndTime());
 
         String s1="";
-        for(String s:dragonboatModfiyExpiryReq.getReceiveTypeList()){
+        for(String s:dragonboatModfiyReq.getReceiveTypeList()){
             s1 = s1+","+s;
         }
         dragonboatraceMain.setReceiveType(s1.substring(1));
-        dragonboatraceMain.setPhone(dragonboatModfiyExpiryReq.getPhone());
-        dragonboatraceMain.setCashPrizeInstruction(dragonboatModfiyExpiryReq.getCashPrizeInstruction());
-
+        dragonboatraceMain.setPhone(dragonboatModfiyReq.getPhone());
+        dragonboatraceMain.setCashPrizeInstruction(dragonboatModfiyReq.getCashPrizeInstruction());
+        dragonboatraceMain.setPrizeDescription(dragonboatModfiyReq.getPrizeDescription());
         dragonboatraceMainService.updateById(dragonboatraceMain);
 
         //TODO  清空兑奖地址
@@ -337,9 +406,9 @@ public class DragonboatServiceImpl implements DragonboatService {
         entityWrapper.eq("act_id",dragonboatraceMain.getId());
         dragonboatraceAddressService.delete(entityWrapper);
 
-        for(String s:dragonboatModfiyExpiryReq.getReceiveTypeList()){
+        for(String s:dragonboatModfiyReq.getReceiveTypeList()){
             if("1".equals(s)){
-                for(String s2:dragonboatModfiyExpiryReq.getAddressList()){
+                for(String s2:dragonboatModfiyReq.getAddressList()){
                     DragonboatraceAddress dragonboatraceAddress = new DragonboatraceAddress();
                     dragonboatraceAddress.setActId(dragonboatraceMain.getId());
                     dragonboatraceAddress.setCreatetime(new Date());
@@ -349,28 +418,15 @@ public class DragonboatServiceImpl implements DragonboatService {
                 }
             }
         }
-    }
 
-    /**
-     * 编辑端午赛龙舟活动奖项设置
-     * @param busUser
-     * @param dragonboatModfiyAwardsReq
-     */
-    @Override
-    public void modfiyAwardsDragonboat(BusUser busUser, DragonboatModfiyAwardsReq dragonboatModfiyAwardsReq) {
-
-        DragonboatraceMain dragonboatraceMain = new DragonboatraceMain();
-        dragonboatraceMain.setId(dragonboatModfiyAwardsReq.getId());
-        dragonboatraceMain.setPrizeDescription(dragonboatModfiyAwardsReq.getPrizeDescription());
-        dragonboatraceMainService.updateById(dragonboatraceMain);
-
-        if(dragonboatModfiyAwardsReq.getAdvertisingPictureList().size()>0){  // TODO  广告轮播图
+        //TODO 奖项设置
+        if(dragonboatModfiyReq.getAdvertisingPictureList().size()>0){  // TODO  广告轮播图
             //TODO  清空广告轮播图
-            EntityWrapper<DragonboatraceAd> entityWrapper = new EntityWrapper();
-            entityWrapper.eq("act_id",dragonboatraceMain.getId());
-            dragonboatraceAdService.delete(entityWrapper);
+            EntityWrapper<DragonboatraceAd> entityWrapper2 = new EntityWrapper();
+            entityWrapper2.eq("act_id",dragonboatraceMain.getId());
+            dragonboatraceAdService.delete(entityWrapper2);
 
-            for(DragonboatAdvertisingPictureReq DragonboatAdvertisingPictureReq:dragonboatModfiyAwardsReq.getAdvertisingPictureList()){
+            for(DragonboatAdvertisingPictureReq DragonboatAdvertisingPictureReq:dragonboatModfiyReq.getAdvertisingPictureList()){
                 DragonboatraceAd dragonboatraceAd = new DragonboatraceAd();
                 dragonboatraceAd.setActId(dragonboatraceMain.getId());
                 dragonboatraceAd.setUrl(DragonboatAdvertisingPictureReq.getUrl());
@@ -380,13 +436,13 @@ public class DragonboatServiceImpl implements DragonboatService {
             }
         }
 
-        if(dragonboatModfiyAwardsReq.getPrizeSetList().size()>0){        //TODO  奖品设置
+        if(dragonboatModfiyReq.getPrizeSetList().size()>0){        //TODO  奖品设置
             // TODO  清空奖品设置
-            EntityWrapper<DragonboatracePrize> entityWrapper = new EntityWrapper();
-            entityWrapper.eq("act_id",dragonboatraceMain.getId());
-            dragonboatracePrizeService.delete(entityWrapper);
+            EntityWrapper<DragonboatracePrize> entityWrapper3 = new EntityWrapper();
+            entityWrapper3.eq("act_id",dragonboatraceMain.getId());
+            dragonboatracePrizeService.delete(entityWrapper3);
 
-            for(DragonboatPrizeSetReq dragonboatPrizeSetReq:dragonboatModfiyAwardsReq.getPrizeSetList()){
+            for(DragonboatPrizeSetReq dragonboatPrizeSetReq:dragonboatModfiyReq.getPrizeSetList()){
                 DragonboatracePrize dragonboatracePrize = new DragonboatracePrize();
                 dragonboatracePrize.setActId(dragonboatraceMain.getId());
                 dragonboatracePrize.setType(dragonboatPrizeSetReq.getType());
@@ -397,9 +453,9 @@ public class DragonboatServiceImpl implements DragonboatService {
                 dragonboatracePrizeService.insert(dragonboatracePrize);
 
                 //TODO 清空图片
-                EntityWrapper<DragonboatracePrizeImg> entityWrapper2 = new EntityWrapper();
-                entityWrapper2.eq("prize_id",dragonboatracePrize.getId());
-                dragonboatracePrizeImgService.delete(entityWrapper2);
+                EntityWrapper<DragonboatracePrizeImg> entityWrapper4 = new EntityWrapper();
+                entityWrapper4.eq("prize_id",dragonboatracePrize.getId());
+                dragonboatracePrizeImgService.delete(entityWrapper4);
 
                 if(dragonboatPrizeSetReq.getImgUrl().size()>0){   ///TODO 添加图片
 
@@ -457,8 +513,6 @@ public class DragonboatServiceImpl implements DragonboatService {
         EntityWrapper<DragonboatracePrize> entityWrapper5 = new EntityWrapper<>();
         entityWrapper5.eq("act_id",dragonboatDelReq.getId());
         dragonboatracePrizeService.delete(entityWrapper5);
-
-
     }
 
     /**
@@ -846,4 +900,6 @@ public class DragonboatServiceImpl implements DragonboatService {
         }
         return ResponseDTO.createBySuccess("获取成功", dragonboatPrizeTypeListResList);
     }
+
+
 }

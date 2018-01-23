@@ -12,7 +12,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @author zwq
  * @since 2017-12-25
  */
-@ApiModel("分页获取中奖记录列表请求类")
+@ApiModel("分页获取疯狂数钱活动中奖记录列表请求类")
 public class CountmoneyGetWinningReq extends PageReq {
 
 	@ApiModelProperty("活动id")

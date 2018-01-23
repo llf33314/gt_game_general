@@ -24,8 +24,9 @@ export const getPrizeList     = params => { return axios.post(`${base}/getLuckWi
 export const givePrize        = params => { return axios.post(`${base}/editLuckWinning`, params).then(res => res.data) }
 
 /*新增，编辑*/
-export const saveAct          = params => { return axios.post(`${base}/saveNewYear`, params).then(res => res.data) }
-export const getAct           = params => { return axios.get(`${base}/getNewYear?id=${params}`).then(res => res.data) }
+export const saveAct          = params => { return axios.post(`${base}/saveLuck`, params).then(res => res.data) }
+export const getAct           = params => { return axios.post(`${base}/getLuck`, params).then(res => res.data) }
+// export const getAct           = params => { return axios.get(`${base}/getNewYear?id=${params}`).then(res => res.data) }
 
 
 // /*核销*/

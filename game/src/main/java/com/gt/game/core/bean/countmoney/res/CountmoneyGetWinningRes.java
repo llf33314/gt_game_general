@@ -5,15 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 
-/**
- * <p>
- * 元宵点灯 主表
- * </p>
- *
- * @author zwq
- * @since 2017-12-25
- */
-@ApiModel("分页获取中奖记录列表返回类")
+@ApiModel("分页获取疯狂数钱活动中奖记录列表返回类")
 public class CountmoneyGetWinningRes {
 
 	/**
@@ -48,9 +40,6 @@ public class CountmoneyGetWinningRes {
 
 	@ApiModelProperty("兑奖码")
 	private String snCode;
-
-	@ApiModelProperty("成绩")
-	private Double score;
 
 	@ApiModelProperty("中奖人")
 	private String nickname;
@@ -178,11 +167,4 @@ public class CountmoneyGetWinningRes {
 		this.snCode = snCode;
 	}
 
-	public Double getScore() {
-		return score;
-	}
-
-	public void setScore(Double score) {
-		this.score = score;
-	}
 }

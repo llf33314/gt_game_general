@@ -24,6 +24,7 @@ const GtVideoBtn = ()=>import('./components/PublicVue/video-button/video-button'
 const GtDelTip = ()=>import('./components/PublicVue/del-tip/del-tip')
 const GtDialog = ()=>import('./components/PublicVue/dialog/dialog')
 const GtPrizeDetail = ()=>import('components/PublicVue/prizeDetail/prizeDetail')
+const GtFansData = ()=>import('components/PublicVue/fans-dialog/fans')//指定中奖人
 //加载全局样式 
 require('./assets/css/public.less')
 require('./assets/css/public.css')
@@ -51,7 +52,8 @@ Vue.component('gt-enquire',GtEnquire)
 Vue.component('gt-video-btn',GtVideoBtn)         // 视频播放按钮
 Vue.component('gt-del-tip',GtDelTip)             // 删除提示
 Vue.component('el-dialog',GtDialog)                // 弹出框
-Vue.component('gt-prize-detail',GtPrizeDetail)   // 中奖记录详情            
+Vue.component('gt-prize-detail',GtPrizeDetail)   // 中奖记录详情  
+Vue.component('gt-Fans-detail',GtFansData)      // 指定中奖人            
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
