@@ -24,10 +24,9 @@
                     </span>
                 </el-form-item>
                  <el-form-item label="游戏时间：" prop="acttime">
-                    <el-date-picker class="w_demo" v-model="ruleForm1.acttime"   type="datetimerange"  placeholder="选择时间范围">
+                    <el-date-picker class="w_demo" v-model="ruleForm1.acttime"  :picker-options="pickerOptions" type="datetimerange"  placeholder="选择时间范围">
                     </el-date-picker>
-                </el-form-item>  
-
+                </el-form-item>   
                 <el-form-item label="活动说明：" prop="luckBeforeTxt">
                     <el-input class="w_demo"  type="textarea" v-model="ruleForm1.luckBeforeTxt" :rows="3" placeholder="请输入活动说明"></el-input>
                     <span class="el-upload__tip grey" >
@@ -45,10 +44,14 @@
                  <el-form-item label="参与人员："  prop="luckLuckPartaker">
                     <el-radio-group v-model="ruleForm1.luckLuckPartaker">
                     <el-radio :label="1">所有粉丝</el-radio>
-                    <el-radio :label="2">仅会员(持有会员卡的粉丝)</el-radio>
+                    <el-radio :label="2">仅会员
+                        <span class="el-upload__tip grey" >
+                        (持有会员卡的粉丝)
+                        </span>
+                    </el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <div class="pd20 bw pt10 bb ml150 mb20" v-show="ruleForm1.luckLuckPartaker==2">
+                <div class="pd20 bw pt10 bb ml150 mb20" v-show="ruleForm1.luckLuckPartaker==1">
                     <el-form-item label="参与方式：" label-width="100px" prop="luckPway">
                           <el-radio-group v-model="ruleForm1.luckPway">
                             <el-radio :label="1">所有会员不需要积分</el-radio><br><br>
@@ -201,7 +204,9 @@ export default {
            callback(new Error("请输入大于0的整数")); 
         }else if(this.ruleForm1.luckPway==4&&this.ruleForm1.name4<0){
            callback(new Error("请输入大于0的整数")); 
-        }         
+        }else{
+           callback(); 
+        }          
     }; 
     let numberPass = (rule, value, callback) => { 
         if(!value){
@@ -214,6 +219,10 @@ export default {
     }; 
     return {
       active:0,
+      // 时间的筛选
+      pickerOptions: {
+        disabledDate(time) { return time.getTime() < Date.now() - 8.64e7; }
+      },
       ruleForm1: {
         type:1,
         luckName: "",

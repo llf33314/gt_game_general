@@ -172,7 +172,7 @@ import { getDragonboatList,getDragonboatCount,getMobileUrl,getShortUrl,delDragon
         this.$router.push('/gragonBoat/addAct')
       },
       editActive(val){
-        this.$router.push({path:'/cashTree/editAct', query: {id: val}});
+        this.$router.push({path:'/gragonBoat/editAct', query: {id: val}});
       },
     },
     mounted() {
