@@ -7,13 +7,12 @@
       <el-breadcrumb-item>创建活动</el-breadcrumb-item>   
     </el-breadcrumb>  
     <div class="gt-content">
-        <el-steps :active="active" :center="true" :align-center="true" class="bbtom pb20">
-            <el-step title="基础设置"></el-step>
-            <el-step title="规则设置"></el-step>
-            <el-step title="兑奖设置"></el-step>
-            <el-step title="奖项设置"></el-step>
-            <el-step title="新建完成"></el-step>
-        </el-steps>
+        <el-tabs v-model="active" type="card">
+            <el-tab-pane label="基础设置" name="0"></el-tab-pane>
+            <el-tab-pane label="规则设置" name="1"></el-tab-pane>
+            <el-tab-pane label="兑奖设置" name="2"></el-tab-pane>
+            <el-tab-pane label="奖项设置" name="3"></el-tab-pane>
+        </el-tabs>
         <!-- 基础设置 -->
         <div v-show="this.active==0" class="mt40">
             <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="160px" class="demo-ruleForm"> 
@@ -157,24 +156,15 @@
                 </el-table-column>
             </el-table>  
             
-        </div>       
-        <!-- 新建完成 -->
-        <div v-if="active==5" class="gt-content complete"> 
-            <div class="addOk"> 
-                <div class="el-icon-circle-check green" style="font-size:40px"></div>
-                <div class="complete-info">活动添加成功</div>
-                <el-button class="mt80" type="primary" @click="backUrl()">返回活动列表</el-button>  
-            </div> 
-        </div>
+        </div>  
         <!-- 按钮 -->
         <div class="h80"></div>
-        <div class="btnRow"  v-if="this.active!=5">
-            <el-button   @click="upStep()" v-if="this.active!=0">上一步</el-button>
-            <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步</el-button> 
-            <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步</el-button>
-            <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步</el-button>   
-            <el-button type="primary" @click="lastStep()"     :disabled="this.isSubmit"    v-if="this.active==3">保存</el-button>   
-            <!-- <el-button type="primary" @click="submit()">打印</el-button>    -->
+        <div class="btnRow">
+            <el-button   @click="backUrl()" >返回</el-button>
+            <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">保存1</el-button> 
+            <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">保存2</el-button>
+            <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">保存3</el-button>   
+            <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存4</el-button>   
         </div> 
         <!-- 选择粉丝弹窗 --> 
         <gt-Fans-detail  :visible.sync="dialogFans"   v-on:getFansData="getFansData"></gt-Fans-detail>  
@@ -184,8 +174,8 @@
 </template>
 <script>
 import { 
-saveAct
-}from './../api/api' 
+ saveAct,getPrizeType,getAct
+}from './../api/api'
 export default {
   data() {
     let numPass = (rule, value, callback) => { 
@@ -304,9 +294,6 @@ export default {
     }, 
     //保存活动
     submit(){
-        if(this.isSubmit){
-             this.$message({type: "info", message: "请不要重复提交~" });
-        }else{ 
             //第一部分
             var luckMan="",luckKou="";
             if(this.ruleForm1.luckPway==2){
@@ -334,7 +321,7 @@ export default {
            console.log(newPrize,123)
            
             const data = {
-                id:0,
+                id:this.$router.history.current.query.id,
                 //基础设置 
                 luckName     :this.ruleForm1.luckName, 
                 luckBeginTime:this.ruleForm1.acttime[0], 
@@ -353,28 +340,23 @@ export default {
                 //兑奖设置
                 luckCashDay : Number(this.ruleForm3.luckCashDay), 
                 luckAddress : this.ruleForm3.luckAddress, 
-                //奖项设置 
-                //name13:this.awardKey,
+                //奖项设置  
                 luckDetailReqs:newPrize
             };
             console.log(data,123); 
-            saveAct(data).then(data=>{
-                this.isSubmit=true
+            saveAct(data).then(data=>{ 
                 if (data.code == 100) {  
-                    this.active=5
-                } else {
-                    this.isSubmit=false
+                    this.$message({ message: "操作成功", type: "success"}); 
+                } else { 
                     this.$message.error(data.msg);
                 }
-            }).catch(() => {
-                this.isSubmit=false
+            }).catch(() => { 
                 this.$message({type: "info", message: "网络问题，请刷新重试~" });
-            }); 
-        }
+            });  
     },  
     test() {
       console.log(123); 
-      this.active=5
+      //this.active=5
     },
     //背景音乐
     getMusic(e) {
@@ -387,14 +369,11 @@ export default {
     },
     addForm4(){  
       this.ruleForm4.push({name0: "", name1: "", name2: "", name3: "", name4: "",nickname:"",openid:"",})
-    },
-    upStep() {
-      this.active--;
     }, 
     next(formName) { 
         this.$refs[formName].validate((valid) => { 
           if (valid) {
-            this.active++; 
+            this.submit(); 
           } else {
             console.log('error submit!!');
             return false;
@@ -431,8 +410,7 @@ export default {
             var s=eval(arr.join("+")) 
                 return  s; 
         };  
-       var sum = getSum(arr1)
-    //    console.log(sum,998);
+       var sum = getSum(arr1) 
        if(sum!=100){
             this.$message.error("中奖概率之和必须等于100%");
         }else{
@@ -442,7 +420,71 @@ export default {
     backUrl(){
          window.history.go(-1);
     },
-  },
+    //初始化数据
+    geteditData(){
+        var id=this.$router.history.current.query.id
+        getAct({id:id}).then(data=>{
+            if (data.code == 100) {                
+            console.log(data,1233); 
+            //基础设置
+            this.ruleForm1=data.data 
+            this.ruleForm1.acttime=[data.data.luckBeginTime,data.data.luckEndTime]
+            this.ruleForm1.musicUrl=data.data.luckBgm
+            this.ruleForm1.music=data.data.luckBgmName
+            this.ruleForm1.luckPway=Number(data.data.luckPway)
+            if(this.ruleForm1.luckPway==2){
+                this.ruleForm1.name1=data.data.luckMan
+            }else  if(this.ruleForm1.luckPway==3){
+                this.ruleForm1.name2=data.data.luckKou
+            }else  if(this.ruleForm1.luckPway==4){
+                this.ruleForm1.name3=data.data.luckMan
+                this.ruleForm1.name4=data.data.luckKou 
+            }
+            //规则设置
+            this.ruleForm2=data.data  
+            //兑奖设置 
+            this.ruleForm3=data.data  
+            //兑奖地址  
+            //奖项设置 
+            var newPraise = [];//兑奖地址
+            for (var i = 0; i < data.data.luckDetailReqs.length; i++) {
+                var newabc1 = {
+                    name0  : data.data.luckDetailReqs[i].luckPrizeType, 
+                    name1  : data.data.luckDetailReqs[i].luckPrizeLimit, 
+                    name2  : data.data.luckDetailReqs[i].luckPrizeName, 
+                    name3  : String(data.data.luckDetailReqs[i].luckPrizeNums), 
+                    name4  : String(data.data.luckDetailReqs[i].luckPrizeChance),
+                    nickname  : String(data.data.luckDetailReqs[i].nickname),
+                    openid  : String(data.data.luckDetailReqs[i].openid),  
+                };
+                newPraise.push(newabc1) 
+            }
+            //console.log(newPraise,789);
+            this.ruleForm4=newPraise  
+
+
+            } else {
+                this.$message.error(data.msg);
+            }
+        }).catch(() => {
+            this.$message({ type: "info", message: "网络问题，请刷新重试~" });
+        }); 
+    },
+    //获取奖品类型-----------star
+      getPrizeTypeData(){
+        getPrizeType().then(data=>{
+          if (data.code == 100) {
+            console.log(data,1233);
+            this.options=data.data
+             console.log(this.options,444);
+          } else {
+              this.$message.error(data.msg);
+          }
+        }).catch(() => {
+            this.$message({ type: "info", message: "网络问题，请刷新重试~" });
+        }); 
+      }, 
+},
    
     filters: {
         sexStatus(val) {
@@ -472,5 +514,9 @@ export default {
             return val;
         }, 
     }, 
+    mounted() {
+        this.getPrizeTypeData()
+        this.geteditData()
+    }
 };
 </script>

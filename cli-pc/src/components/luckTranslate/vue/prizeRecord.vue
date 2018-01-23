@@ -56,8 +56,8 @@
           <el-table-column prop="order_option"  label="操作">
             <template slot-scope="scope"> 
               <el-button class="gt-button-normal blue"  @click="showDetailBtn(scope.row)">详情</el-button>  
-              <el-button class="gt-button-normal blue"  v-if="scope.row.status==3"       @click="handOut(scope.row.id)">发放奖品</el-button> 
-              <el-button class="gt-button-normal blue"  v-if="scope.row.status==1"  :disabled="true"   @click="handOut(scope.row.id)">发放奖品</el-button>  
+              <el-button class="gt-button-normal blue"  v-if="scope.row.luckStatus==3"       @click="handOut(scope.row.id)">发放奖品</el-button> 
+              <el-button class="gt-button-normal blue"  v-if="scope.row.luckStatus==1"  :disabled="true"   @click="handOut(scope.row.id)">发放奖品</el-button>  
             </template>
           </el-table-column>
         </el-table> 
