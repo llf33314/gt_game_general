@@ -180,7 +180,7 @@ public class RaiseflagServiceImpl implements RaiseflagService {
                 RaiseflagListRes.setStatus(1);
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",raiseflagList,pageDTO);
     }
     /**
@@ -226,7 +226,7 @@ public class RaiseflagServiceImpl implements RaiseflagService {
                 }
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",RaiseflagApplyListResList,pageDTO);
     }
 
@@ -575,7 +575,7 @@ public class RaiseflagServiceImpl implements RaiseflagService {
             }
         }
 
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",RaiseflagAuthorityListRes,pageDTO);
     }
     /**

@@ -158,7 +158,7 @@ public class QixiServiceImpl implements QixiService {
                 QixiListRes.setStatus(1);
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",QixiListResList,pageDTO);
     }
     /**
@@ -204,7 +204,7 @@ public class QixiServiceImpl implements QixiService {
                 }
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",QixiApplyListResList,pageDTO);
 
     }
@@ -520,7 +520,7 @@ public class QixiServiceImpl implements QixiService {
             BeanUtils.copyProperties(QixiAuthority,QixiAuthorityListRes1);
             QixiAuthorityListRes.add(QixiAuthorityListRes1);
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",QixiAuthorityListRes,pageDTO);
     }
     /**

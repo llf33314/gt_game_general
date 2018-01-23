@@ -159,7 +159,7 @@ public class NewYearServiceImpl implements NewYearService {
                 newYearListRes.setStatus(1);
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",newYearListResList,pageDTO);
     }
     /**
@@ -204,7 +204,7 @@ public class NewYearServiceImpl implements NewYearService {
                 }
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",newYearApplyListResList,pageDTO);
     }
     /**
@@ -521,7 +521,7 @@ public class NewYearServiceImpl implements NewYearService {
             NewYearAuthorityListRes1.setMemberName(NewYearGameAuthority.getName());
             NewYearAuthorityListRes.add(NewYearAuthorityListRes1);
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",NewYearAuthorityListRes,pageDTO);
     }
     /**
