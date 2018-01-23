@@ -41,7 +41,7 @@
                     <el-form-item label="赞助商设置：">
                         <el-button type="primary" class="mb10" @click="addlinks()">新增</el-button>  
                     </el-form-item>   
-                   <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark" style="width:900px;margin-left:160px">
+                   <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark" style="width:1000px;margin-left:160px">
                         <el-table-column label="广告链接">
                         <template slot-scope="scope" >
                                 <el-input v-model="scope.row.url">

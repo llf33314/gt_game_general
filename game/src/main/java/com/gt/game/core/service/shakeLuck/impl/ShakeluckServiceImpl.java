@@ -156,7 +156,7 @@ public class ShakeluckServiceImpl  implements ShakeluckService {
                 ShakeluckListRes.setStatus(1);
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",ShakeluckListResList,pageDTO);
     }
     /**
@@ -202,7 +202,7 @@ public class ShakeluckServiceImpl  implements ShakeluckService {
                 }
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",ShakeluckApplyListResList,pageDTO);
     }
     /**
@@ -517,7 +517,7 @@ public class ShakeluckServiceImpl  implements ShakeluckService {
             BeanUtils.copyProperties(ShakeluckAuthority,ShakeluckAuthorityListRes1);
             ShakeluckAuthorityListRes.add(ShakeluckAuthorityListRes1);
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",ShakeluckAuthorityListRes,pageDTO);
     }
     /**

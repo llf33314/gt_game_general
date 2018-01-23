@@ -37,7 +37,7 @@
             <h1 class="mt30 mb20 pb10 bbtom">广告设置</h1> 
             <el-button type="primary" class="mb20" @click="addlinks()">新增</el-button>  
             <span class="ml10 el-upload__tip grey">1.仅支持多粉与翼粉开头的链接    2.广告图格式：1000*300px</span>
-            <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark">
+            <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark"   style="max-width:1000px;">
                 <el-table-column label="广告链接">
                   <template slot-scope="scope" >
                         <el-input v-model="scope.row.url">
@@ -431,7 +431,7 @@ export default {
         if(this.isSubmit){
              this.$message({type: "info", message: "请不要重复提交~" });
         }else{ 
-        console.log(this.ruleForm3,123); 
+        //console.log(this.ruleForm3,123); 
         //广告
         var newadv=[];
         for(let i =0;i< this.ruleForm1.links.length;i++){ 
@@ -476,7 +476,7 @@ export default {
             } 
         }
         const data = {
-            // id:0,
+            id:0,
             //基础设置 
             name             : this.ruleForm1.name, 
             activityBeginTime: this.ruleForm1.name1[0], 

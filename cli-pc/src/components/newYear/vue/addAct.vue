@@ -28,10 +28,10 @@
                     <el-date-picker class="w_demo" v-model="ruleForm1.name1" :picker-options="pickerOptions"  type="datetimerange"  placeholder="选择时间范围">
                     </el-date-picker>
                 </el-form-item>    
-            <h1 class="mt30 mb20 pb10 bbtom" style="width:80%">广告设置</h1> 
+            <h1 class="mt30 mb20 pb10 bbtom" >广告设置</h1> 
             <el-button type="primary" class="mb20" @click="addlinks()">新增</el-button>  
             <span class="ml10 el-upload__tip grey">1.仅支持多粉与翼粉开头的链接    2.广告图格式：1000*300px</span>
-            <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark" style="width:80%">
+            <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark"   style="max-width:1000px;">
                 <el-table-column label="广告链接">
                   <template slot-scope="scope" >
                         <el-input v-model="scope.row.url">

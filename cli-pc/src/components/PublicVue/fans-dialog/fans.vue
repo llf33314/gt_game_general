@@ -64,11 +64,7 @@
 <script>
 import { getMembers } from "./api";
 export default {
-  props: {
-    fansKey: {
-      type: String,
-      default: ""
-    },
+  props: { 
     visible: {
       type: Boolean,
       default: true 
@@ -87,12 +83,7 @@ export default {
     };
   },
 
-  methods: { 
-
-      cancelBtn() {
-        //  this.$emit('update:visible', false)
-        this.d
-      },
+  methods: {  
     getMembersData() {
       var params = {};
       params.current = this.current;

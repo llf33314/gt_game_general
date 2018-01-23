@@ -569,7 +569,7 @@ public class LanternServiceImpl implements LanternService {
                 }
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("分页获取元宵点灯中奖记录列表成功",lanternGetWinningResList,pageDTO);
 
     }
