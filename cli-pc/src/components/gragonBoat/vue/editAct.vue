@@ -35,7 +35,7 @@
             <h1 class="mt30 mb20 pb10 bbtom">广告设置</h1> 
             <el-button type="primary" class="mb20" @click="addlinks()">新增</el-button>  
             <span class="ml10 el-upload__tip grey">1.仅支持多粉与翼粉开头的链接    2.广告图格式：1000*300px</span>
-            <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark" style="width:1000px;" >
+            <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark" style="max-width:1000px;" >
                 <el-table-column label="广告链接">
                     <template slot-scope="scope" >
                         <el-input v-model="scope.row.url" :class="{ 'bd1px-red': checked && !scope.row.url}">
@@ -169,7 +169,7 @@
         <div class="btnRow"  v-if="this.active!=5">
             <el-button   @click="backUrl()">返回</el-button>
             <el-button type="primary" @click="submit()"          v-if="this.active==0||this.active==1">保存</el-button>   
-            <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">保存</el-button>   
+            <el-button type="primary" @click="submit()"   v-if="this.active==2">保存</el-button>   
             <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>   
         </div> 
     </div>   
@@ -205,7 +205,6 @@ export default {
         }; 
     return {
       active: 0,
-      isSubmit:false,
     //第一步==========================
         ruleForm1: {
             name: "",
@@ -390,28 +389,6 @@ export default {
             }
         });
         }, 
-    //校验概率
-        // checkGL(){
-        //     var arr1=[]; 
-        //     for(let i=0;i<this.ruleForm4.length;i++){
-        //     var  arr2={
-        //             id: parseFloat(this.ruleForm4[i].name4).toFixed(2)
-        //         }
-        //         arr1.push(arr2.id) 
-        //     } 
-        //     var getSum=function(ar){
-        //         var arr=ar;   
-        //         var s=eval(arr.join("+")) 
-        //             return  s; 
-        //     };  
-        // var sum = getSum(arr1)
-        // console.log(sum,998);
-        // if(sum!=100){
-        //         this.$message.error("中奖概率之和必须等于100%");
-        //     }else{
-        //         this.submit();
-        //     }
-        // },
     //保存验证奖项设置-------------------------------------------
         lastStep() {
             console.log(this.ruleForm4,1243)
@@ -438,10 +415,6 @@ export default {
         }, 
     //表单提交--------------------------------------star
         submit(){
-            if(this.isSubmit){
-                this.$message({type: "info", message: "请不要重复提交~" });
-            }else{ 
-            console.log(this.ruleForm3,123); 
             //广告
                 var newadv=[];
                 for(let i =0;i< this.ruleForm1.links.length;i++){ 
@@ -522,17 +495,14 @@ export default {
             };
             console.log(data,123); 
             getAct(data).then(data=>{
-                this.isSubmit=true
                if (data.code == 100) {  
                     this.$message({ message: "保存成功", type: "success"}); 
                 } else { 
                     this.$message.error(data.msg);
                 }
                 }).catch(() => {
-                    this.isSubmit=false
                     this.$message({type: "info", message: "网络问题，请刷新重试~" });
                 }); 
-                }
         }, 
     //f返回===================================== 
         backUrl(){

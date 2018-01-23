@@ -31,7 +31,7 @@
                 <span class="ml10 el-upload__tip grey mr10">1.仅支持多粉与翼店开头的链接</span>
                 <span class="ml10 el-upload__tip grey mr10">2.广告图格式：1000*300px</span>
                 <span class="ml10 el-upload__tip grey mr10">3.最多添加3个广告</span>
-                <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark">
+                <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark" style="max-width:1000px;">
                     <el-table-column label="广告链接">
                         <template slot-scope="scope" >
                             <el-input v-model="scope.row.url" :class="{ 'bd1px-red': checked && !scope.row.url}">
