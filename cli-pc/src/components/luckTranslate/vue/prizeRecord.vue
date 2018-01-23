@@ -76,9 +76,9 @@
           </div> 
         </el-dialog> 
         <div class="public-page-fr" v-if="this.tableData.data.length!=0">
-              <el-pagination @current-change="handleCurrentChange"  :page-size="10" 
-              layout="prev, pager, next, jumper" :total="tableData.page.totalNums">
-              </el-pagination>
+            <el-pagination @current-change="handleCurrentChange"  :page-size="10" 
+            layout="prev, pager, next, jumper" :total="tableData.page.totalNums">
+            </el-pagination>
         </div> 
     </div>
 </div>
