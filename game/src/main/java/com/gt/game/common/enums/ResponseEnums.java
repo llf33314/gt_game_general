@@ -226,6 +226,14 @@ public enum ResponseEnums {
     DRAGONBOAT_HAS4(403,"该奖品已发放!"),
     DRAGONBOAT_HAS5(404,"手动发放只能选择[已提交]状态的数据!"),
     DRAGONBOAT_HAS6(405,"活动为空!"),
+    DRAGONBOAT_HAS7(407,"粉币不足，保存失败"),
+    DRAGONBOAT_HAS8(408,"冻结粉币失败，保存失败"),
+    DRAGONBOAT_HAS9(409,"输入的粉币数量过少"),
+    DRAGONBOAT_HAS10(410,"活动已经开始，不允许操作!"),
+    DRAGONBOAT_HAS11(411,"活动正在进行，不允许删除"),
+    DRAGONBOAT_HAS12(412,"未过活动兑换期限，不允许删除"),
+    DRAGONBOAT_HAS13(413,"奖品未发放完毕，不允许操作"),
+    DRAGONBOAT_HAS14(414,"回滚粉币失败，删除失败"),
 
     //幸运九宫格响应
     NINELATTICE_HAS1(401,"未到兑奖时间!"),

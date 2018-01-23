@@ -158,7 +158,7 @@ public class CountmoneyServiceImpl implements CountmoneyService {
         Date date = new Date();
         for (CountmoneyMain countmoneyMain : countmoneyMainList) {
             if (countmoneyMain.getActBeginTime().getTime() > date.getTime()) {
-                count2++; //  TODO    未开始
+                count2++; //   TODO    未开始
             } else if (countmoneyMain.getActBeginTime().getTime() <= date.getTime() && countmoneyMain.getActEndTime().getTime() >= date.getTime()) {
                 count3++;  // TODO    进行中
             } else if (countmoneyMain.getActEndTime().getTime() < date.getTime()) {
