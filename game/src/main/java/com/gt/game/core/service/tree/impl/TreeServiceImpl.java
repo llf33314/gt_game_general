@@ -459,7 +459,7 @@ public class TreeServiceImpl implements TreeService {
                 }
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("分页获取中奖记录列表成功",treeGetWinningResList,pageDTO);
     }
 

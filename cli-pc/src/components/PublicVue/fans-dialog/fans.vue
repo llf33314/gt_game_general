@@ -65,6 +65,10 @@
 import { getMembers } from "./api";
 export default {
   props: { 
+    // fansKey:{
+    //   type: String,
+    //   default: "" 
+    // },
     visible: {
       type: Boolean,
       default: true 
@@ -81,75 +85,51 @@ export default {
         multipleTable: [],
         dialogFans: this.visible, 
     };
-  },
-
-  methods: {  
-    getMembersData() {
-      var params = {};
-      params.current = this.current;
-      params.size = 8;
-      params.memberName = this.memberName;
-      console.log(params);
-      getMembers(params).then(data => {
-          if (data.code == 100) {
-              console.log(data,1234);
-            this.fansDetail = data;
-          } else {
-            this.$message.error(data.msg);
-          }
-        })
-        .catch(() => {
-          this.$message({ type: "info", message: "网络问题，请刷新重试~" });
-        });
-    },
-    //指定中奖人确定按钮
-    prizeSubmit() {
-        if(this.multipleTable.length==0){
-            this.$message.error("指定中奖人个数不能为0，请重新选择");
-        }else if(this.multipleTable.length > 4){
-            this.$message.error("指定中奖人不能超过5个，请重新选择");
-        }else{
-            this.$emit("getFansData", this.multipleTable);
-        }
-    //   if (this.multipleTable.length > 4) {
-    //     this.$message.error("指定中奖人不能超过5个");
-    //   } else {
-    //     var k = this.fansKey;
-    //     var nickname = [];
-    //     var openid = [];
-    //     console.log(k, 7788);
-    //     for (var i = 0; i < this.multipleTable.length; i++) {
-    //       var arr1 = {
-    //         nickname: this.multipleTable[i].nickname,
-    //         openid: this.multipleTable[i].openid
-    //       };
-    //       nickname.push(arr1.nickname);
-    //       openid.push(arr1.openid);
-    //     }
-    //     this.ruleForm4[k].nickname = nickname + "";
-    //     this.ruleForm4[k].openid = openid + "";
-    //     this.dialogFans = false;
-    //   } 
-        
-    },
-    //多选名单
-    handleSelectionChange(val) {
-      // console.log(val,111) 
-      this.multipleTable = val; 
-    },
-    //翻页
-    handleCurrentChange(val) {
-      this.getMembersData();
-    }
   }, 
-  created(){
-      console.log(this.fansKey,'fansKey')
-      this.getMembersData();
-      console.log(this.visible,123)
-    //   this.multipleSelection=""
-      
-  },
-   filters: {
+    methods: {  
+        getMembersData() {
+            var params = {};
+            params.current = this.current;
+            params.size = 8;
+            params.memberName = this.memberName;
+            console.log(params);
+            getMembers(params).then(data => {
+                if (data.code == 100) {
+                    console.log(data,1234);
+                this.fansDetail = data;
+                } else {
+                this.$message.error(data.msg);
+                }
+            })
+            .catch(() => {
+                this.$message({ type: "info", message: "网络问题，请刷新重试~" });
+            });
+        },
+        //指定中奖人确定按钮
+        prizeSubmit() {
+            if(this.multipleTable.length==0){
+                this.$message.error("指定中奖人个数不能为0，请重新选择");
+            }else if(this.multipleTable.length > 4){
+                this.$message.error("指定中奖人不能超过5个，请重新选择");
+            }else{
+                this.$emit("getFansData", this.multipleTable);
+            } 
+        },
+        //多选名单
+        handleSelectionChange(val) { 
+            this.multipleTable = val; 
+        },
+        //翻页
+        handleCurrentChange(val) {
+            this.getMembersData();
+        }
+    }, 
+    created(){
+        //console.log(this.fansKey,'fansKey')
+        this.getMembersData();
+        console.log(this.visible,123)        
+    },
+    filters: {
         sexStatus(val) {
             if (val == 2) {
             val = "女";
@@ -162,7 +142,13 @@ export default {
         }, 
     },
     watch: {
-        visible: function(val, old) {
+        // fansKey: function(val, old) {
+        //     console.log(val,11111111111111)
+        //     console.log(old,22222222222222)
+        //     // this.dialogFans = val
+        //     // this.$refs.multipleTable && this.$refs.multipleTable.clearSelection()
+        // },
+        visible: function(val, old) {            
             this.dialogFans = val
             this.$refs.multipleTable && this.$refs.multipleTable.clearSelection()
         },

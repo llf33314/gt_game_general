@@ -24,10 +24,9 @@
                     </span>
                 </el-form-item>
                  <el-form-item label="游戏时间：" prop="acttime">
-                    <el-date-picker class="w_demo" v-model="ruleForm1.acttime"   type="datetimerange"  placeholder="选择时间范围">
+                    <el-date-picker class="w_demo" v-model="ruleForm1.acttime"  :picker-options="pickerOptions" type="datetimerange"  placeholder="选择时间范围">
                     </el-date-picker>
-                </el-form-item>  
-
+                </el-form-item>   
                 <el-form-item label="活动说明：" prop="luckBeforeTxt">
                     <el-input class="w_demo"  type="textarea" v-model="ruleForm1.luckBeforeTxt" :rows="3" placeholder="请输入活动说明"></el-input>
                     <span class="el-upload__tip grey" >
@@ -40,12 +39,15 @@
                     <span class="el-upload__tip grey" >
                         活动未开始提示限制在100个字数以内
                     </span>
-                </el-form-item>   
-                
-                 <el-form-item label="参与人员："  prop="luckLuckPartaker">
+                </el-form-item>  
+                <el-form-item label="参与人员："  prop="luckLuckPartaker">
                     <el-radio-group v-model="ruleForm1.luckLuckPartaker">
                     <el-radio :label="1">所有粉丝</el-radio>
-                    <el-radio :label="2">仅会员(持有会员卡的粉丝)</el-radio>
+                    <el-radio :label="2">仅会员
+                        <span class="el-upload__tip grey" >
+                        (持有会员卡的粉丝)
+                        </span>
+                    </el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <div class="pd20 bw pt10 bb ml150 mb20" v-show="ruleForm1.luckLuckPartaker==2">
@@ -168,14 +170,14 @@
         <div class="h80"></div>
         <div class="btnRow"  v-if="this.active!=5">
             <el-button   @click="upStep()" v-if="this.active!=0">上一步</el-button>
-            <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步1</el-button> 
-            <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
-            <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
+            <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步</el-button> 
+            <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步</el-button>
+            <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步</el-button>   
             <el-button type="primary" @click="lastStep()"     :disabled="this.isSubmit"    v-if="this.active==3">保存</el-button>   
-            <el-button type="primary" @click="submit()">打印</el-button>   
+            <!-- <el-button type="primary" @click="submit()">打印</el-button>    -->
         </div> 
         <!-- 选择粉丝弹窗 --> 
-        <gt-Fans-detail  :visible="dialogFans"   v-on:getFansData="getFansData"></gt-Fans-detail>  
+        <gt-Fans-detail  :visible.sync="dialogFans"   v-on:getFansData="getFansData"></gt-Fans-detail>  
 </div>   
 </div>
 </section>
@@ -201,7 +203,9 @@ export default {
            callback(new Error("请输入大于0的整数")); 
         }else if(this.ruleForm1.luckPway==4&&this.ruleForm1.name4<0){
            callback(new Error("请输入大于0的整数")); 
-        }         
+        }else{
+           callback(); 
+        }          
     }; 
     let numberPass = (rule, value, callback) => { 
         if(!value){
@@ -214,6 +218,10 @@ export default {
     }; 
     return {
       active:0,
+      // 时间的筛选
+      pickerOptions: {
+        disabledDate(time) { return time.getTime() < Date.now() - 8.64e7; }
+      },
       ruleForm1: {
         type:1,
         luckName: "",
@@ -255,7 +263,7 @@ export default {
       },  
       ruleForm4:[
         { 
-          name0: 1,
+          name0: "",
           name1: "",
           name2: "",
           name3: "",
@@ -266,7 +274,7 @@ export default {
       ],
       dialogFans:false,
       key:0, 
-      isSubmit:false
+      isSubmit:false,
     };
   },
   methods: { 
@@ -291,7 +299,7 @@ export default {
           openid.push(arr1.openid);
         }
         this.ruleForm4[k].nickname = nickname + "";
-        this.ruleForm4[k].openid = openid + "";
+        this.ruleForm4[k].openid = openid + ""; 
         // console.log(this.ruleForm4,852);
     }, 
     //保存活动
@@ -299,16 +307,8 @@ export default {
         if(this.isSubmit){
              this.$message({type: "info", message: "请不要重复提交~" });
         }else{ 
-            var newarr=[];
-            for(let i =0;i< this.ruleForm4.length;i++){
-                var arr={
-                    name0:this.ruleForm4[i].name0,
-                    name1:this.ruleForm4[i].name1,
-                    name2:this.ruleForm4[i].name2, 
-                }
-                newarr.push(arr)
-            } 
-            var luckMan,luckKou;
+            //第一部分
+            var luckMan="",luckKou="";
             if(this.ruleForm1.luckPway==2){
                 luckMan = this.ruleForm1.name1
             }else if(this.ruleForm1.luckPway==3){
@@ -317,6 +317,22 @@ export default {
                 luckMan = this.ruleForm1.name3
                 luckKou = this.ruleForm1.name4
             }
+            //第四部分
+            var newPrize=[];
+            for(let i =0;i< this.ruleForm4.length;i++){
+                var arr={
+                    luckPrizeType   :this.ruleForm4[i].name0,
+                    luckPrizeLimit  :Number(this.ruleForm4[i].name1),
+                    luckPrizeName   :this.ruleForm4[i].name2, 
+                    luckPrizeNums   :Number(this.ruleForm4[i].name3), 
+                    luckPrizeChance :Number(this.ruleForm4[i].name4), 
+                    nickname        :this.ruleForm4[i].nickname, 
+                    openid          :this.ruleForm4[i].openid, 
+                }
+                newPrize.push(arr)
+            } 
+           console.log(newPrize,123)
+           
             const data = {
                 id:0,
                 //基础设置 
@@ -335,21 +351,21 @@ export default {
                 luckCountOfDay : this.ruleForm2.luckCountOfDay, 
                 luckCountOfAll : this.ruleForm2.luckCountOfAll,
                 //兑奖设置
-                luckCashDay : this.ruleForm3.luckCashDay, 
+                luckCashDay : Number(this.ruleForm3.luckCashDay), 
                 luckAddress : this.ruleForm3.luckAddress, 
                 //奖项设置 
-                name13:this.awardKey,
-                name14:newarr
+                //name13:this.awardKey,
+                luckDetailReqs:newPrize
             };
             console.log(data,123); 
             saveAct(data).then(data=>{
-            this.isSubmit=true
-            if (data.code == 100) {  
-                this.active=5
-            } else {
-                this.isSubmit=false
-                this.$message.error(data.msg);
-            }
+                this.isSubmit=true
+                if (data.code == 100) {  
+                    this.active=5
+                } else {
+                    this.isSubmit=false
+                    this.$message.error(data.msg);
+                }
             }).catch(() => {
                 this.isSubmit=false
                 this.$message({type: "info", message: "网络问题，请刷新重试~" });
@@ -374,31 +390,17 @@ export default {
     },
     upStep() {
       this.active--;
-    },
-
-     next(formName) {
-         console.log(formName,'formName');
-        this.$refs[formName].validate((valid) => {
-             console.log(valid,'valid ');
+    }, 
+    next(formName) { 
+        this.$refs[formName].validate((valid) => { 
           if (valid) {
-            this.active++;
-            console.log(88552233)
+            this.active++; 
           } else {
             console.log('error submit!!');
             return false;
           }
         });
-      },
-      
-    // next(formName) {
-    //   this.$refs[formName].validate(valid => {
-    //     if (valid) { 
-    //       this.active++;
-    //     } else {
-    //       console.log("error submit!!");
-    //     }
-    //   });
-    // },
+    }, 
     lastStep() {
       for (let i = 0; i < this.ruleForm4.length; i++) { 
         var regu =/^[1-9]\d*$/;
@@ -411,12 +413,32 @@ export default {
         }else if (!regu.test(this.ruleForm4[i].name3)) {
             this.$message.error("奖项数量填写有误，请重新填写~");
             return false
-        }else{
-            this.ruleForm4[i].name4 = parseFloat(this.ruleForm4[i].name4).toFixed(2); 
-            this.submit();
-        }  
+        } 
       }
-    },   
+      this.checkGL(); 
+    }, 
+    //校验概率
+    checkGL(){
+        var arr1=[]; 
+        for(let i=0;i<this.ruleForm4.length;i++){
+           var  arr2={
+                id: parseFloat(this.ruleForm4[i].name4).toFixed(2)
+            }
+            arr1.push(arr2.id) 
+        } 
+        var getSum=function(ar){
+            var arr=ar;   
+            var s=eval(arr.join("+")) 
+                return  s; 
+        };  
+       var sum = getSum(arr1)
+    //    console.log(sum,998);
+       if(sum!=100){
+            this.$message.error("中奖概率之和必须等于100%");
+        }else{
+            this.submit();
+        }
+    },  
     backUrl(){
          window.history.go(-1);
     },

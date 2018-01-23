@@ -186,7 +186,7 @@ public class DemolitionServiceImpl implements DemolitionService {
                 demolitionListRes.setStatus(1);
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",demolitionListResList,pageDTO);
     }
     /**
@@ -313,7 +313,7 @@ public class DemolitionServiceImpl implements DemolitionService {
                 }
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",demolitionApplyListResList,pageDTO);
     }
     /**
@@ -659,7 +659,7 @@ public class DemolitionServiceImpl implements DemolitionService {
             BeanUtils.copyProperties(demolitiongiftboxAuthority,demolitionAuthorityListRes1);
             demolitionAuthorityListRes.add(demolitionAuthorityListRes1);
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",demolitionAuthorityListRes,pageDTO);
     }
     /**

@@ -152,7 +152,7 @@ public class GoldRushServiceImpl  implements GoldRushService {
                 GoldRushListRes.setStatus(1);
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",GoldRushListResList,pageDTO);
     }
     /**
@@ -198,7 +198,7 @@ public class GoldRushServiceImpl  implements GoldRushService {
                 }
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",GoldRushApplyListResList,pageDTO);
 
     }
@@ -493,7 +493,7 @@ public class GoldRushServiceImpl  implements GoldRushService {
             BeanUtils.copyProperties(GoldRushAuthority,GoldRushAuthorityListRes1);
             GoldRushAuthorityListRes.add(GoldRushAuthorityListRes1);
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",GoldRushAuthorityListRes,pageDTO);
     }
     /**
