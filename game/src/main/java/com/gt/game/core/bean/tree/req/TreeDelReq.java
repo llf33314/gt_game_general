@@ -9,13 +9,13 @@ import java.util.List;
 public class TreeDelReq {
 
 	@ApiModelProperty("主键id")
-	private List<Integer> id;
+	private Integer id;
 
-	public List<Integer> getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(List<Integer> id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 }
