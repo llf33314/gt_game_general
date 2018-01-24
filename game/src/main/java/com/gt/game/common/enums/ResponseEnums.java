@@ -119,6 +119,7 @@ public enum ResponseEnums {
     COMMON_HAS15(415,"修改粉币数量失败"),
     COMMON_HAS16(416,"兑奖开始时间需在活动开始之后"),
     COMMON_HAS17(417,"请选择活动开始时间"),
+    COMMON_HAS18(418,"请选择粉币类型的奖品"),
     //升国旗响应
     RAISEFLAG_HAS1(401,"该奖品已发放!"),
     RAISEFLAG_HAS2(402,"手动发放只能选择[已提交]状态的数据！!"),

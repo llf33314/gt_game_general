@@ -235,6 +235,9 @@ public class LuckServiceImpl implements LuckService {
             throw new LuckException(ResponseEnums.LUCK_HAS5);
         }
         luckDetailService.insertOrUpdateAllColumnBatch(luckDetails);
+        if(fenbi == 0.0 && num > 0.0){
+            throw new LuckException(ResponseEnums.COMMON_HAS18);
+        }
         if(fenbi > 0){//冻结粉币
             if( f > 0){
                 if((fenbi-num) <= (0-num)){
