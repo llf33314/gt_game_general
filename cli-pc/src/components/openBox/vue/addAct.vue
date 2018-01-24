@@ -1,3 +1,9 @@
+<style>
+.el-table .cell { 
+    display: inline-flex;
+}
+</style>
+
 <template>
 <section>
 <div class="hd-common">
@@ -35,12 +41,12 @@
                     </div>
                 </el-form-item>  
             <h1 class="mt30 mb20 pb10 bbtom">礼盒设置</h1> 
-            <el-button type="primary" class="mb20" @click="addboxs()">新增</el-button>  
+            <el-button type="primary" class="mb20" :disabled="this.ruleForm1.demolitionGiftBoxReqs.length>4" @click="adddemolitionGiftBoxReqs()">新增</el-button>  
             <span class="ml10 el-upload__tip grey">至少添加3-5个礼盒，礼盒图片建议尺寸270*270px</span>
-            <el-table ref="multipleTable" :data="ruleForm1.boxs" tooltip-effect="dark"  style="max-width:1000px">
+            <el-table ref="multipleTable" :data="ruleForm1.demolitionGiftBoxReqs" tooltip-effect="dark"  style="max-width:1200px">
                 <el-table-column label="礼盒类型">
                     <template slot-scope="scope">
-                        <el-select  class="w20_demo"  v-model="scope.row.name1" placeholder="请选择"> 
+                        <el-select  class="w100_demo"  v-model="scope.row.name1" placeholder="请选择"> 
                             <el-option label="自定义"     :value="0"></el-option> 
                             <el-option label="默认"       :value="1"></el-option>                             
                         </el-select>
@@ -48,44 +54,50 @@
                 </el-table-column> 
                 <el-table-column label="礼盒名称">
                     <template slot-scope="scope"> 
-                        <el-input class="w20_demo"    v-model="scope.row.name2" v-if="scope.row.name1==0"></el-input>
-                        <el-select  class="w20_demo"  v-model="scope.row.name2" placeholder="请选择" v-if="scope.row.name1==1"> 
-                            <el-option label="矮方盒"  :value="1"></el-option>      
+                        <el-input class="w150_demo" placeholder="20字以内"  :maxlength="20"   v-model="scope.row.giftName" v-if="scope.row.name1==0"></el-input>
+                        <el-select  class="w150_demo"  v-model="scope.row.giftName"  @change="boxStyle(scope.$index)" placeholder="请选择" v-if="scope.row.name1==1"> 
+                            <el-option label="矮方盒"  value="矮方盒"></el-option>
+                            <el-option label="大方盒"  value="大方盒"></el-option>
+                            <el-option label="矮圆盒"  value="矮圆盒"></el-option>
+                            <el-option label="高圆盒"  value="高圆盒"></el-option>
+                            <el-option label="大圆盒"  value="大圆盒"></el-option>      
                         </el-select>
                     </template>
                 </el-table-column> 
                 <el-table-column label="礼盒图片">
                   <template slot-scope="scope">
-                      <gt-material prop="url" :url="scope.row.name3" v-on:getChangeUrl="getChangeUrlBox(scope.$index, $event)" width="60" height="60"></gt-material>
+                      <gt-material prop="url" :url="scope.row.giftImg" v-on:getChangeUrl="getChangeUrlBox(scope.$index, $event)" width="60" height="60"></gt-material>
                   </template>
                 </el-table-column> 
-                 <el-table-column label="礼盒音乐">
-                  <template slot-scope="scope">
-                       <el-select  class="w100_demo"  v-model="scope.row.name4" placeholder="请选择"> 
-                            <el-option label="音乐1"     :value="0"></el-option> 
-                            <el-option label="音乐2"     :value="1"></el-option>                             
-                        </el-select>
-                        <el-button size="small" type="primary">播放</el-button>
-                        <el-button size="small" type="primary">暂停</el-button>
-                  </template>
+                <el-table-column label="礼盒音乐">
+                    <template slot-scope="scope">
+                       <el-select  class="w100_demo pull-left"  v-model="scope.row.giftSound"  @change="boxMusic(scope.$index)" placeholder="请选择"> 
+                            <el-option label="音乐一"  value="音乐一"></el-option> 
+                            <el-option label="音乐二"  value="音乐二"></el-option> 
+                            <el-option label="音乐三"  value="音乐三"></el-option> 
+                            <el-option label="音乐四"  value="音乐四"></el-option> 
+                            <el-option label="音乐五"  value="音乐五"></el-option>                             
+                        </el-select> 
+                        <audio v-show="scope.row.giftSound" controls="controls" :src="scope.row.music" style="width:70px;margin-left:10px;margin-top:3px;"> 
+                        </audio>  
+                    </template>
                 </el-table-column> 
                  <el-table-column label="放置礼品">
                   <template slot-scope="scope">
-                    <el-switch v-model="scope.row.name5" on-text="开启" off-text="关闭" :on-value="0" :off-value="1">
+                    <el-switch v-model="scope.row.award" on-text="开启" off-text="关闭" :on-value="1" :off-value="0">
                     </el-switch>
                   </template>
                 </el-table-column> 
                 <el-table-column label="操作">
                   <template slot-scope="scope">
-                        <el-button class="gt-button-normal" v-show="scope.$index>2" @click="delboxs(scope.$index)">删除</el-button>
+                        <el-button class="gt-button-normal" v-show="scope.$index>2" @click="deldemolitionGiftBoxReqs(scope.$index)">删除</el-button>
                   </template>
                 </el-table-column> 
-             </el-table> 
-
+            </el-table>  
             <h1 class="mt30 mb20 pb10 bbtom">广告设置</h1> 
-            <el-button type="primary" class="mb20" @click="addlinks()">新增</el-button>  
+            <el-button type="primary" class="mb20" @click="adddemolitionAdReqs()">新增</el-button>  
             <span class="ml10 el-upload__tip grey">1.仅支持多粉与翼粉开头的链接    2.广告图格式：1000*300px</span>
-            <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark" style="max-width:1000px">
+            <el-table ref="multipleTable" :data="ruleForm1.demolitionAdReqs" tooltip-effect="dark" style="max-width:1000px">
                 <el-table-column label="广告链接">
                   <template slot-scope="scope" >
                         <el-input v-model="scope.row.hrefUrl">
@@ -141,7 +153,7 @@
                 <div   class="bb pt20 pb20 ml120 bw mb10" v-if="this.ruleForm3.type[0]==1||this.ruleForm3.type[1]==1" >
                     <span style="margin-left:30px;color: #333;" ><span style="color:#ff4949;margin-right:3px">*</span>兑奖地址：</span>
                     <el-button  class="mb10"  type="primary" @click="addList()">添加</el-button>  
-                    <el-form-item v-for="(item,index) in ruleForm3.addrRow" :key="item.key"  :prop="'addrRow.' + index + '.address'" :rules="{required:true,validator:addrPass,trigger: 'blur'}">
+                    <el-form-item v-for="(item,index) in ruleForm3.demolitionAddressReqs" :key="item.key"  :prop="'demolitionAddressReqs.' + index + '.address'" :rules="{required:true,validator:addrPass,trigger: 'blur'}">
                         <el-input class="w_demo mr10" prop="address" v-model="item.address" placeholder="请输入到店领取地址"></el-input> 
                         <span class="blueee"  @click="delList(index)" v-if="index!=0" >删除</span> 
                     </el-form-item>
@@ -150,8 +162,8 @@
                       <el-input  class="w_demo" v-model="ruleForm3.phone" placeholder="请输入联系电话(固话用-分割)"></el-input>    
                 </el-form-item>  
 
-                <el-form-item label="兑奖说明：" prop="desc">
-                    <el-input class="bw" type="textarea" v-model="ruleForm3.desc" :rows="5" placeholder="请输入兑奖说明"></el-input> 
+                <el-form-item label="兑奖说明：" prop="cashPrizeInstruction">
+                    <el-input class="bw" type="textarea" v-model="ruleForm3.cashPrizeInstruction" :rows="5" placeholder="请输入兑奖说明"></el-input> 
                 </el-form-item>   
             </el-form> 
         </div>   
@@ -232,11 +244,11 @@
         <div class="h80"></div> 
         <div class="btnRow"  v-if="this.active!=5">
             <el-button   @click="upStep()" v-if="this.active!=0">上一步</el-button>
-            <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步1</el-button> 
-            <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
-            <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
+            <el-button type="primary" @click="next1('ruleForm1')" v-if="this.active==0">下一步</el-button> 
+            <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步</el-button>
+            <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步</el-button>   
             <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>   
-            <el-button type="primary" @click="submit()">打印</el-button>   
+            <!-- <el-button type="primary" @click="submit()">打印</el-button>    -->
         </div> 
     </div>   
 </div>
@@ -273,29 +285,32 @@ export default {
         name1: "", 
         music: "暂无上传音乐",
         musicUrl:"",
-        links:[
+        demolitionAdReqs:[
           {hrefUrl:"",url:""},
           {hrefUrl:"",url:""}
         ],
-        boxs:[
+        demolitionGiftBoxReqs:[
             {
             name1:0,
-            name2:"",
-            name3:"",
-            name4:"",
-            name5:"",
+            giftName :"",
+            giftImg:"",
+            giftSound:"",
+            music:"",
+            award:"",
             }, {
             name1:0,
-            name2:"",
-            name3:"",
-            name4:"",
-            name5:"",
+            giftName :"",
+            giftImg:"",
+            giftSound:"",
+            music:"",
+            award:"",
             }, {
             name1:0,
-            name2:"",
-            name3:"",
-            name4:"",
-            name5:"",
+            giftName :"",
+            giftImg:"",
+            giftSound:"",
+            music:"",
+            award:"",
             },
             
         ],
@@ -345,16 +360,16 @@ export default {
         ruleForm3: {
             date:"",
             type: [], 
-            addrRow:[{address:""},{address:""}],
+            demolitionAddressReqs:[{address:""},{address:""}],
             phone:"",
-            desc:""
+            cashPrizeInstruction:""
         },
         rules3: {
             address: [{ required: true }],
             date: [{ required: true,type: 'array', message: "兑奖时间不能为空" }],
             type: [{ required: true,type: 'array', message: "兑奖方式不能为空", trigger: "blur" }], 
             phone:[{ required: true,type: 'text', validator:iiPass,trigger: "blur" }],  
-            desc: [{ required: true,message: "兑奖说明不能为空", trigger: "blur" }], 
+            cashPrizeInstruction: [{ required: true,message: "兑奖说明不能为空", trigger: "blur" }], 
         }, 
         prizeSetInstruction: "",
         options: [],
@@ -379,7 +394,38 @@ export default {
         }, 
     };
   },
-  methods: {    
+  methods: {
+    boxMusic(val){
+        var k=val
+        if(this.ruleForm1.demolitionGiftBoxReqs[k].giftSound=="音乐一"){
+            this.ruleForm1.demolitionGiftBoxReqs[k].music = gameVoice+'game/openBox/music/'+'1.mp3' 
+        }else if(this.ruleForm1.demolitionGiftBoxReqs[k].giftSound=="音乐二"){
+            this.ruleForm1.demolitionGiftBoxReqs[k].music = gameVoice+'game/openBox/music/'+'2.mp3' 
+        }else if(this.ruleForm1.demolitionGiftBoxReqs[k].giftSound=="音乐三"){
+            this.ruleForm1.demolitionGiftBoxReqs[k].music = gameVoice+'game/openBox/music/'+'3.mp3' 
+        }else if(this.ruleForm1.demolitionGiftBoxReqs[k].giftSound=="音乐四"){
+            this.ruleForm1.demolitionGiftBoxReqs[k].music = gameVoice+'game/openBox/music/'+'4.mp3' 
+        }else if(this.ruleForm1.demolitionGiftBoxReqs[k].giftSound=="音乐五"){
+            this.ruleForm1.demolitionGiftBoxReqs[k].music = gameVoice+'game/openBox/music/'+'5.mp3'  
+        }
+    }, 
+    boxStyle(val){
+        var k=val
+        var giftNameid= this.ruleForm1.demolitionGiftBoxReqs[k].giftName 
+        console.log(val,giftNameid);
+        if(giftNameid=="矮方盒"){ 
+            this.ruleForm1.demolitionGiftBoxReqs[k].giftImg=gameGift+'game/openBox/images/gift1.png'
+        }else if(giftNameid=="大方盒"){
+            this.ruleForm1.demolitionGiftBoxReqs[k].giftImg=gameGift+'game/openBox/images/gift2.png'
+        }else if(giftNameid=="矮圆盒"){
+            this.ruleForm1.demolitionGiftBoxReqs[k].giftImg=gameGift+'game/openBox/images/gift3.png'
+        }else if(giftNameid=="高圆盒"){
+            this.ruleForm1.demolitionGiftBoxReqs[k].giftImg=gameGift+'game/openBox/images/gift4.png'
+        }else if(giftNameid=="大圆盒"){
+            this.ruleForm1.demolitionGiftBoxReqs[k].giftImg=gameGift+'game/openBox/images/gift5.png'
+        }
+     },
+      
     addrPass(rule, value, callback) {
       if (!value) {
        callback(new Error("到店领取地址不能为空"));
@@ -397,20 +443,20 @@ export default {
       }
     },
     addList(){
-        this.ruleForm3.addrRow.push({address:""});
+        this.ruleForm3.demolitionAddressReqs.push({address:""});
     },
     delList(val){
-        this.ruleForm3.addrRow.splice(val, 1);
+        this.ruleForm3.demolitionAddressReqs.splice(val, 1);
     },
     upStep() {
       this.active--;
     },
     //礼盒设置的新增&删除
-    addboxs(){ 
-      this.ruleForm1.boxs.push({ name1:0, name2:"", name3:"", name4:"", name5:"",})
+    adddemolitionGiftBoxReqs(){ 
+      this.ruleForm1.demolitionGiftBoxReqs.push({ name1:0, name2:"", name3:"", name4:"", name5:"",})
     },
-    delboxs(val) { 
-          this.ruleForm1.boxs.splice(val, 1); 
+    deldemolitionGiftBoxReqs(val) { 
+          this.ruleForm1.demolitionGiftBoxReqs.splice(val, 1); 
     },
     //背景音乐
     getMusic(e) {
@@ -419,17 +465,17 @@ export default {
         this.ruleForm1.musicUrl  = e.music.url
     },
     //广告设置的新增&删除
-    addlinks(){
-      this.ruleForm1.links.push({hrefUrl:"",url:""},)
+    adddemolitionAdReqs(){
+      this.ruleForm1.demolitionAdReqs.push({hrefUrl:"",url:""},)
     },
     delLinks(val) { 
-          this.ruleForm1.links.splice(val, 1); 
+          this.ruleForm1.demolitionAdReqs.splice(val, 1); 
     },
     getChangeUrlBox(i,e) { 
-      this.ruleForm1.boxs[i].name3=e.url
+      this.ruleForm1.demolitionGiftBoxReqs[i].giftImg=e.url
     }, 
     getChangeUrl(i,e) {  
-      this.ruleForm1.links[i].url=e.url
+      this.ruleForm1.demolitionAdReqs[i].url=e.url
     }, 
     getChangeUrl2(e) { 
       this.ruleForm2.followQrCode=e.url
@@ -467,6 +513,25 @@ export default {
         return
       }
     }, 
+    next1(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) { 
+           this.checkStep1()
+        } else {
+         console.log("error submit!!");
+        }
+      });
+    }, 
+    checkStep1(){
+        for(var i=0;i<this.ruleForm1.demolitionGiftBoxReqs.length;i++){
+            if(!this.ruleForm1.demolitionGiftBoxReqs[i].giftName||!this.ruleForm1.demolitionGiftBoxReqs[i].giftImg||!this.ruleForm1.demolitionGiftBoxReqs[i].giftSound){
+                this.$message.error("礼盒设置不能留空，请填写完整~");
+                return false
+            }
+        }
+        this.active=1
+        
+    },
     next(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) { 
@@ -476,7 +541,7 @@ export default {
         }
       });
     }, 
-//校验概率
+    //校验概率
     checkGL(){
         var arr1=[]; 
         for(let i=0;i<this.ruleForm4.length;i++){
@@ -520,25 +585,25 @@ export default {
     },  
     //表单提交--------------------------------------star
     submit(){
-        console.log(this.ruleForm3,123); 
-        //广告
-        var newadv=[];
-        for(let i =0;i< this.ruleForm1.links.length;i++){ 
-            var arr={
-                hrefUrl:this.ruleForm1.links[i].hrefUrl, 
-                url:this.ruleForm1.links[i].url, 
-            } 
-            newadv.push(arr)
-        }  
-        var newaddr=[];
-        if(this.ruleForm3.addrRow){ 
-            for(let i =0;i< this.ruleForm3.addrRow.length;i++){ 
-                var arraddr={
-                    address:this.ruleForm3.addrRow[i].address,  
-                } 
-                newaddr.push(arraddr)
-            }    
-        } 
+        console.log(this.ruleForm1,123); 
+        // //广告
+        // var newadv=[];
+        // for(let i =0;i< this.ruleForm1.demolitionAdReqs.length;i++){ 
+        //     var arr={
+        //         hrefUrl:this.ruleForm1.demolitionAdReqs[i].hrefUrl, 
+        //         url:this.ruleForm1.demolitionAdReqs[i].url, 
+        //     } 
+        //     newadv.push(arr)
+        // }  
+        // var newaddr=[];
+        // if(this.ruleForm3.demolitionAddressReqs){ 
+        //     for(let i =0;i< this.ruleForm3.demolitionAddressReqs.length;i++){ 
+        //         var arraddr={
+        //             address:this.ruleForm3.demolitionAddressReqs[i].address,  
+        //         } 
+        //         newaddr.push(arraddr)
+        //     }    
+        // } 
         //奖品
         var newPrize=[];
         if(this.ruleForm4){
@@ -564,12 +629,14 @@ export default {
             } 
         } 
         const data = {
+            id:0,
             //基础设置 
             name  : this.ruleForm1.name, 
             activityBeginTime: this.ruleForm1.name1[0], 
             activityEndTime  : this.ruleForm1.name1[1], 
             musicUrl  : this.ruleForm1.musicUrl ,  
-            demolitionAdReqs:newadv,
+            demolitionGiftBoxReqs:this.ruleForm1.demolitionGiftBoxReqs,
+            demolitionAdReqs:this.ruleForm1.demolitionAdReqs,
             //规则设置
             followQrCode  : this.ruleForm2.followQrCode, 
             manTotalChance: this.ruleForm2.manTotalChance, 
@@ -579,9 +646,9 @@ export default {
             cashPrizeBeginTime:this.ruleForm3.date[0], 
             cashPrizeEndTime  :this.ruleForm3.date[1], 
             receiveType       :this.ruleForm3.type.toString(), //兑奖方式
-            seagoldAddressReqs:newaddr,//兑奖地址 
+            demolitionAddressReqs:this.ruleForm3.demolitionAddressReqs,//兑奖地址 
             phone             :this.ruleForm3.phone, 
-            cashPrizeInstruction:this.ruleForm3.desc,  
+            cashPrizeInstruction:this.ruleForm3.cashPrizeInstruction,  
             //奖项设置 
             prizeSetInstruction:this.prizeSetInstruction, 
             demolitionPrizeReqs:newPrize, 
@@ -589,6 +656,18 @@ export default {
            
         };
         console.log(data,123); 
+        saveAct(data).then(data=>{
+          this.isSubmit=true
+          if (data.code == 100) {  
+              this.active=5
+          } else {
+              this.isSubmit=false
+              this.$message.error(data.msg);
+          }
+        }).catch(() => {
+            this.isSubmit=false
+            this.$message({type: "info", message: "网络问题，请刷新重试~" });
+        }); 
     },  
     backUrl(){
          window.history.go(-1);

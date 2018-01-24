@@ -3,9 +3,6 @@ package com.gt.game.core.service.ninelattice;
 
 import com.gt.api.bean.session.BusUser;
 import com.gt.game.common.dto.ResponseDTO;
-import com.gt.game.core.bean.lantern.req.*;
-import com.gt.game.core.bean.lantern.req.LanternDelWinningReq;
-import com.gt.game.core.bean.lantern.res.*;
 import com.gt.game.core.bean.ninelattice.req.*;
 import com.gt.game.core.bean.ninelattice.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
@@ -31,6 +28,14 @@ public interface NinelatticeService {
      * @return
      */
     MobileUrlRes getMobileUrl(BusUser busUser, MobileUrlReq mobileUrlReq);
+
+    /**
+     * 获取新增授权链接
+     * @param busUser
+     * @param mobileUrlReq
+     * @return
+     */
+    ResponseDTO<MobileUrlRes> getAuthorityUrl(BusUser busUser, MobileUrlReq mobileUrlReq);
 
 
     /**
@@ -65,32 +70,11 @@ public interface NinelatticeService {
     NinelatticeGetActivityRes getActivityById(BusUser busUser, NinelatticeGetActivityReq ninelatticeGetActivityReq);
 
     /**
-     * 编辑幸运九宫格活动基础设置
+     * 编辑幸运九宫格活动设置
      * @param busUser
-     * @param ninelatticeModfiyBasicsReq
+     * @param ninelatticeModfiyReq
      */
-    void modfiyBasicsNinelattice(BusUser busUser, NinelatticeModfiyBasicsReq ninelatticeModfiyBasicsReq);
-
-    /**
-     * 编辑幸运九宫格活动规则设置
-     * @param busUser
-     * @param ninelatticeModfiyRuleReq
-     */
-    void modfiyRuleNinelattice(BusUser busUser, NinelatticeModfiyRuleReq ninelatticeModfiyRuleReq);
-
-    /**
-     * 编辑幸运九宫格活动兑奖设置
-     * @param busUser
-     * @param ninelatticeModfiyExpiryReq
-     */
-    void modfiyExpiryNinelattice(BusUser busUser, NinelatticeModfiyExpiryReq ninelatticeModfiyExpiryReq);
-
-    /**
-     * 编辑幸运九宫格奖项设置
-     * @param busUser
-     * @param ninelatticeModfiyAwardsReq
-     */
-    void modfiyAwardsNinelattice(BusUser busUser, NinelatticeModfiyAwardsReq ninelatticeModfiyAwardsReq);
+    void modfiyNinelattice(BusUser busUser, NinelatticeModfiyReq ninelatticeModfiyReq);
 
     /**
      * 删除幸运九宫格活动

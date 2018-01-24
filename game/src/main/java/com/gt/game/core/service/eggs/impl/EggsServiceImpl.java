@@ -234,7 +234,7 @@ public class EggsServiceImpl implements EggsService {
         Double fenbi = 0.0;
         for(EggsPrizeSetReq eggsPrizeSetReq:eggsAddReq.getPrizeSetList()){
             if (eggsPrizeSetReq.getEggPrizeType() == 1) {
-                fenbi += eggsPrizeSetReq.getEggPrizeType();
+                fenbi += eggsPrizeSetReq.getEggPrizeNums();
             }
             EggsDetail eggsDetail = new EggsDetail();
             eggsDetail.setEggId(eggsMain.getId());

@@ -462,6 +462,9 @@ public class ShakeluckServiceImpl  implements ShakeluckService {
                 shakeluckAdService.insert(ShakeluckAd);
             }
         }
+        if(fenbi == 0.0 && num > 0.0){
+            throw new ShakeluckException(ResponseEnums.COMMON_HAS18);
+        }
         if(fenbi > 0){//冻结粉币
             if( f > 0){
                 if((fenbi-num) <= (0-num)){

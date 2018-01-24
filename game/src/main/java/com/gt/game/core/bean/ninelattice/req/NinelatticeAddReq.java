@@ -18,6 +18,12 @@ public class NinelatticeAddReq {
 	@ApiModelProperty("活动结束时间")
 	private Date activityEndTime;
 
+	@ApiModelProperty("背景音乐名")
+	private String bgmSp;
+
+	@ApiModelProperty("背景音乐地址")
+	private String musicUrl;
+
 	@ApiModelProperty("关注二维码")
 	private String followQrCode;
 
@@ -50,6 +56,22 @@ public class NinelatticeAddReq {
 
 	@ApiModelProperty("奖品设置")
 	private List<NinelatticePrizeSetReq> prizeSetList;
+
+	public String getBgmSp() {
+		return bgmSp;
+	}
+
+	public void setBgmSp(String bgmSp) {
+		this.bgmSp = bgmSp;
+	}
+
+	public String getMusicUrl() {
+		return musicUrl;
+	}
+
+	public void setMusicUrl(String musicUrl) {
+		this.musicUrl = musicUrl;
+	}
 
 	public String getName() {
 		return name;

@@ -47,11 +47,11 @@
           </el-table-column>
           <el-table-column  width="400" label="操作">
             <template slot-scope="scope"> 
-              <el-button class="gt-button-normal blue" v-show="scope.row.isEdit==1" @click="test(scope.row.id)">编辑</el-button>
+              <el-button class="gt-button-normal blue" v-if="scope.row.isEdit==1" @click="editAct(scope.row.id)">编辑</el-button>
               <el-button class="gt-button-normal blue" @click="record(scope.row.id)">中奖纪录</el-button>
               <el-button class="gt-button-normal blue" @click="askPreview(scope.row.id)">预览链接</el-button>
               <el-button class="gt-button-normal blue" @click="impower(scope.row.id)">核销授权</el-button>
-              <el-button class="gt-button-normal"       @click="delBtn(scope.row.id)">删除</el-button> 
+              <el-button class="gt-button-normal"      @click="delBtn(scope.row.id)">删除</el-button> 
             </template>
           </el-table-column>
         </el-table>
@@ -179,6 +179,9 @@ import {
       addActive(){
         //  this.$router.push({path: '/online/editAct', query: {id: val}});
         this.$router.push('/openBox/addAct')
+      },
+      editAct(val){
+         this.$router.push({path: '/openBox/editAct', query: {id: val}});
       },
       test(){
         console.log(123)
