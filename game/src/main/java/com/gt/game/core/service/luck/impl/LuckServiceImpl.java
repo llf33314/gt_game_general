@@ -287,7 +287,7 @@ public class LuckServiceImpl implements LuckService {
             if(luckMain.getLuckBeginTime().getTime() < date.getTime() && luckMain.getLuckEndTime().getTime() > date.getTime()){
                 throw new LuckException(ResponseEnums.LOVEARROW_HAS10);
             }
-            if(luckMain.getLuckBeginTime().getTime() > date.getTime() && DateTimeKit.addDate(luckMain.getLuckEndTime(),luckMain.getLuckCashDay()).getTime() > date.getTime()){
+            if(luckMain.getLuckBeginTime().getTime() < date.getTime() && DateTimeKit.addDate(luckMain.getLuckEndTime(),luckMain.getLuckCashDay()).getTime() > date.getTime()){
                 throw new LuckException(ResponseEnums.LOVEARROW_HAS12);
             }
             List<LuckWinning> luckWinnings = luckWinningService.selectList(

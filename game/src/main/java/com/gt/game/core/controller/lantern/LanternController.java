@@ -5,7 +5,6 @@ package com.gt.game.core.controller.lantern;
 import com.gt.api.bean.session.BusUser;
 import com.gt.game.common.base.BaseController;
 import com.gt.game.common.dto.ResponseDTO;
-import com.gt.game.core.bean.dragonboat.req.DragonboatDelReq;
 import com.gt.game.core.bean.lantern.req.*;
 import com.gt.game.core.bean.lantern.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
@@ -58,6 +57,26 @@ public class LanternController extends BaseController {
             BusUser busUser = CommonUtil.getLoginUser(request);
             MobileUrlRes mobileUrlRes = lanternService.getMobileUrl(busUser, mobileUrlReq);
             return ResponseDTO.createBySuccess("获取手机端链接成功", mobileUrlRes);
+        } catch (LanternException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+            @ApiResponse(code = 1, message = "响应对象", response = MobileUrlRes.class),
+    })
+    @ApiOperation(value = "获取新增授权链接", notes = "获取新增授权链接")
+    @RequestMapping(value = "/getAuthorityUrl", method = RequestMethod.POST)
+    protected ResponseDTO getAuthorityUrl(@RequestBody @ApiParam(value = "请求参数") MobileUrlReq mobileUrlReq, HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO<MobileUrlRes> mobileUrlRes = lanternService.getAuthorityUrl(busUser, mobileUrlReq);
+            return mobileUrlRes;
         } catch (LanternException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
@@ -165,89 +184,20 @@ public class LanternController extends BaseController {
         }
     }
 
-    // TODO  编辑元宵点灯活动基础设置
+    // TODO  编辑元宵点灯活动设置
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
     })
-    @ApiOperation(value = "编辑元宵点灯活动基础设置", notes = "编辑元宵点灯活动基础设置")
-    @RequestMapping(value = "/modfiyBasicsLantern", method = RequestMethod.POST)
-    protected ResponseDTO modfiyBasicsLantern(@RequestBody @ApiParam(value = "编辑元宵点灯活动基础对象") LanternModfiyBasicsReq lanternModfiyBasicsReq, BindingResult bindingResult,
+    @ApiOperation(value = "编辑元宵点灯活动设置", notes = "编辑元宵点灯活动设置")
+    @RequestMapping(value = "/modfiyLantern", method = RequestMethod.POST)
+    protected ResponseDTO modfiyLantern(@RequestBody @ApiParam(value = "编辑元宵点灯活动对象") LanternModfiyReq lanternModfiyReq, BindingResult bindingResult,
                                               HttpServletRequest request) {
         InvalidParameter(bindingResult);
         try {
-            logger.debug(lanternModfiyBasicsReq.toString());
+            logger.debug(lanternModfiyReq.toString());
             BusUser busUser = CommonUtil.getLoginUser(request);
-            lanternService.modfiyBasicsLantern(busUser,lanternModfiyBasicsReq);
-            return ResponseDTO.createBySuccessMessage("编辑元宵点灯活动基础设置成功");
-        } catch (LanternException e){
-            logger.error(e.getMessage(), e.fillInStackTrace());
-            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
-        } catch (Exception e){
-            e.printStackTrace();
-            return ResponseDTO.createByError();
-        }
-    }
-
-    // TODO  编辑元宵点灯活动规则设置
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-    })
-    @ApiOperation(value = "编辑元宵点灯活动规则设置", notes = "编辑元宵点灯活动规则设置")
-    @RequestMapping(value = "/modfiyRuleLantern", method = RequestMethod.POST)
-    protected ResponseDTO modfiyRuleLantern(@RequestBody @ApiParam(value = "编辑元宵点灯活动基础规则对象") LanternModfiyRuleReq lanternModfiyRuleReq, BindingResult bindingResult,
-                                            HttpServletRequest request) {
-        InvalidParameter(bindingResult);
-        try {
-            logger.debug(lanternModfiyRuleReq.toString());
-            BusUser busUser = CommonUtil.getLoginUser(request);
-            lanternService.modfiyRuleLantern(busUser, lanternModfiyRuleReq);
-            return ResponseDTO.createBySuccessMessage("编辑元宵点灯活动规则设置成功");
-        } catch (LanternException e){
-            logger.error(e.getMessage(), e.fillInStackTrace());
-            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
-        } catch (Exception e){
-            e.printStackTrace();
-            return ResponseDTO.createByError();
-        }
-    }
-
-    // TODO  编辑元宵点灯活动兑奖设置
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-    })
-    @ApiOperation(value = "编辑元宵点灯活动兑奖设置", notes = "编辑元宵点灯活动规则设置")
-    @RequestMapping(value = "/modfiyExpiryLantern", method = RequestMethod.POST)
-    protected ResponseDTO modfiyExpiryLantern(@RequestBody @ApiParam(value = "编辑元宵点灯活动基础兑奖对象") LanternModfiyExpiryReq lanternModfiyExpiryReq, BindingResult bindingResult,
-                                            HttpServletRequest request) {
-        InvalidParameter(bindingResult);
-        try {
-            logger.debug(lanternModfiyExpiryReq.toString());
-            BusUser busUser = CommonUtil.getLoginUser(request);
-            lanternService.modfiyExpiryLantern(busUser, lanternModfiyExpiryReq);
-            return ResponseDTO.createBySuccessMessage("编辑元宵点灯活动兑奖设置成功");
-        } catch (LanternException e){
-            logger.error(e.getMessage(), e.fillInStackTrace());
-            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
-        } catch (Exception e){
-            e.printStackTrace();
-            return ResponseDTO.createByError();
-        }
-    }
-
-    // TODO  编辑元宵点灯活动奖项设置
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-    })
-    @ApiOperation(value = "编辑元宵点灯活动奖项设置", notes = "编辑元宵点灯活动奖项设置")
-    @RequestMapping(value = "/modfiyAwardsLantern", method = RequestMethod.POST)
-    protected ResponseDTO modfiyAwardsLantern(@RequestBody @ApiParam(value = "编辑元宵点灯活动奖项设置对象") LanternModfiyAwardsReq lanternModfiyAwardsReq, BindingResult bindingResult,
-                                              HttpServletRequest request) {
-        InvalidParameter(bindingResult);
-        try {
-            logger.debug(lanternModfiyAwardsReq.toString());
-            BusUser busUser = CommonUtil.getLoginUser(request);
-            lanternService.modfiyAwardsLantern(busUser, lanternModfiyAwardsReq);
-            return ResponseDTO.createBySuccessMessage("编辑元宵点灯活动奖项设置成功");
+            lanternService.modfiyLantern(busUser,lanternModfiyReq);
+            return ResponseDTO.createBySuccessMessage("编辑元宵点灯活动设置成功");
         } catch (LanternException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());

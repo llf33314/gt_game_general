@@ -39,11 +39,11 @@ public class ScratchAddReq {
 	@ApiModelProperty("活动未开始提示")
 	private String scrBeforeTxt;
 
-/*	@ApiModelProperty("音乐名称")
+	@ApiModelProperty("音乐名称")
 	private String scrBgmName;
 
 	@ApiModelProperty("音乐路径")
-	private String scrBgm;*/
+	private String scrBgm;
 
 	@ApiModelProperty("抽奖总数")
 	private Integer scrCountOfAll;
@@ -68,6 +68,22 @@ public class ScratchAddReq {
 
 	@ApiModelProperty("奖品设置")
 	private List<ScratchPrizeSetReq> prizeSetList;
+
+	public String getScrBgmName() {
+		return scrBgmName;
+	}
+
+	public void setScrBgmName(String scrBgmName) {
+		this.scrBgmName = scrBgmName;
+	}
+
+	public String getScrBgm() {
+		return scrBgm;
+	}
+
+	public void setScrBgm(String scrBgm) {
+		this.scrBgm = scrBgm;
+	}
 
 	public String getScrName() {
 		return scrName;
