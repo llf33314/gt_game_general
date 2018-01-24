@@ -599,9 +599,8 @@ export default {
         // newYearPrizeReqs: newYearPrizeReqs,
         prizeSetList: newYearPrizeReqs
       };
-      console.log(data, 123);
       api
-        .modfiyLantern(data)
+        .modfiyActivity(data)
         .then(data => {
           this.isSubmit = true;
           if (data.code == 100) {
