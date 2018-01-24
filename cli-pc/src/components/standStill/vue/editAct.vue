@@ -401,6 +401,8 @@ export default {
                     arr4.type =1
                 }else if (arr4.type == "手机流量"){
                     arr4.type =2 
+                }else if (arr4.type == "手机话费"){
+                    arr4.type =3 
                 }else if (arr4.type == "实体物品"){
                     arr4.type =4 
                 }

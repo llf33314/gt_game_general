@@ -561,26 +561,7 @@ export default {
        this.checkGL(); 
     },  
     //表单提交--------------------------------------star
-    submit(){
-        console.log(this.ruleForm1,123); 
-        // //广告
-        // var newadv=[];
-        // for(let i =0;i< this.ruleForm1.demolitionAdReqs.length;i++){ 
-        //     var arr={
-        //         hrefUrl:this.ruleForm1.demolitionAdReqs[i].hrefUrl, 
-        //         url:this.ruleForm1.demolitionAdReqs[i].url, 
-        //     } 
-        //     newadv.push(arr)
-        // }  
-        // var newaddr=[];
-        // if(this.ruleForm3.demolitionAddressReqs){ 
-        //     for(let i =0;i< this.ruleForm3.demolitionAddressReqs.length;i++){ 
-        //         var arraddr={
-        //             address:this.ruleForm3.demolitionAddressReqs[i].address,  
-        //         } 
-        //         newaddr.push(arraddr)
-        //     }    
-        // } 
+    submit(){   
         //奖品
         var newPrize=[];
         if(this.ruleForm4){
@@ -594,6 +575,21 @@ export default {
                     probabiliy :this.ruleForm4[i].name4,  //概率
                     demolitionPrizeImgReqs:[]//图片
                 }
+                if (arr4.type == "粉币"){
+                    arr4.type =1
+                }else if (arr4.type == "手机流量"){
+                    arr4.type =2 
+                }else if (arr4.type == "手机话费"){
+                    arr4.type =3 
+                }else if (arr4.type == "实体物品"){
+                    arr4.type =4 
+                }
+                else if (arr4.type == "积分"){
+                    arr4.type =6
+                }
+                else if (arr4.type == "优惠券"){
+                    arr4.type =7 
+                } 
                 if(arr4.type==4){
                     for(var j=0;j<this.ruleForm4[i].name5.length;j++){
                         var imgarr={

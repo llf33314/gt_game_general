@@ -489,6 +489,19 @@ export default {
                     // probabiliy :this.ruleForm4[i].name4,  //概率
                     raiseflagPrizeImgReqs :[]//图片
                 }
+                if (arr4.type == "粉币"){
+                    arr4.type =1
+                }else if (arr4.type == "手机流量"){
+                    arr4.type =2 
+                }else if (arr4.type == "手机话费"){
+                    arr4.type =3 
+                }else if (arr4.type == "实体物品"){
+                    arr4.type =4 
+                }else if (arr4.type == "积分"){
+                    arr4.type =6
+                }else if (arr4.type == "优惠券"){
+                    arr4.type =7 
+                } 
                 if(arr4.type==4){
                     for(var j=0;j<this.ruleForm4[i].name5.length;j++){
                         var imgarr={
@@ -535,7 +548,7 @@ export default {
         saveAct(data).then(data=>{
           this.isSubmit=true
             if (data.code == 100) { 
-              this.active=5
+              this.$message({ message: "操作成功", type: "success"}); 
             } else {
               this.isSubmit=false
               this.$message.error(data.msg);

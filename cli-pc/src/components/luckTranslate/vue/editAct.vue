@@ -161,10 +161,10 @@
         <div class="h80"></div>
         <div class="btnRow">
             <el-button   @click="backUrl()" >返回</el-button>
-            <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">保存1</el-button> 
-            <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">保存2</el-button>
-            <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">保存3</el-button>   
-            <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存4</el-button>   
+            <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">保存</el-button> 
+            <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">保存</el-button>
+            <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">保存</el-button>   
+            <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>   
         </div> 
         <!-- 选择粉丝弹窗 --> 
         <gt-Fans-detail  :visible.sync="dialogFans"   v-on:getFansData="getFansData"></gt-Fans-detail>  
