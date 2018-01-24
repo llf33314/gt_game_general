@@ -88,7 +88,7 @@
 </template>
 <script>
 import {  
-getDemolitionApplyList,editDemolitionApply
+getPrizeList,givePrize
 }from './../api/api'
   export default{
     data() {
@@ -121,7 +121,7 @@ getDemolitionApplyList,editDemolitionApply
           params.status =this.prizeState;
           params.type   =this.prizeType;
         console.log(params,77)
-        getDemolitionApplyList(params).then(data=>{
+        getPrizeList(params).then(data=>{
           if (data.code == 100) {
             this.tableData=data
             console.log(data,33);
@@ -134,7 +134,7 @@ getDemolitionApplyList,editDemolitionApply
       },
       //发放奖品  
       handOut(id){
-        editDemolitionApply({id}).then(data=>{
+        givePrize({id}).then(data=>{
           if (data.code == 100) {
                 this.$message({ message: "发放成功", type: "success" });
                 this.getData();  

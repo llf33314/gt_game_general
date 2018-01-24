@@ -33,14 +33,11 @@
                             音频文件的格式为mp3、wma、wav,大小不超过3M
                         </div>
                     </div>
-                </el-form-item>   
-
-
-
-            <h1 class="mt30 mb20 pb10 bbtom" style="width:80%">礼盒设置</h1> 
+                </el-form-item>  
+            <h1 class="mt30 mb20 pb10 bbtom">礼盒设置</h1> 
             <el-button type="primary" class="mb20" @click="addboxs()">新增</el-button>  
             <span class="ml10 el-upload__tip grey">至少添加3-5个礼盒，礼盒图片建议尺寸270*270px</span>
-            <el-table ref="multipleTable" :data="ruleForm1.boxs" tooltip-effect="dark" style="width:80%">
+            <el-table ref="multipleTable" :data="ruleForm1.boxs" tooltip-effect="dark"  style="max-width:1000px">
                 <el-table-column label="礼盒类型">
                     <template slot-scope="scope">
                         <el-select  class="w20_demo"  v-model="scope.row.name1" placeholder="请选择"> 
@@ -85,10 +82,10 @@
                 </el-table-column> 
              </el-table> 
 
-            <h1 class="mt30 mb20 pb10 bbtom" style="width:80%">广告设置</h1> 
+            <h1 class="mt30 mb20 pb10 bbtom">广告设置</h1> 
             <el-button type="primary" class="mb20" @click="addlinks()">新增</el-button>  
             <span class="ml10 el-upload__tip grey">1.仅支持多粉与翼粉开头的链接    2.广告图格式：1000*300px</span>
-            <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark" style="width:80%">
+            <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark" style="max-width:1000px">
                 <el-table-column label="广告链接">
                   <template slot-scope="scope" >
                         <el-input v-model="scope.row.hrefUrl">

@@ -16,7 +16,7 @@ export const getActCount     = params => { return axios.post(`${base}/getDemolit
 /*核销*/
 export const getVerifierList = params => { return axios.post(`${base}/getDemolitionAuthorityList`, params).then(res => res.data) }
 export const delVerifier     = params => { return axios.post(`${base}/removeDemolitionAuthority`, params).then(res => res.data) } 
-export const getVerifierUrl     = params => { return axios.post(`${base}/getAuthorityUrl`, params).then(res => res.data) }
+export const getAuthorityUrl     = params => { return axios.post(`${base}/getAuthorityUrl`, params).then(res => res.data) }
 
 /*中奖*/
 export const getPrizeList     = params => { return axios.post(`${base}/getDemolitionApplyList`, params).then(res => res.data) }
