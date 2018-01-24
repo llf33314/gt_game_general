@@ -8,13 +8,12 @@
     </el-breadcrumb> 
 
     <div class="gt-content">
-        <el-steps :active="active" :center="true" :align-center="true" class="bbtom pb20">
-            <el-step title="基础设置"></el-step>
-            <el-step title="规则设置"></el-step>
-            <el-step title="兑奖设置"></el-step>
-            <el-step title="奖项设置"></el-step>
-            <el-step title="新建完成"></el-step>
-        </el-steps>
+        <el-tabs v-model="active" type="card">
+            <el-tab-pane label="基础设置" name="0"></el-tab-pane>
+            <el-tab-pane label="规则设置" name="1"></el-tab-pane>
+            <el-tab-pane label="兑奖设置" name="2"></el-tab-pane>
+            <el-tab-pane label="奖项设置" name="3"></el-tab-pane>
+        </el-tabs>
         <!-- 基础设置 -->
         <div v-show="this.active==0" class="mt40">
           <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="120px" class="demo-ruleForm">
@@ -215,7 +214,7 @@
                   </template>
                 </el-table-column>
                 <el-table-column label="奖品图片">
-                    <template slot-scope="scope"  v-if="scope.row.name0==4">  
+                    <template slot-scope="scope"  v-if="scope.row.name0==4||scope.row.name0=='实体物品'">  
                         <gt-material v-for="(item,index) in scope.row.name5" :key="index" :prop="scope" :sonIndex="index" selectType="radio" :url="item" @getChangeUrl="getAwardImgList" width="50" height="50" class="mr10"></gt-material>
                         <gt-material :prop="scope" selectType="select"  @getChangeUrl="addAwardImg" width="50" height="50" class="uploadBtn"></gt-material>
                     </template>
@@ -238,10 +237,10 @@
         <!-- 按钮 -->
         <div class="h80"></div> 
         <div class="btnRow"  v-if="this.active!=5">
-            <el-button   @click="upStep()" v-if="this.active!=0">上一步</el-button>
-            <el-button type="primary" @click="next1('ruleForm1')" v-if="this.active==0">下一步</el-button> 
-            <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步</el-button>
-            <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步</el-button>   
+            <el-button   @click="backUrl()" >返回</el-button>
+            <el-button type="primary" @click="next1('ruleForm1')" v-if="this.active==0">保存</el-button> 
+            <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">保存</el-button>
+            <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">保存</el-button>   
             <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>   
             <!-- <el-button type="primary" @click="submit()">打印</el-button>    -->
         </div> 
@@ -250,7 +249,7 @@
 </section>
 </template>
 <script>
-import {saveAct,getPrizeType}from './../api/api'
+import {saveAct,getPrizeType,getAct}from './../api/api'
 export default {
   data() {
     let iiPass = (rule, value, callback) => {
@@ -562,26 +561,7 @@ export default {
        this.checkGL(); 
     },  
     //表单提交--------------------------------------star
-    submit(){
-        console.log(this.ruleForm1,123); 
-        // //广告
-        // var newadv=[];
-        // for(let i =0;i< this.ruleForm1.demolitionAdReqs.length;i++){ 
-        //     var arr={
-        //         hrefUrl:this.ruleForm1.demolitionAdReqs[i].hrefUrl, 
-        //         url:this.ruleForm1.demolitionAdReqs[i].url, 
-        //     } 
-        //     newadv.push(arr)
-        // }  
-        // var newaddr=[];
-        // if(this.ruleForm3.demolitionAddressReqs){ 
-        //     for(let i =0;i< this.ruleForm3.demolitionAddressReqs.length;i++){ 
-        //         var arraddr={
-        //             address:this.ruleForm3.demolitionAddressReqs[i].address,  
-        //         } 
-        //         newaddr.push(arraddr)
-        //     }    
-        // } 
+    submit(){   
         //奖品
         var newPrize=[];
         if(this.ruleForm4){
@@ -595,6 +575,21 @@ export default {
                     probabiliy :this.ruleForm4[i].name4,  //概率
                     demolitionPrizeImgReqs:[]//图片
                 }
+                if (arr4.type == "粉币"){
+                    arr4.type =1
+                }else if (arr4.type == "手机流量"){
+                    arr4.type =2 
+                }else if (arr4.type == "手机话费"){
+                    arr4.type =3 
+                }else if (arr4.type == "实体物品"){
+                    arr4.type =4 
+                }
+                else if (arr4.type == "积分"){
+                    arr4.type =6
+                }
+                else if (arr4.type == "优惠券"){
+                    arr4.type =7 
+                } 
                 if(arr4.type==4){
                     for(var j=0;j<this.ruleForm4[i].name5.length;j++){
                         var imgarr={
@@ -607,13 +602,12 @@ export default {
             } 
         } 
         const data = {
-            id:0,
+            id:this.$router.history.current.query.id,
             //基础设置 
             name  : this.ruleForm1.name, 
             activityBeginTime: this.ruleForm1.name1[0], 
             activityEndTime  : this.ruleForm1.name1[1], 
             musicUrl  : this.ruleForm1.musicUrl ,  
-            demolitionGiftBoxReqs:this.ruleForm1.demolitionGiftBoxReqs,
             demolitionAdReqs:this.ruleForm1.demolitionAdReqs,
             //规则设置
             followQrCode  : this.ruleForm2.followQrCode, 
@@ -624,7 +618,7 @@ export default {
             cashPrizeBeginTime:this.ruleForm3.date[0], 
             cashPrizeEndTime  :this.ruleForm3.date[1], 
             receiveType       :this.ruleForm3.type.toString(), //兑奖方式
-            demolitionAddressReqs:this.ruleForm3.demolitionAddressReqs,//兑奖地址 
+            seagoldAddressReqs:this.ruleForm3.demolitionAddressReqs,//兑奖地址 
             phone             :this.ruleForm3.phone, 
             cashPrizeInstruction:this.ruleForm3.cashPrizeInstruction,  
             //奖项设置 
@@ -634,16 +628,13 @@ export default {
            
         };
         console.log(data,123); 
-        saveAct(data).then(data=>{
-          this.isSubmit=true
+        saveAct(data).then(data=>{ 
           if (data.code == 100) {  
-              this.active=5
-          } else {
-              this.isSubmit=false
+              this.$message({ message: "操作成功", type: "success"}); 
+          } else { 
               this.$message.error(data.msg);
           }
-        }).catch(() => {
-            this.isSubmit=false
+        }).catch(() => { 
             this.$message({type: "info", message: "网络问题，请刷新重试~" });
         }); 
     },  
@@ -652,10 +643,100 @@ export default {
     },
     test(){
         console.log(1122);
-    }
+    },
+     //初始化-------------------
+    getActData(){
+        var id=this.$router.history.current.query.id
+        getAct(id).then(data=>{
+          if (data.code == 100) {
+              console.log(data,123)
+            //基础设置
+            this.ruleForm1=data.data
+            this.ruleForm1.name1=[data.data.activityBeginTime,data.data.activityEndTime]
+            if(data.data.musicUrl){
+                this.ruleForm1.music = data.data.musicUrl.split("/")[data.data.musicUrl.split("/").length-1]
+            } 
+            //礼盒
+            for(var i=0;i<data.data.demolitionGiftBoxReqs.length;i++){
+                if(data.data.demolitionGiftBoxReqs[i].giftName=="矮方盒"){
+                    this.ruleForm1.demolitionGiftBoxReqs[i].name1=1
+                }else if(data.data.demolitionGiftBoxReqs[i].giftName=="大方盒"){
+                    this.ruleForm1.demolitionGiftBoxReqs[i].name1=1
+                }else if(data.data.demolitionGiftBoxReqs[i].giftName=="矮圆盒"){
+                    this.ruleForm1.demolitionGiftBoxReqs[i].name1=1
+                }else if(data.data.demolitionGiftBoxReqs[i].giftName=="矮方盒"){
+                    this.ruleForm1.demolitionGiftBoxReqs[i].name1=1
+                }else if(data.data.demolitionGiftBoxReqs[i].giftName=="高圆盒"){
+                    this.ruleForm1.demolitionGiftBoxReqs[i].name1=1
+                }else if(data.data.demolitionGiftBoxReqs[i].giftName=="大圆盒"){
+                    this.ruleForm1.demolitionGiftBoxReqs[i].name1=1
+                }else{
+                    this.ruleForm1.demolitionGiftBoxReqs[i].name1=0
+                }
+            }
+            //广告
+            if(data.data.demolitionAdReqs){
+                for(var i=0;i<data.data.demolitionAdReqs.length;i++){
+                    this.ruleForm1.demolitionAdReqs[i].url=IMAGEURL1+data.data.demolitionAdReqs[i].url 
+                }
+            } 
+            //规则设置 
+            this.ruleForm2=data.data
+            if(data.data.followQrCode){
+                this.ruleForm2.followQrCode=IMAGEURL1+data.data.followQrCode
+            } 
+            //兑奖设置 
+            this.ruleForm3=data.data
+            this.ruleForm1.date=[data.data.cashPrizeBeginTime,data.data.cashPrizeEndTime]
+            this.ruleForm3.type=data.data.receiveType.split(',')  
+            //奖项设置
+            this.prizeSetInstruction=data.data.prizeSetInstruction 
+            var newPraise = [];//兑奖
+            for (var i = 0; i < data.data.demolitionPrizeReqs.length; i++) {
+                var newabc1 = {
+                    name0  : data.data.demolitionPrizeReqs[i].type, 
+                    name1  : data.data.demolitionPrizeReqs[i].prizeUnit, 
+                    name2  : data.data.demolitionPrizeReqs[i].prizeName, 
+                    name3  : String(data.data.demolitionPrizeReqs[i].num), 
+                    name4  : data.data.demolitionPrizeReqs[i].probabiliy, 
+                    name5  :[] 
+                }; 
+                if (newabc1.name0 == 1) {
+                newabc1.name0  = "粉币";
+                }else if(newabc1.name0  == 2){
+                newabc1.name0  = "手机流量"; 
+                }else if(newabc1.name0  == 3){
+                newabc1.name0  = "手机话费"; 
+                }else if(newabc1.name0  == 4){
+                newabc1.name0  = "实体物品";
+                }  else if(newabc1.name0  == 6){
+                newabc1.name0  = "积分";
+                } else if(newabc1.name0  == 7){
+                newabc1.name0  = "优惠券";
+                } 
+                if(newabc1.name0=="实体物品"){
+                    for(var j = 0; j < data.data.demolitionPrizeReqs[i].demolitionPrizeImgReqs.length; j++){
+                        var imgarr={
+                             url:window.IMAGEURL+data.data.demolitionPrizeReqs[i].demolitionPrizeImgReqs[j].imgUrl
+                        }
+                        newabc1.name5.push(imgarr.url)
+                    }
+                }
+               newPraise.push(newabc1);  
+            } 
+            this.ruleForm4=newPraise  
+            
+          } else {
+              this.$message.error(data.msg);
+          }
+        }).catch(() => {
+            this.$message({type: "info", message: "网络问题，请刷新重试~" });
+        }); 
+    },
    },
   mounted() {
     this.getPrizeTypeData()
+     this.getActData()
   }
 };
 </script>
