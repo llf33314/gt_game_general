@@ -2,7 +2,6 @@ package com.gt.game.core.bean.countmoney.res;
 
 
 import com.gt.game.core.bean.countmoney.req.CountmoneyProbabilitysetReq;
-import com.gt.game.core.bean.countmoney.req.LanternAdvertisingPictureReq;
 import com.gt.game.core.bean.countmoney.req.CountmoneyPrizeSetReq;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -34,11 +33,11 @@ public class CountmoneyGetActivityRes {
     @ApiModelProperty("活动尚未开始提示")
     private String actNotStartedTips;
 
-	/*@ApiModelProperty("背景音乐URL")
-	private String musicUrl;
+    @ApiModelProperty("背景音乐名")
+    private String actScrBgmName;
 
-	@ApiModelProperty("背景音乐名")
-	private String bgmSp;*/
+    @ApiModelProperty("背景音乐URL")
+    private String actScrBgmUrl;
 
     @ApiModelProperty("游戏时间")
     private Integer actGameTime;
@@ -75,6 +74,22 @@ public class CountmoneyGetActivityRes {
 
     @ApiModelProperty("奖品设置")
     private List<CountmoneyPrizeSetReq> prizeSetList;
+
+    public String getActScrBgmName() {
+        return actScrBgmName;
+    }
+
+    public void setActScrBgmName(String actScrBgmName) {
+        this.actScrBgmName = actScrBgmName;
+    }
+
+    public String getActScrBgmUrl() {
+        return actScrBgmUrl;
+    }
+
+    public void setActScrBgmUrl(String actScrBgmUrl) {
+        this.actScrBgmUrl = actScrBgmUrl;
+    }
 
     public Integer getActType() {
         return actType;

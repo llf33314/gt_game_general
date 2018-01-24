@@ -31,6 +31,7 @@ import com.gt.game.core.entity.eggs.EggsWinning;
 import com.gt.game.core.entity.tree.TreeDetail;
 import com.gt.game.core.entity.tree.TreeMain;
 import com.gt.game.core.entity.tree.TreeWinning;
+import com.gt.game.core.exception.dragonboat.DragonboatException;
 import com.gt.game.core.exception.eggs.EggsException;
 import com.gt.game.core.exception.tree.TreeException;
 import com.gt.game.core.service.tree.TreeDetailService;
@@ -377,6 +378,7 @@ public class TreeServiceImpl implements TreeService {
         //TODO 奖项设置
         Double fenbi = 0.0;
         Double num   = 0.0;
+        int f = 0;
         if(treeModfiyReq.getPrizeSetList().size()>0){
 
             EntityWrapper<TreeDetail> entityWrapper5 = new EntityWrapper();
@@ -386,6 +388,7 @@ public class TreeServiceImpl implements TreeService {
                 for (TreeDetail treeDetail : treeDetailList) {
                     if (treeDetail.getTreePrizeType()== 1) {
                         num += treeDetail.getTreePrizeNums();
+                        f = 1;
                     }
                 }
             }
@@ -397,7 +400,9 @@ public class TreeServiceImpl implements TreeService {
 
             //TODO   添加奖项设置
             for(TreePrizeSetReq treePrizeSetReq:treeModfiyReq.getPrizeSetList()){
-
+                if (treePrizeSetReq.getType() == 1) {
+                    fenbi += treePrizeSetReq.getNum();
+                }
                 TreeDetail treeDetail = new TreeDetail();
                 treeDetail.setTreeId(treeModfiyReq.getId());
                 treeDetail.setTreePrizeType(treePrizeSetReq.getType());
@@ -411,22 +416,40 @@ public class TreeServiceImpl implements TreeService {
             }
         }
 
-        if(fenbi > 0) {//冻结粉币
-            if ((fenbi - num) <= (0 - num)) {
-                throw new TreeException(ResponseEnums.TREE_HAS9);
-            }
-            // 判断账户中的粉币是否足够
-            if (busUser.getFansCurrency().doubleValue() < (fenbi - num)) {
-                throw new TreeException(ResponseEnums.TREE_HAS7);
-            }
-            UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
-            updateFenbiReduceReq.setBusId(busUser.getId());
-            updateFenbiReduceReq.setFkId(treeMain.getId());
-            updateFenbiReduceReq.setFreType(40);
-            updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi - num));
-            AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
-            if (axisResult.getCode() != 0) {
-                throw new TreeException(ResponseEnums.TREE_HAS8);
+        if(fenbi > 0){//冻结粉币
+            if( f > 0){
+                if ((fenbi - num) <= (0 - num)) {
+                    throw new TreeException(ResponseEnums.TREE_HAS9);
+                }
+                // 判断账户中的粉币是否足够
+                if (busUser.getFansCurrency().doubleValue() < (fenbi - num)) {
+                    throw new TreeException(ResponseEnums.TREE_HAS7);
+                }
+                UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
+                updateFenbiReduceReq.setBusId(busUser.getId());
+                updateFenbiReduceReq.setFkId(treeMain.getId());
+                updateFenbiReduceReq.setFreType(40);
+                updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi - num));
+                AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
+                if (axisResult.getCode() != 0) {
+                    throw new TreeException(ResponseEnums.TREE_HAS8);
+                }
+            }else {
+                // 判断账户中的粉币是否足够
+                if(busUser.getFansCurrency().doubleValue() < fenbi.doubleValue()){
+                    throw new TreeException(ResponseEnums.TREE_HAS7);
+                }
+                //构建冻结信息
+                FenbiFlowRecord ffr=CommonUtil.bulidFenFlow(busUser.getId(), fenbi, treeMain.getId(), 40, 1, "圣诞大礼包活动支出", 0);
+                // 保存冻结信息
+                if(ffr!=null){
+                    FenbiFlowRecordReq fenbiFlowRecordReq = new FenbiFlowRecordReq();
+                    BeanUtils.copyProperties(ffr,fenbiFlowRecordReq);
+                    AxisResult axisResult = FenbiflowServer.saveFenbiFlowRecord(fenbiFlowRecordReq);
+                    if(axisResult.getCode() != 0){
+                        throw new TreeException(ResponseEnums.TREE_HAS8);
+                    }
+                }
             }
         }
     }

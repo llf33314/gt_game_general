@@ -485,6 +485,7 @@ public class DragonboatServiceImpl implements DragonboatService {
 
         Double fenbi = 0.0;
         Double num   = 0.0;
+        int f = 0;
         if(dragonboatModfiyReq.getPrizeSetList().size()>0){ //TODO  奖品设置
 
             EntityWrapper<DragonboatracePrize> entityWrapper5 = new EntityWrapper();
@@ -494,6 +495,7 @@ public class DragonboatServiceImpl implements DragonboatService {
                 for (DragonboatracePrize dragonboatracePrize : dragonboatracePrizeList) {
                     if (dragonboatracePrize.getType() == 1) {
                         num += dragonboatracePrize.getNum();
+                        f = 1;
                     }
                 }
             }
@@ -532,24 +534,43 @@ public class DragonboatServiceImpl implements DragonboatService {
                 }
             }
         }
-     if(fenbi > 0) {//冻结粉币
-         if ((fenbi - num) <= (0 - num)) {
-             throw new DragonboatException(ResponseEnums.DRAGONBOAT_HAS9);
-         }
-         // 判断账户中的粉币是否足够
-         if (busUser.getFansCurrency().doubleValue() < (fenbi - num)) {
-             throw new DragonboatException(ResponseEnums.DRAGONBOAT_HAS7);
-         }
-         UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
-         updateFenbiReduceReq.setBusId(busUser.getId());
-         updateFenbiReduceReq.setFkId(dragonboatraceMain.getId());
-         updateFenbiReduceReq.setFreType(43);
-         updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi - num));
-         AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
-         if (axisResult.getCode() != 0) {
-             throw new DragonboatException(ResponseEnums.DRAGONBOAT_HAS8);
-         }
-     }
+
+        if(fenbi > 0){//冻结粉币
+            if( f > 0){
+                if ((fenbi - num) <= (0 - num)) {
+                    throw new DragonboatException(ResponseEnums.DRAGONBOAT_HAS9);
+                }
+                // 判断账户中的粉币是否足够
+                if (busUser.getFansCurrency().doubleValue() < (fenbi - num)) {
+                    throw new DragonboatException(ResponseEnums.DRAGONBOAT_HAS7);
+                }
+                UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
+                updateFenbiReduceReq.setBusId(busUser.getId());
+                updateFenbiReduceReq.setFkId(dragonboatraceMain.getId());
+                updateFenbiReduceReq.setFreType(43);
+                updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi - num));
+                AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
+                if (axisResult.getCode() != 0) {
+                    throw new DragonboatException(ResponseEnums.DRAGONBOAT_HAS8);
+                }
+            }else {
+                // 判断账户中的粉币是否足够
+                if(busUser.getFansCurrency().doubleValue() < fenbi.doubleValue()){
+                    throw new DragonboatException(ResponseEnums.DRAGONBOAT_HAS7);
+                }
+                //构建冻结信息
+                FenbiFlowRecord ffr=CommonUtil.bulidFenFlow(busUser.getId(), fenbi, dragonboatraceMain.getId(), 43, 1, "端午赛龙舟活动支出", 0);
+                // 保存冻结信息
+                if(ffr!=null){
+                    FenbiFlowRecordReq fenbiFlowRecordReq = new FenbiFlowRecordReq();
+                    BeanUtils.copyProperties(ffr,fenbiFlowRecordReq);
+                    AxisResult axisResult = FenbiflowServer.saveFenbiFlowRecord(fenbiFlowRecordReq);
+                    if(axisResult.getCode() != 0){
+                        throw new DragonboatException(ResponseEnums.DRAGONBOAT_HAS8);
+                    }
+                }
+            }
+        }
     }
 
     /**

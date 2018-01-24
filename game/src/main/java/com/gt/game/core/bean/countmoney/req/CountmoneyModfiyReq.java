@@ -30,11 +30,11 @@ public class CountmoneyModfiyReq {
 	@ApiModelProperty("活动尚未开始提示")
 	private String actNotStartedTips;
 
-	/*@ApiModelProperty("背景音乐URL")
-	private String musicUrl;
-
 	@ApiModelProperty("背景音乐名")
-	private String bgmSp;*/
+	private String actScrBgmName;
+
+	@ApiModelProperty("背景音乐URL")
+	private String actScrBgmUrl;
 
 	@ApiModelProperty("游戏时间")
 	private Integer actGameTime;
@@ -71,6 +71,22 @@ public class CountmoneyModfiyReq {
 
 	@ApiModelProperty("奖品设置")
 	private List<CountmoneyPrizeSetReq> prizeSetList;
+
+	public String getActScrBgmName() {
+		return actScrBgmName;
+	}
+
+	public void setActScrBgmName(String actScrBgmName) {
+		this.actScrBgmName = actScrBgmName;
+	}
+
+	public String getActScrBgmUrl() {
+		return actScrBgmUrl;
+	}
+
+	public void setActScrBgmUrl(String actScrBgmUrl) {
+		this.actScrBgmUrl = actScrBgmUrl;
+	}
 
 	public Integer getId() {
 		return id;

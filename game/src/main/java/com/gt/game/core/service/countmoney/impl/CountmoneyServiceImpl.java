@@ -8,9 +8,14 @@ import com.gt.axis.bean.member.member.MemberReq;
 import com.gt.axis.bean.member.member.MemberRes;
 import com.gt.axis.bean.wxmp.dict.DictApiReq;
 import com.gt.axis.bean.wxmp.dict.DictApiRes;
+import com.gt.axis.bean.wxmp.fenbiflow.FenbiFlowRecord;
+import com.gt.axis.bean.wxmp.fenbiflow.FenbiFlowRecordReq;
+import com.gt.axis.bean.wxmp.fenbiflow.FenbiSurplus;
+import com.gt.axis.bean.wxmp.fenbiflow.UpdateFenbiReduceReq;
 import com.gt.axis.content.AxisResult;
 import com.gt.axis.server.member.MemberServer;
 import com.gt.axis.server.wxmp.DictServer;
+import com.gt.axis.server.wxmp.FenbiflowServer;
 import com.gt.game.common.dto.PageDTO;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.common.enums.ResponseEnums;
@@ -30,15 +35,21 @@ import com.gt.game.core.entity.countmoney.CountmoneyRecord;
 import com.gt.game.core.entity.lantern.LanternCashPrizeApply;
 import com.gt.game.core.entity.lantern.LanternMain;
 import com.gt.game.core.entity.lantern.LanternPrize;
+import com.gt.game.core.entity.scratch.ScratchDetail;
+import com.gt.game.core.entity.scratch.ScratchMain;
+import com.gt.game.core.entity.scratch.ScratchWinning;
 import com.gt.game.core.exception.countmoney.CountmoneyException;
 import com.gt.game.core.exception.lantern.LanternException;
+import com.gt.game.core.exception.scratch.ScratchException;
 import com.gt.game.core.service.countmoney.*;
 import com.gt.game.core.util.CommonUtil;
 import com.gt.game.core.util.DateTimeKit;
+import org.apache.poi.hssf.record.CountryRecord;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -179,7 +190,7 @@ public class CountmoneyServiceImpl implements CountmoneyService {
      * @param countmoneyAddReq
      */
     @Override
-    public void addCountmoney(WxPublicUsers loginPbUser, CountmoneyAddReq countmoneyAddReq) {
+    public void addCountmoney(BusUser busUser ,WxPublicUsers loginPbUser, CountmoneyAddReq countmoneyAddReq) {
 
         CountmoneyMain countmoneyMain = new CountmoneyMain();
         countmoneyMain.setActWxUserid(loginPbUser.getId());
@@ -190,6 +201,8 @@ public class CountmoneyServiceImpl implements CountmoneyService {
         countmoneyMain.setActEndTime(countmoneyAddReq.getActEndTime());
         countmoneyMain.setActDescribe(countmoneyAddReq.getActDescribe());
         countmoneyMain.setActNotStartedTips(countmoneyAddReq.getActNotStartedTips());
+        countmoneyMain.setActScrBgmName(countmoneyAddReq.getActScrBgmName());
+        countmoneyMain.setActScrBgmUrl(countmoneyAddReq.getActScrBgmUrl());
 
         //TODO  规则设置
         countmoneyMain.setActGameTime(countmoneyAddReq.getActGameTime());
@@ -223,10 +236,12 @@ public class CountmoneyServiceImpl implements CountmoneyService {
 
            countmoneyProbabilitysetService.insert(countmoneyProbabilityset);
        }
-
-        if(countmoneyAddReq.getActType()==1){  //TODO  排名中奖模式
+        Double fenbi = 0.0;
+        if(countmoneyAddReq.getActType()==1){  //TODO  排名中奖模式  奖项设置
             for(CountmoneyPrizeSetReq countmoneyPrizeSetReq:countmoneyAddReq.getPrizeSetList()){
-
+                if (countmoneyPrizeSetReq.getTurPrizeType() == 1) {
+                    fenbi += countmoneyPrizeSetReq.getTurPrizeNums();
+                }
                 CountmoneyDetail countmoneyDetail = new CountmoneyDetail();
                 countmoneyDetail.setActId(countmoneyMain.getId());
                 countmoneyDetail.setTurPrizeName(countmoneyPrizeSetReq.getTurPrizeName());
@@ -239,6 +254,23 @@ public class CountmoneyServiceImpl implements CountmoneyService {
             }
         }
 
+        if(fenbi > 0){//冻结粉币
+            // 判断账户中的粉币是否足够
+            if(busUser.getFansCurrency().doubleValue() < fenbi.doubleValue()){
+                throw new CountmoneyException(ResponseEnums.COUNTMONEY_HAS7);
+            }
+            //构建冻结信息
+            FenbiFlowRecord ffr=CommonUtil.bulidFenFlow(busUser.getId(), fenbi, countmoneyMain.getId(), 17, 1, "疯狂数钱活动支出", 0);
+            // 保存冻结信息
+            if(ffr!=null){
+                FenbiFlowRecordReq fenbiFlowRecordReq = new FenbiFlowRecordReq();
+                BeanUtils.copyProperties(ffr,fenbiFlowRecordReq);
+                AxisResult axisResult = FenbiflowServer.saveFenbiFlowRecord(fenbiFlowRecordReq);
+                if(axisResult.getCode() != 0){
+                    throw new CountmoneyException(ResponseEnums.COUNTMONEY_HAS8);
+                }
+            }
+        }
     }
 
     /**
@@ -259,6 +291,8 @@ public class CountmoneyServiceImpl implements CountmoneyService {
         countmoneyGetActivityRes.setActEndTime(countmoneyMain.getActEndTime());
         countmoneyGetActivityRes.setActDescribe(countmoneyMain.getActDescribe());
         countmoneyGetActivityRes.setActNotStartedTips(countmoneyMain.getActNotStartedTips());
+        countmoneyGetActivityRes.setActScrBgmName(countmoneyMain.getActScrBgmName());
+        countmoneyGetActivityRes.setActScrBgmUrl(countmoneyMain.getActScrBgmUrl());
 
         //TODO  规则设置
         countmoneyGetActivityRes.setActGameTime(countmoneyMain.getActGameTime());
@@ -325,15 +359,23 @@ public class CountmoneyServiceImpl implements CountmoneyService {
     @Override
     public void modfiyBasicsCountmoney(BusUser busUser, CountmoneyModfiyReq countmoneyModfiyReq) {
 
-        CountmoneyMain countmoneyMain = new CountmoneyMain();
+        CountmoneyMain countmoneyMain = countmoneyMainService.selectById(countmoneyModfiyReq.getId());
+        if(CommonUtil.isEmpty(countmoneyMain)){
+            throw new CountmoneyException(ResponseEnums.COUNTMONEY_HAS5);
+        }
+        if(countmoneyMain.getActBeginTime().getTime() < new Date().getTime()){
+            throw new CountmoneyException(ResponseEnums.COUNTMONEY_HAS10);
+        }
+
         //TODO 基础设置
-        countmoneyMain.setId(countmoneyModfiyReq.getId());
         countmoneyMain.setActType(countmoneyModfiyReq.getActType());
         countmoneyMain.setActName(countmoneyModfiyReq.getActName());
         countmoneyMain.setActBeginTime(countmoneyModfiyReq.getActBeginTime());
         countmoneyMain.setActEndTime(countmoneyModfiyReq.getActEndTime());
         countmoneyMain.setActDescribe(countmoneyModfiyReq.getActDescribe());
         countmoneyMain.setActNotStartedTips(countmoneyModfiyReq.getActNotStartedTips());
+        countmoneyMain.setActScrBgmName(countmoneyModfiyReq.getActScrBgmName());
+        countmoneyMain.setActScrBgmUrl(countmoneyModfiyReq.getActScrBgmUrl());
 
 
         //TODO  规则设置
@@ -355,6 +397,7 @@ public class CountmoneyServiceImpl implements CountmoneyService {
 
         //TODO 奖品设置
         countmoneyMain.setActIsShowNums(countmoneyModfiyReq.getActIsShowNums());
+
         countmoneyMainService.updateById(countmoneyMain);
 
         //TODO 清空活动概率设置
@@ -373,14 +416,33 @@ public class CountmoneyServiceImpl implements CountmoneyService {
             countmoneyProbabilitysetService.insert(countmoneyProbabilityset);
         }
 
+        Double fenbi = 0.0;
+        Double num   = 0.0;
+        int f = 0;
+
+        EntityWrapper<CountmoneyDetail> entityWrapper5 = new EntityWrapper();
+        entityWrapper5.eq("act_id",countmoneyModfiyReq.getId());
+        List<CountmoneyDetail> countmoneyDetailList = countmoneyDetailService.selectList(entityWrapper5);
+        if(countmoneyDetailList.size() > 0) {
+            for (CountmoneyDetail countmoneyDetail : countmoneyDetailList) {
+                if (countmoneyDetail.getTurPrizeType() == 1) {
+                    num += countmoneyDetail.getTurPrizeNums();
+                    f = 1;
+                }
+            }
+        }
+
         //TODO 清空奖品设置
         EntityWrapper<CountmoneyDetail> entityWrapper2 = new EntityWrapper();
         entityWrapper2.eq("act_id", countmoneyMain.getId());
         countmoneyDetailService.delete(entityWrapper2);
 
-        if(countmoneyMain.getActType()==1){  //TODO  排名中奖模式
-            for(CountmoneyPrizeSetReq countmoneyPrizeSetReq:countmoneyModfiyReq.getPrizeSetList()){
 
+        if(countmoneyMain.getActType()==1){  //TODO  排名中奖模式  奖品设置
+            for(CountmoneyPrizeSetReq countmoneyPrizeSetReq:countmoneyModfiyReq.getPrizeSetList()){
+                if (countmoneyPrizeSetReq.getTurPrizeType() == 1) {
+                    fenbi += countmoneyPrizeSetReq.getTurPrizeNums();
+                }
                 CountmoneyDetail countmoneyDetail = new CountmoneyDetail();
                 countmoneyDetail.setActId(countmoneyMain.getId());
                 countmoneyDetail.setTurPrizeName(countmoneyPrizeSetReq.getTurPrizeName());
@@ -391,16 +453,110 @@ public class CountmoneyServiceImpl implements CountmoneyService {
                 countmoneyDetailService.insert(countmoneyDetail);
             }
         }
+
+        if(fenbi > 0){//冻结粉币
+            if( f > 0){
+                if ((fenbi - num) <= (0 - num)) {
+                    throw new CountmoneyException(ResponseEnums.COUNTMONEY_HAS9);
+                }
+                // 判断账户中的粉币是否足够
+                if (busUser.getFansCurrency().doubleValue() < (fenbi - num)) {
+                    throw new CountmoneyException(ResponseEnums.COUNTMONEY_HAS7);
+                }
+                UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
+                updateFenbiReduceReq.setBusId(busUser.getId());
+                updateFenbiReduceReq.setFkId(countmoneyMain.getId());
+                updateFenbiReduceReq.setFreType(17);
+                updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi - num));
+                AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
+                if (axisResult.getCode() != 0) {
+                    throw new CountmoneyException(ResponseEnums.COUNTMONEY_HAS8);
+                }
+            }else {
+                // 判断账户中的粉币是否足够
+                if(busUser.getFansCurrency().doubleValue() < fenbi.doubleValue()){
+                    throw new CountmoneyException(ResponseEnums.COUNTMONEY_HAS7);
+                }
+                //构建冻结信息
+                FenbiFlowRecord ffr=CommonUtil.bulidFenFlow(busUser.getId(), fenbi, countmoneyMain.getId(), 17, 1, "疯狂数钱活动支出", 0);
+                // 保存冻结信息
+                if(ffr!=null){
+                    FenbiFlowRecordReq fenbiFlowRecordReq = new FenbiFlowRecordReq();
+                    BeanUtils.copyProperties(ffr,fenbiFlowRecordReq);
+                    AxisResult axisResult = FenbiflowServer.saveFenbiFlowRecord(fenbiFlowRecordReq);
+                    if(axisResult.getCode() != 0){
+                        throw new CountmoneyException(ResponseEnums.COUNTMONEY_HAS8);
+                    }
+                }
+            }
+        }
     }
 
     /**
      * 删除疯狂数钱活动
      * @param busUser
-     * @param lanternDelReq
      */
     @Override
-    public void delCountmoney(BusUser busUser, LanternDelReq lanternDelReq) {
+    public void delCountmoney(BusUser busUser, CountmoneyDelReq countmoneyDelReq) {
 
+        CountmoneyMain countmoneyMain = countmoneyMainService.selectById(countmoneyDelReq.getId());
+        if(CommonUtil.isNotEmpty(countmoneyMain)) {
+            if (countmoneyMain.getActBeginTime().getTime() < new Date().getTime() && countmoneyMain.getActEndTime().getTime() > new Date().getTime()) {
+                throw new CountmoneyException(ResponseEnums.COUNTMONEY_HAS11);
+            }
+
+            List<CountmoneyRecord> countmoneyRecordList = countmoneyRecordService.selectList(
+                    new EntityWrapper<CountmoneyRecord>().eq("win_act_id", countmoneyDelReq.getId()).eq("win_status", 3));
+            if (countmoneyRecordList.size() > 0) {
+                throw new CountmoneyException(ResponseEnums.COUNTMONEY_HAS13);
+
+            }
+        }
+        //TODO  删除活动
+        boolean b = countmoneyMainService.deleteById(countmoneyDelReq.getId());
+        if(b==false){
+            throw  new CountmoneyException(ResponseEnums.COUNTMONEY_HAS6);
+        }
+
+        EntityWrapper<CountmoneyDetail> entityWrapper3 = new EntityWrapper<>();
+        entityWrapper3.eq("act_id",countmoneyDelReq.getId());
+        List<CountmoneyDetail> countmoneyDetailList = countmoneyDetailService.selectList(entityWrapper3);
+
+        boolean ff = false;
+        if(countmoneyDetailList.size() > 0){
+            for(CountmoneyDetail countmoneyDetail : countmoneyDetailList){
+                if(countmoneyDetail.getTurPrizeType() == 1){
+                    ff = true;
+                }
+            }
+        }
+
+        //TODO  删除奖品设置
+        EntityWrapper<CountmoneyDetail> entityWrapper5 = new EntityWrapper<>();
+        entityWrapper3.eq("act_id",countmoneyDelReq.getId());
+        countmoneyDetailService.delete(entityWrapper5);
+
+        //删除冻结信息
+        if(ff){
+            FenbiSurplus fenbiSurplus = new FenbiSurplus();
+            fenbiSurplus.setBusId(busUser.getId());
+            fenbiSurplus.setFkId(countmoneyMain.getId());
+            fenbiSurplus.setFre_type(17);
+            fenbiSurplus.setRec_type(1);
+            AxisResult<FenbiFlowRecord> ffr = FenbiflowServer.getFenbiFlowRecord(fenbiSurplus);
+            if(ffr!=null && ffr.getData() != null && ffr.getData().getRollStatus() == 1){//未回滚
+                // 获取冻结信息中粉币剩余量
+                FenbiSurplus fenbiSurplus1 = new FenbiSurplus();
+                fenbiSurplus1.setBusId(busUser.getId());
+                fenbiSurplus1.setFkId(countmoneyMain.getId());
+                fenbiSurplus1.setRec_type(1);
+                fenbiSurplus1.setFre_type(17);
+                AxisResult axisResult = FenbiflowServer.rollbackFenbiRecord(fenbiSurplus1);
+                if(axisResult.getCode() != 0){
+                    throw new CountmoneyException(ResponseEnums.COUNTMONEY_HAS14);
+                }
+            }
+        }
     }
 
     /**

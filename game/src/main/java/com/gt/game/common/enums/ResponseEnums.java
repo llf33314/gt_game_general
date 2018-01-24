@@ -310,10 +310,6 @@ public enum ResponseEnums {
     TREE_HAS13(413,"奖品未发放完毕，不允许操作"),
     TREE_HAS14(414,"回滚粉币失败，删除失败"),
 
-
-
-
-
     //疯狂数钱
     COUNTMONEY_HAS1(401,"未到兑奖时间!"),
     COUNTMONEY_HAS2(402,"已过兑奖时间!"),
@@ -321,6 +317,16 @@ public enum ResponseEnums {
     COUNTMONEY_HAS4(404,"手动发放只能选择[已提交]状态的数据！!"),
     COUNTMONEY_HAS5(405,"活动为空!"),
     COUNTMONEY_HAS6(406,"删除活动失败！"),
+    COUNTMONEY_HAS7(407,"粉币不足，保存失败"),
+    COUNTMONEY_HAS8(408,"冻结粉币失败，保存失败"),
+    COUNTMONEY_HAS9(409,"输入的粉币数量过少"),
+    COUNTMONEY_HAS10(410,"活动已经开始，不允许操作!"),
+    COUNTMONEY_HAS11(411,"活动正在进行，不允许删除"),
+    COUNTMONEY_HAS12(412,"未过活动兑换期限，不允许删除"),
+    COUNTMONEY_HAS13(413,"奖品未发放完毕，不允许操作"),
+    COUNTMONEY_HAS14(414,"回滚粉币失败，删除失败"),
+    COUNTMONEY_HAS15(415,"活动还未开始"),
+    COUNTMONEY_HAS16(416,"活动已结束"),
     ;
 
     private final int code;
