@@ -37,11 +37,11 @@ public class TreeAddReq {
 	@ApiModelProperty("活动未开始提示")
 	private String treeBeforeTxt;
 
-/*	@ApiModelProperty("音乐名称")
+	@ApiModelProperty("音乐名称")
 	private String treeBgmName;
 
 	@ApiModelProperty("音乐路径")
-	private String treeBgm;*/
+	private String treeBgm;
 
 	@ApiModelProperty("抽奖总数")
 	private Integer treeCountOfAll;
@@ -64,6 +64,21 @@ public class TreeAddReq {
 	@ApiModelProperty("奖品设置")
 	private List<TreePrizeSetReq> prizeSetList;
 
+	public String getTreeBgmName() {
+		return treeBgmName;
+	}
+
+	public void setTreeBgmName(String treeBgmName) {
+		this.treeBgmName = treeBgmName;
+	}
+
+	public String getTreeBgm() {
+		return treeBgm;
+	}
+
+	public void setTreeBgm(String treeBgm) {
+		this.treeBgm = treeBgm;
+	}
 
 	public String getTreeName() {
 		return treeName;

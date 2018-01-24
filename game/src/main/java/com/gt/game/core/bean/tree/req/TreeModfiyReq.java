@@ -4,9 +4,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
+import java.util.List;
 
-@ApiModel("编辑圣诞大礼包活动基础设置请求类")
-public class TreeModfiyBasicsReq {
+@ApiModel("编辑圣诞大礼包活动设置请求类")
+public class TreeModfiyReq {
 
 	@ApiModelProperty("活动主键id")
 	private Integer id;
@@ -38,11 +39,32 @@ public class TreeModfiyBasicsReq {
 	@ApiModelProperty("活动未开始提示")
 	private String treeBeforeTxt;
 
-/*	@ApiModelProperty("音乐名称")
+	@ApiModelProperty("音乐名称")
 	private String treeBgmName;
 
 	@ApiModelProperty("音乐路径")
-	private String treeBgm;*/
+	private String treeBgm;
+
+	@ApiModelProperty("抽奖总数")
+	private Integer treeCountOfAll;
+
+	@ApiModelProperty("抽奖次数")
+	private Integer treeCountOfDay;
+
+	@ApiModelProperty("兑奖期限")
+	private Integer treeCashDay;
+
+	@ApiModelProperty("兑奖地址")
+	private String treeAddress;
+
+	@ApiModelProperty("是否允许转赠送 0.不允许 1.允许")
+	private Integer treeIsGive;
+
+	@ApiModelProperty("兑奖提示")
+	private String treeWinningTxt;
+
+	@ApiModelProperty("奖品设置")
+	private List<TreePrizeSetReq> prizeSetList;
 
 	public Integer getId() {
 		return id;
@@ -50,6 +72,22 @@ public class TreeModfiyBasicsReq {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public String getTreeBgmName() {
+		return treeBgmName;
+	}
+
+	public void setTreeBgmName(String treeBgmName) {
+		this.treeBgmName = treeBgmName;
+	}
+
+	public String getTreeBgm() {
+		return treeBgm;
+	}
+
+	public void setTreeBgm(String treeBgm) {
+		this.treeBgm = treeBgm;
 	}
 
 	public String getTreeName() {
@@ -122,5 +160,61 @@ public class TreeModfiyBasicsReq {
 
 	public void setTreeBeforeTxt(String treeBeforeTxt) {
 		this.treeBeforeTxt = treeBeforeTxt;
+	}
+
+	public Integer getTreeCountOfAll() {
+		return treeCountOfAll;
+	}
+
+	public void setTreeCountOfAll(Integer treeCountOfAll) {
+		this.treeCountOfAll = treeCountOfAll;
+	}
+
+	public Integer getTreeCountOfDay() {
+		return treeCountOfDay;
+	}
+
+	public void setTreeCountOfDay(Integer treeCountOfDay) {
+		this.treeCountOfDay = treeCountOfDay;
+	}
+
+	public Integer getTreeCashDay() {
+		return treeCashDay;
+	}
+
+	public void setTreeCashDay(Integer treeCashDay) {
+		this.treeCashDay = treeCashDay;
+	}
+
+	public String getTreeAddress() {
+		return treeAddress;
+	}
+
+	public void setTreeAddress(String treeAddress) {
+		this.treeAddress = treeAddress;
+	}
+
+	public Integer getTreeIsGive() {
+		return treeIsGive;
+	}
+
+	public void setTreeIsGive(Integer treeIsGive) {
+		this.treeIsGive = treeIsGive;
+	}
+
+	public String getTreeWinningTxt() {
+		return treeWinningTxt;
+	}
+
+	public void setTreeWinningTxt(String treeWinningTxt) {
+		this.treeWinningTxt = treeWinningTxt;
+	}
+
+	public List<TreePrizeSetReq> getPrizeSetList() {
+		return prizeSetList;
+	}
+
+	public void setPrizeSetList(List<TreePrizeSetReq> prizeSetList) {
+		this.prizeSetList = prizeSetList;
 	}
 }

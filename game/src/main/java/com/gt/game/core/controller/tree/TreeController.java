@@ -3,28 +3,17 @@ package com.gt.game.core.controller.tree;
 
 
 import com.gt.api.bean.session.BusUser;
+import com.gt.api.bean.session.WxPublicUsers;
 import com.gt.game.common.base.BaseController;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.core.bean.lantern.res.LanternPrizeTypeListRes;
-import com.gt.game.core.bean.ninelattice.req.*;
-import com.gt.game.core.bean.ninelattice.req.NinelatticeAuthorityListReq;
-import com.gt.game.core.bean.ninelattice.req.NinelatticeDelReq;
-import com.gt.game.core.bean.ninelattice.req.NinelatticeDelWinningReq;
-import com.gt.game.core.bean.ninelattice.req.NinelatticeEditApplyReq;
-import com.gt.game.core.bean.ninelattice.req.NinelatticeGetWinningReq;
-import com.gt.game.core.bean.ninelattice.req.NinelatticeModfiyAwardsReq;
-import com.gt.game.core.bean.ninelattice.req.NinelatticeModfiyExpiryReq;
-import com.gt.game.core.bean.ninelattice.req.NinelatticeModfiyRuleReq;
 import com.gt.game.core.bean.ninelattice.res.*;
 import com.gt.game.core.bean.tree.req.*;
 import com.gt.game.core.bean.tree.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
-import com.gt.game.core.exception.demolition.DemolitionException;
-import com.gt.game.core.exception.lantern.LanternException;
 import com.gt.game.core.exception.ninelattice.NinelatticeException;
 import com.gt.game.core.exception.tree.TreeException;
-import com.gt.game.core.service.ninelattice.NinelatticeService;
 import com.gt.game.core.service.tree.TreeService;
 import com.gt.game.core.util.CommonUtil;
 import io.swagger.annotations.*;
@@ -67,8 +56,8 @@ public class TreeController extends BaseController {
     @Override
     protected ResponseDTO getMobileUrl(@RequestBody @ApiParam(value = "请求参数") MobileUrlReq mobileUrlReq, HttpServletRequest request) {
         try {
-            BusUser busUser = CommonUtil.getLoginUser(request);
-            MobileUrlRes mobileUrlRes = treeService.getMobileUrl(busUser, mobileUrlReq);
+            WxPublicUsers loginPbUser = CommonUtil.getLoginPbUser(request);
+            MobileUrlRes mobileUrlRes = treeService.getMobileUrl(loginPbUser, mobileUrlReq);
             return ResponseDTO.createBySuccess("获取手机端链接成功", mobileUrlRes);
         } catch (TreeException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
@@ -178,20 +167,20 @@ public class TreeController extends BaseController {
         }
     }
 
-    // TODO  编辑圣诞大礼包活动基础设置
+    // TODO  编辑圣诞大礼包活动设置
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
     })
-    @ApiOperation(value = "编辑圣诞大礼包活动基础设置", notes = "编辑圣诞大礼包活动基础设置")
-    @RequestMapping(value = "/modfiyBasicsTree", method = RequestMethod.POST)
-    protected ResponseDTO modfiyBasicsTree(@RequestBody @ApiParam(value = "请求对象") TreeModfiyBasicsReq treeModfiyBasicsReq, BindingResult bindingResult,
+    @ApiOperation(value = "编辑圣诞大礼包活动设置", notes = "编辑圣诞大礼包活动设置")
+    @RequestMapping(value = "/modfiyTree", method = RequestMethod.POST)
+    protected ResponseDTO modfiyTree(@RequestBody @ApiParam(value = "请求对象") TreeModfiyReq treeModfiyReq, BindingResult bindingResult,
                                            HttpServletRequest request) {
         InvalidParameter(bindingResult);
         try {
-            logger.debug(treeModfiyBasicsReq.toString());
+            logger.debug(treeModfiyReq.toString());
             BusUser busUser = CommonUtil.getLoginUser(request);
-            treeService.modfiyBasicsTree(busUser,treeModfiyBasicsReq);
-            return ResponseDTO.createBySuccessMessage("编辑圣诞大礼包活动基础设置成功");
+            treeService.modfiyTree(busUser,treeModfiyReq);
+            return ResponseDTO.createBySuccessMessage("编辑圣诞大礼包活动设置成功");
         } catch (TreeException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
@@ -201,80 +190,10 @@ public class TreeController extends BaseController {
         }
     }
 
-    // TODO  编辑圣诞大礼包活动规则设置
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
     })
-    @ApiOperation(value = "编辑圣诞大礼包活动规则设置", notes = "编辑圣诞大礼包活动规则设置")
-    @RequestMapping(value = "/modfiyRuleTree", method = RequestMethod.POST)
-    protected ResponseDTO modfiyRuleTree(@RequestBody @ApiParam(value = "请求对象") TreeModfiyRuleReq treeModfiyRuleReq, BindingResult bindingResult,
-                                                HttpServletRequest request) {
-        InvalidParameter(bindingResult);
-        try {
-            logger.debug(treeModfiyRuleReq.toString());
-            BusUser busUser = CommonUtil.getLoginUser(request);
-            treeService.modfiyRuleTree(busUser, treeModfiyRuleReq);
-            return ResponseDTO.createBySuccessMessage("编辑圣诞大礼包活动规则设置成功");
-        } catch (TreeException e){
-            logger.error(e.getMessage(), e.fillInStackTrace());
-            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
-        } catch (Exception e){
-            e.printStackTrace();
-            return ResponseDTO.createByError();
-        }
-    }
-
-    // TODO  编辑圣诞大礼包活动兑奖设置
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-    })
-    @ApiOperation(value = "编辑圣诞大礼包活动兑奖设置", notes = "编辑圣诞大礼包活动兑奖设置")
-    @RequestMapping(value = "/modfiyExpiryTree", method = RequestMethod.POST)
-    protected ResponseDTO modfiyExpiryTree(@RequestBody @ApiParam(value = "请求对象") TreeModfiyExpiryReq treeModfiyExpiryReq, BindingResult bindingResult,
-                                                  HttpServletRequest request) {
-        InvalidParameter(bindingResult);
-        try {
-            logger.debug(treeModfiyExpiryReq.toString());
-            BusUser busUser = CommonUtil.getLoginUser(request);
-            treeService.modfiyExpiryTree(busUser, treeModfiyExpiryReq);
-            return ResponseDTO.createBySuccessMessage("编辑圣诞大礼包活动兑奖设置成功");
-        } catch (TreeException e){
-            logger.error(e.getMessage(), e.fillInStackTrace());
-            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
-        } catch (Exception e){
-            e.printStackTrace();
-            return ResponseDTO.createByError();
-        }
-    }
-
-    // TODO  编辑圣诞大礼包奖项设置
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-    })
-    @ApiOperation(value = "编辑圣诞大礼包奖项设置", notes = "编辑圣诞大礼包奖项设置")
-    @RequestMapping(value = "/modfiyAwardsTree", method = RequestMethod.POST)
-    protected ResponseDTO modfiyAwardsTree(@RequestBody @ApiParam(value = "请求对象") TreeModfiyAwardsReq treeModfiyAwardsReq, BindingResult bindingResult,
-                                                  HttpServletRequest request) {
-        InvalidParameter(bindingResult);
-        try {
-            logger.debug(treeModfiyAwardsReq.toString());
-            BusUser busUser = CommonUtil.getLoginUser(request);
-            treeService.modfiyAwardsTree(busUser, treeModfiyAwardsReq);
-            return ResponseDTO.createBySuccessMessage("编辑圣诞大礼包奖项设置成功");
-        } catch (TreeException e){
-            logger.error(e.getMessage(), e.fillInStackTrace());
-            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
-        } catch (Exception e){
-            e.printStackTrace();
-            return ResponseDTO.createByError();
-        }
-    }
-
-
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-    })
-    @ApiOperation(value = "批量删除圣诞大礼包活动", notes = "批量删除圣诞大礼包活动")
+    @ApiOperation(value = "删除圣诞大礼包活动", notes = "删除圣诞大礼包活动")
     @RequestMapping(value = "/delTree", method = RequestMethod.POST)
     protected ResponseDTO delTree(
             @RequestBody @ApiParam("请求参数") TreeDelReq treeDelReq,
@@ -282,7 +201,7 @@ public class TreeController extends BaseController {
         try {
             BusUser busUser = CommonUtil.getLoginUser(request);
             treeService.delTree(busUser, treeDelReq);
-            return ResponseDTO.createBySuccessMessage("批量删除圣诞大礼包活动成功");
+            return ResponseDTO.createBySuccessMessage("删除圣诞大礼包活动成功");
         } catch (TreeException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
