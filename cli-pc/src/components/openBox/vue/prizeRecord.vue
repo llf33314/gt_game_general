@@ -59,15 +59,27 @@
           </el-table-column>
           <el-table-column prop="order_option"  label="操作">
             <template slot-scope="scope"> 
-              <el-button class="gt-button-normal blue"      @click="test(scope.row.id)">详情</el-button>  
+              <el-button class="gt-button-normal blue"      @click="showDetailBtn(scope.row)">详情</el-button>  
               <el-button class="gt-button-normal blue"  v-if="scope.row.status==3"       @click="handOut(scope.row.id)">发放奖品</el-button> 
               <el-button class="gt-button-normal blue"  v-if="scope.row.status==1"  :disabled="true"   @click="handOut(scope.row.id)">发放奖品</el-button>  
             </template>
           </el-table-column>
         </el-table> 
+        <!-- 详情 -->
+        <el-dialog title="详情" :visible.sync="showDetail" class="detail-dialog"> 
+          <div>
+              <p><span class="w20_demo">中奖人</span><b> : </b> {{showDetailData.nickname}}</p> 
+              <p><span class="w20_demo">兑奖人</span><b> : </b> {{showDetailData.addressName}}</p> 
+              <p><span class="w20_demo">兑奖人联系方式</span><b> : </b> {{showDetailData.memberPhone }}</p> 
+              <p v-if="showDetailData.status==1"><span class="w20_demo">兑奖时间</span><b> : </b>{{showDetailData.cashTime|parseTime('{y}-{m}-{d}')}}</p> 
+              <p v-if="showDetailData.status!=1"><span class="w20_demo">领取方式</span><b> : </b> {{showDetailData.receiveType|receiveTypeStatus(showDetailData.receiveType)}}</p> 
+              <p v-if="showDetailData.receiveType==1"><span class="w20_demo">到店领取地址</span><b> : </b> {{showDetailData.addressName}}</p> 
+              <p v-if="showDetailData.receiveType==2"><span class="w20_demo">收货人姓名</span><b> : </b> {{showDetailData.addressName}}</p> 
+              <p v-if="showDetailData.receiveType==2"><span class="w20_demo">收货地址</span><b> : </b> {{showDetailData.address}}</p> 
+          </div> 
+        </el-dialog> 
         <div class="public-page-fr" v-if="this.tableData.data.length!=0">
-              <el-pagination @current-change="handleCurrentChange"  :page-size="10" 
-              layout="prev, pager, next, jumper" :total="tableData.page.totalNums">
+              <el-pagination @current-change="handleCurrentChange"  :page-size="10" layout="prev, pager, next, jumper" :total="tableData.page.totalNums">
               </el-pagination>
         </div> 
     </div>
@@ -76,7 +88,7 @@
 </template>
 <script>
 import {  
-getDemolitionApplyList,editDemolitionApply
+getPrizeList,givePrize
 }from './../api/api'
   export default{
     data() {
@@ -88,10 +100,18 @@ getDemolitionApplyList,editDemolitionApply
         tableData:{
           data:[ ], 
           page:{ }
-        },  
+        }, 
+         showDetail:false,
+        showDetailData:[] 
       };
     },
     methods: {
+      showDetailBtn(val){
+        this.showDetail=true
+        this.showDetailData=val
+        console.log(this.showDetailData,852222);
+
+      },
       getData(){
         var params    ={}; 
           params.actId  =this.$router.history.current.query.id; 
@@ -101,7 +121,7 @@ getDemolitionApplyList,editDemolitionApply
           params.status =this.prizeState;
           params.type   =this.prizeType;
         console.log(params,77)
-        getDemolitionApplyList(params).then(data=>{
+        getPrizeList(params).then(data=>{
           if (data.code == 100) {
             this.tableData=data
             console.log(data,33);
@@ -114,7 +134,7 @@ getDemolitionApplyList,editDemolitionApply
       },
       //发放奖品  
       handOut(id){
-        editDemolitionApply({id}).then(data=>{
+        givePrize({id}).then(data=>{
           if (data.code == 100) {
                 this.$message({ message: "发放成功", type: "success" });
                 this.getData();  
@@ -153,6 +173,16 @@ getDemolitionApplyList,editDemolitionApply
           val = "已兑奖"; 
         }else if(val == 3){
           val = "已提交";
+        }  
+        return val;
+      },
+       receiveTypeStatus(val) {
+        if (val == 1) {
+          val = "到店领取";
+        }else if(val == 2){
+          val = "邮寄"; 
+        }else if(val == 3){
+          val = "直接兑奖";
         }  
         return val;
       },

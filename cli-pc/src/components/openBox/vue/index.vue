@@ -63,14 +63,12 @@
     </div> 
     <!-- 链接 -->
     <gt-copy-url :copeData="copeData"></gt-copy-url>
-    
 </div>
 </section>
 </template>
 <script>
 import { 
-  getDemolitionList,getMobileUrl,requestgetShortUrl,getDemolitionCount,removeDemolition
-
+  getActList,getMobileUrl,getShortUrl,getActCount,delAct
 }from './../api/api'
   export default{
     data() {
@@ -99,7 +97,7 @@ import {
         params.current=this.current;
         params.size   =10;
         console.log(params,77)
-        getDemolitionList(params).then(data=>{
+        getActList(params).then(data=>{
           if (data.code == 100) {
             this.tableData=data
             console.log(data,123);
@@ -112,7 +110,7 @@ import {
         // console.log(3);
       },
       getCount(){
-        getDemolitionCount().then(data=>{
+        getActCount().then(data=>{
           if (data.code == 100) {
             // console.log(data,1212)
             this.countNum.all    =data.data.count1 
@@ -133,7 +131,7 @@ import {
             //页面链接
             this.copeData.url = data.data.mobileUrl;
             //短链接
-            requestgetShortUrl(data.data.mobileUrl).then(res => {
+            getShortUrl(data.data.mobileUrl).then(res => {
               this.copeData.shortUrl = res;
             });
             this.copeData.copyUrlVisible = true;
@@ -148,7 +146,7 @@ import {
             cancelButtonText: "取消",
             type: "warning" 
             }).then(() => {  
-            removeDemolition({id:val}).then(data => {  
+            delAct({id:val}).then(data => {  
                 if (data.code == 100) { 
                     this.$message({ message: "操作成功", type: "success"}); 
                     this.getdata();
