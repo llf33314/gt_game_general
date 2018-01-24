@@ -581,25 +581,7 @@ export default {
     },  
     //表单提交--------------------------------------star
     submit(){
-        console.log(this.ruleForm1,123); 
-        // //广告
-        // var newadv=[];
-        // for(let i =0;i< this.ruleForm1.demolitionAdReqs.length;i++){ 
-        //     var arr={
-        //         hrefUrl:this.ruleForm1.demolitionAdReqs[i].hrefUrl, 
-        //         url:this.ruleForm1.demolitionAdReqs[i].url, 
-        //     } 
-        //     newadv.push(arr)
-        // }  
-        // var newaddr=[];
-        // if(this.ruleForm3.demolitionAddressReqs){ 
-        //     for(let i =0;i< this.ruleForm3.demolitionAddressReqs.length;i++){ 
-        //         var arraddr={
-        //             address:this.ruleForm3.demolitionAddressReqs[i].address,  
-        //         } 
-        //         newaddr.push(arraddr)
-        //     }    
-        // } 
+        console.log(this.ruleForm1,123);  
         //奖品
         var newPrize=[];
         if(this.ruleForm4){
@@ -640,7 +622,7 @@ export default {
             } 
         } 
         const data = {
-            id:0,
+            id:this.$router.history.current.query.id,
             //基础设置 
             name  : this.ruleForm1.name, 
             activityBeginTime: this.ruleForm1.name1[0], 
@@ -670,7 +652,7 @@ export default {
         saveAct(data).then(data=>{
           this.isSubmit=true
           if (data.code == 100) {  
-              this.active=5
+              this.$message({ message: "操作成功", type: "success"}); 
           } else {
               this.isSubmit=false
               this.$message.error(data.msg);
