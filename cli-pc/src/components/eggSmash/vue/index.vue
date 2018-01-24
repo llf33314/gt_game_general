@@ -205,12 +205,12 @@ export default {
     addActive() {
       this.$router.push("/eggSmash/addAct");
     },
-    // edit(id) {
-    //   this.$router.push({
-    //     path: "/eggSmash/editAct",
-    //     query: { id: id }
-    //   });
-    // },
+    edit(id) {
+      this.$router.push({
+        path: "/eggSmash/editAct",
+        query: { id: id }
+      });
+    },
     //中奖记录
     record(val) {
       this.$router.push({

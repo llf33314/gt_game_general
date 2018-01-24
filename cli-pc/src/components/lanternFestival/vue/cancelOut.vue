@@ -92,34 +92,18 @@ export default {
       cancelCode: false,
 
       multipleSelection: [],
-      tableData: [
-        {
-          id: 0,
-          memberName: "熊小猫",
-          createtime: "1514252903"
-        },
-        {
-          id: 12,
-          memberName: "王小虎",
-          createtime: "1514252903"
-        },
-        {
-          id: 0,
-          memberName: "熊小猫",
-          createtime: "1514252903"
-        },
-        {
-          id: 12,
-          memberName: "王小虎",
-          createtime: "1514252903"
-        }
-      ],
+      tableData: [],
       showSuccee: false
     };
   },
   methods: {
     //新增授权
     add() {
+      api.getAuthorityUrl({ main: this.$route.query.id }).then(res => {
+         if (res.code == 100) {
+           this.Code = res.data.mobileUrl
+         }
+      })
       this.cancelCode = true;
     },
     //全选
@@ -145,7 +129,6 @@ export default {
           actId: this.$route.query.id,
           id: [id]
         };
-
         api.delAuthority(params).then(res => {
           if (res.code == 100) {
             this.$message.success("删除成功");

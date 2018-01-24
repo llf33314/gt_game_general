@@ -108,7 +108,7 @@ import { getActList,getMobileUrl,getShortUrl,getActCount,delAct}from './../api/a
       },
       //获取数量--------------------------------------star
       getCount(){
-        getActCount().then(data=>{
+        getActCount({ name: this.keyWord }).then(data=>{
           if (data.code == 100) {
             console.log(data,'数量')
             this.countNum.all    =data.data.count1 

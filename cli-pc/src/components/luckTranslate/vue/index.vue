@@ -94,7 +94,7 @@ import {
       getdata(){
         var params    ={};
         params.status =Number(this.activeName);
-        params.name   =this.keyWord;
+        params.luckName=this.keyWord;
         params.current=this.current;
         params.size   =10;
         console.log(params,77)
@@ -153,6 +153,7 @@ import {
                 if (data.code == 100) { 
                     this.$message({ message: "操作成功", type: "success"}); 
                     this.getdata();
+                    this.getCount();
                 } else {
                 this.$message.error(data.msg);
                 }
@@ -167,9 +168,28 @@ import {
         params.id=val
         params.luckStatus=1
         console.log(params,12345);
-        stopLuck().then(data=>{
+        stopLuck(params).then(data=>{
           if (data.code == 100) {
-            console.log(data,'数量')           
+            this.$message({ message: "操作成功", type: "success" });   
+            this.getdata(); 
+            this.getCount();       
+          } else {
+              this.$message.error(data.msg);
+          }
+        }).catch(() => {
+            this.$message({type: "info", message: "网络问题，请刷新重试~" });
+        });  
+      },
+       handleActive2(val){
+        var params={}
+        params.id=val
+        params.luckStatus=2
+        console.log(params,12345);
+        stopLuck(params).then(data=>{
+          if (data.code == 100) {
+            this.$message({ message: "操作成功", type: "success" });    
+            this.getdata(); 
+            this.getCount();      
           } else {
               this.$message.error(data.msg);
           }

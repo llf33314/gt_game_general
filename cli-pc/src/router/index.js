@@ -24,8 +24,7 @@ import { throughHeart }  from '@/components/throughHeart/router/index.js'
 Vue.use(Router)
 var routes = [
   {
-      path: '/',
-      redirect: '/eggSmash/index',
+      path: '/', 
   },
   ...bigTurnplate,
   ...cashTree,

@@ -4,6 +4,7 @@ import {
 import {
   Message
 } from 'element-ui'
+import axios from 'axios'
 export default {
   /**
    * @Created by xiandan on 2017-10-09
