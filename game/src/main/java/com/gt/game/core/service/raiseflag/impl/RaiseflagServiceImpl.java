@@ -471,7 +471,7 @@ public class RaiseflagServiceImpl implements RaiseflagService {
             for(RaiseflagSponsorReq raiseflagSponsorReq :RaiseflagSaveReq.getRaiseflagSponsorReqs()){
                 RaiseflagSponsor raiseflagSponsor = new RaiseflagSponsor();
                 BeanUtils.copyProperties(raiseflagSponsorReq,raiseflagSponsor);
-                raiseflagSponsor.setSponsorImgUrl(raiseflagSponsor.getSponsorUrl().split("/upload").length > 1 ? raiseflagSponsor.getSponsorUrl().split("/upload")[1]:"");
+                raiseflagSponsor.setSponsorImgUrl(raiseflagSponsor.getSponsorImgUrl().split("/upload").length > 1 ? raiseflagSponsor.getSponsorImgUrl().split("/upload")[1]:"");
                 raiseflagSponsor.setActId(RaiseflagMain.getId());
                 raiseflagSponsor.setCreatetime(date);
                 raiseflagSponsorService.insert(raiseflagSponsor);
