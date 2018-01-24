@@ -63,7 +63,7 @@
                  <el-form-item label="背景音乐：">
                     <div class="pd20 bb bw bgMusic">
                         <gt-material class="va-m" :prop="''" :isMusic="true" btnContent="点击上传"  v-on:getChangeUrl="getMusic" width="72" height="72"></gt-material>
-                        <span class="el-upload__tip c333 ml20">{{ruleForm1.bgmSp}}</span> 
+                        <span class="el-upload__tip c333 ml20">{{ruleForm1.eggBgmName}}</span> 
                         <div class="el-upload__tip grey" style="line-height:25px">
                             音频文件的格式为mp3、wma、wav,大小不超过3M
                         </div>
@@ -185,6 +185,8 @@
             <el-button type="primary" @click="lastStep"        v-if="this.active==3">保存</el-button>   
             <el-button type="primary" @click="submit">打印</el-button>   
         </div> 
+
+        <gt-Fans-detail :fansKey="key+''" :visible="dialogFans" v-on:getFansData="getFansData"></gt-Fans-detail>  
     </div>   
 </div>
 </section>
@@ -206,8 +208,8 @@ export default {
         eggKou: '', // 每次抽奖扣除积分
         eggDescribe: '',  // 活动说明/描述
         eggBeforeTxt : '',   // 活动未开始提示
-        bgmSp: '',       // 背景音乐名称    
-        musicUrl: '',   // 背景音乐链接
+        eggBgmName: '',       // 背景音乐名称    
+        eggBgm: '',   // 背景音乐链接
       },
       rules1: {
         eggName: [{ required: true, message: "活动名称不能为空", trigger: "blur" }],
@@ -243,16 +245,21 @@ export default {
           nickname:"",
         }
       ],
-      options: []
+      options: [],
+      dialogFans:false,
+      key:0,
     };
   },
   methods: {
     getMusic(e) {
-      this.ruleForm1.bgmSp = e.music.name
-      this.ruleForm1.musicUrl = e.music.url
+      this.ruleForm1.eggBgmName = e.music.name
+      this.ruleForm1.eggBgm = e.music.url
+    },
+    getFansData(e) {
+         console.log('获取子组件信息')
     },  
     test() {
-      this.active=5
+      this.dialogFans = true
     },
 
     delForm4(index){
@@ -315,8 +322,8 @@ export default {
             eggKou: this.ruleForm1.eggKou, // 每次抽奖扣除积分
             eggDescribe: this.ruleForm1.eggDescribe,  // 活动说明/描述
             eggBeforeTxt : this.ruleForm1.eggBeforeTxt,   // 活动未开始提示
-            bgmSp: this.ruleForm1.bgmSp,       // 背景音乐名称    
-            musicUrl: this.ruleForm1.musicUrl,   // 背景音乐链接
+            eggBgmName: this.ruleForm1.eggBgmName,       // 背景音乐名称    
+            eggBgm: this.ruleForm1.eggBgm,   // 背景音乐链接
             //规则设置
             eggCountOfDay: this.ruleForm2.eggCountOfDay,   // 抽奖次数
             eggCountOfAll: this.ruleForm2.eggCountOfAll, // 抽奖总数

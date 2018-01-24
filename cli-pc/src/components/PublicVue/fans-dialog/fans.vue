@@ -113,6 +113,7 @@ export default {
                 this.$message.error("指定中奖人不能超过5个，请重新选择");
             }else{
                 this.$emit("getFansData", this.multipleTable);
+                this.dialogFans = false
             } 
         },
         //多选名单
