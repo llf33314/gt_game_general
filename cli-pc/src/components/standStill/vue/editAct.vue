@@ -413,7 +413,7 @@ export default {
                 if(arr4.type==4){
                     for(var j=0;j<this.ruleForm4[i].name5.length;j++){
                         var imgarr={
-                            imgUrl:this.ruleForm4[i].name5[j]
+                            picUrl:this.ruleForm4[i].name5[j]
                         }
                     arr4.standPrizeImgReqs.push(imgarr)
                     } 
@@ -546,9 +546,9 @@ export default {
                 newabc1.name0  = "优惠券";
                 } 
                 if(newabc1.name0=="实体物品"){
-                    for(var j = 0; j < data.data.standPrizeReqs[i].loveArrowPrizeImgReqs.length; j++){
+                    for(var j = 0; j < data.data.standPrizeReqs[i].standPrizeImgReqs.length; j++){
                         var imgarr={
-                             url:window.IMAGEURL+data.data.standPrizeReqs[i].loveArrowPrizeImgReqs[j].imgUrl
+                             url:window.IMAGEURL+data.data.standPrizeReqs[i].standPrizeImgReqs[j].picUrl
                         }
                         newabc1.name5.push(imgarr.url)
                     }
