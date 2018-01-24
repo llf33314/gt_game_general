@@ -29,20 +29,26 @@ import com.gt.game.core.bean.qixi.req.*;
 import com.gt.game.core.bean.qixi.res.*;
 import com.gt.game.core.bean.scratch.req.*;
 import com.gt.game.core.bean.scratch.res.*;
+import com.gt.game.core.bean.turntable.req.ScratchStartReq;
+import com.gt.game.core.bean.turntable.req.ScratchStopReq;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 import com.gt.game.core.dao.qixi.QixiCashPrizeApplyDAO;
 import com.gt.game.core.dao.qixi.QixiMainDAO;
 import com.gt.game.core.dao.scratch.ScratchMainDAO;
 import com.gt.game.core.dao.scratch.ScratchWinningDAO;
+import com.gt.game.core.entity.dragonboat.*;
 import com.gt.game.core.entity.eggs.EggsDetail;
 import com.gt.game.core.entity.eggs.EggsMain;
 import com.gt.game.core.entity.eggs.EggsWinning;
+import com.gt.game.core.entity.luck.LuckMain;
 import com.gt.game.core.entity.qixi.*;
 import com.gt.game.core.entity.scratch.ScratchDetail;
 import com.gt.game.core.entity.scratch.ScratchMain;
 import com.gt.game.core.entity.scratch.ScratchWinning;
+import com.gt.game.core.exception.dragonboat.DragonboatException;
 import com.gt.game.core.exception.eggs.EggsException;
+import com.gt.game.core.exception.luck.LuckException;
 import com.gt.game.core.exception.qixi.QixiException;
 import com.gt.game.core.exception.scratch.ScratchException;
 import com.gt.game.core.service.qixi.*;
@@ -88,15 +94,20 @@ public class ScratchServiceImpl implements ScratchService {
     @Autowired
     ScratchWinningDAO scratchWinningDAO;
 
+    @Autowired
+    ApplyProperties applyProperties;
+
     /**
      * 获取手机端链接
-     * @param busUser
+     * @param loginPbUser
      * @param mobileUrlReq
      * @return
      */
     @Override
-    public MobileUrlRes getMobileUrl(BusUser busUser, MobileUrlReq mobileUrlReq) {
-        return null;
+    public MobileUrlRes getMobileUrl(WxPublicUsers loginPbUser, MobileUrlReq mobileUrlReq) {
+
+        String url = applyProperties.getMobileBaseUrl() + "scratch/"+loginPbUser.getId()+"/"+ mobileUrlReq.getMainId() + "/-100"+"/79B4DE7C/userGrant.do";
+        return new MobileUrlRes(url);
     }
 
     /**
@@ -209,7 +220,7 @@ public class ScratchServiceImpl implements ScratchService {
      * @param scratchAddReq
      */
     @Override
-    public void addScratch(WxPublicUsers loginPbUser, ScratchAddReq scratchAddReq) {
+    public void addScratch(BusUser busUser ,WxPublicUsers loginPbUser, ScratchAddReq scratchAddReq) {
 
         ScratchMain scratchMain = new ScratchMain();
         scratchMain.setScrWxUserid(loginPbUser.getId());
@@ -233,6 +244,8 @@ public class ScratchServiceImpl implements ScratchService {
         scratchMain.setScrPicture(scratchAddReq.getScrPicture());
         scratchMain.setScrDescribe(scratchAddReq.getScrDescribe());
         scratchMain.setScrBeforeTxt(scratchAddReq.getScrBeforeTxt());
+        scratchMain.setScrBgmName(scratchAddReq.getScrBgmName());
+        scratchMain.setScrBgm(scratchAddReq.getScrBgm());
 
         //TODO  规则设置
         scratchMain.setScrCountOfAll(scratchAddReq.getScrCountOfAll());
@@ -248,8 +261,11 @@ public class ScratchServiceImpl implements ScratchService {
         scratchMainService.insert(scratchMain);
 
         //TODO   奖项设置
+        Double fenbi = 0.0;
         for(ScratchPrizeSetReq scratchPrizeSetReq:scratchAddReq.getPrizeSetList()){
-
+            if (scratchPrizeSetReq.getScrPrizeType() == 1) {
+                fenbi += scratchPrizeSetReq.getScrPrizeNums();
+            }
             ScratchDetail scratchDetail = new ScratchDetail();
             scratchDetail.setScrId(scratchMain.getId());
             scratchDetail.setScrPrizeType(scratchPrizeSetReq.getScrPrizeType());
@@ -260,6 +276,24 @@ public class ScratchServiceImpl implements ScratchService {
             scratchDetail.setNickname(scratchPrizeSetReq.getNickname());
 
             scratchDetailService.insert(scratchDetail);
+        }
+
+        if(fenbi > 0){//冻结粉币
+            // 判断账户中的粉币是否足够
+            if(busUser.getFansCurrency().doubleValue() < fenbi.doubleValue()){
+                throw new ScratchException(ResponseEnums.SCRATCH_HAS7);
+            }
+            //构建冻结信息
+            FenbiFlowRecord ffr=CommonUtil.bulidFenFlow(busUser.getId(), fenbi, scratchMain.getId(), 3, 1, "刮刮乐活动支出", 0);
+            // 保存冻结信息
+            if(ffr!=null){
+                FenbiFlowRecordReq fenbiFlowRecordReq = new FenbiFlowRecordReq();
+                BeanUtils.copyProperties(ffr,fenbiFlowRecordReq);
+                AxisResult axisResult = FenbiflowServer.saveFenbiFlowRecord(fenbiFlowRecordReq);
+                if(axisResult.getCode() != 0){
+                    throw new ScratchException(ResponseEnums.SCRATCH_HAS8);
+                }
+            }
         }
     }
 
@@ -294,6 +328,8 @@ public class ScratchServiceImpl implements ScratchService {
         scratchGetActivityRes.setScrPicture(scratchMain.getScrPicture());
         scratchGetActivityRes.setScrDescribe(scratchMain.getScrDescribe());
         scratchGetActivityRes.setScrBeforeTxt(scratchMain.getScrBeforeTxt());
+        scratchGetActivityRes.setScrBgmName(scratchMain.getScrBgmName());
+        scratchGetActivityRes.setScrBgm(scratchMain.getScrBgm());
 
         //TODO  规则设置
         scratchGetActivityRes.setScrCountOfAll(scratchMain.getScrCountOfAll());
@@ -337,10 +373,15 @@ public class ScratchServiceImpl implements ScratchService {
     @Override
     public void modfiyScratch(BusUser busUser, ScratchModfiyReq scratchModfiyReq) {
 
-        ScratchMain scratchMain = new ScratchMain();
+        ScratchMain scratchMain = scratchMainService.selectById(scratchModfiyReq.getId());
+        if(CommonUtil.isEmpty(scratchMain)){
+            throw new ScratchException(ResponseEnums.SCRATCH_HAS5);
+        }
+        if(scratchMain.getScrBeginTime().getTime() < new Date().getTime()){
+            throw new ScratchException(ResponseEnums.SCRATCH_HAS10);
+        }
 
         //TODO  基础设置
-        scratchMain.setId(scratchModfiyReq.getId());
         scratchMain.setScrName(scratchModfiyReq.getScrName());
         scratchMain.setScrBeginTime(scratchModfiyReq.getScrBeginTime());
         scratchMain.setScrEndTime(scratchModfiyReq.getScrEndTime());
@@ -359,6 +400,8 @@ public class ScratchServiceImpl implements ScratchService {
         scratchMain.setScrPicture(scratchModfiyReq.getScrPicture());
         scratchMain.setScrDescribe(scratchModfiyReq.getScrDescribe());
         scratchMain.setScrBeforeTxt(scratchModfiyReq.getScrBeforeTxt());
+        scratchMain.setScrBgmName(scratchModfiyReq.getScrBgmName());
+        scratchMain.setScrBgm(scratchModfiyReq.getScrBgm());
 
         //TODO  规则设置
         scratchMain.setScrCountOfAll(scratchModfiyReq.getScrCountOfAll());
@@ -373,65 +416,165 @@ public class ScratchServiceImpl implements ScratchService {
 
         scratchMainService.updateById(scratchMain);
 
-        // TODO  清空奖品设置
-        EntityWrapper<ScratchDetail> entityWrapper = new EntityWrapper();
-        entityWrapper.eq("scr_id",scratchModfiyReq.getId());
-        scratchDetailService.delete(entityWrapper);
 
-        //TODO   添加奖项设置
-        for(ScratchPrizeSetReq scratchPrizeSetReq:scratchModfiyReq.getPrizeSetList()){
 
-            ScratchDetail scratchDetail = new ScratchDetail();
-            scratchDetail.setScrId(scratchMain.getId());
-            scratchDetail.setScrPrizeType(scratchPrizeSetReq.getScrPrizeType());
-            scratchDetail.setScrPrizeLimit(scratchPrizeSetReq.getScrPrizeLimit());
-            scratchDetail.setScrPrizeName(scratchPrizeSetReq.getScrPrizeName());
-            scratchDetail.setScrPrizeNums(scratchPrizeSetReq.getScrPrizeNums());
-            scratchDetail.setScrPrizeChance(scratchPrizeSetReq.getScrPrizeChance());
-            scratchDetail.setNickname(scratchPrizeSetReq.getNickname());
+        Double fenbi = 0.0;
+        Double num   = 0.0;
+        if(scratchModfiyReq.getPrizeSetList().size()>0){
 
-            scratchDetailService.insert(scratchDetail);
+            EntityWrapper<ScratchDetail> entityWrapper5 = new EntityWrapper();
+            entityWrapper5.eq("scr_id",scratchModfiyReq.getId());
+            List<ScratchDetail> scratchDetailList = scratchDetailService.selectList(entityWrapper5);
+            if(scratchDetailList.size() > 0) {
+                for (ScratchDetail scratchDetail : scratchDetailList) {
+                    if (scratchDetail.getScrPrizeType() == 1) {
+                        num += scratchDetail.getScrPrizeNums();
+                    }
+                }
+            }
+
+
+            // TODO  清空奖品设置
+            EntityWrapper<ScratchDetail> entityWrapper = new EntityWrapper();
+            entityWrapper.eq("scr_id",scratchModfiyReq.getId());
+            scratchDetailService.delete(entityWrapper);
+
+
+            //TODO   添加奖项设置
+
+            for(ScratchPrizeSetReq scratchPrizeSetReq:scratchModfiyReq.getPrizeSetList()){
+
+                ScratchDetail scratchDetail = new ScratchDetail();
+                scratchDetail.setScrId(scratchMain.getId());
+                scratchDetail.setScrPrizeType(scratchPrizeSetReq.getScrPrizeType());
+                scratchDetail.setScrPrizeLimit(scratchPrizeSetReq.getScrPrizeLimit());
+                scratchDetail.setScrPrizeName(scratchPrizeSetReq.getScrPrizeName());
+                scratchDetail.setScrPrizeNums(scratchPrizeSetReq.getScrPrizeNums());
+                scratchDetail.setScrPrizeChance(scratchPrizeSetReq.getScrPrizeChance());
+                scratchDetail.setNickname(scratchPrizeSetReq.getNickname());
+
+                scratchDetailService.insert(scratchDetail);
+            }
+        }
+
+        if(fenbi > 0) {//冻结粉币
+            if ((fenbi - num) <= (0 - num)) {
+                throw new ScratchException(ResponseEnums.SCRATCH_HAS9);
+            }
+            // 判断账户中的粉币是否足够
+            if (busUser.getFansCurrency().doubleValue() < (fenbi - num)) {
+                throw new ScratchException(ResponseEnums.SCRATCH_HAS7);
+            }
+            UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
+            updateFenbiReduceReq.setBusId(busUser.getId());
+            updateFenbiReduceReq.setFkId(scratchMain.getId());
+            updateFenbiReduceReq.setFreType(3);
+            updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi - num));
+            AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
+            if (axisResult.getCode() != 0) {
+                throw new ScratchException(ResponseEnums.SCRATCH_HAS8);
+            }
         }
     }
 
     /**
-     * 刮刮乐开始活动
+     * 刮刮乐 暂停/开始活动
      * @param busUser
-     * @param scratchStartReq
+     * @param scratchStopIdReq
+     * @return
      */
     @Override
-    public void startScratch(BusUser busUser, ScratchStartReq scratchStartReq) {
+    public ResponseDTO stopScratch(WxPublicUsers busUser, ScratchStopIdReq scratchStopIdReq) {
 
-        ScratchMain scratchMain = scratchMainService.selectById(scratchStartReq.getId());
-        scratchMain.setScrStatus(1);
-        scratchMainService.updateById(scratchMain);
+        ScratchMain scratchMain = scratchMainService.selectById(scratchStopIdReq.getId());
+        if(CommonUtil.isNotEmpty(scratchMain)){
+            if(scratchMain.getScrWxUserid().intValue() != busUser.getId().intValue()){
+                throw new ScratchException(ResponseEnums.DIFF_USER);
+            }
+            Date date = new Date();
+            if(scratchMain.getScrBeginTime().getTime() > date.getTime()){
+                throw new ScratchException(ResponseEnums.SCRATCH_HAS15);
+            }
+            if(scratchMain.getScrEndTime().getTime() < date.getTime()){
+                throw new ScratchException(ResponseEnums.SCRATCH_HAS16);
+            }
+            scratchMain.setScrStatus(scratchStopIdReq.getStatus());
+            scratchMainService.updateById(scratchMain);
+        }
+        return ResponseDTO.createBySuccess("操作成功");
     }
 
     /**
-     * 刮刮乐暂停活动
-     * @param busUser
-     * @param scratchStopReq
-     */
-    @Override
-    public void stopScratch(BusUser busUser, ScratchStopReq scratchStopReq) {
-
-        ScratchMain scratchMain = scratchMainService.selectById(scratchStopReq.getId());
-        scratchMain.setScrStatus(2);
-        scratchMainService.updateById(scratchMain);
-    }
-
-    /**
-     * 批量删除刮刮乐活动
+     * 删除刮刮乐活动
      * @param busUser
      * @param scratchDelReq
      */
     @Override
     public void delScratch(BusUser busUser, ScratchDelReq scratchDelReq) {
 
+        ScratchMain scratchMain = scratchMainService.selectById(scratchDelReq.getId());
+        if(CommonUtil.isNotEmpty(scratchMain)) {
+            if (scratchMain.getScrBeginTime().getTime() < new Date().getTime() && scratchMain.getScrEndTime().getTime() > new Date().getTime()) {
+                throw new ScratchException(ResponseEnums.LANTERN_HAS11);
+            }
+
+            List<ScratchWinning> scratchWinningList = scratchWinningService.selectList(
+                    new EntityWrapper<ScratchWinning>().eq("win_act_id", scratchDelReq.getId()).eq("win_status", 3));
+            if (scratchWinningList.size() > 0) {
+                throw new ScratchException(ResponseEnums.SCRATCH_HAS13);
+
+            }
+        }
+        //TODO  删除活动
+        boolean b = scratchMainService.deleteById(scratchDelReq.getId());
+        if(b==false){
+            throw  new ScratchException(ResponseEnums.SCRATCH_HAS6);
+        }
+
+        EntityWrapper<ScratchDetail> entityWrapper3 = new EntityWrapper<>();
+        entityWrapper3.eq("scr_id",scratchDelReq.getId());
+        List<ScratchDetail> scratchDetailList = scratchDetailService.selectList(entityWrapper3);
+
+        boolean ff = false;
+        if(scratchDetailList.size() > 0){
+            for(ScratchDetail scratchDetail : scratchDetailList){
+                if(scratchDetail.getScrPrizeType() == 1){
+                    ff = true;
+                }
+            }
+        }
+
+        //TODO  删除奖品设置
+        EntityWrapper<ScratchDetail> entityWrapper5 = new EntityWrapper<>();
+        entityWrapper5.eq("scr_id",scratchDelReq.getId());
+        scratchDetailService.delete(entityWrapper5);
+
+
+        //删除冻结信息
+        if(ff){
+            FenbiSurplus fenbiSurplus = new FenbiSurplus();
+            fenbiSurplus.setBusId(busUser.getId());
+            fenbiSurplus.setFkId(scratchMain.getId());
+            fenbiSurplus.setFre_type(3);
+            fenbiSurplus.setRec_type(1);
+            AxisResult<FenbiFlowRecord> ffr = FenbiflowServer.getFenbiFlowRecord(fenbiSurplus);
+            if(ffr!=null && ffr.getData() != null && ffr.getData().getRollStatus() == 1){//未回滚
+                // 获取冻结信息中粉币剩余量
+                FenbiSurplus fenbiSurplus1 = new FenbiSurplus();
+                fenbiSurplus1.setBusId(busUser.getId());
+                fenbiSurplus1.setFkId(scratchMain.getId());
+                fenbiSurplus1.setRec_type(1);
+                fenbiSurplus1.setFre_type(3);
+                AxisResult axisResult = FenbiflowServer.rollbackFenbiRecord(fenbiSurplus1);
+                if(axisResult.getCode() != 0){
+                    throw new ScratchException(ResponseEnums.SCRATCH_HAS14);
+                }
+            }
+        }
     }
 
     /**
-     * 分页获取砸金蛋中奖记录列表
+     * 分页获取刮刮乐中奖记录列表
      * @param busUser
      * @param scratchGetWinningReq
      * @return
@@ -757,5 +900,8 @@ public class ScratchServiceImpl implements ScratchService {
         }
         return ResponseDTO.createBySuccess("获取成功",scratchPrizeTypeListResList);
     }
+
+
+
 
 }

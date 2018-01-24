@@ -50,7 +50,7 @@
                 </el-table-column> 
              </el-table>  
             <el-form-item>
-                <div class="mg-t40">
+                <div class="btnRow">
                            <el-button type="primary" @click="Save('ruleForm1')" >保存</el-button>
                            <el-button   @click="backUrl">返回</el-button>
                 </div>
@@ -88,7 +88,7 @@
                     <span class="el-upload__tip grey ml10">300个字以内</span>   
                 </el-form-item>   
                  <el-form-item>
-                      <div class="mg-t40">
+                      <div class="btnRow">
                            <el-button type="primary" @click="Save('ruleForm2')" >保存</el-button>
                            <el-button   @click="backUrl">返回</el-button>
                       </div>
@@ -124,7 +124,7 @@
                     <el-input class="bw" type="textarea" v-model="ruleForm3.desc" :rows="5" placeholder="请输入兑奖说明" :maxlength="200"></el-input> 
                 </el-form-item> 
                  <el-form-item>
-                     <div class="mg-t40">
+                     <div class="btnRow">
                            <el-button type="primary" @click="Save('ruleForm3')" >保存</el-button>
                            <el-button   @click="backUrl">返回</el-button>
                      </div>
@@ -191,7 +191,7 @@
                 </el-table-column>
                
             </el-table> 
-            <div class="mg-t60 pd-l20">
+            <div class="btnRow">
                 <el-button type="primary" @click="Save('ruleForm4')" >保存</el-button>
                 <el-button   @click="backUrl">返回</el-button>
             </div>
@@ -204,15 +204,6 @@
                 <el-button class="mt80" type="primary" @click="backUrl">返回活动列表</el-button>  
             </div> 
         </div>
-        <!-- 按钮 -->
-        <div class="h80"></div> 
-        <div class="btnRow"  v-if="this.active!=5">
-            <!-- <el-button   @click="backUrl()">返回</el-button>
-            <el-button type="primary" @click="submit()" v-if="this.active==0">保存</el-button> 
-            <el-button type="primary" @click="submit()" v-if="this.active==1">保存</el-button>
-            <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">保存</el-button>   
-            <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>  -->
-        </div> 
     </div>   
 </div>
 </section>
@@ -275,9 +266,11 @@ export default {
       },
       ruleForm2: {
         code: "",
-        manTotalChance: "",
-        manDayChance: "",
-        gameTime: "",
+        bgmSp: '',
+        musicUrl: '',
+        manTotalChance:"",
+        manDayChance:"", 
+        gameTime: '',
         desc: ""
       },
       rules2: {
@@ -393,7 +386,6 @@ export default {
       }
     },
     getMusic(e) {
-      console.log(e)
       this.ruleForm2.bgmSp = e.music.name
       this.ruleForm2.musicUrl = e.music.url
     },
@@ -439,13 +431,6 @@ export default {
           prizeSetList: newYearPrizeReqs
         };
 
-        api.modfiyAwardsLantern(params4).then(res => {
-          if (res.code == 100) {
-            this.$message.success("保存成功");
-          } else {
-            this.$message.error((res && res.msg) || "保存失败");
-          }
-        });
       } else {
         this.$refs[formName].validate(valid => {
           if (valid) {
@@ -468,14 +453,6 @@ export default {
                 activityEndTime: this.ruleForm1.name1[1],
                 advertisingPictureList: newadv
               };
-              api.modfiyBasicsLantern(params1).then(res => {
-                if (res.code == 100) {
-                  this.$message.success("保存成功");
-                } else {
-                  this.$message.error((res && res.msg) || "保存失败");
-                }
-              });
-              return;
             }
 
             if (formName == "ruleForm2") {
@@ -489,14 +466,6 @@ export default {
                 gameTime: this.ruleForm2.gameTime,
                 actRule: this.ruleForm2.desc
               };
-              api.modfiyRuleLantern(params2).then(res => {
-                if (res.code == 100) {
-                  this.$message.success("保存成功");
-                } else {
-                  this.$message.error((res && res.msg) || "保存失败");
-                }
-              });
-              return;
             }
 
             if (formName == "ruleForm3") {
@@ -515,20 +484,15 @@ export default {
                 cashPrizeInstruction: this.ruleForm3.desc,
                 addressList: newYearAddressReqs
               };
-              api.modfiyExpiryLantern(params3).then(res => {
-                if (res.code == 100) {
-                  this.$message.success("保存成功");
-                } else {
-                  this.$message.error((res && res.msg) || "保存失败");
-                }
-              });
-              return;
             }
+
+            
           } else {
             return false;
           }
         });
       }
+      this.submit()
     },
     lastStep() {
       for (let i = 0; i < this.ruleForm4.length; i++) {
@@ -635,16 +599,15 @@ export default {
         // newYearPrizeReqs: newYearPrizeReqs,
         prizeSetList: newYearPrizeReqs
       };
-      console.log(data, 123);
       api
-        .addActivity(data)
+        .modfiyActivity(data)
         .then(data => {
           this.isSubmit = true;
           if (data.code == 100) {
             this.$message.success("保存成功");
           } else {
             this.isSubmit = false;
-            this.$message.error(data.msg + "错误码：[" + data.code + "]");
+            this.$message.error(data.msg || '保存失败');
           }
         })
         .catch(() => {
@@ -697,7 +660,6 @@ export default {
           }
         }
         this.ruleForm1.links = newadv;
-        console.log("this.ruleForm1", this.ruleForm1);
         //规则设置
         this.ruleForm2.code = res.data.followQrCode;
         this.ruleForm2.bgmSp = res.data.bgmSp;
@@ -706,7 +668,6 @@ export default {
         this.ruleForm2.manDayChance = String(res.data.manDayChance);
         this.ruleForm2.gameTime = res.data.gameTime;
         this.ruleForm2.desc = res.data.actRule;
-        console.log("this.ruleForm2", this.ruleForm2);
         //兑奖设置
         this.ruleForm3.date = [
           res.data.cashPrizeBeginTime,
@@ -750,19 +711,12 @@ export default {
             newabc1.typeName = "优惠券";
           }
           if (newabc1.typeName == "实体物品") {
-            // for(var j = 0; j < res.data.prizeSetList[i].imgUrl.length; j++){
-            //     // var imgarr={
-            //     //      url:window.IMAGEURL+res.data.prizeSetList[i].imgUrl[j]
-            //     // }
-
-            // }
             newabc1.name5 = res.data.prizeSetList[i].imgUrl;
-            console.log(newabc1.name5);
           }
           newPraise.push(newabc1);
         }
         this.ruleForm4 = newPraise;
-        console.log("this.ruleForm4", this.ruleForm4);
+        this.explain = res.data.prizeDescription
       } else {
         this.$message.error("获取编辑数据失败");
       }

@@ -27,6 +27,12 @@ public class LanternGetActivityRes {
     @ApiModelProperty("关注二维码")
     private String followQrCode;
 
+    @ApiModelProperty("背景音乐URL")
+    private String musicUrl;
+
+    @ApiModelProperty("背景音乐名")
+    private String bgmSp;
+
     @ApiModelProperty("游戏总数")
     private Integer manTotalChance;
 
@@ -65,6 +71,22 @@ public class LanternGetActivityRes {
 
     @ApiModelProperty("奖品设置")
     private List<LanternPrizeSetReq> prizeSetList;
+
+    public String getMusicUrl() {
+        return musicUrl;
+    }
+
+    public void setMusicUrl(String musicUrl) {
+        this.musicUrl = musicUrl;
+    }
+
+    public String getBgmSp() {
+        return bgmSp;
+    }
+
+    public void setBgmSp(String bgmSp) {
+        this.bgmSp = bgmSp;
+    }
 
     public String getName() {
         return name;

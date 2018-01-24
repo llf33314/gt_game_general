@@ -8,42 +8,42 @@ import com.gt.axis.bean.member.member.MemberRes;
 import com.gt.axis.bean.wxmp.dict.DictApiReq;
 import com.gt.axis.bean.wxmp.dict.DictApiRes;
 import com.gt.api.bean.session.WxPublicUsers;
+import com.gt.axis.bean.wxmp.fenbiflow.FenbiFlowRecord;
+import com.gt.axis.bean.wxmp.fenbiflow.FenbiFlowRecordReq;
+import com.gt.axis.bean.wxmp.fenbiflow.FenbiSurplus;
+import com.gt.axis.bean.wxmp.fenbiflow.UpdateFenbiReduceReq;
 import com.gt.axis.content.AxisResult;
 import com.gt.axis.server.member.MemberServer;
 import com.gt.axis.server.wxmp.DictServer;
+import com.gt.axis.server.wxmp.FenbiflowServer;
+import com.gt.game.common.config.ApplyProperties;
 import com.gt.game.common.dto.PageDTO;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.common.enums.ResponseEnums;
 import com.gt.game.core.bean.eggs.req.*;
 import com.gt.game.core.bean.eggs.res.*;
-import com.gt.game.core.bean.tree.req.*;
-import com.gt.game.core.bean.tree.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 import com.gt.game.core.dao.eggs.EggsWinningDAO;
-import com.gt.game.core.dao.tree.TreeWinningDAO;
 import com.gt.game.core.entity.eggs.EggsDetail;
 import com.gt.game.core.entity.eggs.EggsMain;
 import com.gt.game.core.entity.eggs.EggsWinning;
-import com.gt.game.core.entity.tree.TreeDetail;
-import com.gt.game.core.entity.tree.TreeMain;
-import com.gt.game.core.entity.tree.TreeWinning;
+import com.gt.game.core.entity.scratch.ScratchDetail;
+import com.gt.game.core.entity.scratch.ScratchMain;
+import com.gt.game.core.entity.scratch.ScratchWinning;
 import com.gt.game.core.exception.eggs.EggsException;
-import com.gt.game.core.exception.tree.TreeException;
+import com.gt.game.core.exception.scratch.ScratchException;
 import com.gt.game.core.service.eggs.EggsDetailService;
 import com.gt.game.core.service.eggs.EggsMainService;
 import com.gt.game.core.service.eggs.EggsService;
 import com.gt.game.core.service.eggs.EggsWinningService;
-import com.gt.game.core.service.tree.TreeDetailService;
-import com.gt.game.core.service.tree.TreeMainService;
-import com.gt.game.core.service.tree.TreeService;
-import com.gt.game.core.service.tree.TreeWinningService;
 import com.gt.game.core.util.CommonUtil;
 import com.gt.game.core.util.DateTimeKit;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -73,16 +73,22 @@ public class EggsServiceImpl implements EggsService {
 
     @Autowired
     EggsWinningDAO eggsWinningDAO;
+
+    @Autowired
+    ApplyProperties applyProperties;
+
     /**
      * 获取手机端链接
      *
-     * @param busUser
+     * @param loginPbUser
      * @param mobileUrlReq
      * @return
      */
     @Override
-    public MobileUrlRes getMobileUrl(BusUser busUser, MobileUrlReq mobileUrlReq) {
-        return null;
+    public MobileUrlRes getMobileUrl(WxPublicUsers loginPbUser, MobileUrlReq mobileUrlReq) {
+
+        String url = applyProperties.getMobileBaseUrl() + "eggs/"+loginPbUser.getId()+"/"+ mobileUrlReq.getMainId() + "/-100"+"/79B4DE7C/userGrant.do";
+        return new MobileUrlRes(url);
     }
 
     /**
@@ -208,6 +214,8 @@ public class EggsServiceImpl implements EggsService {
         }
         eggsMain.setEggDescribe(eggsAddReq.getEggDescribe());
         eggsMain.setEggBeforeTxt(eggsAddReq.getEggBeforeTxt());
+        eggsMain.setEggBgmName(eggsAddReq.getEggBgmName());
+        eggsMain.setEggBgm(eggsAddReq.getEggBgm());
 
         //TODO  规则设置
         eggsMain.setEggCountOfAll(eggsAddReq.getEggCountOfAll());
@@ -223,8 +231,11 @@ public class EggsServiceImpl implements EggsService {
         eggsMainService.insert(eggsMain);
 
         //TODO   奖项设置
+        Double fenbi = 0.0;
         for(EggsPrizeSetReq eggsPrizeSetReq:eggsAddReq.getPrizeSetList()){
-
+            if (eggsPrizeSetReq.getEggPrizeType() == 1) {
+                fenbi += eggsPrizeSetReq.getEggPrizeType();
+            }
             EggsDetail eggsDetail = new EggsDetail();
             eggsDetail.setEggId(eggsMain.getId());
             eggsDetail.setEggPrizeType(eggsPrizeSetReq.getEggPrizeType());
@@ -235,6 +246,24 @@ public class EggsServiceImpl implements EggsService {
             eggsDetail.setNickname(eggsPrizeSetReq.getNickname());
 
             eggsDetailService.insert(eggsDetail);
+        }
+
+        if(fenbi > 0){//冻结粉币
+            // 判断账户中的粉币是否足够
+            if(busUser.getFansCurrency().doubleValue() < fenbi.doubleValue()){
+                throw new EggsException(ResponseEnums.EGGS_HAS7);
+            }
+            //构建冻结信息
+            FenbiFlowRecord ffr=CommonUtil.bulidFenFlow(busUser.getId(), fenbi, eggsMain.getId(), 13, 1, "砸金蛋活动支出", 0);
+            // 保存冻结信息
+            if(ffr!=null){
+                FenbiFlowRecordReq fenbiFlowRecordReq = new FenbiFlowRecordReq();
+                BeanUtils.copyProperties(ffr,fenbiFlowRecordReq);
+                AxisResult axisResult = FenbiflowServer.saveFenbiFlowRecord(fenbiFlowRecordReq);
+                if(axisResult.getCode() != 0){
+                    throw new EggsException(ResponseEnums.EGGS_HAS8);
+                }
+            }
         }
     }
 
@@ -268,6 +297,8 @@ public class EggsServiceImpl implements EggsService {
         }
         eggsGetActivityRes.setEggDescribe(eggsMain.getEggDescribe());
         eggsGetActivityRes.setEggBeforeTxt(eggsMain.getEggBeforeTxt());
+        eggsGetActivityRes.setEggBgmName(eggsMain.getEggBgmName());
+        eggsGetActivityRes.setEggBgm(eggsMain.getEggBgm());
 
         //TODO  规则设置
         eggsGetActivityRes.setEggCountOfAll(eggsMain.getEggCountOfAll());
@@ -302,91 +333,81 @@ public class EggsServiceImpl implements EggsService {
     }
 
     /**
-     * 编辑砸金蛋活动基础设置
+     * 编辑砸金蛋活动设置
      * @param busUser
-     * @param eggsModfiyBasicsReq
+     * @param eggsModfiyReq
      */
     @Override
-    public void modfiyBasicsEggs(BusUser busUser, EggsModfiyBasicsReq eggsModfiyBasicsReq) {
+    public void modfiyEggs(BusUser busUser, EggsModfiyReq eggsModfiyReq) {
 
-        EggsMain eggsMain = new EggsMain();
-        eggsMain.setId(eggsModfiyBasicsReq.getId());
-        eggsMain.setEggName(eggsModfiyBasicsReq.getEggName());
-        eggsMain.setEggBeginTime(eggsModfiyBasicsReq.getEggBeginTime());
-        eggsMain.setEggEndTime(eggsModfiyBasicsReq.getEggEndTime());
-        eggsMain.setEggEggPartaker(eggsModfiyBasicsReq.getEggEggPartaker());
+        EggsMain eggsMain = eggsMainService.selectById(eggsModfiyReq.getId());
+        if(CommonUtil.isEmpty(eggsMain)){
+            throw new EggsException(ResponseEnums.EGGS_HAS5);
+        }
+        if(eggsMain.getEggBeginTime().getTime() < new Date().getTime()){
+            throw new EggsException(ResponseEnums.EGGS_HAS10);
+        }
 
-        if(eggsModfiyBasicsReq.getEggEggPartaker()==2){
-            eggsMain.setEggPway(eggsModfiyBasicsReq.getEggPway());
-            if(eggsModfiyBasicsReq.getEggPway()==2){
-                eggsMain.setEggMan(eggsModfiyBasicsReq.getEggMan());
-            }else if(eggsModfiyBasicsReq.getEggPway()==3){
-                eggsMain.setEggKou(eggsModfiyBasicsReq.getEggKou());
-            }else if(eggsModfiyBasicsReq.getEggPway()==4){
-                eggsMain.setEggMan(eggsModfiyBasicsReq.getEggMan());
-                eggsMain.setEggKou(eggsModfiyBasicsReq.getEggKou());
+        eggsMain.setEggName(eggsModfiyReq.getEggName());
+        eggsMain.setEggBeginTime(eggsModfiyReq.getEggBeginTime());
+        eggsMain.setEggEndTime(eggsModfiyReq.getEggEndTime());
+        eggsMain.setEggEggPartaker(eggsModfiyReq.getEggEggPartaker());
+
+        if(eggsModfiyReq.getEggEggPartaker()==2){
+            eggsMain.setEggPway(eggsModfiyReq.getEggPway());
+            if(eggsModfiyReq.getEggPway()==2){
+                eggsMain.setEggMan(eggsModfiyReq.getEggMan());
+            }else if(eggsModfiyReq.getEggPway()==3){
+                eggsMain.setEggKou(eggsModfiyReq.getEggKou());
+            }else if(eggsModfiyReq.getEggPway()==4){
+                eggsMain.setEggMan(eggsModfiyReq.getEggMan());
+                eggsMain.setEggKou(eggsModfiyReq.getEggKou());
             }
         }
-        eggsMain.setEggDescribe(eggsModfiyBasicsReq.getEggDescribe());
-        eggsMain.setEggBeforeTxt(eggsModfiyBasicsReq.getEggBeforeTxt());
+        eggsMain.setEggDescribe(eggsModfiyReq.getEggDescribe());
+        eggsMain.setEggBeforeTxt(eggsModfiyReq.getEggBeforeTxt());
+        eggsMain.setEggBgmName(eggsModfiyReq.getEggBgmName());
+        eggsMain.setEggBgm(eggsModfiyReq.getEggBgm());
+
+        //TODO  规则设置
+        eggsMain.setEggCountOfAll(eggsModfiyReq.getEggCountOfAll());
+        eggsMain.setEggCountOfDay(eggsModfiyReq.getEggCountOfDay());
+
+        //TODO  兑奖设置
+        eggsMain.setEggCashDay(eggsModfiyReq.getEggCashDay());
+        eggsMain.setEggAddress(eggsModfiyReq.getEggAddress());
+        eggsMain.setEggCashWay(eggsModfiyReq.getEggCashWay());
+        eggsMain.setEggWinningTxt(eggsModfiyReq.getEggWinningTxt());
+        eggsMain.setEggWinningNotice(eggsModfiyReq.getEggWinningNotice());
 
         eggsMainService.updateById(eggsMain);
-    }
 
-    /**
-     * 编辑砸金蛋活动规则设置
-     * @param busUser
-     * @param eggsModfiyRuleReq
-     */
-    @Override
-    public void modfiyRuleEggs(BusUser busUser, EggsModfiyRuleReq eggsModfiyRuleReq) {
+        //TODO 奖项设置
+        Double fenbi = 0.0;
+        Double num   = 0.0;
+        if(eggsModfiyReq.getPrizeSetList().size()>0){        //TODO  奖品设置
 
-        EggsMain eggsMain = new EggsMain();
-        eggsMain.setId(eggsModfiyRuleReq.getId());
-        eggsMain.setEggCountOfAll(eggsModfiyRuleReq.getEggsCountOfAll());
-        eggsMain.setEggCountOfDay(eggsModfiyRuleReq.getEggsCountOfDay());
+            EntityWrapper<EggsDetail> entityWrapper5 = new EntityWrapper();
+            entityWrapper5.eq("egg_id",eggsModfiyReq.getId());
+            List<EggsDetail> eggsDetailList = eggsDetailService.selectList(entityWrapper5);
+            if(eggsDetailList.size() > 0) {
+                for (EggsDetail eggsDetail : eggsDetailList) {
+                    if (eggsDetail.getEggPrizeType() == 1) {
+                        num += eggsDetail.getEggPrizeNums();
+                    }
+                }
+            }
 
-        eggsMainService.updateById(eggsMain);
-    }
-
-    /**
-     * 编辑砸金蛋活动兑奖设置
-     * @param busUser
-     * @param eggsModfiyExpiryReq
-     */
-    @Override
-    public void modfiyExpiryEggs(BusUser busUser, EggsModfiyExpiryReq eggsModfiyExpiryReq) {
-
-        EggsMain eggsMain = new EggsMain();
-        eggsMain.setId(eggsModfiyExpiryReq.getId());
-        eggsMain.setEggCashDay(eggsModfiyExpiryReq.getEggCashDay());
-        eggsMain.setEggAddress(eggsModfiyExpiryReq.getEggAddress());
-        eggsMain.setEggCashWay(eggsModfiyExpiryReq.getEggCashWay());
-        eggsMain.setEggWinningTxt(eggsModfiyExpiryReq.getEggWinningTxt());
-        eggsMain.setEggWinningNotice(eggsModfiyExpiryReq.getEggWinningNotice());
-
-        eggsMainService.updateById(eggsMain);
-    }
-
-    /**
-     * 编辑砸金蛋奖项设置
-     * @param busUser
-     * @param eggsModfiyAwardsReq
-     */
-    @Override
-    public void modfiyAwardsEggs(BusUser busUser, EggsModfiyAwardsReq eggsModfiyAwardsReq) {
-
-        if(eggsModfiyAwardsReq.getPrizeSetList().size()>0){        //TODO  奖品设置
             // TODO  清空奖品设置
             EntityWrapper<EggsDetail> entityWrapper = new EntityWrapper();
-            entityWrapper.eq("egg_id",eggsModfiyAwardsReq.getId());
+            entityWrapper.eq("egg_id",eggsModfiyReq.getId());
             eggsDetailService.delete(entityWrapper);
 
-            //TODO   奖项设置
-            for(EggsPrizeSetReq eggsPrizeSetReq:eggsModfiyAwardsReq.getPrizeSetList()){
+            //TODO   添加奖项设置
+            for(EggsPrizeSetReq eggsPrizeSetReq:eggsModfiyReq.getPrizeSetList()){
 
                 EggsDetail eggsDetail = new EggsDetail();
-                eggsDetail.setEggId(eggsModfiyAwardsReq.getId());
+                eggsDetail.setEggId(eggsModfiyReq.getId());
                 eggsDetail.setEggPrizeType(eggsPrizeSetReq.getEggPrizeType());
                 eggsDetail.setEggPrizeLimit(eggsPrizeSetReq.getEggPrizeLimit());
                 eggsDetail.setEggPrizeName(eggsPrizeSetReq.getEggPrizeName());
@@ -397,35 +418,102 @@ public class EggsServiceImpl implements EggsService {
                 eggsDetailService.insert(eggsDetail);
             }
         }
+
+        if(fenbi > 0) {//冻结粉币
+            if ((fenbi - num) <= (0 - num)) {
+                throw new EggsException(ResponseEnums.EGGS_HAS9);
+            }
+            // 判断账户中的粉币是否足够
+            if (busUser.getFansCurrency().doubleValue() < (fenbi - num)) {
+                throw new EggsException(ResponseEnums.EGGS_HAS7);
+            }
+            UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
+            updateFenbiReduceReq.setBusId(busUser.getId());
+            updateFenbiReduceReq.setFkId(eggsMain.getId());
+            updateFenbiReduceReq.setFreType(13);
+            updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi - num));
+            AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
+            if (axisResult.getCode() != 0) {
+                throw new EggsException(ResponseEnums.EGGS_HAS8);
+            }
+        }
     }
 
     /**
-     * 批量删除砸金蛋活动
+     * 删除砸金蛋活动
      * @param busUser
      * @param eggsDelReq
      */
     @Override
     public void delEggs(BusUser busUser, EggsDelReq eggsDelReq) {
 
-        //TODO  批量删除活动
-        eggsMainService.deleteBatchIds(eggsDelReq.getId());
+        EggsMain eggsMain = eggsMainService.selectById(eggsDelReq.getId());
+        if(CommonUtil.isNotEmpty(eggsMain)) {
+            if (eggsMain.getEggBeginTime().getTime() < new Date().getTime() && eggsMain.getEggEndTime().getTime() > new Date().getTime()) {
+                throw new EggsException(ResponseEnums.EGGS_HAS11);
+            }
 
+            List<EggsWinning> eggsWinningList = eggsWinningService.selectList(
+                    new EntityWrapper<EggsWinning>().eq("win_act_id", eggsDelReq.getId()).eq("win_status", 3));
+            if (eggsWinningList.size() > 0) {
+                throw new EggsException(ResponseEnums.EGGS_HAS13);
 
-        for(Integer eggsId:eggsDelReq.getId()){
-            //TODO  批量删除奖品设置
-            EntityWrapper<EggsDetail> entityWrapper = new EntityWrapper<>();
-            entityWrapper.eq("egg_id",eggsId);
-            eggsDetailService.delete(entityWrapper);
+            }
+        }
 
-            //TODO  批量删除中奖记录
-            EntityWrapper<EggsWinning> entityWrapper2 = new EntityWrapper<>();
-            entityWrapper2.eq("win_act_id",eggsId);
-            eggsWinningService.delete(entityWrapper2);
+        boolean b = eggsMainService.deleteById(eggsDelReq.getId());
+        if(b==false){
+            throw  new EggsException(ResponseEnums.EGGS_HAS6);
+        }
+
+        EntityWrapper<EggsDetail> entityWrapper3 = new EntityWrapper<>();
+        entityWrapper3.eq("egg_id",eggsDelReq.getId());
+        List<EggsDetail> eggsDetailList = eggsDetailService.selectList(entityWrapper3);
+
+        boolean ff = false;
+        if(eggsDetailList.size() > 0){
+            for(EggsDetail eggsDetail : eggsDetailList){
+                if(eggsDetail.getEggPrizeType() == 1){
+                    ff = true;
+                }
+            }
+        }
+
+        //TODO  删除奖品设置
+        EntityWrapper<EggsDetail> entityWrapper = new EntityWrapper<>();
+        entityWrapper.eq("egg_id",eggsDelReq.getId());
+        eggsDetailService.delete(entityWrapper);
+
+        //TODO  删除中奖记录
+        EntityWrapper<EggsWinning> entityWrapper2 = new EntityWrapper<>();
+        entityWrapper2.eq("win_act_id",eggsDelReq.getId());
+        eggsWinningService.delete(entityWrapper2);
+
+        //删除冻结信息
+        if(ff){
+            FenbiSurplus fenbiSurplus = new FenbiSurplus();
+            fenbiSurplus.setBusId(busUser.getId());
+            fenbiSurplus.setFkId(eggsMain.getId());
+            fenbiSurplus.setFre_type(13);
+            fenbiSurplus.setRec_type(1);
+            AxisResult<FenbiFlowRecord> ffr = FenbiflowServer.getFenbiFlowRecord(fenbiSurplus);
+            if(ffr!=null && ffr.getData() != null && ffr.getData().getRollStatus() == 1){//未回滚
+                // 获取冻结信息中粉币剩余量
+                FenbiSurplus fenbiSurplus1 = new FenbiSurplus();
+                fenbiSurplus1.setBusId(busUser.getId());
+                fenbiSurplus1.setFkId(eggsMain.getId());
+                fenbiSurplus1.setRec_type(1);
+                fenbiSurplus1.setFre_type(13);
+                AxisResult axisResult = FenbiflowServer.rollbackFenbiRecord(fenbiSurplus1);
+                if(axisResult.getCode() != 0){
+                    throw new EggsException(ResponseEnums.EGGS_HAS14);
+                }
+            }
         }
     }
 
     /**
-     * 分页获取圣诞大礼包中奖记录列表
+     * 分页获取中奖记录列表
      * @param busUser
      * @param eggsGetWinningReq
      * @return
