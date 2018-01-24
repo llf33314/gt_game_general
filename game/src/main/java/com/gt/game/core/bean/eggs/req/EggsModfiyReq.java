@@ -4,9 +4,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
+import java.util.List;
 
-@ApiModel("编辑砸金蛋活动基础设置请求类")
-public class EggsModfiyBasicsReq {
+@ApiModel("编辑砸金蛋活动设置请求类")
+public class EggsModfiyReq {
 
 	@ApiModelProperty("活动主键id")
 	private Integer id;
@@ -38,11 +39,35 @@ public class EggsModfiyBasicsReq {
 	@ApiModelProperty("活动未开始提示")
 	private String eggBeforeTxt;
 
-	/*@ApiModelProperty("音乐名称")
+	@ApiModelProperty("音乐名称")
 	private String eggBgmName;
 
 	@ApiModelProperty("音乐路径")
-	private String eggBgm;*/
+	private String eggBgm;
+
+	@ApiModelProperty("抽奖总数")
+	private Integer eggCountOfAll;
+
+	@ApiModelProperty("抽奖次数")
+	private Integer eggCountOfDay;
+
+	@ApiModelProperty("兑奖期限")
+	private Integer eggCashDay;
+
+	@ApiModelProperty("兑奖地址")
+	private String eggAddress;
+
+	@ApiModelProperty("兑奖方式(1手动 2自动)")
+	private Integer eggCashWay;
+
+	@ApiModelProperty("兑奖提示")
+	private String eggWinningTxt;
+
+	@ApiModelProperty("中奖须知")
+	private String eggWinningNotice;
+
+	@ApiModelProperty("奖品设置")
+	private List<EggsPrizeSetReq> prizeSetList;
 
 	public Integer getId() {
 		return id;
@@ -122,5 +147,85 @@ public class EggsModfiyBasicsReq {
 
 	public void setEggBeforeTxt(String eggBeforeTxt) {
 		this.eggBeforeTxt = eggBeforeTxt;
+	}
+
+	public String getEggBgmName() {
+		return eggBgmName;
+	}
+
+	public void setEggBgmName(String eggBgmName) {
+		this.eggBgmName = eggBgmName;
+	}
+
+	public String getEggBgm() {
+		return eggBgm;
+	}
+
+	public void setEggBgm(String eggBgm) {
+		this.eggBgm = eggBgm;
+	}
+
+	public Integer getEggCountOfAll() {
+		return eggCountOfAll;
+	}
+
+	public void setEggCountOfAll(Integer eggCountOfAll) {
+		this.eggCountOfAll = eggCountOfAll;
+	}
+
+	public Integer getEggCountOfDay() {
+		return eggCountOfDay;
+	}
+
+	public void setEggCountOfDay(Integer eggCountOfDay) {
+		this.eggCountOfDay = eggCountOfDay;
+	}
+
+	public Integer getEggCashDay() {
+		return eggCashDay;
+	}
+
+	public void setEggCashDay(Integer eggCashDay) {
+		this.eggCashDay = eggCashDay;
+	}
+
+	public String getEggAddress() {
+		return eggAddress;
+	}
+
+	public void setEggAddress(String eggAddress) {
+		this.eggAddress = eggAddress;
+	}
+
+	public Integer getEggCashWay() {
+		return eggCashWay;
+	}
+
+	public void setEggCashWay(Integer eggCashWay) {
+		this.eggCashWay = eggCashWay;
+	}
+
+	public String getEggWinningTxt() {
+		return eggWinningTxt;
+	}
+
+	public void setEggWinningTxt(String eggWinningTxt) {
+		this.eggWinningTxt = eggWinningTxt;
+	}
+
+	public String getEggWinningNotice() {
+		return eggWinningNotice;
+	}
+
+	public void setEggWinningNotice(String eggWinningNotice) {
+		this.eggWinningNotice = eggWinningNotice;
+	}
+
+	public List<EggsPrizeSetReq> getPrizeSetList() {
+		return prizeSetList;
+	}
+
+	public void setPrizeSetList(List<EggsPrizeSetReq> prizeSetList) {
+		this.prizeSetList = prizeSetList;
 	}
 }

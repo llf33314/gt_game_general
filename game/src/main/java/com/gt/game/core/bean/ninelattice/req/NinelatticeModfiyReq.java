@@ -6,8 +6,11 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 import java.util.List;
 
-@ApiModel("新增幸运九宫格活动请求类")
-public class NinelatticeAddReq {
+@ApiModel("编辑幸运九宫格活动基础设置请求类")
+public class NinelatticeModfiyReq {
+
+	@ApiModelProperty("活动主键id")
+	private Integer id;
 
 	@ApiModelProperty("活动名称")
 	private String name;
@@ -71,6 +74,14 @@ public class NinelatticeAddReq {
 
 	public void setMusicUrl(String musicUrl) {
 		this.musicUrl = musicUrl;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getName() {

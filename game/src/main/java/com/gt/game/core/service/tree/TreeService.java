@@ -2,11 +2,8 @@ package com.gt.game.core.service.tree;
 
 
 import com.gt.api.bean.session.BusUser;
+import com.gt.api.bean.session.WxPublicUsers;
 import com.gt.game.common.dto.ResponseDTO;
-import com.gt.game.core.bean.lantern.req.*;
-import com.gt.game.core.bean.lantern.res.*;
-import com.gt.game.core.bean.ninelattice.res.NinelatticeAuthorityListRes;
-import com.gt.game.core.bean.ninelattice.res.NinelatticeListRes;
 import com.gt.game.core.bean.tree.req.*;
 import com.gt.game.core.bean.tree.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
@@ -32,7 +29,7 @@ public interface TreeService {
      * @param mobileUrlReq
      * @return
      */
-    MobileUrlRes getMobileUrl(BusUser busUser, MobileUrlReq mobileUrlReq);
+    MobileUrlRes getMobileUrl(WxPublicUsers loginPbUser , MobileUrlReq mobileUrlReq);
 
     /**
      * 分页获取圣诞大礼包活动列表
@@ -68,35 +65,14 @@ public interface TreeService {
     TreeGetActivityRes getActivityById(BusUser busUser, TreeGetActivityReq treeGetActivityReq);
 
     /**
-     * 编辑圣诞大礼包活动基础设置
+     * 编辑圣诞大礼包活动设置
      * @param busUser
-     * @param treeModfiyBasicsReq
+     * @param treeModfiyReq
      */
-    void modfiyBasicsTree(BusUser busUser, TreeModfiyBasicsReq treeModfiyBasicsReq);
+    void modfiyTree(BusUser busUser, TreeModfiyReq treeModfiyReq);
 
     /**
-     * 编辑圣诞大礼包活动规则设置
-     * @param busUser
-     * @param treeModfiyRuleReq
-     */
-    void modfiyRuleTree(BusUser busUser, TreeModfiyRuleReq treeModfiyRuleReq);
-
-    /**
-     * 编辑圣诞大礼包活动兑奖设置
-     * @param busUser
-     * @param treeModfiyExpiryReq
-     */
-    void modfiyExpiryTree(BusUser busUser, TreeModfiyExpiryReq treeModfiyExpiryReq);
-
-    /**
-     * 编辑圣诞大礼包奖项设置
-     * @param busUser
-     * @param treeModfiyAwardsReq
-     */
-    void modfiyAwardsTree(BusUser busUser, TreeModfiyAwardsReq treeModfiyAwardsReq);
-
-    /**
-     * 批量删除圣诞大礼包活动
+     * 删除圣诞大礼包活动
      * @param busUser
      * @param treeDelReq
      */

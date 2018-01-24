@@ -48,10 +48,10 @@
           </el-table-column>
           <el-table-column prop="order_option" width="450" label="操作">
             <template slot-scope="scope">
-              <el-button class="gt-button-normal blue" @click="edit(scope.row.id)">编辑</el-button>
               <el-button class="gt-button-normal blue" @click="askPreview(scope.row.id)">预览链接</el-button>
               <el-button class="gt-button-normal blue" @click="impower(scope.row.id)">核销授权</el-button>
               <el-button class="gt-button-normal blue" @click="record(scope.row.id)">中奖纪录</el-button>
+              <el-button class="gt-button-normal blue" @click="edit(scope.row.id)" v-if="scope.row.status == 0">编辑</el-button>
               <el-button class="gt-button-normal" @click="delOne(scope.row.id)">删除</el-button>
             </template>
           </el-table-column>
@@ -201,12 +201,12 @@ export default {
     addActive() {
       this.$router.push("/luckyNine/addAct");
     },
-    // edit(id) {
-    //   this.$router.push({
-    //     path: "/luckyNine/editAct",
-    //     query: { id: id }
-    //   });
-    // },
+    edit(id) {
+      this.$router.push({
+        path: "/luckyNine/editAct",
+        query: { id: id }
+      });
+    },
     //中奖记录
     record(val) {
       this.$router.push({

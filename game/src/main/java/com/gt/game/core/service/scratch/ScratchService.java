@@ -8,6 +8,7 @@ import com.gt.game.core.bean.qixi.req.*;
 import com.gt.game.core.bean.qixi.res.*;
 import com.gt.game.core.bean.scratch.req.*;
 import com.gt.game.core.bean.scratch.res.*;
+import com.gt.game.core.bean.turntable.req.ScratchStartReq;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 
@@ -25,7 +26,7 @@ import java.util.Map;
  */
 public interface ScratchService {
 
-    MobileUrlRes getMobileUrl(BusUser busUser, MobileUrlReq mobileUrlReq);
+    MobileUrlRes getMobileUrl(WxPublicUsers loginPbUser, MobileUrlReq mobileUrlReq);
 
     /**
      * 分页获取刮刮乐活动列表
@@ -48,7 +49,7 @@ public interface ScratchService {
      * @param loginPbUser
      * @param scratchAddReq
      */
-    void addScratch(WxPublicUsers loginPbUser, ScratchAddReq scratchAddReq);
+    void addScratch(BusUser busUser ,WxPublicUsers loginPbUser, ScratchAddReq scratchAddReq);
 
     /**
      * 通过活动id查询刮刮乐活动
@@ -66,18 +67,12 @@ public interface ScratchService {
     void modfiyScratch(BusUser busUser, ScratchModfiyReq scratchModfiyReq);
 
     /**
-     * 刮刮乐开始活动
+     * 刮刮乐 暂停/开始活动
      * @param busUser
-     * @param scratchStartReq
+     * @param scratchStopIdReq
+     * @return
      */
-    void startScratch(BusUser busUser, ScratchStartReq scratchStartReq);
-
-    /**
-     * 刮刮乐暂停活动
-     * @param busUser
-     * @param scratchStopReq
-     */
-    void stopScratch(BusUser busUser, ScratchStopReq scratchStopReq);
+    ResponseDTO stopScratch(WxPublicUsers busUser, ScratchStopIdReq scratchStopIdReq);
 
     /**
      * 批量删除刮刮乐活动
@@ -124,4 +119,6 @@ public interface ScratchService {
      * @return
      */
     ResponseDTO<List<ScratchPrizeTypeListRes>> getScratchPrizeType(BusUser busUser);
+
+
 }

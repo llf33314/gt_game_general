@@ -7,39 +7,36 @@ import com.gt.axis.bean.member.member.MemberReq;
 import com.gt.axis.bean.member.member.MemberRes;
 import com.gt.axis.bean.wxmp.dict.DictApiReq;
 import com.gt.axis.bean.wxmp.dict.DictApiRes;
+import com.gt.axis.bean.wxmp.fenbiflow.FenbiFlowRecord;
+import com.gt.axis.bean.wxmp.fenbiflow.FenbiFlowRecordReq;
+import com.gt.axis.bean.wxmp.fenbiflow.FenbiSurplus;
+import com.gt.axis.bean.wxmp.fenbiflow.UpdateFenbiReduceReq;
 import com.gt.axis.content.AxisResult;
 import com.gt.axis.server.member.MemberServer;
 import com.gt.axis.server.wxmp.DictServer;
+import com.gt.axis.server.wxmp.FenbiflowServer;
+import com.gt.game.common.config.ApplyProperties;
 import com.gt.game.common.dto.PageDTO;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.common.enums.ResponseEnums;
-import com.gt.game.core.bean.lantern.req.*;
-import com.gt.game.core.bean.lantern.req.LanternAdvertisingPictureReq;
-import com.gt.game.core.bean.lantern.req.LanternDelWinningReq;
-import com.gt.game.core.bean.lantern.res.*;
 import com.gt.game.core.bean.ninelattice.req.*;
 import com.gt.game.core.bean.ninelattice.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
-import com.gt.game.core.dao.lantern.LanternCashPrizeApplyDAO;
 import com.gt.game.core.dao.ninelattice.NinelatticeCashPrizeApplyDAO;
-import com.gt.game.core.entity.dragonboat.DragonboatraceAd;
-import com.gt.game.core.entity.dragonboat.DragonboatraceAddress;
-import com.gt.game.core.entity.dragonboat.DragonboatracePrize;
-import com.gt.game.core.entity.dragonboat.DragonboatracePrizeImg;
 import com.gt.game.core.entity.lantern.*;
 import com.gt.game.core.entity.ninelattice.*;
-import com.gt.game.core.exception.dragonboat.DragonboatException;
 import com.gt.game.core.exception.lantern.LanternException;
 import com.gt.game.core.exception.ninelattice.NinelatticeException;
-import com.gt.game.core.service.lantern.*;
 import com.gt.game.core.service.ninelattice.*;
 import com.gt.game.core.util.CommonUtil;
 import com.gt.game.core.util.DateTimeKit;
+import com.sun.xml.internal.bind.v2.TODO;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -76,7 +73,14 @@ public class NinelatticeServiceImpl implements NinelatticeService {
     NinelatticeAuthorityService ninelatticeAuthorityService;
 
     @Autowired
+    NinelatticePlayRecordService ninelatticePlayRecordService;
+
+    @Autowired
     NinelatticeCashPrizeApplyDAO ninelatticeCashPrizeApplyDAO;
+
+    @Autowired
+    ApplyProperties applyProperties;
+
 
     /**
      * 获取手机端链接
@@ -86,7 +90,22 @@ public class NinelatticeServiceImpl implements NinelatticeService {
      */
     @Override
     public MobileUrlRes getMobileUrl(BusUser busUser, MobileUrlReq mobileUrlReq) {
-        return null;
+
+        String url = applyProperties.getMobileBaseUrl() + "nineLatticeMobile/"+ mobileUrlReq.getMainId() + "/79B4DE7C/toPhoneIndex.do";
+        return new MobileUrlRes(url);
+    }
+
+    /**
+     * 获取新增授权链接
+     * @param busUser
+     * @param mobileUrlReq
+     * @return
+     */
+    @Override
+    public ResponseDTO<MobileUrlRes> getAuthorityUrl(BusUser busUser, MobileUrlReq mobileUrlReq) {
+
+        String url = applyProperties.getMobileBaseUrl() + "nineLatticeMobile/"+ mobileUrlReq.getMainId() + "/79B4DE7C/saveAuthorizer.do";
+        return ResponseDTO.createBySuccess("获取新增授权链接成功",new MobileUrlRes(url));
     }
 
     /**
@@ -193,6 +212,8 @@ public class NinelatticeServiceImpl implements NinelatticeService {
         ninelatticeMain.setName(ninelatticeAddReq.getName());
         ninelatticeMain.setActivityBeginTime(ninelatticeAddReq.getActivityBeginTime());
         ninelatticeMain.setActivityEndTime(ninelatticeAddReq.getActivityEndTime());
+        ninelatticeMain.setBgmSp(ninelatticeAddReq.getBgmSp());
+        ninelatticeMain.setMusicUrl(ninelatticeAddReq.getMusicUrl());
         ninelatticeMain.setFollowQrCode(ninelatticeAddReq.getFollowQrCode());
         ninelatticeMain.setManTotalChance(ninelatticeAddReq.getManTotalChance());
         ninelatticeMain.setManDayChance(ninelatticeAddReq.getManDayChance());
@@ -222,9 +243,12 @@ public class NinelatticeServiceImpl implements NinelatticeService {
                 }
             }
         }
-
+        Double fenbi = 0.0;
         if(ninelatticeAddReq.getPrizeSetList().size()>0){        //TODO  奖品设置
             for(NinelatticePrizeSetReq ninelatticePrizeSetReq:ninelatticeAddReq.getPrizeSetList()){
+                if (ninelatticePrizeSetReq.getType() == 1) {
+                    fenbi += ninelatticePrizeSetReq.getNum();
+                }
                 NinelatticePrize ninelatticePrize = new NinelatticePrize();
                 ninelatticePrize.setActId(ninelatticeMain.getId());
                 ninelatticePrize.setType(ninelatticePrizeSetReq.getType());
@@ -246,6 +270,24 @@ public class NinelatticeServiceImpl implements NinelatticeService {
                 }
             }
         }
+
+        if(fenbi > 0){//冻结粉币
+            // 判断账户中的粉币是否足够
+            if(busUser.getFansCurrency().doubleValue() < fenbi.doubleValue()){
+                throw new NinelatticeException(ResponseEnums.NINELATTICE_HAS7);
+            }
+            //构建冻结信息
+            FenbiFlowRecord ffr=CommonUtil.bulidFenFlow(busUser.getId(), fenbi, ninelatticeMain.getId(), 98, 1, "元宵点灯活动支出", 0);
+            // 保存冻结信息
+            if(ffr!=null){
+                FenbiFlowRecordReq fenbiFlowRecordReq = new FenbiFlowRecordReq();
+                BeanUtils.copyProperties(ffr,fenbiFlowRecordReq);
+                AxisResult axisResult = FenbiflowServer.saveFenbiFlowRecord(fenbiFlowRecordReq);
+                if(axisResult.getCode() != 0){
+                    throw new NinelatticeException(ResponseEnums.NINELATTICE_HAS8);
+                }
+            }
+        }
     }
 
     /**
@@ -264,6 +306,8 @@ public class NinelatticeServiceImpl implements NinelatticeService {
         ninelatticeGetActivityRes.setActivityEndTime(ninelatticeMain.getActivityEndTime());
         ninelatticeGetActivityRes.setCashPrizeBeginTime(ninelatticeMain.getCashPrizeBeginTime());
         ninelatticeGetActivityRes.setCashPrizeEndTime(ninelatticeMain.getCashPrizeEndTime());
+        ninelatticeGetActivityRes.setBgmSp(ninelatticeMain.getBgmSp());
+        ninelatticeGetActivityRes.setMusicUrl(ninelatticeMain.getMusicUrl());
         ninelatticeGetActivityRes.setFollowQrCode(ninelatticeMain.getFollowQrCode());
         ninelatticeGetActivityRes.setManTotalChance(ninelatticeMain.getManTotalChance());
         ninelatticeGetActivityRes.setManDayChance(ninelatticeMain.getManDayChance());
@@ -316,60 +360,48 @@ public class NinelatticeServiceImpl implements NinelatticeService {
     }
 
     /**
-     * 编辑幸运九宫格活动基础设置
+     * 编辑幸运九宫格活动设置
      * @param busUser
-     * @param ninelatticeModfiyBasicsReq
+     * @param ninelatticeModfiyReq
      */
     @Override
-    public void modfiyBasicsNinelattice(BusUser busUser, NinelatticeModfiyBasicsReq ninelatticeModfiyBasicsReq) {
+    public void modfiyNinelattice(BusUser busUser, NinelatticeModfiyReq ninelatticeModfiyReq) {
 
-        NinelatticeMain ninelatticeMain = new NinelatticeMain();
-        ninelatticeMain.setId(ninelatticeModfiyBasicsReq.getId());
-        ninelatticeMain.setName(ninelatticeModfiyBasicsReq.getName());
-        ninelatticeMain.setActivityBeginTime(ninelatticeModfiyBasicsReq.getActivityBeginTime());
-        ninelatticeMain.setActivityEndTime(ninelatticeModfiyBasicsReq.getActivityEndTime());
+        NinelatticeMain ninelatticeMain = ninelatticeMainService.selectById(ninelatticeModfiyReq.getId());
+        if(CommonUtil.isEmpty(ninelatticeMain)){
+            throw new NinelatticeException(ResponseEnums.NINELATTICE_HAS5);
+        }
+        if(ninelatticeMain.getActivityBeginTime().getTime() < new Date().getTime()){
+            throw new NinelatticeException(ResponseEnums.NINELATTICE_HAS10);
+        }
+        if(ninelatticeMain.getBusId().intValue() != busUser.getId().intValue()){
+            throw new NinelatticeException(ResponseEnums.DIFF_USER);
+        }
 
-        ninelatticeMainService.updateById(ninelatticeMain);
-    }
+        //TODO  基础设置
+        ninelatticeMain.setName(ninelatticeModfiyReq.getName());
+        ninelatticeMain.setActivityBeginTime(ninelatticeModfiyReq.getActivityBeginTime());
+        ninelatticeMain.setActivityEndTime(ninelatticeModfiyReq.getActivityEndTime());
+        ninelatticeMain.setBgmSp(ninelatticeModfiyReq.getBgmSp());
+        ninelatticeMain.setMusicUrl(ninelatticeModfiyReq.getMusicUrl());
 
-    /**
-     * 编辑幸运九宫格活动规则设置
-     * @param busUser
-     * @param ninelatticeModfiyRuleReq
-     */
-    @Override
-    public void modfiyRuleNinelattice(BusUser busUser, NinelatticeModfiyRuleReq ninelatticeModfiyRuleReq) {
+        //TODO 规则设置
+        ninelatticeMain.setFollowQrCode(ninelatticeModfiyReq.getFollowQrCode());
+        ninelatticeMain.setManTotalChance(ninelatticeModfiyReq.getManTotalChance());
+        ninelatticeMain.setManDayChance(ninelatticeModfiyReq.getManDayChance());
+        ninelatticeMain.setActRule(ninelatticeModfiyReq.getActRule());
 
-        NinelatticeMain ninelatticeMain = new NinelatticeMain();
-        ninelatticeMain.setId(ninelatticeModfiyRuleReq.getId());
-        ninelatticeMain.setFollowQrCode(ninelatticeModfiyRuleReq.getFollowQrCode());
-        ninelatticeMain.setManTotalChance(ninelatticeModfiyRuleReq.getManTotalChance());
-        ninelatticeMain.setManDayChance(ninelatticeModfiyRuleReq.getManDayChance());
-        ninelatticeMain.setActRule(ninelatticeModfiyRuleReq.getActRule());
-
-        ninelatticeMainService.updateById(ninelatticeMain);
-    }
-
-    /**
-     * 编辑幸运九宫格活动兑奖设置
-     * @param busUser
-     * @param ninelatticeModfiyExpiryReq
-     */
-    @Override
-    public void modfiyExpiryNinelattice(BusUser busUser, NinelatticeModfiyExpiryReq ninelatticeModfiyExpiryReq) {
-
-        NinelatticeMain ninelatticeMain = new NinelatticeMain();
-        ninelatticeMain.setId(ninelatticeModfiyExpiryReq.getId());
-        ninelatticeMain.setCashPrizeBeginTime(ninelatticeModfiyExpiryReq.getCashPrizeBeginTime());
-        ninelatticeMain.setCashPrizeEndTime(ninelatticeModfiyExpiryReq.getCashPrizeEndTime());
+        //TODO 兑奖设置
+        ninelatticeMain.setCashPrizeBeginTime(ninelatticeModfiyReq.getCashPrizeBeginTime());
+        ninelatticeMain.setCashPrizeEndTime(ninelatticeModfiyReq.getCashPrizeEndTime());
 
         String s1="";
-        for(String s:ninelatticeModfiyExpiryReq.getReceiveTypeList()){
+        for(String s:ninelatticeModfiyReq.getReceiveTypeList()){
             s1 = s1+","+s;
         }
         ninelatticeMain.setReceiveType(s1.substring(1));
-        ninelatticeMain.setPhone(ninelatticeModfiyExpiryReq.getPhone());
-        ninelatticeMain.setCashPrizeInstruction(ninelatticeModfiyExpiryReq.getCashPrizeInstruction());
+        ninelatticeMain.setPhone(ninelatticeModfiyReq.getPhone());
+        ninelatticeMain.setCashPrizeInstruction(ninelatticeModfiyReq.getCashPrizeInstruction());
 
         ninelatticeMainService.updateById(ninelatticeMain);
 
@@ -378,9 +410,9 @@ public class NinelatticeServiceImpl implements NinelatticeService {
         entityWrapper.eq("act_id",ninelatticeMain.getId());
         ninelatticeAddressService.delete(entityWrapper);
 
-        for(String s:ninelatticeModfiyExpiryReq.getReceiveTypeList()){
+        for(String s:ninelatticeModfiyReq.getReceiveTypeList()){
             if("1".equals(s)){
-                for(String s2:ninelatticeModfiyExpiryReq.getAddressList()){
+                for(String s2:ninelatticeModfiyReq.getAddressList()){
                     NinelatticeAddress ninelatticeAddress = new NinelatticeAddress();
                     ninelatticeAddress.setActId(ninelatticeMain.getId());
                     ninelatticeAddress.setCreatetime(new Date());
@@ -390,25 +422,32 @@ public class NinelatticeServiceImpl implements NinelatticeService {
                 }
             }
         }
-    }
 
-    /**
-     * 编辑幸运九宫格奖项设置
-     * @param busUser
-     * @param ninelatticeModfiyAwardsReq
-     */
-    @Override
-    public void modfiyAwardsNinelattice(BusUser busUser, NinelatticeModfiyAwardsReq ninelatticeModfiyAwardsReq) {
+        //TODO 奖项设置
+        Double fenbi = 0.0;
+        Double num   = 0.0;
+        if(ninelatticeModfiyReq.getPrizeSetList().size()>0) {        //TODO  奖品设置
 
-        if(ninelatticeModfiyAwardsReq.getPrizeSetList().size()>0){        //TODO  奖品设置
+            //TODO 统计粉币
+            EntityWrapper<NinelatticePrize> entityWrapper5 = new EntityWrapper();
+            entityWrapper5.eq("act_id",ninelatticeModfiyReq.getId());
+            List<NinelatticePrize> ninelatticePrizeList = ninelatticePrizeService.selectList(entityWrapper5);
+            if(ninelatticePrizeList.size() > 0) {
+                for (NinelatticePrize ninelatticePrize : ninelatticePrizeList) {
+                    if (ninelatticePrize.getType() == 1) {
+                        num += ninelatticePrize.getNum();
+                    }
+                }
+            }
+
             // TODO  清空奖品设置
-            EntityWrapper<NinelatticePrize> entityWrapper = new EntityWrapper();
-            entityWrapper.eq("act_id",ninelatticeModfiyAwardsReq.getId());
-            ninelatticePrizeService.delete(entityWrapper);
+            EntityWrapper<NinelatticePrize> entityWrapper2 = new EntityWrapper();
+            entityWrapper2.eq("act_id", ninelatticeModfiyReq.getId());
+            ninelatticePrizeService.delete(entityWrapper2);
 
-            for(NinelatticePrizeSetReq ninelatticePrizeSetReq:ninelatticeModfiyAwardsReq.getPrizeSetList()){
+            for (NinelatticePrizeSetReq ninelatticePrizeSetReq : ninelatticeModfiyReq.getPrizeSetList()) {
                 NinelatticePrize ninelatticePrize = new NinelatticePrize();
-                ninelatticePrize.setActId(ninelatticeModfiyAwardsReq.getId());
+                ninelatticePrize.setActId(ninelatticeModfiyReq.getId());
                 ninelatticePrize.setType(ninelatticePrizeSetReq.getType());
                 ninelatticePrize.setPrizeUnit(ninelatticePrizeSetReq.getPrizeUnit());
                 ninelatticePrize.setPrizeName(ninelatticePrizeSetReq.getPrizeName());
@@ -418,19 +457,38 @@ public class NinelatticeServiceImpl implements NinelatticeService {
                 ninelatticePrizeService.insert(ninelatticePrize);
 
                 //TODO 清空图片
-                EntityWrapper<NinelatticePrizeImg> entityWrapper2 = new EntityWrapper();
-                entityWrapper2.eq("prize_id",ninelatticePrize.getId());
-                ninelatticePrizeImgService.delete(entityWrapper2);
+                EntityWrapper<NinelatticePrizeImg> entityWrapper3 = new EntityWrapper();
+                entityWrapper3.eq("prize_id", ninelatticePrize.getId());
+                ninelatticePrizeImgService.delete(entityWrapper3);
 
-                if(ninelatticePrizeSetReq.getImgUrl().size()>0){   ///TODO 添加图片
+                if (ninelatticePrizeSetReq.getImgUrl().size() > 0) {   ///TODO 添加图片
 
-                    for(String s:ninelatticePrizeSetReq.getImgUrl()){
+                    for (String s : ninelatticePrizeSetReq.getImgUrl()) {
                         NinelatticePrizeImg ninelatticePrizeImg = new NinelatticePrizeImg();
                         ninelatticePrizeImg.setPrizeId(ninelatticePrize.getId());
                         ninelatticePrizeImg.setImgUrl(s);
                         ninelatticePrizeImgService.insert(ninelatticePrizeImg);
                     }
                 }
+            }
+        }
+
+        if(fenbi > 0) {//冻结粉币
+            if ((fenbi - num) <= (0 - num)) {
+                throw new NinelatticeException(ResponseEnums.NINELATTICE_HAS9);
+            }
+            // 判断账户中的粉币是否足够
+            if (busUser.getFansCurrency().doubleValue() < (fenbi - num)) {
+                throw new NinelatticeException(ResponseEnums.NINELATTICE_HAS7);
+            }
+            UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
+            updateFenbiReduceReq.setBusId(busUser.getId());
+            updateFenbiReduceReq.setFkId(ninelatticeMain.getId());
+            updateFenbiReduceReq.setFreType(98);
+            updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi - num));
+            AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
+            if (axisResult.getCode() != 0) {
+                throw new NinelatticeException(ResponseEnums.NINELATTICE_HAS8);
             }
         }
     }
@@ -443,6 +501,26 @@ public class NinelatticeServiceImpl implements NinelatticeService {
     @Override
     public void delNinelattice(BusUser busUser, NinelatticeDelReq ninelatticeDelReq) {
 
+        NinelatticeMain ninelatticeMain = ninelatticeMainService.selectById(ninelatticeDelReq.getId());
+        if(CommonUtil.isNotEmpty(ninelatticeMain)) {
+            if (ninelatticeMain.getActivityBeginTime().getTime() < new Date().getTime() && ninelatticeMain.getActivityEndTime().getTime() > new Date().getTime()) {
+                throw new NinelatticeException(ResponseEnums.NINELATTICE_HAS11);
+            }
+            if (ninelatticeMain.getCashPrizeBeginTime().getTime() < new Date().getTime() && ninelatticeMain.getCashPrizeEndTime().getTime() > new Date().getTime()) {
+                throw new NinelatticeException(ResponseEnums.NINELATTICE_HAS12);
+            }
+
+            List<NinelatticeCashPrizeApply> ninelatticeCashPrizeApplyList = ninelatticeCashPrizeApplyService.selectList(
+                    new EntityWrapper<NinelatticeCashPrizeApply>().eq("act_id", ninelatticeDelReq.getId()).eq("status", 3));
+            if (ninelatticeCashPrizeApplyList.size() > 0) {
+                throw new NinelatticeException(ResponseEnums.NINELATTICE_HAS13);
+
+            }
+            if(ninelatticeMain.getBusId().intValue() != busUser.getId().intValue()){
+                throw new NinelatticeException(ResponseEnums.DIFF_USER);
+            }
+        }
+
         //TODO  删除活动
         boolean b = ninelatticeMainService.deleteById(ninelatticeDelReq.getId());
         if(b==false){
@@ -454,10 +532,18 @@ public class NinelatticeServiceImpl implements NinelatticeService {
         entityWrapper.eq("act_id",ninelatticeDelReq.getId());
         ninelatticeAddressService.delete(entityWrapper);
 
-
         EntityWrapper<NinelatticePrize> entityWrapper2 = new EntityWrapper<>();
         entityWrapper2.eq("act_id",ninelatticeDelReq.getId());
         List<NinelatticePrize> ninelatticePrizeList = ninelatticePrizeService.selectList(entityWrapper2);
+
+        boolean ff = false;
+        if(ninelatticePrizeList.size() > 0){
+            for(NinelatticePrize ninelatticePrize : ninelatticePrizeList){
+                if(ninelatticePrize.getType() == 1){
+                    ff = true;
+                }
+            }
+        }
 
         if(ninelatticePrizeList.size()>0){
             for(NinelatticePrize ninelatticePrize:ninelatticePrizeList){
@@ -473,6 +559,37 @@ public class NinelatticeServiceImpl implements NinelatticeService {
         EntityWrapper<NinelatticePrize> entityWrapper4 = new EntityWrapper<>();
         entityWrapper4.eq("act_id",ninelatticeDelReq.getId());
         ninelatticePrizeService.delete(entityWrapper4);
+
+        //TODO  删除活动用户授权信息
+        EntityWrapper<NinelatticeAuthority> entityWrapper6 = new EntityWrapper<>();
+        entityWrapper6.eq("act_id",ninelatticeDelReq.getId());
+        ninelatticeAuthorityService.delete(entityWrapper6);
+
+        EntityWrapper<NinelatticePlayRecord> entityWrapper8 = new EntityWrapper<>();
+        entityWrapper8.eq("act_id",ninelatticeDelReq.getId());
+        ninelatticePlayRecordService.delete(entityWrapper8);
+
+        //删除冻结信息
+        if(ff){
+            FenbiSurplus fenbiSurplus = new FenbiSurplus();
+            fenbiSurplus.setBusId(busUser.getId());
+            fenbiSurplus.setFkId(ninelatticeMain.getId());
+            fenbiSurplus.setFre_type(98);
+            fenbiSurplus.setRec_type(1);
+            AxisResult<FenbiFlowRecord> ffr = FenbiflowServer.getFenbiFlowRecord(fenbiSurplus);
+            if(ffr!=null && ffr.getData() != null && ffr.getData().getRollStatus() == 1){//未回滚
+                // 获取冻结信息中粉币剩余量
+                FenbiSurplus fenbiSurplus1 = new FenbiSurplus();
+                fenbiSurplus1.setBusId(busUser.getId());
+                fenbiSurplus1.setFkId(ninelatticeMain.getId());
+                fenbiSurplus1.setRec_type(1);
+                fenbiSurplus1.setFre_type(98);
+                AxisResult axisResult = FenbiflowServer.rollbackFenbiRecord(fenbiSurplus1);
+                if(axisResult.getCode() != 0){
+                    throw new NinelatticeException(ResponseEnums.NINELATTICE_HAS14);
+                }
+            }
+        }
     }
 
     /**

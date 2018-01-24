@@ -84,13 +84,6 @@ public enum ResponseEnums {
     STAND_HAS17(417,"导入失败,格式有误！存在空值！请修正后再尝试导入"),
     STAND_HAS18(418,"导入失败,格式有误"),
 
-    //元宵点灯响应
-    LANTERN_HAS1(401,"未到兑奖时间!"),
-    LANTERN_HAS2(402,"已过兑奖时间!"),
-    LANTERN_HAS3(403,"该奖品已发放!"),
-    LANTERN_HAS4(404,"手动发放只能选择[已提交]状态的数据！!"),
-    LANTERN_HAS5(405,"活动为空!"),
-    LANTERN_HAS6(401,"删除活动失败！"),
     //一箭穿心响应
     LOVEARROW_HAS1(401,"该奖品已发放!"),
     LOVEARROW_HAS2(402,"手动发放只能选择[已提交]状态的数据！!"),
@@ -223,9 +216,9 @@ public enum ResponseEnums {
     DRAGONBOAT_HAS1(401,"删除活动失败！"),
     DRAGONBOAT_HAS2(402,"未到兑奖时间!"),
     DRAGONBOAT_HAS3(403,"已过兑奖时间!"),
-    DRAGONBOAT_HAS4(403,"该奖品已发放!"),
-    DRAGONBOAT_HAS5(404,"手动发放只能选择[已提交]状态的数据!"),
-    DRAGONBOAT_HAS6(405,"活动为空!"),
+    DRAGONBOAT_HAS4(404,"该奖品已发放!"),
+    DRAGONBOAT_HAS5(405,"手动发放只能选择[已提交]状态的数据!"),
+    DRAGONBOAT_HAS6(406,"活动为空!"),
     DRAGONBOAT_HAS7(407,"粉币不足，保存失败"),
     DRAGONBOAT_HAS8(408,"冻结粉币失败，保存失败"),
     DRAGONBOAT_HAS9(409,"输入的粉币数量过少"),
@@ -235,27 +228,21 @@ public enum ResponseEnums {
     DRAGONBOAT_HAS13(413,"奖品未发放完毕，不允许操作"),
     DRAGONBOAT_HAS14(414,"回滚粉币失败，删除失败"),
 
-    //幸运九宫格响应
-    NINELATTICE_HAS1(401,"未到兑奖时间!"),
-    NINELATTICE_HAS2(402,"已过兑奖时间!"),
-    NINELATTICE_HAS3(403,"该奖品已发放!"),
-    NINELATTICE_HAS4(404,"手动发放只能选择[已提交]状态的数据！!"),
-    NINELATTICE_HAS5(405,"活动为空!"),
-    NINELATTICE_HAS6(401,"删除活动失败！"),
-
-    //圣诞大礼包响应
-    TREE_HAS1(401,"未到兑奖时间!"),
-    TREE_HAS2(402,"已过兑奖时间!"),
-    TREE_HAS3(403,"该奖品已发放!"),
-    TREE_HAS4(404,"手动发放只能选择[已提交]状态的数据！!"),
-
-    //砸金蛋响应
-    EGGS_HAS1(401,"未到兑奖时间!"),
-    EGGS_HAS2(402,"已过兑奖时间!"),
-    EGGS_HAS3(403,"该奖品已发放!"),
-    EGGS_HAS4(404,"手动发放只能选择[已提交]状态的数据！!"),
-    EGGS_HAS5(405,"活动为空!"),
-    EGGS_HAS6(401,"删除活动失败！"),
+    //元宵点灯响应
+    LANTERN_HAS1(401,"未到兑奖时间!"),
+    LANTERN_HAS2(402,"已过兑奖时间!"),
+    LANTERN_HAS3(403,"该奖品已发放!"),
+    LANTERN_HAS4(404,"手动发放只能选择[已提交]状态的数据！!"),
+    LANTERN_HAS5(405,"活动为空!"),
+    LANTERN_HAS6(406,"删除活动失败！"),
+    LANTERN_HAS7(407,"粉币不足，保存失败"),
+    LANTERN_HAS8(408,"冻结粉币失败，保存失败"),
+    LANTERN_HAS9(409,"输入的粉币数量过少"),
+    LANTERN_HAS10(410,"活动已经开始，不允许操作!"),
+    LANTERN_HAS11(411,"活动正在进行，不允许删除"),
+    LANTERN_HAS12(412,"未过活动兑换期限，不允许删除"),
+    LANTERN_HAS13(413,"奖品未发放完毕，不允许操作"),
+    LANTERN_HAS14(414,"回滚粉币失败，删除失败"),
 
     //刮刮乐响应
     SCRATCH_HAS1(401,"未到兑奖时间!"),
@@ -263,7 +250,69 @@ public enum ResponseEnums {
     SCRATCH_HAS3(403,"该奖品已发放!"),
     SCRATCH_HAS4(404,"手动发放只能选择[已提交]状态的数据！!"),
     SCRATCH_HAS5(405,"活动为空!"),
-    SCRATCH_HAS6(401,"删除活动失败！"),
+    SCRATCH_HAS6(406,"删除活动失败！"),
+    SCRATCH_HAS7(407,"粉币不足，保存失败"),
+    SCRATCH_HAS8(408,"冻结粉币失败，保存失败"),
+    SCRATCH_HAS9(409,"输入的粉币数量过少"),
+    SCRATCH_HAS10(410,"活动已经开始，不允许操作!"),
+    SCRATCH_HAS11(411,"活动正在进行，不允许删除"),
+    SCRATCH_HAS12(412,"未过活动兑换期限，不允许删除"),
+    SCRATCH_HAS13(413,"奖品未发放完毕，不允许操作"),
+    SCRATCH_HAS14(414,"回滚粉币失败，删除失败"),
+    SCRATCH_HAS15(415,"活动还未开始"),
+    SCRATCH_HAS16(416,"活动已结束"),
+
+    //砸金蛋响应
+    EGGS_HAS1(401,"未到兑奖时间!"),
+    EGGS_HAS2(402,"已过兑奖时间!"),
+    EGGS_HAS3(403,"该奖品已发放!"),
+    EGGS_HAS4(404,"手动发放只能选择[已提交]状态的数据！!"),
+    EGGS_HAS5(405,"活动为空!"),
+    EGGS_HAS6(406,"删除活动失败！"),
+    EGGS_HAS7(407,"粉币不足，保存失败"),
+    EGGS_HAS8(408,"冻结粉币失败，保存失败"),
+    EGGS_HAS9(409,"输入的粉币数量过少"),
+    EGGS_HAS10(410,"活动已经开始，不允许操作!"),
+    EGGS_HAS11(411,"活动正在进行，不允许删除"),
+    EGGS_HAS12(412,"未过活动兑换期限，不允许删除"),
+    EGGS_HAS13(413,"奖品未发放完毕，不允许操作"),
+    EGGS_HAS14(414,"回滚粉币失败，删除失败"),
+
+    //幸运九宫格响应
+    NINELATTICE_HAS1(401,"未到兑奖时间!"),
+    NINELATTICE_HAS2(402,"已过兑奖时间!"),
+    NINELATTICE_HAS3(403,"该奖品已发放!"),
+    NINELATTICE_HAS4(404,"手动发放只能选择[已提交]状态的数据！!"),
+    NINELATTICE_HAS5(405,"活动为空!"),
+    NINELATTICE_HAS6(406,"删除活动失败！"),
+    NINELATTICE_HAS7(407,"粉币不足，保存失败"),
+    NINELATTICE_HAS8(408,"冻结粉币失败，保存失败"),
+    NINELATTICE_HAS9(409,"输入的粉币数量过少"),
+    NINELATTICE_HAS10(410,"活动已经开始，不允许操作!"),
+    NINELATTICE_HAS11(411,"活动正在进行，不允许删除"),
+    NINELATTICE_HAS12(412,"未过活动兑换期限，不允许删除"),
+    NINELATTICE_HAS13(413,"奖品未发放完毕，不允许操作"),
+    NINELATTICE_HAS14(414,"回滚粉币失败，删除失败"),
+
+    //圣诞大礼包响应
+    TREE_HAS1(401,"未到兑奖时间!"),
+    TREE_HAS2(402,"已过兑奖时间!"),
+    TREE_HAS3(403,"该奖品已发放!"),
+    TREE_HAS4(404,"手动发放只能选择[已提交]状态的数据!"),
+    TREE_HAS5(405,"活动为空!"),
+    TREE_HAS6(405,"活动删除失败!"),
+    TREE_HAS7(407,"粉币不足，保存失败"),
+    TREE_HAS8(408,"冻结粉币失败，保存失败"),
+    TREE_HAS9(409,"输入的粉币数量过少"),
+    TREE_HAS10(410,"活动已经开始，不允许操作!"),
+    TREE_HAS11(411,"活动正在进行，不允许删除"),
+    TREE_HAS12(412,"未过活动兑换期限，不允许删除"),
+    TREE_HAS13(413,"奖品未发放完毕，不允许操作"),
+    TREE_HAS14(414,"回滚粉币失败，删除失败"),
+
+
+
+
 
     //疯狂数钱
     COUNTMONEY_HAS1(401,"未到兑奖时间!"),
@@ -271,7 +320,7 @@ public enum ResponseEnums {
     COUNTMONEY_HAS3(403,"该奖品已发放!"),
     COUNTMONEY_HAS4(404,"手动发放只能选择[已提交]状态的数据！!"),
     COUNTMONEY_HAS5(405,"活动为空!"),
-    COUNTMONEY_HAS6(401,"删除活动失败！"),
+    COUNTMONEY_HAS6(406,"删除活动失败！"),
     ;
 
     private final int code;

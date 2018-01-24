@@ -178,11 +178,11 @@
         <div class="h80"></div> 
         <div class="btnRow"  v-if="this.active!=5">
             <el-button   @click="upStep()" v-if="this.active!=0">上一步</el-button>
-            <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步1</el-button> 
-            <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
-            <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
+            <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步</el-button> 
+            <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步</el-button>
+            <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步</el-button>   
             <el-button type="primary" @click="lastStep()"   :disabled="this.isSubmit"   v-if="this.active==3">保存</el-button>   
-            <el-button type="primary" @click="checkGL()">打印</el-button>   
+            <!-- <el-button type="primary" @click="checkGL()">打印</el-button>    -->
         </div> 
     </div>   
 </div>
@@ -339,7 +339,7 @@ export default {
         this.ruleForm1.music = e.music.name
         this.ruleForm1.musicUrl = e.music.url
     },  
-        // 添加实物图 
+    // 添加实物图 
     addAwardImg(val) {
          JSON.parse(val.url).forEach(function (item, index, arr) {
                this.ruleForm4[val.prop.$index].name5.push(item.url)

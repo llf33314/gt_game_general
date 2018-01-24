@@ -24,17 +24,17 @@
                     <el-input class="w_demo"  placeholder="请输入活动名称"  v-model="ruleForm1.name"></el-input>
                 </el-form-item>
                  <el-form-item label="游戏时间：" prop="name1">
-                    <el-date-picker class="w_demo" v-model="ruleForm1.name1"   type="datetimerange"  @change="changeDate" placeholder="选择时间范围">
+                    <el-date-picker class="w_demo" v-model="ruleForm1.name1"   type="datetimerange"  placeholder="选择时间范围">
                     </el-date-picker>
                 </el-form-item>   
                 
                 <el-form-item label="参与人员：">
-                    <el-radio-group v-model="ruleForm1.eggEggPartaker">
+                    <el-radio-group v-model="ruleForm1.resource">
                     <el-radio :label="1">所有粉丝</el-radio>
                     <el-radio :label="2">仅会员(持有会员卡的粉丝)</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <div class="pd20 bw pt10 bb ml150 mb20" v-if="ruleForm1.eggEggPartaker==2">
+                <div class="pd20 bw pt10 bb ml150 mb20" v-if="ruleForm1.resource==2">
                     <el-form-item label="参与方式：" label-width="100px">
                           <el-radio-group v-model="ruleForm1.way">
                             <el-radio :label="1">所有会员不需要积分</el-radio><br><br>
@@ -47,14 +47,14 @@
                 </div> 
 
                 <el-form-item label="活动说明：" prop="desc">
-                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.eggDescribe" :rows="3" placeholder="请输入活动说明"></el-input>
+                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.desc1" :rows="3" placeholder="请输入活动说明"></el-input>
                     <span class="el-upload__tip grey" >
                         描述活动详情，能让粉丝了解此次活动
                     </span>
                 </el-form-item> 
 
                  <el-form-item label="活动未开始提示：" prop="desc">
-                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.eggBeforeTxt" :rows="3" placeholder="如：活动尚未开始，敬请期待!"></el-input>
+                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.desc2" :rows="3" placeholder="如：活动尚未开始，敬请期待!"></el-input>
                     <span class="el-upload__tip grey" >
                         活动未开始提示限制在100个字数以内
                     </span>
@@ -83,40 +83,40 @@
         <!-- 规则设置 -->
         <div v-show="this.active==1" class="mt40">
             <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="120px" class="mt40 demo-ruleForm">  
-                    <el-form-item label="抽奖次数：" prop="eggCountOfDay">
-                        <el-input class="w_demo mr10" v-model="ruleForm2.eggCountOfDay" placeholder="请输入每人抽奖总次数"></el-input> 次/人
+                    <el-form-item label="抽奖次数：" prop="cishu">
+                        <el-input class="w_demo mr10" v-model="ruleForm2.cishu" placeholder="请输入每人抽奖总次数"></el-input> 次/人
                     </el-form-item>
-                    <el-form-item label="抽奖总数：" prop="eggCountOfAll">
-                        <el-input class="w_demo mr10" v-model="ruleForm2.eggCountOfAll" placeholder="请输入每人/每天抽奖总数"></el-input>次/人
+                    <el-form-item label="抽奖总数：" prop="zongshu">
+                        <el-input class="w_demo mr10" v-model="ruleForm2.zongshu" placeholder="请输入每人/每天抽奖总数"></el-input>次/人
                     </el-form-item>   
             </el-form> 
         </div> 
         <!-- 兑奖设置 -->
         <div v-show="this.active==2" class="mt40">
             <el-form :model="ruleForm3" :rules="rules3" ref="ruleForm3" label-width="120px" class="mt40 demo-ruleForm">
-                <el-form-item label="兑奖期限：" prop="eggCashDay">
-                    <el-input class="w_demo mr10" type="number" v-model="ruleForm3.eggCashDay" placeholder="请输入兑奖期限"></el-input>天
+                <el-form-item label="兑奖期限：" prop="days">
+                    <el-input class="w_demo mr10" type="number" v-model="ruleForm3.days" placeholder="请输入兑奖期限"></el-input>天
                     <span class="el-upload__tip grey">
                         从活动结束后开始计算
                     </span>
                 </el-form-item> 
-                <el-form-item label="兑奖地址：" prop="eggAddress">
-                    <el-input class="w_demo"  type="textarea" v-model="ruleForm3.eggAddress" :rows="5" placeholder="请输入兑奖地址"></el-input>
+                <el-form-item label="兑奖地址：" prop="dizhi">
+                    <el-input class="w_demo"  type="textarea" v-model="ruleForm3.dizhi" :rows="5" placeholder="请输入兑奖地址"></el-input>
                 </el-form-item> 
 
                 <el-form-item label="兑奖方式：">
-                    <el-select v-model="ruleForm3.eggCashWay" placeholder="请选择"> 
+                    <el-select v-model="ruleForm3.ticketWay" placeholder="请选择"> 
                       <el-option label="自动发放"   :value="1"></el-option>
                       <el-option label="手动兑奖"   :value="2"></el-option> 
                     </el-select> 
                 </el-form-item>  
 
                 <el-form-item label="兑奖提示：">
-                    <el-input class="w_demo" :maxlength="100" type="textarea" v-model="ruleForm3.eggWinningTxt" :rows="5" 
+                    <el-input class="w_demo" :maxlength="100" type="textarea" v-model="ruleForm3.tishi" :rows="5" 
                     placeholder="兑奖提示限制在100个字以内"></el-input>
                 </el-form-item>  
                  <el-form-item label="中奖须知：">
-                    <el-input class="w_demo" :maxlength="100" type="textarea" v-model="ruleForm3.eggWinningNotice" :rows="13" 
+                    <el-input class="w_demo" :maxlength="100" type="textarea" v-model="ruleForm3.tishi" :rows="13" 
                     placeholder="1、如果是实物的奖品，要填写中奖人的手机号码，如不是现场兑奖的还要填写速递地址。2、如中奖是流量的则要填写手机号码，流量将在12小时内到充值中奖人的手机号码上同时运营商会有流量到帐短信通知。3、如中奖是粉币或积分、优惠券的， 则中奖数额会即时自动累计到会员中心对应的类目上， 中奖人可到会员中心查看粉币或积分的增加数量。4、如果是转赠的，则要输入受赠人的手机号，同时受赠人要关注我们的微信公众号。5、中奖人须在规定的时间内完成兑奖，逾期则奖品自动作废。"></el-input>
                 </el-form-item>    
             </el-form> 
@@ -134,32 +134,36 @@
                 <span class="el-upload__tip grey ml10">最多设置五个奖项</span> 
             </div> 
              <el-table ref="multipleTable" :data="ruleForm4" tooltip-effect="dark">
-                <el-table-column label="奖品类型" :width="200">
-                    <template slot-scope="scope">
-                        <el-select v-model="scope.row.name0" placeholder="请选择" class="w160">
-                            <el-option v-for="item in options" :key="item.value" :label="item.name" :value="item.value" v-if="item.value != 4">
-                            </el-option>
-                        </el-select>
-                    </template>
-                </el-table-column>
-                <el-table-column label="奖品数额" :width="200">
+                <el-table-column label="奖品类型">
                   <template slot-scope="scope">
-                      <el-input class="w150" type="number" v-model="scope.row.name1" placeholder="数值应大于0"></el-input>
+                      <el-select v-model="scope.row.name0" placeholder="请选择"> 
+                      <el-option label="粉币"      :value="1"></el-option>
+                      <el-option label="手机流量"   :value="2"></el-option>
+                      <el-option label="手机话费"   :value="3"></el-option>
+                      <el-option label="实体物品"   :value="4"></el-option>
+                      <el-option label="谢谢参与"   :value="5"></el-option> 
+                      <el-option label="积分"       :value="6"></el-option> 
+                      </el-select>
+                  </template>
+                </el-table-column> 
+                <el-table-column label="奖品数额">
+                  <template slot-scope="scope">
+                      <el-input class="w20_demo" type="number" v-model="scope.row.name1" placeholder="数值应大于0"></el-input>
                   </template>
                 </el-table-column>
-                <el-table-column label="奖项名称" :width="240">
+                <el-table-column label="奖项名称">
                   <template slot-scope="scope">
                       <el-input class="w20_demo"  v-model="scope.row.name2" placeholder="请输入奖项名称"></el-input>
                   </template>
                 </el-table-column>
-                <el-table-column label="奖项数量" :width="200">
+                <el-table-column label="奖项数量">
                   <template slot-scope="scope">
-                      <el-input class="w150"  type="number"  v-model="scope.row.name3" placeholder="数值应大于0"></el-input>
+                      <el-input class="w20_demo"  type="number"  v-model="scope.row.name3" placeholder="数值应大于0"></el-input>
                   </template>
                 </el-table-column>
-                <el-table-column label="中奖概率(%)" :width="200">
+                <el-table-column label="中奖概率(%)">
                   <template slot-scope="scope">
-                      <el-input class="w160"  v-model="scope.row.name4" placeholder="0-100且保留两位小数"></el-input>
+                      <el-input class="w20_demo"  v-model="scope.row.name4" placeholder="0-100且保留两位小数"></el-input>
                   </template>
                 </el-table-column>
                 <el-table-column label="中奖人"> 
@@ -187,7 +191,7 @@
         <!-- 按钮 -->
         <div class="h80"></div>
         <div class="btnRow"  v-if="this.active!=5">
-            <!-- <el-button   @click="upStep()" v-if="this.active!=0">上一步</el-button> -->
+            <el-button   @click="upStep()" v-if="this.active!=0">上一步</el-button>
             <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步1</el-button> 
             <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
@@ -199,18 +203,17 @@
 </section>
 </template>
 <script>
-import api from './../api/api'
 export default {
   data() {
     return {
-      active: 3,
+      active:0,
       ruleForm1: {
         type:1,
         name: "",
         name1: "",
-        eggEggPartaker: 1,
-        eggDescribe: "",
-        eggBeforeTxt: "",
+        resource: 1,
+        desc1: "",
+        desc2: "",
         music: "暂无上传音乐",
         way:1,
         wayJF:"", 
@@ -223,41 +226,66 @@ export default {
         ],
       },
       ruleForm2: { 
-        eggCountOfDay: "",
-        eggCountOfAll: "" ,
+        cishu: "",
+        zongshu: "" ,
        
       },
       rules2: { 
-        eggCountOfDay: [{ required: true, message: "每天抽奖次数不能为空", trigger: "blur" }],
-        eggCountOfAll: [{ required: true, message: "抽奖总数不能为空", trigger: "blur" }]
+        cishu: [{ required: true, message: "每天抽奖次数不能为空", trigger: "blur" }],
+        zongshu: [{ required: true, message: "抽奖总数不能为空", trigger: "blur" }]
       },
       ruleForm3: {
-        eggCashDay:"",
-        eggAddress: "",
-        eggWinningTxt: "",
-        eggCashWay:2,
+        days:"",
+        dizhi: "",
+        tishi: "",
+        ticketWay:2,
       }, 
       rules3: {
-        eggCashDay: [{ required: true,  message: "兑奖期限不能为空", trigger: "blur" }],
-        eggAddress: [{ required: true, message: "兑奖地址不能为空", trigger: "blur" }]
+        days: [{ required: true,  message: "兑奖期限不能为空", trigger: "blur" }],
+        dizhi: [{ required: true, message: "兑奖地址不能为空", trigger: "blur" }]
       },  
       ruleForm4:[
         { 
-          name0: "1",
+          name0: 1,
           name1: "",
           name2: "",
           name3: "",
           name4: "",
           winners:"大大，小小",
+        },
+        { 
+          name0: 1,
+          name1: "",
+          name2: "",
+          name3: "",
+          name4: "",
+          winners:"",
+        },
+        { 
+          name0: 1,
+          name1: "",
+          name2: "",
+          name3: "",
+          name4: ""
+        },
+        { 
+          name0: 1,
+          name1: "",
+          name2: "",
+          name3: "",
+          name4: ""
+        },
+        { 
+          name0: 1,
+          name1: "",
+          name2: "",
+          name3: "",
+          name4: ""
         }
       ],
-      options: []
     };
   },
   methods: {  
-      changeDate(val) {
-          console.log(val)
-      },
     test() {
       console.log(123); 
       this.active=5
@@ -278,8 +306,7 @@ export default {
       this.ruleForm2.musicUrl = e.music.url
     },
     next(formName) {
-        console.log(formName)
-        // console.log(!this.ruleForm4[i].name1)
+        console.log(!this.ruleForm4[i].name1)
       this.$refs[formName].validate(valid => {
         if (valid) { 
           this.active++;
@@ -287,9 +314,9 @@ export default {
           console.log("error submit!!");
         }
       });
-    //   this.submit()
     },
     lastStep() {
+        
       for (let i = 0; i < this.ruleForm4.length; i++) { 
         var regu =/^[1-9]\d*$/;
         if(!this.ruleForm4[i].name1||!this.ruleForm4[i].name2||!this.ruleForm4[i].name3||!this.ruleForm4[i].name4){
@@ -318,89 +345,45 @@ export default {
             }
             newarr.push(arr)
         } 
-        console.log(this.ruleForm1.name1)
-
-        //奖品
-        var newYearPrizeReqs=[];
-         if(this.ruleForm4){
-            for(let i =0;i< this.ruleForm4.length;i++){
-                var arr4={
-                    imgInstruction :"",
-                    eggPrizeType:this.ruleForm4[i].name0,//类型
-                    eggPrizeLimit :this.ruleForm4[i].name1,//单位
-                    eggPrizeName:this.ruleForm4[i].name2,//名称
-                    eggPrizeNums:Number(this.ruleForm4[i].name3),//数量
-                    eggPrizeChance :this.ruleForm4[i].name4,  //概率
-                    imgUrl :[]//图片
-                }
-                if(arr4.type==4){
-                    for(var j=0;j<this.ruleForm4[i].name5.length;j++){
-                    //     var imgarr={
-                    //         imgUrl:this.ruleForm4[i].name5[j]
-                    //     }
-                    // arr4.newYearPrizeImgReqs.push(imgarr)
-                    arr4.imgUrl.push(this.ruleForm4[i].name5[j])
-                    } 
-                } 
-                newYearPrizeReqs.push(arr4)
-            } 
-        }
         const data = {
             //基础设置 
             name: this.ruleForm1.name,  // 活动名称               
             eggBeginTime: this.ruleForm1.name1[0], // 活动开始时间
             eggEndTime: this.ruleForm1.name1[1],  // 活动结束时间
-            eggEggPartaker : this.ruleForm1.eggEggPartaker,  // 1.所有粉丝 2.仅会员(持有会员卡的粉丝) 
-            eggDescribe: this.ruleForm1.eggDescribe,  // 活动说明/描述
-            eggBeforeTxt : this.ruleForm1.eggBeforeTxt,   // 活动未开始提示
+            eggEggPartaker : this.ruleForm1.endTime,  // 所有粉丝 2.仅会员(持有会员卡的粉丝) 
+            eggDescribe: this.ruleForm1.resource,  // 活动说明/描述
+            eggBeforeTxt : this.ruleForm1.desc1,   // 活动未开始提示
             bgmSp: '',       // 背景音乐名称    
             musicUrl: '',   // 背景音乐链接
             //规则设置
-            eggCountOfDay: this.ruleForm2.eggCountOfDay,   // 抽奖次数
-            eggCountOfAll: this.ruleForm2.eggCountOfAll, // 抽奖总数
+            eggCountOfDay: this.ruleForm2.cishu,   // 抽奖次数
+            eggCountOfAll: this.ruleForm2.zongshu, // 抽奖总数
             //兑奖设置
-            eggCashDay: this.ruleForm3.eggCashDay,      // 兑奖期限
-            eggAddress: this.ruleForm3.eggAddress,     // 兑奖地址
-            // name11: this.ruleForm3.eggWinningTxt,     // 兑奖时间
-            eggCashWay: this.ruleForm3.eggCashWay,  // 兑奖方式
+            eggCashDay: this.ruleForm3.days,      // 兑奖期限
+            eggAddress: this.ruleForm3.dizhi,     // 兑奖地址
+            // name11: this.ruleForm3.tishi,     // 兑奖时间
+            eggCashWay: this.ruleForm3.transfer,  // 兑奖方式
             eggWinningTxt: this.ruleForm3.eggWinningTxt, // 兑奖提示
             eggWinningNotice: this.ruleForm3.eggWinningNotice,// 中奖须知
             //奖项设置 
-            prizeSetList:newYearPrizeReqs
+            name13:this.awardKey,
+            name14:newarr
         };
         console.log(data,123); 
-        api.addActivity(data).then(data=>{
-          this.isSubmit=true
-          if (data.code == 100) { 
-              console.log(12336666)
-              this.active=5
-          } else {
-              this.isSubmit=false
-              this.$message.error(data.msg + "错误码：[" + data.code + "]");
-          }
-        }).catch(() => {
-            this.isSubmit=false
-            this.$message({type: "info", message: "网络问题，请刷新重试~" });
-        }); 
     },    
     backUrl(){
          window.history.go(-1);
     },
-    
   },
   created() {
       console.log('bbbbbbbbbbbbb')
   },
   mounted() { 
-     // 获取奖品类型
-     api.getPrizeType().then(res=>{
-            if (res.code == 100) {
-            this.options=res.data
-                console.log(this.options,'获取奖品类型');
-            } else {
-                this.$message.error('获取奖品类型失败');
-            }
-        })
+      console.log('aaaaaaaaaaaaaa')
+      window.onresize = function() {
+          console.log(1111111111111,widiow)
+        //   document.getElementsByTagName('html')[0].style.backgroundColor = 'red'
+      }
   },
   filters: {
     prizeStatus(val) {
@@ -418,7 +401,9 @@ export default {
           val = "六等奖";
         }  
         return val;
-    }
+    },
+     
+
   }
 };
 </script>
