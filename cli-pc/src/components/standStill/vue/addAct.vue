@@ -409,7 +409,7 @@ export default {
                 if(arr4.type==4){
                     for(var j=0;j<this.ruleForm4[i].name5.length;j++){
                         var imgarr={
-                            imgUrl:this.ruleForm4[i].name5[j]
+                            picUrl:this.ruleForm4[i].name5[j]
                         }
                     arr4.standPrizeImgReqs.push(imgarr)
                     } 

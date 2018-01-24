@@ -32,7 +32,7 @@ export default {
        },
        // 删除活动
        delActivity(params) { 
-           return post(`${base}/delLantern`, params) 
+           return post(`${base}/delCountmoney`, params) 
        }, 
        // 获取手机端链接 
        getMobileUrl(params) {
@@ -58,20 +58,20 @@ export default {
        },
 
        // 编辑活动基础设置  
-       modfiyBasicsLantern(params) {
-        return post(`${base}/modfiyBasicsLantern`, params) 
+       modfiyBasicsCountmoney(params) {
+        return post(`${base}/modfiyBasicsCountmoney`, params) 
        },
        // 编辑活动规则设置  
-       modfiyRuleLantern(params) {
-        return post(`${base}/modfiyRuleLantern`, params) 
+       modfiyRuleCountmoney(params) {
+        return post(`${base}/modfiyRuleCountmoney`, params) 
        },
        // 编辑活动兑奖设置 
-       modfiyExpiryLantern(params) {
-        return post(`${base}/modfiyExpiryLantern`, params) 
+       modfiyExpiryCountmoney(params) {
+        return post(`${base}/modfiyExpiryCountmoney`, params) 
        },
        // 编辑活动奖项设置  
-       modfiyAwardsLantern(params) {
-        return post(`${base}/modfiyAwardsLantern`, params) 
+       modfiyAwardsCountmoney(params) {
+        return post(`${base}/modfiyAwardsCountmoney`, params) 
        }, 
 
        /* 核销授权 - 接口 */ 

@@ -145,8 +145,8 @@ export default {
         type: this.type,
         snCode: this.snCode
       };
-      // location.href = api.exportLantern(params)
-      window.open(api.exportPrizeRecord(params));
+      location.href = api.exportPrizeRecord(params)
+      // window.open(api.exportPrizeRecord(params));
     },
     sendPrize(id) {
       this.$confirm("确定要发送奖品?", "提示", {
