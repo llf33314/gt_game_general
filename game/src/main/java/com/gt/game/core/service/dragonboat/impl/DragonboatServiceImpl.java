@@ -487,7 +487,6 @@ public class DragonboatServiceImpl implements DragonboatService {
         Double num   = 0.0;
         if(dragonboatModfiyReq.getPrizeSetList().size()>0){ //TODO  奖品设置
 
-
             EntityWrapper<DragonboatracePrize> entityWrapper5 = new EntityWrapper();
             entityWrapper5.eq("act_id",dragonboatraceMain.getId());
             List<DragonboatracePrize> dragonboatracePrizeList = dragonboatracePrizeService.selectList(entityWrapper5);
@@ -659,8 +658,6 @@ public class DragonboatServiceImpl implements DragonboatService {
                 }
             }
         }
-
-
     }
 
     /**

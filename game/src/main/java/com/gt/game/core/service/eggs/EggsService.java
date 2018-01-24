@@ -2,11 +2,10 @@ package com.gt.game.core.service.eggs;
 
 
 import com.gt.api.bean.session.BusUser;
+import com.gt.api.bean.session.WxPublicUsers;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.core.bean.eggs.req.*;
 import com.gt.game.core.bean.eggs.res.*;
-import com.gt.game.core.bean.tree.req.*;
-import com.gt.game.core.bean.tree.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 
@@ -26,11 +25,11 @@ public interface EggsService {
 
     /**
      * 获取手机端链接
-     * @param busUser
+     * @param loginPbUser
      * @param mobileUrlReq
      * @return
      */
-    MobileUrlRes getMobileUrl(BusUser busUser, MobileUrlReq mobileUrlReq);
+    MobileUrlRes getMobileUrl(WxPublicUsers loginPbUser, MobileUrlReq mobileUrlReq);
 
     /**
      * 分页获取砸金蛋活动列表
@@ -67,35 +66,14 @@ public interface EggsService {
     EggsGetActivityRes getActivityById(BusUser busUser, EggsGetActivityReq eggsGetActivityReq);
 
     /**
-     * 编辑砸金蛋活动基础设置
+     * 编辑砸金蛋活动设置
      * @param busUser
-     * @param eggsModfiyBasicsReq
+     * @param eggsModfiyReq
      */
-    void modfiyBasicsEggs(BusUser busUser, EggsModfiyBasicsReq eggsModfiyBasicsReq);
+    void modfiyEggs(BusUser busUser, EggsModfiyReq eggsModfiyReq);
 
     /**
-     * 编辑砸金蛋活动规则设置
-     * @param busUser
-     * @param eggsModfiyRuleReq
-     */
-    void modfiyRuleEggs(BusUser busUser, EggsModfiyRuleReq eggsModfiyRuleReq);
-
-    /**
-     * 编辑砸金蛋活动兑奖设置
-     * @param busUser
-     * @param eggsModfiyExpiryReq
-     */
-    void modfiyExpiryEggs(BusUser busUser, EggsModfiyExpiryReq eggsModfiyExpiryReq);
-
-    /**
-     * 编辑砸金蛋奖项设置
-     * @param busUser
-     * @param eggsModfiyAwardsReq
-     */
-    void modfiyAwardsEggs(BusUser busUser, EggsModfiyAwardsReq eggsModfiyAwardsReq);
-
-    /**
-     * 批量删除砸金蛋活动
+     * 删除砸金蛋活动
      * @param busUser
      * @param eggsDelReq
      */
