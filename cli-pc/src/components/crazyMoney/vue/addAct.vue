@@ -21,37 +21,37 @@
         <div v-show="this.active==0" class="mt40">
             <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="145px" class="demo-ruleForm">
                  <el-form-item label="游戏模式：">
-                    <el-radio-group v-model="ruleForm1.resource">
+                    <el-radio-group v-model="ruleForm1.actType">
                         <el-radio :label="1">排名中奖模式</el-radio>
                         <el-radio :label="2">数钱折算模式</el-radio>
                     </el-radio-group>
                 </el-form-item>
                
-                <el-form-item label="活动名称：" prop="name">
-                    <el-input class="w_demo"  placeholder="请输入活动名称"  v-model="ruleForm1.name"></el-input>
+                <el-form-item label="活动名称：" prop="actName">
+                    <el-input class="w_demo"  placeholder="请输入活动名称"  v-model="ruleForm1.actName"></el-input>
                 </el-form-item>
-                 <el-form-item label="游戏时间：" prop="name1">
-                    <el-date-picker class="w_demo" v-model="ruleForm1.name1"   type="datetimerange"  placeholder="选择时间范围">
+                 <el-form-item label="活动时间：" prop="date">
+                    <el-date-picker class="w_demo" v-model="ruleForm1.date"   type="datetimerange"  placeholder="选择时间范围">
                     </el-date-picker>
                 </el-form-item>     
-                <el-form-item label="活动说明：" prop="desc">
-                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.desc1" :rows="3" placeholder="请输入活动说明"></el-input>
+                <el-form-item label="活动说明：" prop="actDescribe">
+                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.actDescribe" :rows="3" placeholder="请输入活动说明"></el-input>
                     <span class="el-upload__tip grey" >
                         描述活动详情，能让粉丝了解此次活动
                     </span>
                 </el-form-item> 
 
-                 <el-form-item label="活动未开始提示：" prop="desc">
-                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.desc2" :rows="3" placeholder="如：活动尚未开始，敬请期待!"></el-input>
+                 <el-form-item label="活动未开始提示：" prop="actNotStartedTips">
+                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.actNotStartedTips" :rows="3" placeholder="如：活动尚未开始，敬请期待!"></el-input>
                     <span class="el-upload__tip grey" >
                         活动未开始提示限制在100个字数以内
                     </span>
                 </el-form-item>  
 
-                <el-form-item label="背景音乐：">
-                    <div class="pd20 bb bw">
-                        <el-button size="small" type="primary">点击上传</el-button>
-                        <span class="el-upload__tip grey ml20">{{ruleForm1.music}}</span> 
+                 <el-form-item label="背景音乐：">
+                    <div class="pd20 bb bw bgMusic">
+                        <gt-material class="va-m" :prop="''" :isMusic="true" btnContent="点击上传"  v-on:getChangeUrl="getMusic" width="72" height="72"></gt-material>
+                        <span class="el-upload__tip c333 ml20">{{ruleForm1.bgmSp}}</span> 
                         <div class="el-upload__tip grey" style="line-height:25px">
                             音频文件的格式为mp3、wma、wav,大小不超过3M
                         </div>
@@ -206,28 +206,19 @@
 export default {
   data() {
     return {
-      active: 3,
+      active: 0,
       ruleForm1: {
-          type:1,
-        name: "",
-        name1: "",
-        endTime: "",
-        resource: 1,
-        desc1: "",
-        desc2: "",
-        music: "暂无上传音乐",
-        way:1,
-        wayJF:"", 
-        wayJF1:"",
+        actType:1,
+        actName: "",
+        date: "",
+        actDescribe: '',
+        actNotStartedTips: '',
+        bgmSp: '',
+        musicUrl: ''
       },
       rules1: {
         name: [{ required: true, message: "活动名称不能为空", trigger: "blur" }],
-        name1: [
-          { required: true, type: "date", message: "开始时间不能为空", trigger: "blur" }
-        ],
-        endTime: [
-          { required: true, type: "date", message: "结束时间不能为空", trigger: "blur" }
-        ]
+        date: [{required: true, type: "array",message: "游戏时间不能为空", trigger: "blur" }],
       },
       ruleForm2: {
         gameTime:"",
@@ -287,31 +278,15 @@ export default {
           name0: 1,
           name1: "",
           name2: "", 
-        },
-        // { 
-        //   name0: 1,
-        //   name1: "",
-        //   name2: "", 
-        // },
-        // { 
-        //   name0: 1,
-        //   name1: "",
-        //   name2: "", 
-        // },
-        // { 
-        //   name0: 1,
-        //   name1: "",
-        //   name2: "", 
-        // },
-        // { 
-        //   name0: 1,
-        //   name1: "",
-        //   name2: "", 
-        // }
+        }
       ],
     };
   },
   methods: {  
+    getMusic(e) {
+      this.ruleForm1.bgmSp = e.music.name
+      this.ruleForm1.musicUrl = e.music.url
+    },
     test() {
       console.log(123); 
       this.active=5
@@ -358,6 +333,7 @@ export default {
     }, 
     //表单提交--------------------------------------star
     submit(){
+        // 奖品设置 数据处理
         var newarr=[];
         for(let i =0;i< this.ruleForm4.length;i++){
             var arr={
@@ -368,29 +344,29 @@ export default {
             newarr.push(arr)
         } 
         const data = {
-            //基础设置 
-            name1 : this.ruleForm1.name, 
-            name2 : this.ruleForm1.name1, 
-            name3 : this.ruleForm1.endTime, 
-            name4 : this.ruleForm1.resource, 
-            name51 : this.ruleForm1.desc1, 
-            name52 : this.ruleForm1.desc2, 
-            name61 : this.ruleForm1.wayJF, 
-            name62 : this.ruleForm1.wayJF1, 
-            name15: this.ruleForm1.music, 
+            // 基础设置 
+            actType: this.ruleForm1.actType,  // 游戏模式(1-排名中奖；2-数钱折算),
+            actName : this.ruleForm1.actName,  // 活动名称
+            actBeginTime: this.ruleForm1.date[0], // 活动开始时间
+            actEndTime: this.ruleForm1.date[1], // 活动结束时间
+            actDescribe: this.ruleForm1.actDescribe, // 活动说明
+            actNotStartedTips: this.ruleForm1.actNotStartedTips, // 活动尚未开始提示
+            bgmSp: this.ruleForm1.bgmSp,   // 音乐名称
+            musicUrl: this.ruleForm1.musicUrl, // 音乐地址
             //规则设置
-            name6 : this.ruleForm2.cishu, 
-            name7 : this.ruleForm2.zongshu,
+            actGameTime: this.ruleForm2.actGameTime, // 游戏时间
+            actCountOfDay: this.ruleForm2.actCountOfDay, // 抽奖次数
+            actTotalOfAct: this.ruleForm2.actTotalOfAct,  // 抽奖总数
+            countmoneyProbabilitysetList: [], // 概率设置
             //兑奖设置
-            name9 : this.ruleForm3.days, 
-            name10: this.ruleForm3.dizhi, 
-            name11: this.ruleForm3.tishi, 
-            name12: this.ruleForm3.transfer,  
-            //奖项设置 
-            name13:this.awardKey,
-            name14:newarr
+            actAwardingTime: this.ruleForm3.actAwardingTime, // 兑奖期限
+            actAwardingAddress: this.ruleForm3.actAwardingAddress, // 兑奖地址
+            actAwardingTips: this.ruleForm3.actAwardingTips, // 兑奖提示
+            //奖项设置
+            prizeSetList:newarr
         };
-        console.log(data,123); 
+
+        
     },    
     backUrl(){
          window.history.go(-1);
