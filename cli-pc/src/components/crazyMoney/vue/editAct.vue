@@ -7,16 +7,15 @@
     <el-breadcrumb separator="/" class="gt-crumbs">
       <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
       <el-breadcrumb-item  :to="{ path:'/crazyMoney/index' }">疯狂数钱</el-breadcrumb-item>  
-      <el-breadcrumb-item>创建活动</el-breadcrumb-item>   
+      <el-breadcrumb-item>编辑活动</el-breadcrumb-item>   
     </el-breadcrumb>  
     <div class="gt-content">
-        <el-steps :active="active" :center="true" :align-center="true" class="bbtom pb20">
-            <el-step title="基础设置"></el-step>
-            <el-step title="规则设置"></el-step>
-            <el-step title="兑奖设置"></el-step>
-            <el-step title="奖项设置"></el-step>
-            <el-step title="新建完成"></el-step>
-        </el-steps>
+         <el-tabs v-model="active" type="card">
+            <el-tab-pane label="基础设置" name="0"></el-tab-pane>
+            <el-tab-pane label="规则设置" name="1"></el-tab-pane>
+            <el-tab-pane label="兑奖设置" name="2"></el-tab-pane>
+            <el-tab-pane label="奖项设置" name="3"></el-tab-pane>
+        </el-tabs>
         <!-- 基础设置 -->
         <div v-show="this.active==0" class="mt40">
             <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="145px" class="demo-ruleForm">
@@ -31,7 +30,7 @@
                     <el-input class="w_demo"  placeholder="请输入活动名称"  v-model="ruleForm1.actName"></el-input>
                 </el-form-item>
                  <el-form-item label="活动时间：" prop="date">
-                    <el-date-picker class="w_demo" v-model="ruleForm1.date"  :editable="false"  type="datetimerange"  placeholder="选择时间范围">
+                    <el-date-picker class="w_demo" v-model="ruleForm1.date"   type="datetimerange"  placeholder="选择时间范围">
                     </el-date-picker>
                 </el-form-item>     
                 <el-form-item label="活动说明：" prop="actDescribe">
@@ -58,6 +57,10 @@
                     </div>
                 </el-form-item>
             </el-form> 
+                    <div class="btnRow">
+                                <el-button type="primary" @click="Save('ruleForm1')" >保存</el-button>
+                                <el-button   @click="backUrl">返回</el-button>
+                        </div>
         </div>
         <!-- 规则设置 -->
         <div v-show="this.active==1" class="mt40">
@@ -65,11 +68,11 @@
                 <el-form-item label="游戏时间" prop="gameTime">
                     <el-input class="w_demo mr10" type="number" v-model="ruleForm2.gameTime" placeholder="请输入游戏持续时间"></el-input> 秒
                 </el-form-item>
-                <el-form-item label="抽奖次数：" prop="actCountOfDay">
-                    <el-input class="w_demo mr10"  type="number" v-model="ruleForm2.actCountOfDay" placeholder="请输入每人抽奖总次数"></el-input> 次/人
+                <el-form-item label="抽奖次数：" prop="cishu">
+                    <el-input class="w_demo mr10"  type="number" v-model="ruleForm2.cishu" placeholder="请输入每人抽奖总次数"></el-input> 次/人
                 </el-form-item>
-                <el-form-item label="抽奖总数：" prop="actTotalOfAct">
-                    <el-input class="w_demo mr10" type="number" v-model="ruleForm2.actTotalOfAct" placeholder="请输入每人/每天抽奖总数"></el-input>次/人
+                <el-form-item label="抽奖总数：" prop="zongshu">
+                    <el-input class="w_demo mr10" type="number" v-model="ruleForm2.zongshu" placeholder="请输入每人/每天抽奖总数"></el-input>次/人
                 </el-form-item>
 
                 <el-form-item label="概率设置：" class="mt10" prop="">
@@ -98,14 +101,17 @@
                         </el-table-column>  
                         <el-table-column label="出现概率"  align="center">
                         <template slot-scope="scope">
-                            <el-input  class="w100_demo mr10 ml20" v-model.number="scope.row.fenbiChance"> 
+                            <el-input  class="w100_demo mr10 ml20" v-model="scope.row.fenbiChance"> 
                             </el-input>%
                         </template>
                         </el-table-column>   
                     </el-table> 
-                     
                 </el-form-item>    
             </el-form> 
+            <div class="btnRow">
+                                <el-button type="primary" @click="Save('ruleForm2')" >保存</el-button>
+                                <el-button   @click="backUrl">返回</el-button>
+                        </div>
         </div> 
         <!-- 兑奖设置 -->
         <div v-show="this.active==2" class="mt40">
@@ -121,10 +127,14 @@
                 </el-form-item> 
 
                 <el-form-item label="兑奖提示：">
-                    <el-input class="w_demo" :maxlength="100" type="textarea" v-model="ruleForm3.actAwardingTips" :rows="5" 
+                    <el-input class="w_demo" :maxlength="100" type="textarea" v-model="ruleForm3.aactAwardingTips" :rows="5" 
                     placeholder="兑奖提示限制在100个字以内"></el-input>
                 </el-form-item>    
             </el-form> 
+                    <div class="btnRow">
+                                <el-button type="primary" @click="Save('ruleForm3')" >保存</el-button>
+                                <el-button   @click="backUrl">返回</el-button>
+                        </div>
         </div>
         <!-- 奖项设置 -->
         <div v-show="this.active==3" class="mt40">
@@ -148,12 +158,12 @@
             <el-table ref="multipleTable" :data="ruleForm4" tooltip-effect="dark">
                 <el-table-column label="奖品类型">
                   <template slot-scope="scope">  
-                      {{scope.$index | prizeStatus(scope.$index)}}
+                      {{scope.$index |prizeStatus(scope.$index)}}
                   </template>
                 </el-table-column> 
-                <el-table-column label="奖品类型">
+                <el-table-column label="奖品类型" :width="200">
                   <template slot-scope="scope">
-                      <el-select v-model="scope.row.turPrizeType" placeholder="请选择"> 
+                      <el-select class="w150"  v-model="scope.row.turPrizeType" placeholder="请选择"> 
                       <el-option label="粉币"      :value="1"></el-option>
                       <el-option label="手机流量"   :value="2"></el-option>
                       <el-option label="手机话费"   :value="3"></el-option>
@@ -163,14 +173,14 @@
                       </el-select>
                   </template>
                 </el-table-column> 
-                <el-table-column label="奖品数额">
+                <el-table-column label="奖品数额" :width="200">
                     <template slot-scope="scope">
-                        <el-input class="w20_demo" type="number" v-model="scope.row.turPrizeUnit" placeholder="数值应大于0"></el-input>
+                        <el-input class="w150"   type="number" v-model="scope.row.turPrizeUnit" placeholder="数值应大于0"></el-input>
                     </template>
                 </el-table-column>
-                <el-table-column label="奖项数量">
+                <el-table-column label="奖项数量" :width="200">
                     <template slot-scope="scope">
-                        <el-input class="w20_demo"  type="number"  v-model="scope.row.turPrizeNums" placeholder="数值应大于0"></el-input>
+                        <el-input class="w150"   type="number"  v-model="scope.row.turPrizeNums" placeholder="数值应大于0"></el-input>
                     </template>
                 </el-table-column> 
                 <el-table-column label="操作">
@@ -179,6 +189,10 @@
                     </template>
                 </el-table-column>
             </el-table>  
+            <div class="btnRow">
+                <el-button type="primary" @click="lastStep" >保存</el-button>
+                <el-button   @click="backUrl">返回</el-button>
+            </div>
         </div>       
         <!-- 新建完成 -->
         <div v-if="active==5" class="gt-content complete"> 
@@ -190,13 +204,6 @@
         </div>
         <!-- 按钮 -->
         <div class="h80"></div>
-        <div class="btnRow"  v-if="this.active!=5">
-            <el-button   @click="upStep()" v-if="this.active!=0">上一步</el-button>
-            <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步1</el-button> 
-            <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
-            <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
-            <el-button type="primary" @click="lastStep"        v-if="this.active==3">保存</el-button>   
-        </div> 
     </div>   
 </div>
 </section>
@@ -206,13 +213,13 @@ import api from "../api/api";
 export default {
   data() {
     return {
-      active: 0,
+      active: "0",
       ruleForm1: {
-        actType: 1, // 游戏模式
-        actName: "", // 活动名称
-        date: "", // 活动时间
-        actDescribe: "", // 活动说明
-        actNotStartedTips: "", // 活动未开始提示
+        actType: 1,
+        actName: "",
+        date: "",
+        actDescribe: "",
+        actNotStartedTips: "",
         bgmSp: "",
         musicUrl: ""
       },
@@ -229,8 +236,8 @@ export default {
           }
         ]
       },
-      ruleForm2: {  
-        gameTime: "",      // 游戏时间
+      ruleForm2: {
+        gameTime: "", // 游戏时间
         actCountOfDay: "", // 抽奖次数
         actTotalOfAct: "", // 抽奖总数
         countmoneyProbabilitysetList: [
@@ -270,17 +277,17 @@ export default {
         gameTime: [
           { required: true, message: "游戏时间不能为空", trigger: "blur" }
         ],
-        actCountOfDay: [
+        cishu: [
           { required: true, message: "抽奖次数不能为空", trigger: "blur" }
         ],
-        actTotalOfAct: [
+        zongshu: [
           { required: true, message: "抽奖总数不能为空", trigger: "blur" }
         ]
       },
       ruleForm3: {
-        actAwardingTime: "", // 兑奖期限
-        actAwardingAddress: "", // 兑奖地址
-        actAwardingTips: "" // 兑奖提示
+        actAwardingTime: "",
+        actAwardingAddress: "",
+        aactAwardingTips: ""
       },
       rules3: {
         actAwardingTime: [
@@ -293,10 +300,9 @@ export default {
       isShow: 1,
       ruleForm4: [
         {
-          turPrizeName: "", // 奖品名称
-          turPrizeNums: "", // 奖品数量
-          turPrizeType: "", // 奖品类型
-          turPrizeUnit: "" // 奖品数额
+          turPrizeType: "",
+          turPrizeUnit: "",
+          turPrizeNums: ""
         }
       ]
     };
@@ -306,30 +312,22 @@ export default {
       this.ruleForm1.bgmSp = e.music.name;
       this.ruleForm1.musicUrl = e.music.url;
     },
-    test() {
-      console.log(123);
-      this.active = 5;
-    },
-
     delForm4(index) {
       this.ruleForm4.splice(index, 1);
     },
     addForm4() {
       this.ruleForm4.push({
-        turPrizeType: 1,
+        turPrizeType: "",
         turPrizeUnit: "",
         turPrizeNums: ""
       });
     },
-    upStep() {
-      this.active--;
-    },
-    next(formName) {
+    Save(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.active++;
+          this.submit()
         } else {
-          console.log("error submit!!");
+          return false
         }
       });
     },
@@ -348,23 +346,27 @@ export default {
         } else if (!regu.test(this.ruleForm4[i].turPrizeNums)) {
           this.$message.error("奖项数量填写有误，请重新填写~");
           return false;
+        } else {
+          this.submit();
         }
       }
-      this.submit();
     },
     //表单提交--------------------------------------star
     submit() {
-      // 概率数据处理 
-      let Arr = []
-      this.ruleForm2.countmoneyProbabilitysetList.forEach((item, index, arr)=> {
-             if (item.checked == true) {
-                  Arr.push({
-                       fenbiType: item.fenbiType,
-                       fenbiChance: item.fenbiChance
-                  }) 
-             }
-      })
+      // 概率数据处理
+      let Arr = [];
+      this.ruleForm2.countmoneyProbabilitysetList.forEach(
+        (item, index, arr) => {
+          if (item.checked == true) {
+            Arr.push({
+              fenbiType: item.fenbiType,
+              fenbiChance: item.fenbiChance
+            });
+          }
+        }
+      );
       const data = {
+        id: this.$route.query.id, 
         // 基础设置
         actType: this.ruleForm1.actType, // 游戏模式(1-排名中奖；2-数钱折算),
         actName: this.ruleForm1.actName, // 活动名称
@@ -386,10 +388,10 @@ export default {
         //奖项设置
         prizeSetList: this.ruleForm4
       };
-      api.addActivity(data).then(data => {
+      api.modfiyActivity(data).then(data => {
         this.isSubmit = true;
         if (data.code == 100) {
-          this.active = 5;
+          this.$message.success('保存成功');
         } else {
           this.isSubmit = false;
           this.$message.error(data.msg || "保存失败");
@@ -401,6 +403,61 @@ export default {
     }
   },
   mounted() {},
+  created() {
+    api.getActivityById({ id: this.$route.query.id }).then(res => {
+      if (res.code == 100) {
+        //基础设置
+        (this.ruleForm1.actType = res.data.actType), // 游戏模式(1-排名中奖；2-数钱折算),
+          (this.ruleForm1.actName = res.data.actName), // 活动名称
+          (this.ruleForm1.date = [res.data.actBeginTime, res.data.actEndTime]); // 活动时间
+        (this.ruleForm1.actDescribe = res.data.actDescribe), // 活动说明
+          (this.ruleForm1.actNotStartedTips = res.data.actNotStartedTips), // 活动尚未开始提示
+          (this.ruleForm1.bgmSp = res.data.bgmSp), // 音乐名称
+          (this.ruleForm1.musicUrl = res.data.musicUrl), // 音乐地址
+          //规则设置
+          (this.ruleForm2.actGameTime = res.data.actGameTime), // 游戏时间
+          (this.ruleForm2.actCountOfDay = res.data.actCountOfDay), // 抽奖次数
+          (this.ruleForm2.actTotalOfAct = res.data.actTotalOfAct); // 抽奖总数
+        // 概率设置
+        res.data.countmoneyProbabilitysetList.forEach((item, idnex, arr) => {
+          for (
+            let i = 0;
+            i < this.ruleForm2.countmoneyProbabilitysetList.length;
+            i++
+          ) {
+            if (
+              this.ruleForm2.countmoneyProbabilitysetList[i].fenbiType ==
+              item.fenbiType
+            ) {
+              this.ruleForm2.countmoneyProbabilitysetList[i].checked = true;
+              this.ruleForm2.countmoneyProbabilitysetList[i].fenbiChance =
+                item.fenbiChance;
+              continue;
+            }
+          }
+        });
+        //兑奖设置
+        (this.ruleForm3.actAwardingTime = res.data.actAwardingTime), // 兑奖期限
+          (this.ruleForm3.actAwardingAddress = res.data.actAwardingAddress), // 兑奖地址
+          (this.ruleForm3.actAwardingTips = res.data.actAwardingTips); // 兑奖提示
+
+        //奖项设置
+        res.data.prizeSetList.forEach((item, idnex, arr) => {
+          item.eggPrizeType = item.eggPrizeType + "";
+        });
+        this.ruleForm4 = res.data.prizeSetList;
+      } else {
+        this.$message.error("获取编辑数据失败");
+      }
+    });
+    api.getPrizeType().then(data => {
+      if (data.code == 100) {
+        this.options = data.data;
+      } else {
+        this.$message.error("获取奖品类型失败");
+      }
+    });
+  },
   filters: {
     prizeStatus(val) {
       if (val == 0) {
