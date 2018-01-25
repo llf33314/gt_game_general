@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel("奖品类型返回类")
-public class ScratchPrizeTypeListRes {
+public class TurntablePrizeTypeListRes {
 
 	@ApiModelProperty("value")
 	private String value;

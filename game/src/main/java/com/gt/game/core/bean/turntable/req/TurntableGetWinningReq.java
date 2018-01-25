@@ -4,8 +4,8 @@ import com.gt.game.common.base.PageReq;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("分页获取刮刮乐活动中奖记录列表请求类")
-public class ScratchGetWinningReq extends PageReq {
+@ApiModel("分页获取大转盘活动中奖记录列表请求类")
+public class TurntableGetWinningReq extends PageReq {
 
 	@ApiModelProperty("活动id")
 	private Integer actId;

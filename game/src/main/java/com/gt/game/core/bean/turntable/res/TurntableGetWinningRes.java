@@ -6,8 +6,8 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 
 
-@ApiModel("分页获取刮刮乐活动中奖记录列表返回类")
-public class ScratchGetWinningRes {
+@ApiModel("分页获取大转盘活动中奖记录列表返回类")
+public class TurntableGetWinningRes {
 
 	/**
 	 * 主键

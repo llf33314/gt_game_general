@@ -5,17 +5,17 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
-@ApiModel("批量删除刮刮乐请求类")
-public class ScratchDelReq {
+@ApiModel("删除大转盘活动请求类")
+public class TurntableDelReq {
 
 	@ApiModelProperty("主键id")
-	private List<Integer> id;
+	private Integer id;
 
-	public List<Integer> getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(List<Integer> id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 }

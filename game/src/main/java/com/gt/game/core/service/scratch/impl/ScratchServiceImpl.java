@@ -759,7 +759,7 @@ public class ScratchServiceImpl implements ScratchService {
         createCell(wb, row1, 1, "奖品名称", font1);
         createCell(wb, row1, 2, "奖品", font1);
         createCell(wb, row1, 3, "中奖时间", font1);
-        createCell(wb, row1, 4, "中奖人联系方式", font1);
+        createCell(wb, row1, 4, "兑奖人联系方式", font1);
         createCell(wb, row1, 5, "中奖人昵称", font1);
         createCell(wb, row1, 6, "状态", font1);
         createCell(wb, row1, 7, "兑奖码", font1);
@@ -773,8 +773,8 @@ public class ScratchServiceImpl implements ScratchService {
             Row rowData = sheet.createRow(l++);
             Map<String, Object> map = list.get(i);
             createCell(wb, rowData, 0, String.valueOf(i + 1), font1);
-            createCell(wb, rowData, 1, delWithColumn(map.get("egg_prize_name")), font1);
-            String turPriType = delWithColumn(map.get("egg_prize_type"));
+            createCell(wb, rowData, 1, delWithColumn(map.get("scr_prize_name")), font1);
+            String turPriType = delWithColumn(map.get("scr_prize_type"));
             if ("4".equals(turPriType)) {// 实物
                 priTypeName = "实体物品";
                 priTypeUnit = "份";
@@ -806,9 +806,9 @@ public class ScratchServiceImpl implements ScratchService {
                     font1);
             if ("1".equals(delWithColumn(map.get("win_status")).toString())) {
                 createCell(wb, rowData, 6, "未兑奖", font1);
-            } else if ("2".equals(delWithColumn(map.get("status")).toString())) {
+            } else if ("2".equals(delWithColumn(map.get("win_status")).toString())) {
                 createCell(wb, rowData, 6, "已兑奖", font1);
-            } else {
+            } else if("3".equals(delWithColumn(map.get("win_status")).toString())) {
                 createCell(wb, rowData, 6, "已提交", font1);
             }
             createCell(wb, rowData, 7, delWithColumn(map.get("win_exchangeCode")), font1);
@@ -898,8 +898,4 @@ public class ScratchServiceImpl implements ScratchService {
         }
         return ResponseDTO.createBySuccess("获取成功",scratchPrizeTypeListResList);
     }
-
-
-
-
 }
