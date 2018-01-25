@@ -26,6 +26,7 @@ import com.gt.game.core.bean.url.MobileUrlRes;
 import com.gt.game.core.dao.ninelattice.NinelatticeCashPrizeApplyDAO;
 import com.gt.game.core.entity.lantern.*;
 import com.gt.game.core.entity.ninelattice.*;
+import com.gt.game.core.exception.dragonboat.DragonboatException;
 import com.gt.game.core.exception.lantern.LanternException;
 import com.gt.game.core.exception.ninelattice.NinelatticeException;
 import com.gt.game.core.service.ninelattice.*;
@@ -426,6 +427,7 @@ public class NinelatticeServiceImpl implements NinelatticeService {
         //TODO 奖项设置
         Double fenbi = 0.0;
         Double num   = 0.0;
+        int f  = 0;
         if(ninelatticeModfiyReq.getPrizeSetList().size()>0) {        //TODO  奖品设置
 
             //TODO 统计粉币
@@ -436,6 +438,7 @@ public class NinelatticeServiceImpl implements NinelatticeService {
                 for (NinelatticePrize ninelatticePrize : ninelatticePrizeList) {
                     if (ninelatticePrize.getType() == 1) {
                         num += ninelatticePrize.getNum();
+                        f = 1;
                     }
                 }
             }
@@ -446,6 +449,9 @@ public class NinelatticeServiceImpl implements NinelatticeService {
             ninelatticePrizeService.delete(entityWrapper2);
 
             for (NinelatticePrizeSetReq ninelatticePrizeSetReq : ninelatticeModfiyReq.getPrizeSetList()) {
+                if (ninelatticePrizeSetReq.getType() == 1) {
+                    fenbi += ninelatticePrizeSetReq.getNum();
+                }
                 NinelatticePrize ninelatticePrize = new NinelatticePrize();
                 ninelatticePrize.setActId(ninelatticeModfiyReq.getId());
                 ninelatticePrize.setType(ninelatticePrizeSetReq.getType());
@@ -473,22 +479,40 @@ public class NinelatticeServiceImpl implements NinelatticeService {
             }
         }
 
-        if(fenbi > 0) {//冻结粉币
-            if ((fenbi - num) <= (0 - num)) {
-                throw new NinelatticeException(ResponseEnums.NINELATTICE_HAS9);
-            }
-            // 判断账户中的粉币是否足够
-            if (busUser.getFansCurrency().doubleValue() < (fenbi - num)) {
-                throw new NinelatticeException(ResponseEnums.NINELATTICE_HAS7);
-            }
-            UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
-            updateFenbiReduceReq.setBusId(busUser.getId());
-            updateFenbiReduceReq.setFkId(ninelatticeMain.getId());
-            updateFenbiReduceReq.setFreType(98);
-            updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi - num));
-            AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
-            if (axisResult.getCode() != 0) {
-                throw new NinelatticeException(ResponseEnums.NINELATTICE_HAS8);
+        if(fenbi > 0){//冻结粉币
+            if( f > 0){
+                if ((fenbi - num) <= (0 - num)) {
+                    throw new NinelatticeException(ResponseEnums.NINELATTICE_HAS9);
+                }
+                // 判断账户中的粉币是否足够
+                if (busUser.getFansCurrency().doubleValue() < (fenbi - num)) {
+                    throw new NinelatticeException(ResponseEnums.NINELATTICE_HAS7);
+                }
+                UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
+                updateFenbiReduceReq.setBusId(busUser.getId());
+                updateFenbiReduceReq.setFkId(ninelatticeMain.getId());
+                updateFenbiReduceReq.setFreType(98);
+                updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi - num));
+                AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
+                if (axisResult.getCode() != 0) {
+                    throw new NinelatticeException(ResponseEnums.NINELATTICE_HAS8);
+                }
+            }else {
+                // 判断账户中的粉币是否足够
+                if(busUser.getFansCurrency().doubleValue() < fenbi.doubleValue()){
+                    throw new NinelatticeException(ResponseEnums.NINELATTICE_HAS7);
+                }
+                //构建冻结信息
+                FenbiFlowRecord ffr=CommonUtil.bulidFenFlow(busUser.getId(), fenbi, ninelatticeMain.getId(), 98, 1, "元宵点灯活动支出", 0);
+                // 保存冻结信息
+                if(ffr!=null){
+                    FenbiFlowRecordReq fenbiFlowRecordReq = new FenbiFlowRecordReq();
+                    BeanUtils.copyProperties(ffr,fenbiFlowRecordReq);
+                    AxisResult axisResult = FenbiflowServer.saveFenbiFlowRecord(fenbiFlowRecordReq);
+                    if(axisResult.getCode() != 0){
+                        throw new NinelatticeException(ResponseEnums.NINELATTICE_HAS8);
+                    }
+                }
             }
         }
     }

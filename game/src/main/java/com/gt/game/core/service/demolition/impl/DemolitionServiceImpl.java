@@ -418,6 +418,12 @@ public class DemolitionServiceImpl implements DemolitionService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResponseDTO saveDemolition(BusUser busUser, DemolitionSaveReq demolitionSaveReq) {
+        if(demolitionSaveReq.getDemolitionGiftBoxReqs() == null || demolitionSaveReq.getDemolitionGiftBoxReqs().size() < 3 || demolitionSaveReq.getDemolitionGiftBoxReqs().size() > 5){
+            throw new DemolitionException(ResponseEnums.DEMOLITION_HAS14);
+        }
+        if(demolitionSaveReq.getDemolitionPrizeReqs() == null || demolitionSaveReq.getDemolitionPrizeReqs().size() < 1){
+            throw new DemolitionException(ResponseEnums.COMMON_HAS20);
+        }
         DemolitiongiftboxMain demolitiongiftboxMain = null;
         Double num = 0.0;
         int f = 0;
@@ -526,6 +532,9 @@ public class DemolitionServiceImpl implements DemolitionService {
                 demolitiongiftboxAd.setActId(demolitiongiftboxMain.getId());
                 demolitiongiftboxAd.setUrl(demolitiongiftboxAd.getUrl().split("/upload").length>1?
                         demolitiongiftboxAd.getUrl().split("/upload")[1]:demolitiongiftboxAd.getUrl());
+                if(demolitiongiftboxAd.getHrefUrl().indexOf("deeptel.com.cn") == -1 && demolitiongiftboxAd.getHrefUrl().indexOf("duofriend.com") == -1 ){
+                    throw new DemolitionException(ResponseEnums.COMMON_HAS19);
+                }
                 demolitionGiftBoxAdService.insert(demolitiongiftboxAd);
             }
         }
@@ -539,7 +548,7 @@ public class DemolitionServiceImpl implements DemolitionService {
                 }
                 // 判断账户中的粉币是否足够
                 if (busUser.getFansCurrency().doubleValue() < (fenbi-num)) {
-                    throw new DemolitionException(ResponseEnums.DEMOLITION_HAS7);
+                    throw new DemolitionException(ResponseEnums.DEMOLITION_HAS15);
                 }
                 UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
                 updateFenbiReduceReq.setBusId(busUser.getId());
@@ -548,7 +557,7 @@ public class DemolitionServiceImpl implements DemolitionService {
                 updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi-num));
                 AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
                 if(axisResult.getCode() != 0){
-                    throw new DemolitionException(ResponseEnums.DEMOLITION_HAS8);
+                    throw new DemolitionException(ResponseEnums.DEMOLITION_HAS16);
                 }
             }else {
                 // 判断账户中的粉币是否足够

@@ -14,6 +14,7 @@ import com.gt.game.core.util.CommonUtil;
 import io.swagger.annotations.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
@@ -211,8 +212,9 @@ public class GoldRushController  extends BaseController {
     @ApiOperation(value = "保存活动", notes = "保存活动")
     @RequestMapping(value = "/saveGoldRush", method = RequestMethod.POST)
     protected ResponseDTO getGoldRush(
-            @RequestBody @ApiParam("请求参数") GoldRushSaveReq GoldRushSaveReq,
+            @RequestBody @ApiParam("请求参数") GoldRushSaveReq GoldRushSaveReq,BindingResult result ,
             HttpServletRequest request) {
+        InvalidParameter(result);
         try {
             BusUser busUser = CommonUtil.getLoginUser(request);
             ResponseDTO responseDTO = goldRushService.saveGoldRush(busUser, GoldRushSaveReq);

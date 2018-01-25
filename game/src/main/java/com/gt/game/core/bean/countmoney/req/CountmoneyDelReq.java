@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel("删除元宵点灯活动请求类")
-public class LanternDelReq {
+public class CountmoneyDelReq {
 
 	@ApiModelProperty("主键id")
 	private Integer id;

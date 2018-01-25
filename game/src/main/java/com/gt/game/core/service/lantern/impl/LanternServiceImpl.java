@@ -478,6 +478,7 @@ public class LanternServiceImpl implements LanternService {
 
         Double fenbi = 0.0;
         Double num   = 0.0;
+        int f = 0;
         if(lanternModfiyReq.getPrizeSetList().size()>0){        //TODO  奖品设置
 
             //TODO 统计粉币
@@ -488,6 +489,7 @@ public class LanternServiceImpl implements LanternService {
                 for (LanternPrize lanternPrize : lanternPrizeList) {
                     if (lanternPrize.getType() == 1) {
                         num += lanternPrize.getNum();
+                        f = 1;
                     }
                 }
             }
@@ -498,6 +500,9 @@ public class LanternServiceImpl implements LanternService {
             lanternPrizeService.delete(entityWrapper3);
 
             for(LanternPrizeSetReq lanternPrizeSetReq:lanternModfiyReq.getPrizeSetList()){
+                if (lanternPrizeSetReq.getType() == 1) {
+                    fenbi += lanternPrizeSetReq.getNum();
+                }
                 LanternPrize lanternPrize = new LanternPrize();
                 lanternPrize.setActId(lanternModfiyReq.getId());
                 lanternPrize.setType(lanternPrizeSetReq.getType());
@@ -524,22 +529,40 @@ public class LanternServiceImpl implements LanternService {
             }
         }
 
-        if(fenbi > 0) {//冻结粉币
-            if ((fenbi - num) <= (0 - num)) {
-                throw new LanternException(ResponseEnums.LANTERN_HAS9);
-            }
-            // 判断账户中的粉币是否足够
-            if (busUser.getFansCurrency().doubleValue() < (fenbi - num)) {
-                throw new LanternException(ResponseEnums.LANTERN_HAS7);
-            }
-            UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
-            updateFenbiReduceReq.setBusId(busUser.getId());
-            updateFenbiReduceReq.setFkId(lanternMain.getId());
-            updateFenbiReduceReq.setFreType(97);
-            updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi - num));
-            AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
-            if (axisResult.getCode() != 0) {
-                throw new LanternException(ResponseEnums.LANTERN_HAS8);
+        if(fenbi > 0){//冻结粉币
+            if( f > 0){
+                if ((fenbi - num) <= (0 - num)) {
+                    throw new LanternException(ResponseEnums.LANTERN_HAS9);
+                }
+                // 判断账户中的粉币是否足够
+                if (busUser.getFansCurrency().doubleValue() < (fenbi - num)) {
+                    throw new LanternException(ResponseEnums.LANTERN_HAS7);
+                }
+                UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
+                updateFenbiReduceReq.setBusId(busUser.getId());
+                updateFenbiReduceReq.setFkId(lanternMain.getId());
+                updateFenbiReduceReq.setFreType(97);
+                updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi - num));
+                AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
+                if (axisResult.getCode() != 0) {
+                    throw new LanternException(ResponseEnums.LANTERN_HAS8);
+                }
+            }else {
+                // 判断账户中的粉币是否足够
+                if(busUser.getFansCurrency().doubleValue() < fenbi.doubleValue()){
+                    throw new LanternException(ResponseEnums.LANTERN_HAS7);
+                }
+                //构建冻结信息
+                FenbiFlowRecord ffr=CommonUtil.bulidFenFlow(busUser.getId(), fenbi, lanternMain.getId(), 97, 1, "元宵点灯活动支出", 0);
+                // 保存冻结信息
+                if(ffr!=null){
+                    FenbiFlowRecordReq fenbiFlowRecordReq = new FenbiFlowRecordReq();
+                    BeanUtils.copyProperties(ffr,fenbiFlowRecordReq);
+                    AxisResult axisResult = FenbiflowServer.saveFenbiFlowRecord(fenbiFlowRecordReq);
+                    if(axisResult.getCode() != 0){
+                        throw new LanternException(ResponseEnums.LANTERN_HAS8);
+                    }
+                }
             }
         }
     }

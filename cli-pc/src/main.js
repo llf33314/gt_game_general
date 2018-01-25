@@ -4,6 +4,7 @@ import axios from './http/index'
 import * as filters from './filters'
 import router from './router'
 import isJs from 'is_js'
+import valid from './assets/js/validate'
 //加载全局方法
 import  util  from './assets/js/util'
 Object.keys(filters).forEach(key => {
@@ -38,6 +39,7 @@ Vue.config.productionTip = true
 Vue.config.devtools = true
 //挂载全局方法 
 Vue.prototype.$util = util 
+Vue.prototype.$valid = valid
 Vue.prototype.$baseURL = 'http://192.168.3.10:9037'
 Vue.prototype.$baseImgURL = 'http://maint.deeptel.com.cn/upload'
 Vue.prototype.$is = isJs                         // 第三方检验方法   参考地址：https://github.com/arasatasaygin/is.js

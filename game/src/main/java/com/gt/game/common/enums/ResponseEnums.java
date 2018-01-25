@@ -31,7 +31,9 @@ public enum ResponseEnums {
     DEMOLITION_HAS11(411,"奖品未发放完毕，不允许操作"),
     DEMOLITION_HAS12(412,"未过活动兑换期限，不允许删除"),
     DEMOLITION_HAS13(413,"回滚粉币失败，删除失败"),
-
+    DEMOLITION_HAS14(414," 最少添加3~5个礼盒"),
+    DEMOLITION_HAS15(415,"请输入正确的粉币数量"),
+    DEMOLITION_HAS16(416,"修改粉币数量失败"),
     //大海捞金响应
     SEAGOLD_HAS1(401,"该奖品已发放!"),
     SEAGOLD_HAS2(402,"手动发放只能选择[已提交]状态的数据！!"),
@@ -120,6 +122,8 @@ public enum ResponseEnums {
     COMMON_HAS16(416,"兑奖开始时间需在活动开始之后"),
     COMMON_HAS17(417,"请选择活动开始时间"),
     COMMON_HAS18(418,"请选择粉币类型的奖品"),
+    COMMON_HAS19(419,"广告链接必须为多粉或翼粉"),
+    COMMON_HAS20(420,"请添加奖品"),
     //升国旗响应
     RAISEFLAG_HAS1(401,"该奖品已发放!"),
     RAISEFLAG_HAS2(402,"手动发放只能选择[已提交]状态的数据！!"),
@@ -311,10 +315,6 @@ public enum ResponseEnums {
     TREE_HAS13(413,"奖品未发放完毕，不允许操作"),
     TREE_HAS14(414,"回滚粉币失败，删除失败"),
 
-
-
-
-
     //疯狂数钱
     COUNTMONEY_HAS1(401,"未到兑奖时间!"),
     COUNTMONEY_HAS2(402,"已过兑奖时间!"),
@@ -322,6 +322,16 @@ public enum ResponseEnums {
     COUNTMONEY_HAS4(404,"手动发放只能选择[已提交]状态的数据！!"),
     COUNTMONEY_HAS5(405,"活动为空!"),
     COUNTMONEY_HAS6(406,"删除活动失败！"),
+    COUNTMONEY_HAS7(407,"粉币不足，保存失败"),
+    COUNTMONEY_HAS8(408,"冻结粉币失败，保存失败"),
+    COUNTMONEY_HAS9(409,"输入的粉币数量过少"),
+    COUNTMONEY_HAS10(410,"活动已经开始，不允许操作!"),
+    COUNTMONEY_HAS11(411,"活动正在进行，不允许删除"),
+    COUNTMONEY_HAS12(412,"未过活动兑换期限，不允许删除"),
+    COUNTMONEY_HAS13(413,"奖品未发放完毕，不允许操作"),
+    COUNTMONEY_HAS14(414,"回滚粉币失败，删除失败"),
+    COUNTMONEY_HAS15(415,"活动还未开始"),
+    COUNTMONEY_HAS16(416,"活动已结束"),
     ;
 
     private final int code;
