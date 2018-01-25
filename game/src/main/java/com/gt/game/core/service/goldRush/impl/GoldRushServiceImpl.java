@@ -420,6 +420,12 @@ public class GoldRushServiceImpl  implements GoldRushService {
                 BeanUtils.copyProperties(GoldRushPrizeReq,GoldRushPrize);
                 GoldRushPrize.setActId(GoldRushMain.getId());
                 goldRushPrizeService.insert(GoldRushPrize);
+                if(GoldRushPrizeReq.getType() == 4 && GoldRushPrizeReq.getGoldRushPrizeImgReqs().size() == 0){
+                    throw new GoldRushException(ResponseEnums.COMMON_HAS21);
+                }
+                if(GoldRushPrizeReq.getType() == 4 && GoldRushPrizeReq.getGoldRushPrizeImgReqs().size() > 5){
+                    throw new GoldRushException(ResponseEnums.COMMON_HAS22);
+                }
                 if(GoldRushPrizeReq.getGoldRushPrizeImgReqs().size() > 0){
                     for(GoldRushPrizeImgReq GoldRushPrizeImgReq : GoldRushPrizeReq.getGoldRushPrizeImgReqs()){
                         GoldRushPrizeImg GoldRushPrizeImg = new GoldRushPrizeImg();

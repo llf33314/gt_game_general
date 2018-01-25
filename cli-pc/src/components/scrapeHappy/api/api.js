@@ -31,10 +31,10 @@ export const exports = params => {
   return axios.post(`${base}/exportScratch`, params).then(res => res.data)
 }
 
-//通过活动id查询刮刮乐活动/
-export const getActivityById = params => {
-  return axios.post(`${base}/getActivityById`, params).then(res => res.data)
-}
+// //通过活动id查询刮刮乐活动/
+// export const getActivityById = params => {
+//   return axios.post(`${base}/getActivityById`, params).then(res => res.data)
+// }
 
 /*获取手机端链接*/
 export const getShortUrl = params => {
@@ -49,10 +49,10 @@ export const getActList = params => {
   return axios.post(`${base}/getScratchList`, params).then(res => res.data)
 }
 
-//获取奖品类型列表/
-export const getPrizeType = params => {
-  return axios.post(`${base}/getScratchPrizeType`, params).then(res => res.data)
-}
+// //获取奖品类型列表/
+// export const getPrizeType = params => {
+//   return axios.post(`${base}/getScratchPrizeType`, params).then(res => res.data)
+// }
 
 //分页获取刮刮乐中奖记录列表/
 export const getWinningList = params => {
@@ -67,4 +67,45 @@ export const modfiyScratch = params => {
 //刮刮乐开始/暂停活动/
 export const stopLuck = params => {
   return axios.post(`${base}/stopScratch`, params).then(res => res.data)
+}
+
+
+
+
+/* web_liuyaowei */
+function post(url, params) {
+  return axios.post(url, params)
+    .then(res => {
+        return res.data
+    })
+    .catch(error => {
+      return {code: 400}
+    })
+}
+
+function get(url, params) {
+  return axios.get(url, params)
+    .then(res => {
+        return res.data
+    })
+    .catch(error => {
+      return {code: 400}
+    })
+}
+
+// 新增活动 
+export const addActivity = params => {
+    return post(`${base}/addScratch`, params)    
+}
+// 获取奖品类型列表 
+export const getPrizeType = params => {
+  return post(`${base}/getScratchPrizeType`, params)    
+}
+// 编辑元宵点灯 
+export const modfiyActivity = params => { 
+  return post(`${base}/modfiyScratch`, params)  
+ }
+// 通过活动id查询活动 
+export const getActivityById = params => { 
+  return post(`${base}/getActivityById`, params) 
 }

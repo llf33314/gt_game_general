@@ -443,6 +443,12 @@ public class GoldtreeServiceImpl implements GoldtreeService {
                 GoldtreePrize.setTotal(GoldtreePrizeReq.getNum());
                 GoldtreePrize.setNum(GoldtreePrizeReq.getPrizeUnit());
                 goldtreePrizeService.insert(GoldtreePrize);
+                if(GoldtreePrizeReq.getType() == 4 && GoldtreePrizeReq.getGoldtreePrizeImgReqs().size() == 0){
+                    throw new GoldtreeException(ResponseEnums.COMMON_HAS21);
+                }
+                if(GoldtreePrizeReq.getType() == 4 && GoldtreePrizeReq.getGoldtreePrizeImgReqs().size() > 5){
+                    throw new GoldtreeException(ResponseEnums.COMMON_HAS22);
+                }
                 if(CommonUtil.isNotEmpty(GoldtreePrizeReq.getGoldtreePrizeImgReqs()) && GoldtreePrizeReq.getGoldtreePrizeImgReqs().size() > 0){
                     for(GoldtreePrizeImgReq GoldtreePrizeImgReq : GoldtreePrizeReq.getGoldtreePrizeImgReqs()){
                         GoldtreePrizeImg GoldtreePrizeImg = new GoldtreePrizeImg();
