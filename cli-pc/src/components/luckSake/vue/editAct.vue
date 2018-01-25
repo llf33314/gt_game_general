@@ -527,6 +527,7 @@ export default {
             this.ruleForm1.name=data.data.name
             this.ruleForm1.name1=[data.data.activityBeginTime,data.data.activityEndTime] 
             this.ruleForm1.busLogo=data.data.busLogo
+            
             this.ruleForm1.busName=data.data.busName
             //广告设置 
             var newadv = [];//兑奖地址 
@@ -541,7 +542,9 @@ export default {
             }
             this.ruleForm1.links= newadv 
             //规则设置 
-            this.ruleForm2.code=window.IMAGEURL+data.data.followQrCode
+            if(data.data.followQrCode){
+                this.ruleForm2.code=window.IMAGEURL+data.data.followQrCode
+            } 
             this.ruleForm2.manTotalChance=String(data.data.manTotalChance)
             this.ruleForm2.manDayChance=String(data.data.manDayChance)
             this.ruleForm2.desc=data.data.actRule  

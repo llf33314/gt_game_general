@@ -100,12 +100,12 @@
         </div>
         <!-- 奖项设置 -->
         <div v-show="this.active==3" class="mt40">
-            <div>
+            <!-- <div>
                 <span style="color: #333; position:absolute;margin-top:0px;" >奖品说明：</span>
                 <el-input type="textarea" class="bw ml120"  :maxlength="300"  :rows="3" placeholder="请输入兑奖说明" v-model="explain">
                 </el-input>
                 <span class="el-upload__tip grey ml10">300字以内</span>
-            </div> 
+            </div>  -->
             <div class="gt-gray-region mt20" style="color:#666;line-height:20px">
                 <p>奖品类型：奖品的内容;奖品单位：奖品的数量货内容；奖项数量:该奖品的可领取次数</p>
                 <p>如：奖品类型：粉币；奖品数额：2；奖项名称：粉币；奖项数量：3；中奖概率：12</p> 
@@ -258,7 +258,6 @@ export default {
             return time.getTime() < Date.now() - 8.64e7;
           }
       },
-      explain: "",
       ruleForm4: [{ 
           name0: "",
           name1: "",
@@ -437,8 +436,7 @@ export default {
             phone               :this.ruleForm3.phone,  
             cashPrizeInstruction:this.ruleForm3.desc,  
             standAddressReqs    :newAddr, 
-            //奖项设置 
-            cashPrizeInstruction :this.explain, 
+            //奖项设置  
             standPrizeReqs:newPrize,   
         };
         console.log(data,123); 

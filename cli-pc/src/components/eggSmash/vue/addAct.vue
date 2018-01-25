@@ -160,7 +160,7 @@
                 </el-table-column>
                 <el-table-column label="操作">
                   <template slot-scope="scope">
-                      <el-button class="gt-button-normal blue" @click="test(scope.row.id)">指定中奖人</el-button>
+                      <el-button class="gt-button-normal blue" @click="assign(scope)">指定中奖人</el-button>
                       <el-button class="gt-button-normal"  v-if="scope.$index!=0"  @click="delForm4(scope.$index)">删除</el-button>
                   </template>
                 </el-table-column>
@@ -186,214 +186,269 @@
             <el-button type="primary" @click="submit">打印</el-button>   
         </div> 
 
-        <gt-Fans-detail :fansKey="key+''" :visible="dialogFans" v-on:getFansData="getFansData"></gt-Fans-detail>  
+        <gt-Fans-detail :visible.sync="dialogFans" v-on:getFansData="getFansData"></gt-Fans-detail>  
     </div>   
 </div>
 </section>
 </template>
 <script>
-import api from './../api/api'
+import api from "./../api/api";
 export default {
   data() {
     return {
       active: 0,
       ruleForm1: {
-        eggName: '',  // 活动名称
-        date: [],               
-        eggBeginTime: '', // 活动开始时间
-        eggEndTime: '',  // 活动结束时间
-        eggEggPartaker: 1,  // 1.所有粉丝 2.仅会员(持有会员卡的粉丝) 
+        eggName: "", // 活动名称
+        date: [],
+        eggBeginTime: "", // 活动开始时间
+        eggEndTime: "", // 活动结束时间
+        eggEggPartaker: 1, // 1.所有粉丝 2.仅会员(持有会员卡的粉丝)
         eggPway: 0, // 参与方式
-        eggMan: '', // 可参加抽奖的会员积分
-        eggKou: '', // 每次抽奖扣除积分
-        eggDescribe: '',  // 活动说明/描述
-        eggBeforeTxt : '',   // 活动未开始提示
-        eggBgmName: '',       // 背景音乐名称    
-        eggBgm: '',   // 背景音乐链接
+        eggMan: "", // 可参加抽奖的会员积分
+        eggKou: "", // 每次抽奖扣除积分
+        eggDescribe: "", // 活动说明/描述
+        eggBeforeTxt: "", // 活动未开始提示
+        eggBgmName: "", // 背景音乐名称
+        eggBgm: "" // 背景音乐链接
       },
       rules1: {
-        eggName: [{ required: true, message: "活动名称不能为空", trigger: "blur" }],
-        date: [
-          { required: true, type: "array", message: "开始时间不能为空", trigger: "blur" }
+        eggName: [
+          { required: true, message: "活动名称不能为空", trigger: "blur" }
         ],
+        date: [
+          {
+            required: true,
+            type: "array",
+            message: "开始时间不能为空",
+            trigger: "blur"
+          }
+        ]
       },
-      ruleForm2: { 
+      ruleForm2: {
         eggCountOfDay: "",
-        eggCountOfAll: "" ,
+        eggCountOfAll: ""
       },
-      rules2: { 
-        eggCountOfDay: [{ required: true, type:'number', validator: this.$valid.elemIsInteger, trigger: "blur" }],
-        eggCountOfAll: [{ required: true, type:'number', validator: this.$valid.elemIsInteger, trigger: "blur" }]
+      rules2: {
+        eggCountOfDay: [
+          {
+            required: true,
+            type: "number",
+            validator: this.$valid.elemIsInteger,
+            trigger: "blur"
+          }
+        ],
+        eggCountOfAll: [
+          {
+            required: true,
+            type: "number",
+            validator: this.$valid.elemIsInteger,
+            trigger: "blur"
+          }
+        ]
       },
       ruleForm3: {
-        eggCashDay:"",
+        eggCashDay: "",
         eggAddress: "",
         eggWinningTxt: "",
-        eggCashWay:2,
-      }, 
+        eggCashWay: 2
+      },
       rules3: {
-        eggCashDay: [{ required: true,  message: "兑奖期限不能为空", trigger: "blur" }],
-        eggAddress: [{ required: true, message: "兑奖地址不能为空", trigger: "blur" }]
-      },  
-      ruleForm4:[
-        { 
+        eggCashDay: [
+          { required: true, message: "兑奖期限不能为空", trigger: "blur" }
+        ],
+        eggAddress: [
+          { required: true, message: "兑奖地址不能为空", trigger: "blur" }
+        ]
+      },
+      ruleForm4: [
+        {
           eggPrizeType: "",
           eggPrizeLimit: "",
           eggPrizeName: "",
           eggPrizeNums: "",
           eggPrizeChance: "",
-          nickname:"",
+          nickname: ""
         }
       ],
       options: [],
-      dialogFans:false,
-      key:0,
+      dialogFans: false,
+     
     };
   },
   methods: {
+    assign(scope) {
+      //   this.active=5
+      this.dialogFans = true;
+    },
     getMusic(e) {
-      this.ruleForm1.eggBgmName = e.music.name
-      this.ruleForm1.eggBgm = e.music.url
+      this.ruleForm1.eggBgmName = e.music.name;
+      this.ruleForm1.eggBgm = e.music.url;
     },
     getFansData(e) {
-         console.log('获取子组件信息')
-    },  
+      if (e.length) {
+        let nickname = [];
+        let openid = []
+        e.forEach((item, index, arr) => {
+          nickname.push(item.nickname);
+        });
+        this.assignObj.nickname = nickname.join("，");
+        this.assignObj.openid = openid ;
+        this.$set(this.ruleForm4, this.assignObj.$index, this.assignObj);
+      }
+    },
     test() {
-      this.dialogFans = true
+      this.dialogFans = true;
     },
 
-    delForm4(index){
+    delForm4(index) {
       this.ruleForm4.splice(index, 1);
     },
-    addForm4(){  
-      this.ruleForm4.push({ eggPrizeType: "", eggPrizeLimit: "", eggPrizeName: "", eggPrizeNums: "", eggPrizeChance: "", nickname: "" })
+    addForm4() {
+      this.ruleForm4.push({
+        eggPrizeType: "",
+        eggPrizeLimit: "",
+        eggPrizeName: "",
+        eggPrizeNums: "",
+        eggPrizeChance: "",
+        nickname: ""
+      });
     },
     upStep() {
       this.active--;
     },
-    
+
     next(formName) {
       this.$refs[formName].validate(valid => {
-        if (valid) { 
+        if (valid) {
           this.active++;
         } else {
-          return false
+          return false;
         }
       });
     },
     lastStep() {
-     for (let i = 0; i < this.ruleForm4.length; i++) { 
-        var regu =/^[1-9]\d*$/;
-        if(!this.ruleForm4[i].eggPrizeType||!this.ruleForm4[i].eggPrizeLimit||!this.ruleForm4[i].eggPrizeName||!this.ruleForm4[i].eggPrizeNums){
-            this.$message.error("表单不能留空，请填写完整~");
-            return false
-        }else if (!regu.test(this.ruleForm4[i].eggPrizeLimit)) {
-            this.$message.error("奖品单位填写有误，请重新填写~");
-            return false
-        }else if (!regu.test(this.ruleForm4[i].eggPrizeNums)) {
-            this.$message.error("奖项数量填写有误，请重新填写~");
-            return false
-        }else if (this.ruleForm4[i].eggPrizeType==4&&this.ruleForm4[i].name5.length==0) { 
-            this.$message.error("当奖品为实物时，请上传实物图片~");
-            return false 
+      for (let i = 0; i < this.ruleForm4.length; i++) {
+        var regu = /^[1-9]\d*$/;
+        if (
+          !this.ruleForm4[i].eggPrizeType ||
+          !this.ruleForm4[i].eggPrizeLimit ||
+          !this.ruleForm4[i].eggPrizeName ||
+          !this.ruleForm4[i].eggPrizeNums
+        ) {
+          this.$message.error("表单不能留空，请填写完整~");
+          return false;
+        } else if (!regu.test(this.ruleForm4[i].eggPrizeLimit)) {
+          this.$message.error("奖品单位填写有误，请重新填写~");
+          return false;
+        } else if (!regu.test(this.ruleForm4[i].eggPrizeNums)) {
+          this.$message.error("奖项数量填写有误，请重新填写~");
+          return false;
+        } else if (
+          this.ruleForm4[i].eggPrizeType == 4 &&
+          this.ruleForm4[i].name5.length == 0
+        ) {
+          this.$message.error("当奖品为实物时，请上传实物图片~");
+          return false;
         }
       }
-       this.submit();
+      this.submit();
     },
     //表单提交--------------------------------------star
-    submit(){
-        var newarr=[];
-        for(let i =0;i< this.ruleForm4.length;i++){
-            var arr={
-                eggPrizeType:this.ruleForm4[i].eggPrizeType,
-                eggPrizeLimit:this.ruleForm4[i].eggPrizeLimit,
-                eggPrizeName:this.ruleForm4[i].eggPrizeName, 
-            }
-            newarr.push(arr)
-        } 
-        const data = {
-            //基础设置 
-            eggName: this.ruleForm1.eggName,  // 活动名称               
-            eggBeginTime: this.ruleForm1.date[0], // 活动开始时间
-            eggEndTime: this.ruleForm1.date[1],  // 活动结束时间
-            eggEggPartaker: this.ruleForm1.eggEggPartaker,  // 1.所有粉丝 2.仅会员(持有会员卡的粉丝) 
-            eggPway: this.ruleForm1.eggPway, // 参与方式
-            eggMan: this.ruleForm1.eggMan, // 可参加抽奖的会员积分
-            eggKou: this.ruleForm1.eggKou, // 每次抽奖扣除积分
-            eggDescribe: this.ruleForm1.eggDescribe,  // 活动说明/描述
-            eggBeforeTxt : this.ruleForm1.eggBeforeTxt,   // 活动未开始提示
-            eggBgmName: this.ruleForm1.eggBgmName,       // 背景音乐名称    
-            eggBgm: this.ruleForm1.eggBgm,   // 背景音乐链接
-            //规则设置
-            eggCountOfDay: this.ruleForm2.eggCountOfDay,   // 抽奖次数
-            eggCountOfAll: this.ruleForm2.eggCountOfAll, // 抽奖总数
-            //兑奖设置
-            eggCashDay: this.ruleForm3.eggCashDay,      // 兑奖期限
-            eggAddress: this.ruleForm3.eggAddress,     // 兑奖地址
-            eggCashWay: this.ruleForm3.eggCashWay,  // 兑奖方式
-            eggWinningTxt: this.ruleForm3.eggWinningTxt, // 兑奖提示
-            eggWinningNotice: this.ruleForm3.eggWinningNotice,// 中奖须知
-            //奖项设置 
-            prizeSetList: this.ruleForm4
+    submit() {
+      var newarr = [];
+      for (let i = 0; i < this.ruleForm4.length; i++) {
+        var arr = {
+          eggPrizeType: this.ruleForm4[i].eggPrizeType,
+          eggPrizeLimit: this.ruleForm4[i].eggPrizeLimit,
+          eggPrizeName: this.ruleForm4[i].eggPrizeName
         };
-        console.log(data,123); 
-        api.addActivity(data).then(data=>{
-          this.isSubmit=true
-          if (data.code == 100) { 
-              console.log(12336666)
-              this.active=5
+        newarr.push(arr);
+      }
+      const data = {
+        //基础设置
+        eggName: this.ruleForm1.eggName, // 活动名称
+        eggBeginTime: this.ruleForm1.date[0], // 活动开始时间
+        eggEndTime: this.ruleForm1.date[1], // 活动结束时间
+        eggEggPartaker: this.ruleForm1.eggEggPartaker, // 1.所有粉丝 2.仅会员(持有会员卡的粉丝)
+        eggPway: this.ruleForm1.eggPway, // 参与方式
+        eggMan: this.ruleForm1.eggMan, // 可参加抽奖的会员积分
+        eggKou: this.ruleForm1.eggKou, // 每次抽奖扣除积分
+        eggDescribe: this.ruleForm1.eggDescribe, // 活动说明/描述
+        eggBeforeTxt: this.ruleForm1.eggBeforeTxt, // 活动未开始提示
+        eggBgmName: this.ruleForm1.eggBgmName, // 背景音乐名称
+        eggBgm: this.ruleForm1.eggBgm, // 背景音乐链接
+        //规则设置
+        eggCountOfDay: this.ruleForm2.eggCountOfDay, // 抽奖次数
+        eggCountOfAll: this.ruleForm2.eggCountOfAll, // 抽奖总数
+        //兑奖设置
+        eggCashDay: this.ruleForm3.eggCashDay, // 兑奖期限
+        eggAddress: this.ruleForm3.eggAddress, // 兑奖地址
+        eggCashWay: this.ruleForm3.eggCashWay, // 兑奖方式
+        eggWinningTxt: this.ruleForm3.eggWinningTxt, // 兑奖提示
+        eggWinningNotice: this.ruleForm3.eggWinningNotice, // 中奖须知
+        //奖项设置
+        prizeSetList: this.ruleForm4
+      };
+      console.log(data, 123);
+      api
+        .addActivity(data)
+        .then(data => {
+          this.isSubmit = true;
+          if (data.code == 100) {
+            console.log(12336666);
+            this.active = 5;
           } else {
-              this.isSubmit=false
-              this.$message.error(data.msg + "错误码：[" + data.code + "]");
+            this.isSubmit = false;
+            this.$message.error(data.msg + "错误码：[" + data.code + "]");
           }
-        }).catch(() => {
-            this.isSubmit=false
-            this.$message({type: "info", message: "网络问题，请刷新重试~" });
-        }); 
-    },    
-    backUrl(){
-         window.history.go(-1);
+        })
+        .catch(() => {
+          this.isSubmit = false;
+          this.$message({ type: "info", message: "网络问题，请刷新重试~" });
+        });
     },
-    
+    backUrl() {
+      window.history.go(-1);
+    }
   },
   created() {
-      // 获取奖品类型
-     api.getPrizeType().then(res=>{
-            if (res.code == 100) {
-            this.options=res.data
-                console.log(this.options,'获取奖品类型');
-            } else {
-                this.$message.error('获取奖品类型失败');
-            }
-        })
+    // 获取奖品类型
+    api.getPrizeType().then(res => {
+      if (res.code == 100) {
+        this.options = res.data;
+        console.log(this.options, "获取奖品类型");
+      } else {
+        this.$message.error("获取奖品类型失败");
+      }
+    });
   },
-//   mounted() { 
-//      // 获取奖品类型
-//      api.getPrizeType().then(res=>{
-//             if (res.code == 100) {
-//             this.options=res.data
-//                 console.log(this.options,'获取奖品类型');
-//             } else {
-//                 this.$message.error('获取奖品类型失败');
-//             }
-//         })
-//   },
+  //   mounted() {
+  //      // 获取奖品类型
+  //      api.getPrizeType().then(res=>{
+  //             if (res.code == 100) {
+  //             this.options=res.data
+  //                 console.log(this.options,'获取奖品类型');
+  //             } else {
+  //                 this.$message.error('获取奖品类型失败');
+  //             }
+  //         })
+  //   },
   filters: {
     prizeStatus(val) {
-        if (val == 0) {
-          val = "一等奖";
-        }else if(val == 1){
-          val = "二等奖";
-        }else if(val == 2){
-          val = "三等奖";
-        }else if(val == 3){
-          val = "四等奖";
-        }else if(val == 4){
-          val = "五等奖";
-        }else if(val == 5){
-          val = "六等奖";
-        }  
-        return val;
+      if (val == 0) {
+        val = "一等奖";
+      } else if (val == 1) {
+        val = "二等奖";
+      } else if (val == 2) {
+        val = "三等奖";
+      } else if (val == 3) {
+        val = "四等奖";
+      } else if (val == 4) {
+        val = "五等奖";
+      } else if (val == 5) {
+        val = "六等奖";
+      }
+      return val;
     }
   }
 };

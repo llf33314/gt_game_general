@@ -433,10 +433,10 @@ export default {
             receiveType  :this.ruleForm3.type.toString(), //兑奖方式
             phone  :this.ruleForm3.phone,  
             cashPrizeInstruction :this.ruleForm3.desc,  
-            newAddr  :newAddr ,  
+            newYearAddressReqs  :newAddr ,  
             //奖项设置 
             prizeSetInstruction :this.explain, 
-            newPrize:newPrize,  
+            newYearPrizeReqs:newPrize,  
         };
         console.log(data,123); 
         saveAct(data).then(data=>{

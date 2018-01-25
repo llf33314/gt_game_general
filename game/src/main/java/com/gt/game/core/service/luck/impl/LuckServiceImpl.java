@@ -86,7 +86,7 @@ public class LuckServiceImpl implements LuckService {
      */
     @Override
     public MobileUrlRes getMobileUrl(WxPublicUsers busUser, MobileUrlReq mobileUrlReq) {
-        String url = applyProperties.getMobileBaseUrl() + "LuckMobile/"+ mobileUrlReq.getMainId() + "/79B4DE7C/toPhoneIndex.do";
+        String url = applyProperties.getMobileBaseUrl() + "luck/"+busUser.getId()+"/"+ mobileUrlReq.getMainId() + "/-100/79B4DE7C/userGrant.do";
         return new MobileUrlRes(url);
     }
     /**
