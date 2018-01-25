@@ -19,10 +19,10 @@
       </div>
       <div class="gt-content">
         <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-          <el-tab-pane :label="'全部  ('+countNum.all+')'" name="-1"></el-tab-pane>
-          <el-tab-pane :label="'未开始('+countNum.nostar+')'" name="0"></el-tab-pane>
-          <el-tab-pane :label="'进行中('+countNum.started+')'" name="1"></el-tab-pane>
-          <el-tab-pane :label="'已结束('+countNum.over+')'" name="2"></el-tab-pane>
+          <el-tab-pane :label="'全部  ('+countNum.count1+')'" name="-1"></el-tab-pane>
+          <el-tab-pane :label="'未开始('+countNum.count2+')'" name="0"></el-tab-pane>
+          <el-tab-pane :label="'进行中('+countNum.count3+')'" name="1"></el-tab-pane>
+          <el-tab-pane :label="'已结束('+countNum.count4+')'" name="2"></el-tab-pane>
         </el-tabs>
         <gt-null-data v-if="this.tableData.page.totalNums==0">还没有创建相关活动，
           <span @click="addActive()">点击这里</span>创建活动吧
@@ -75,7 +75,7 @@ export default {
       activeName: "-1",
       dialogTip: false,
       // countNum:{first:"10",second:"20",third:"30",fourth:"40",fifth:"2"},
-      countNum: { all: "", nostar: "", started: "", stop: "", over: "" },
+      countNum: { count1: "", count2: "", count3: "", count4: "", count5: "" },
       tableData: { data: [], page: {} },
       current: 1,
       //预览连接
@@ -108,15 +108,11 @@ export default {
     },
     //获取数量--------------------------------------star
     getCount() {
-      getActCount({ name: this.keyWord }).then(data => {
+      getActCount({ name: this.keyWord }).then(res => {
         if (data.code == 100) {
-          console.log(data, '数量')
-          this.countNum.all = data.data.count1
-          this.countNum.nostar = data.data.count2
-          this.countNum.started = data.data.count3
-          this.countNum.over = data.data.count4
+          this.countNum = res.data
         } else {
-          this.$message.errorthis.$message.error(data.msg);;
+          this.$message.error(data.msg);
         }
       }).catch(() => {
         this.$message({ type: "info", message: "网络问题，请刷新重试~" });
@@ -162,7 +158,6 @@ export default {
       var params = {}
       params.id = val
       params.status = 1
-      console.log(params, 12345);
       stopLuck(params).then(data => {
         if (data.code == 100) {
           this.$message({ message: "操作成功", type: "success" });
@@ -180,7 +175,6 @@ export default {
       var params = {}
       params.id = val
       params.status = 2
-      console.log(params, 12345);
       stopLuck(params).then(data => {
         if (data.code == 100) {
           this.$message({ message: "操作成功", type: "success" });

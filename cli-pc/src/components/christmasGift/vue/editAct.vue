@@ -7,16 +7,15 @@
     <el-breadcrumb separator="/" class="gt-crumbs">
       <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
       <el-breadcrumb-item  :to="{ path:'/christmasGift/index' }">圣诞大礼包</el-breadcrumb-item>  
-      <el-breadcrumb-item>创建活动</el-breadcrumb-item>   
+      <el-breadcrumb-item>编辑活动</el-breadcrumb-item>   
     </el-breadcrumb>  
     <div class="gt-content">
-        <el-steps :active="active" :center="true" :align-center="true" class="bbtom pb20">
-            <el-step title="基础设置"></el-step>
-            <el-step title="规则设置"></el-step>
-            <el-step title="兑奖设置"></el-step>
-            <el-step title="奖项设置"></el-step>
-            <el-step title="新建完成"></el-step>
-        </el-steps>
+        <el-tabs v-model="active" type="card">
+            <el-tab-pane label="基础设置" name="0"></el-tab-pane>
+            <el-tab-pane label="规则设置" name="1"></el-tab-pane>
+            <el-tab-pane label="兑奖设置" name="2"></el-tab-pane>
+            <el-tab-pane label="奖项设置" name="3"></el-tab-pane>
+        </el-tabs>
         <!-- 基础设置 -->
         <div v-show="this.active==0" class="mt40">
             <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="145px" class="demo-ruleForm"> 
@@ -70,6 +69,10 @@
                     </div>
                 </el-form-item>
             </el-form> 
+             <div class="btnRow">
+                            <el-button type="primary" @click="Save('ruleForm1')" >保存</el-button>
+                            <el-button   @click="backUrl">返回</el-button>
+                    </div>
         </div>
         <!-- 规则设置 -->
         <div v-show="this.active==1" class="mt40">
@@ -81,6 +84,10 @@
                         <el-input class="w_demo mr10" v-model.number="ruleForm2.treeCountOfAll" placeholder="请输入每人/每天抽奖总数"></el-input>次/人
                     </el-form-item>   
             </el-form> 
+             <div class="btnRow">
+                            <el-button type="primary" @click="Save('ruleForm2')" >保存</el-button>
+                            <el-button   @click="backUrl">返回</el-button>
+                    </div>
         </div> 
         <!-- 兑奖设置 -->
         <div v-show="this.active==2" class="mt40">
@@ -111,6 +118,10 @@
                     placeholder="1、如果是实物的奖品，要填写中奖人的手机号码，如不是现场兑奖的还要填写速递地址。2、如中奖是流量的则要填写手机号码，流量将在12小时内到充值中奖人的手机号码上同时运营商会有流量到帐短信通知。3、如中奖是粉币或积分、优惠券的， 则中奖数额会即时自动累计到会员中心对应的类目上， 中奖人可到会员中心查看粉币或积分的增加数量。4、如果是转赠的，则要输入受赠人的手机号，同时受赠人要关注我们的微信公众号。5、中奖人须在规定的时间内完成兑奖，逾期则奖品自动作废。"></el-input>
                 </el-form-item>    
             </el-form> 
+             <div class="btnRow">
+                            <el-button type="primary" @click="Save('ruleForm3')" >保存</el-button>
+                            <el-button   @click="backUrl">返回</el-button>
+                    </div>
         </div>
         <!-- 奖项设置 -->
         <div v-show="this.active==3" class="mt40">
@@ -165,26 +176,14 @@
                   </template>
                 </el-table-column>
             </el-table>  
-            
+             <div class="btnRow">
+                            <el-button type="primary" @click="lastStep" >保存</el-button>
+                            <el-button   @click="backUrl">返回</el-button>
+                    </div>
         </div>       
-        <!-- 新建完成 -->
-        <div v-if="active==5" class="gt-content complete"> 
-            <div class="addOk"> 
-                <div class="el-icon-circle-check green" style="font-size:40px"></div>
-                <div class="complete-info">活动添加成功</div>
-                <el-button class="mt80" type="primary" @click="backUrl()">返回活动列表</el-button>  
-            </div> 
-        </div>
+       
         <!-- 按钮 -->
         <div class="h80"></div>
-        <div class="btnRow"  v-if="this.active!=5">
-            <el-button   @click="upStep()" v-if="this.active!=0">上一步</el-button>
-            <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步1</el-button> 
-            <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
-            <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
-            <el-button type="primary" @click="lastStep"        v-if="this.active==3">保存</el-button>   
-            <el-button type="primary" @click="submit">打印</el-button>   
-        </div> 
 
         <gt-Fans-detail :visible.sync="dialogFans" v-on:getFansData="getFansData"></gt-Fans-detail>  
     </div>   
@@ -317,10 +316,10 @@ export default {
       this.active--;
     },
 
-    next(formName) {
+    Save(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.active++;
+          this.submit()
         } else {
           return false;
         }
@@ -355,66 +354,93 @@ export default {
     },
     //表单提交--------------------------------------star
     submit() {
-      // 奖品设置处理
-      this.ruleForm4.forEach((item, idnex, arr) => {
-        item.eggPrizeType = Number(item.eggPrizeType);
-      });
-      const data = {
-        //基础设置
-        treeName: this.ruleForm1.treeName, // 活动名称
-        activityBeginTime: this.ruleForm1.date[0], // 活动开始时间
-        activityEndTime: this.ruleForm1.date[1], // 活动结束时间
-        treeEggPartaker: this.ruleForm1.treeEggPartaker, // 1.所有粉丝 2.仅会员(持有会员卡的粉丝)
-        treePway: this.ruleForm1.treePway, // 参与方式
-        treeMan: this.ruleForm1.treeMan, // 可参加抽奖的会员积分
-        treeKou: this.ruleForm1.treeKou, // 每次抽奖扣除积分
-        treeDescribe: this.ruleForm1.treeDescribe, // 活动说明/描述
-        treeBeforeTxt: this.ruleForm1.treeBeforeTxt, // 活动未开始提示
-        treeBgmName: this.ruleForm1.treeBgmName, // 背景音乐名称
-        treeBgm: this.ruleForm1.treeBgm, // 背景音乐链接
-        //规则设置
-        treeCountOfDay: this.ruleForm2.treeCountOfDay, // 抽奖次数
-        treeCountOfAll: this.ruleForm2.treeCountOfAll, // 抽奖总数
-        //兑奖设置
-        treeCashDay: this.ruleForm3.treeCashDay, // 兑奖期限
-        treeAddress: this.ruleForm3.treeAddress, // 兑奖地址
-        eggCashWay: this.ruleForm3.eggCashWay, // 兑奖方式
-        treeWinningTxt: this.ruleForm3.treeWinningTxt, // 兑奖提示
-        eggWinningNotice: this.ruleForm3.eggWinningNotice, // 中奖须知
-        //奖项设置
-        prizeSetList: this.ruleForm4
-      };
-      console.log(data, 123);
-      api
-        .addActivity(data)
-        .then(data => {
-          this.isSubmit = true;
-          if (data.code == 100) {
-            console.log(12336666);
-            this.active = 5;
-          } else {
-            this.isSubmit = false;
-            this.$message.error(data.msg + "错误码：[" + data.code + "]");
-          }
-        })
-        .catch(() => {
-          this.isSubmit = false;
-          this.$message({ type: "info", message: "网络问题，请刷新重试~" });
+        this.ruleForm4.forEach((item, idnex, arr) => {
+            item.eggPrizeType = Number(item.eggPrizeType);
         });
+        const data = {
+            id: this.$route.query.id,
+            //基础设置
+            treeName: this.ruleForm1.treeName, // 活动名称
+            activityBeginTime: this.ruleForm1.date[0], // 活动开始时间
+            activityEndTime: this.ruleForm1.date[1], // 活动结束时间
+            treeEggPartaker: this.ruleForm1.treeEggPartaker, // 1.所有粉丝 2.仅会员(持有会员卡的粉丝)
+            treePway: this.ruleForm1.treePway, // 参与方式
+            treeMan: this.ruleForm1.treeMan, // 可参加抽奖的会员积分
+            treeKou: this.ruleForm1.treeKou, // 每次抽奖扣除积分
+            treeDescribe: this.ruleForm1.treeDescribe, // 活动说明/描述
+            treeBeforeTxt: this.ruleForm1.treeBeforeTxt, // 活动未开始提示
+            treeBgmName: this.ruleForm1.treeBgmName, // 背景音乐名称
+            treeBgm: this.ruleForm1.treeBgm, // 背景音乐链接
+            //规则设置
+            treeCountOfDay: this.ruleForm2.treeCountOfDay, // 抽奖次数
+            treeCountOfAll: this.ruleForm2.treeCountOfAll, // 抽奖总数
+            //兑奖设置
+            treeCashDay: this.ruleForm3.treeCashDay, // 兑奖期限
+            treeAddress: this.ruleForm3.treeAddress, // 兑奖地址
+            eggCashWay: this.ruleForm3.eggCashWay, // 兑奖方式
+            treeWinningTxt: this.ruleForm3.treeWinningTxt, // 兑奖提示
+            eggWinningNotice: this.ruleForm3.eggWinningNotice, // 中奖须知
+            //奖项设置
+            prizeSetList: this.ruleForm4
+        };
+        api
+            .modfiyActivity(data)
+            .then(data => {
+            this.isSubmit = true;
+            if (data.code == 100) {
+                this.$message.success('保存成功');
+            } else {
+                this.isSubmit = false;
+                this.$message.error(data.msg || '保存失败');
+            }
+            })
     },
     backUrl() {
       window.history.go(-1);
     }
   },
   created() {
-    // 获取奖品类型
-    api.getPrizeType().then(res => {
-      if (res.code == 100) {
-        this.options = res.data;
-      } else {
-        this.$message.error("获取奖品类型失败");
-      }
-    });
+
+    
+    Promise.all([
+        api.getActivityById({ id: this.$route.query.id }),
+        api.getPrizeType()
+      ]).then(res => {
+        if (res[0].code == 100) {
+            //基础设置
+            this.ruleForm1.treeName = res[0].data.treeName, // 活动名称
+            this.ruleForm1.date = [ res[0].data.activityBeginTime,  res[0].data.activityEndTime ]
+            this.ruleForm1.treeEggPartaker = res[0].data.treeEggPartaker, // 1.所有粉丝 2.仅会员(持有会员卡的粉丝)
+            this.ruleForm1.treePway = res[0].data.treePway, // 参与方式
+            this.ruleForm1.treeMan = res[0].data.treeMan, // 可参加抽奖的会员积分
+            this.ruleForm1.treeKou = res[0].data.treeKou, // 每次抽奖扣除积分
+            this.ruleForm1.treeDescribe = res[0].data.treeDescribe, // 活动说明/描述
+            this.ruleForm1.treeBeforeTxt = res[0].data.treeBeforeTxt, // 活动未开始提示
+            this.ruleForm1.treeBgmName = res[0].data.treeBgmName, // 背景音乐名称
+            this.ruleForm1.treeBgm = res[0].data.treeBgm, // 背景音乐链接
+            //规则设置
+            this.ruleForm2.treeCountOfDay = res[0].data.treeCountOfDay, // 抽奖次数
+            this.ruleForm2.treeCountOfAll = res[0].data.treeCountOfAll, // 抽奖总数
+            //兑奖设置
+            this.ruleForm3.treeCashDay = res[0].data.treeCashDay, // 兑奖期限
+            this.ruleForm3.treeAddress = res[0].data.treeAddress, // 兑奖地址
+            this.ruleForm3.eggCashWay = res[0].data.eggCashWay, // 兑奖方式
+            this.ruleForm3.treeWinningTxt = res[0].data.treeWinningTxt, // 兑奖提示
+            this.ruleForm3.eggWinningNotice = res[0].data.eggWinningNotice, // 中奖须知
+            //奖项设置
+            res[0].data.prizeSetList.forEach((item, idnex, arr) => {
+            item.type = item.type + "";
+            });
+            this.ruleForm4 = res[0].data.prizeSetList
+        } else {
+            this.$message.error("获取编辑数据失败");
+        }
+        if (res[1].code == 100) {
+          this.options = res[1].data;
+        } else {
+          this.$message.error("获取奖品类型失败");  
+        }
+      });
   },
   filters: {
     prizeStatus(val) {
