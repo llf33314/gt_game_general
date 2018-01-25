@@ -360,6 +360,9 @@ export default {
         }else if (this.ruleForm4[i].name0==4&&this.ruleForm4[i].name5.length==0) { 
                 this.$message.error("当奖品为实物时，请上传实物图片~");
                 return false 
+        }else if(this.ruleForm4[i].name0==4&&this.ruleForm4[i].name5.length>5){
+                this.$message.error("实物图片最多上传5张~");
+                return false
         }else{
             this.ruleForm4[i].name4 = parseFloat(this.ruleForm4[i].name4).toFixed(2);  
         }  
@@ -398,21 +401,6 @@ export default {
                     num :Number(this.ruleForm4[i].name3),//数量
                     // probabiliy :this.ruleForm4[i].name4,  //概率
                     qixiPrizeImgReqs :[]//图片
-                }
-                if (arr4.type == "粉币"){
-                    arr4.type =1
-                }else if (arr4.type == "手机流量"){
-                    arr4.type =2 
-                }else if (arr4.type == "手机话费"){
-                    arr4.type =3 
-                }else if (arr4.type == "实体物品"){
-                    arr4.type =4 
-                }
-                else if (arr4.type == "积分"){
-                    arr4.type =6
-                }
-                else if (arr4.type == "优惠券"){
-                    arr4.type =7 
                 } 
                 if(arr4.type==4){
                     for(var j=0;j<this.ruleForm4[i].name5.length;j++){
@@ -514,21 +502,8 @@ export default {
                     name2  : data.data.qixiPrizeReqs[i].prizeName, 
                     name3  : String(data.data.qixiPrizeReqs[i].num),  
                     name5  :[] 
-                };
-                if (newabc1.name0 == 1) {
-                    newabc1.name0  = "粉币";
-                }else if(newabc1.name0  == 2){
-                    newabc1.name0  = "手机流量"; 
-                }else if(newabc1.name0  == 3){
-                    newabc1.name0  = "手机话费";
-                }else if(newabc1.name0  == 4){
-                    newabc1.name0  = "实体物品";
-                }  else if(newabc1.name0  == 6){
-                    newabc1.name0  = "积分";
-                } else if(newabc1.name0  == 7){
-                    newabc1.name0  = "优惠券";
-                } 
-                if(newabc1.name0=="实体物品"){
+                }; 
+                if(newabc1.name0==4){
                     for(var j = 0; j < data.data.qixiPrizeReqs[i].qixiPrizeImgReqs.length; j++){
                         var imgarr={
                              url:window.IMAGEURL+data.data.qixiPrizeReqs[i].qixiPrizeImgReqs[j].imgUrl
