@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 
 @ApiModel("批量删除刮刮乐活动请求类")
-public class ScratchDelWinningReq {
+public class TurntableDelWinningReq {
 
 	@ApiModelProperty("主键id")
 	private List<Integer> id;

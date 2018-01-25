@@ -1,6 +1,9 @@
 package com.gt.game.core.controller.common;
 
+import com.gt.api.util.JsonUtils;
+import com.gt.api.util.ShortUtil;
 import com.gt.axis.bean.wxmp.video.VideoReq;
+import com.gt.axis.content.AxisContent;
 import com.gt.axis.content.AxisResult;
 import com.gt.axis.server.wxmp.ShortUrlServer;
 import com.gt.axis.server.wxmp.VideoServer;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 /**
  * 链接controller
@@ -61,8 +65,10 @@ public class LinkController {
     @ApiOperation(value = "获取短信链接", notes = "获取短信链接")
     @RequestMapping(value = "/getShorUrl", method = RequestMethod.GET)
     public String getShorUrl(HttpServletRequest request, HttpServletResponse response, @RequestParam @ApiParam("移动端链接") String url) throws UnsupportedEncodingException {
-      String s = ShortUrlServer.getShorUrl(url);
-      return s;
+        String urls = AxisContent.getInstance().getServiceUrl()+ "service/rest/shortUrl/getNewShortUrl";
+        String s = ShortUtil.sendLongUrlToShortApi(urls, url);
+        Map<String,Object> map = JsonUtils.json2Map(s);
+        return CommonUtil.isNotEmpty(map.get("url"))?map.get("url").toString():"";
     }
 
     /**
