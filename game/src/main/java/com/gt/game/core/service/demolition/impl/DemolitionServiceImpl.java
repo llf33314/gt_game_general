@@ -483,6 +483,12 @@ public class DemolitionServiceImpl implements DemolitionService {
                 BeanUtils.copyProperties(demolitionPrizeReq,demolitiongiftboxPrize);
                 demolitiongiftboxPrize.setActId(demolitiongiftboxMain.getId());
                 demolitiongiftboxPrizeService.insert(demolitiongiftboxPrize);
+                if(demolitiongiftboxPrize.getType() == 4 && demolitionPrizeReq.getDemolitionPrizeImgReqs().size() == 0){
+                    throw new DemolitionException(ResponseEnums.COMMON_HAS21);
+                }
+                if(demolitiongiftboxPrize.getType() == 4 && demolitionPrizeReq.getDemolitionPrizeImgReqs().size() > 5){
+                    throw new DemolitionException(ResponseEnums.COMMON_HAS22);
+                }
                 if(demolitionPrizeReq.getDemolitionPrizeImgReqs().size() > 0){
                     for(DemolitionPrizeImgReq demolitionPrizeImgReq : demolitionPrizeReq.getDemolitionPrizeImgReqs()){
                         DemolitiongiftboxPrizeImg demolitiongiftboxPrizeImg = new DemolitiongiftboxPrizeImg();
