@@ -463,7 +463,7 @@ export default {
             receiveType  :this.ruleForm3.type.toString(), //兑奖方式
             phone  :this.ruleForm3.phone,  
             cashPrizeInstruction :this.ruleForm3.desc,  
-            newAddr  :newAddr ,  
+            newYearAddressReqs  :newAddr ,  
             //奖项设置 
             prizeSetInstruction :this.explain, 
             newYearPrizeReqs:newYearPrizeReqs,  
@@ -506,7 +506,9 @@ export default {
             }
             this.ruleForm1.links= newadv 
             //规则设置 
-            this.ruleForm2.code=window.IMAGEURL+data.data.followQrCode
+            if(data.data.followQrCode){
+                this.ruleForm2.code=window.IMAGEURL+data.data.followQrCode
+            } 
             this.ruleForm2.manTotalChance=String(data.data.manTotalChance)
             this.ruleForm2.manDayChance=String(data.data.manDayChance)
             this.ruleForm2.desc=data.data.actRule  

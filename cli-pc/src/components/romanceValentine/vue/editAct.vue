@@ -485,7 +485,9 @@ export default {
             }
             this.ruleForm1.links= newadv 
             //规则设置 
-            this.ruleForm2.code=window.IMAGEURL+data.data.followQrCode
+            if(data.data.followQrCode){
+                this.ruleForm2.code=window.IMAGEURL+data.data.followQrCode
+            } 
             this.ruleForm2.manTotalChance=String(data.data.manTotalChance)
             this.ruleForm2.manDayChance=String(data.data.manDayChance)
             this.ruleForm2.desc=data.data.actRule  

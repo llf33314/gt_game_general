@@ -450,7 +450,9 @@ export default {
             this.ruleForm1.name1=[data.data.activityBeginTime,data.data.activityEndTime] 
             this.ruleForm1.goldRushTips=data.data.goldRushTips  
             //规则设置 
-            this.ruleForm2.code=window.IMAGEURL+data.data.followQrCode
+            if(data.data.followQrCode){
+                this.ruleForm2.code=window.IMAGEURL+data.data.followQrCode
+            } 
             this.ruleForm2.manTotalChance=String(data.data.manTotalChance)
             this.ruleForm2.manDayChance=String(data.data.manDayChance)
             this.ruleForm2.gameTime=String(data.data.gametime) 
@@ -505,6 +507,7 @@ export default {
                newPraise.push(newabc1);  
             } 
             this.ruleForm4=newPraise
+            this.explain=data.data.prizeSetInstruction
             } else {
                 this.$message.error(data.msg);
             }
