@@ -332,6 +332,24 @@ public enum ResponseEnums {
     COUNTMONEY_HAS14(414,"回滚粉币失败，删除失败"),
     COUNTMONEY_HAS15(415,"活动还未开始"),
     COUNTMONEY_HAS16(416,"活动已结束"),
+
+    //大转盘响应
+    TURNTABLE_HAS1(401,"未到兑奖时间!"),
+    TURNTABLE_HAS2(402,"已过兑奖时间!"),
+    TURNTABLE_HAS3(403,"该奖品已发放!"),
+    TURNTABLE_HAS4(404,"手动发放只能选择[已提交]状态的数据！!"),
+    TURNTABLE_HAS5(405,"活动为空!"),
+    TURNTABLE_HAS6(406,"删除活动失败！"),
+    TURNTABLE_HAS7(407,"粉币不足，保存失败"),
+    TURNTABLE_HAS8(408,"冻结粉币失败，保存失败"),
+    TURNTABLE_HAS9(409,"输入的粉币数量过少"),
+    TURNTABLE_HAS10(410,"活动已经开始，不允许操作!"),
+    TURNTABLE_HAS11(411,"活动正在进行，不允许删除"),
+    TURNTABLE_HAS12(412,"未过活动兑换期限，不允许删除"),
+    TURNTABLE_HAS13(413,"奖品未发放完毕，不允许操作"),
+    TURNTABLE_HAS14(414,"回滚粉币失败，删除失败"),
+    TURNTABLE_HAS15(415,"活动还未开始"),
+    TURNTABLE_HAS16(416,"活动已结束"),
     ;
 
     private final int code;

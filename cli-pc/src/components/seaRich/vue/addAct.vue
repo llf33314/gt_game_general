@@ -474,7 +474,7 @@ export default {
             phone             :this.ruleForm3.phone, 
             cashPrizeInstruction:this.ruleForm3.desc, 
              //奖项设置 
-            seagoldPrizeReqs:seagoldPrizeReqs,  
+            seagoldPrizeReqs:newPrize,  
         };
         console.log(data,123);         
         saveAct(data).then(data=>{
