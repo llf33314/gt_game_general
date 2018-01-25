@@ -1,22 +1,30 @@
-package com.gt.game.core.bean.turntable.res;
+package com.gt.game.core.bean.common.res;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("奖品类型返回类")
-public class ScratchPrizeTypeListRes {
+/**
+ * <p>
+ * 好运翻翻看
+ * </p>
+ *
+ * @author zwq
+ * @since 2017-12-25
+ */
+@ApiModel("好运翻翻看奖品类型返回对象")
+public class PrizeTypeListRes {
 
 	@ApiModelProperty("value")
-	private String value;
+	private Integer value;
 
 	@ApiModelProperty("name")
 	private String name;
 
-	public String getValue() {
+	public Integer getValue() {
 		return value;
 	}
 
-	public void setValue(String value) {
+	public void setValue(Integer value) {
 		this.value = value;
 	}
 

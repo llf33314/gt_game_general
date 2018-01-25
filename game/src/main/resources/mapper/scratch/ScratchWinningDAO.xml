@@ -60,7 +60,7 @@
 	</select>
 
 	<select id="findExports" resultType="map" parameterType="map" >
-		SELECT t1.id,t4.scr_prize_name,t4.scr_prize_type,t4.scr_prize_limit,t1.win_cashtime AS cashTime,t1.win_phone,t1.win_status,t1.win_exchangeCode,t1.win_memberId,t5.scr_address AS addressName,t1.win_address,t1.win_way
+		SELECT t1.id,t4.scr_prize_name,t4.scr_prize_type,t4.scr_prize_limit,t1.win_create_time AS cashTime,t1.win_phone,t1.win_status,t1.win_exchangeCode,t1.win_memberId,t5.scr_address AS addressName,t1.win_address,t1.win_way
 		FROM  t_wx_activity_scratch_winning t1
 		LEFT JOIN t_wx_activity_scratch_detail t4 ON t1.win_prize_id = t4.id
 		LEFT JOIN t_wx_activity_scratch_main t5 ON t1.win_act_id = t5.id

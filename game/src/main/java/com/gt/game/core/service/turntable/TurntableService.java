@@ -4,12 +4,11 @@ package com.gt.game.core.service.turntable;
 import com.gt.api.bean.session.BusUser;
 import com.gt.api.bean.session.WxPublicUsers;
 import com.gt.game.common.dto.ResponseDTO;
+import com.gt.game.core.bean.scratch.res.ScratchPrizeTypeListRes;
 import com.gt.game.core.bean.tree.req.*;
 import com.gt.game.core.bean.tree.res.*;
 import com.gt.game.core.bean.turntable.req.*;
-import com.gt.game.core.bean.turntable.res.TurntableCountActivityRes;
-import com.gt.game.core.bean.turntable.res.TurntableGetActivityRes;
-import com.gt.game.core.bean.turntable.res.TurntableListRes;
+import com.gt.game.core.bean.turntable.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 
@@ -80,4 +79,49 @@ public interface TurntableService {
      * @return
      */
     ResponseDTO stopTurntable(WxPublicUsers busUser, TurntableStopIdReq turntableStopIdReq);
+
+    /**
+     * 删除大转盘活动
+     * @param busUser
+     * @param turntableDelReq
+     */
+    void delTurntable(BusUser busUser, TurntableDelReq turntableDelReq);
+
+    /**
+     * 分页获取大转盘中奖记录列表
+     * @param busUser
+     * @param turntableGetWinningReq
+     * @return
+     */
+    ResponseDTO<List<TurntableGetWinningRes>> getWinningList(BusUser busUser, TurntableGetWinningReq turntableGetWinningReq);
+
+    /**
+     * 中奖记录发放奖品
+     * @param busUser
+     * @param turntableEditApplyReq
+     * @return
+     */
+    ResponseDTO editTurntableApply(BusUser busUser, TurntableEditApplyReq turntableEditApplyReq);
+
+    /**
+     * 导出中奖记录
+     * @param params
+     * @param busUser
+     * @return
+     */
+    Map<String,Object> exportTurntable(Map<String, Object> params, BusUser busUser);
+
+    /**
+     * 批量删除大转盘活动中奖记录
+     * @param busUser
+     * @param turntableDelWinningReq
+     */
+    void delTurntableWinning(BusUser busUser, TurntableDelWinningReq turntableDelWinningReq);
+
+    /**
+     * 获取奖品类型列表
+     * @param busUser
+     * @return
+     */
+    ResponseDTO<List<TurntablePrizeTypeListRes>> getTurntablePrizeType(BusUser busUser);
 }
