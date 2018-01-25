@@ -1,6 +1,10 @@
 package com.gt.game.core.controller.common;
 
+import com.gt.axis.bean.wxmp.video.VideoReq;
+import com.gt.axis.content.AxisResult;
 import com.gt.axis.server.wxmp.ShortUrlServer;
+import com.gt.axis.server.wxmp.VideoServer;
+import com.gt.game.core.util.CommonUtil;
 import com.gt.game.core.util.QRcodeKit;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -71,8 +75,10 @@ public class LinkController {
     @RequestMapping(value = "{key}/getVideourl", method = RequestMethod.GET)
     public void getVideourl(HttpServletRequest request, HttpServletResponse response, @PathVariable("key") String key ){
         try {
-//            String url = course.urlquery(key);
-            String url = "https://v.qq.com/iframe/player.html?vid=g0550rl08hs&tiny=0&auto=0";
+            VideoReq v = new VideoReq();
+            v.setCourceModel(key);
+            AxisResult<String> result = VideoServer.getVoiceUrl(v);
+            String url = CommonUtil.isNotEmpty(result.getData())?result.getData():"";
             if(!url.equals("")){
                 if(!(url.indexOf("http:")>-1 || url.indexOf("https:")>-1)){
                     url = "http://" + url;

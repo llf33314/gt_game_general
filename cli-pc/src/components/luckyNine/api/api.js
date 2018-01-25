@@ -58,8 +58,8 @@ export default {
        },
 
         // 编辑元宵点灯 
-        modfiyActivity(params) {
-            return post(`${base}/modfiyLantern`, params)  
+        modfiyActivity(params) { 
+            return post(`${base}/modfiyNinelattice`, params)  
            },
 
        /* 核销授权 - 接口 */ 
