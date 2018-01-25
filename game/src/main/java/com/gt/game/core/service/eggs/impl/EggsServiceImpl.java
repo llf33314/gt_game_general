@@ -31,6 +31,7 @@ import com.gt.game.core.entity.eggs.EggsWinning;
 import com.gt.game.core.entity.scratch.ScratchDetail;
 import com.gt.game.core.entity.scratch.ScratchMain;
 import com.gt.game.core.entity.scratch.ScratchWinning;
+import com.gt.game.core.exception.dragonboat.DragonboatException;
 import com.gt.game.core.exception.eggs.EggsException;
 import com.gt.game.core.exception.scratch.ScratchException;
 import com.gt.game.core.service.eggs.EggsDetailService;
@@ -385,6 +386,7 @@ public class EggsServiceImpl implements EggsService {
         //TODO 奖项设置
         Double fenbi = 0.0;
         Double num   = 0.0;
+        int f =0;
         if(eggsModfiyReq.getPrizeSetList().size()>0){        //TODO  奖品设置
 
             EntityWrapper<EggsDetail> entityWrapper5 = new EntityWrapper();
@@ -394,6 +396,7 @@ public class EggsServiceImpl implements EggsService {
                 for (EggsDetail eggsDetail : eggsDetailList) {
                     if (eggsDetail.getEggPrizeType() == 1) {
                         num += eggsDetail.getEggPrizeNums();
+                        f = 1;
                     }
                 }
             }
@@ -405,7 +408,9 @@ public class EggsServiceImpl implements EggsService {
 
             //TODO   添加奖项设置
             for(EggsPrizeSetReq eggsPrizeSetReq:eggsModfiyReq.getPrizeSetList()){
-
+                if (eggsPrizeSetReq.getEggPrizeType() == 1) {
+                    fenbi += eggsPrizeSetReq.getEggPrizeNums();
+                }
                 EggsDetail eggsDetail = new EggsDetail();
                 eggsDetail.setEggId(eggsModfiyReq.getId());
                 eggsDetail.setEggPrizeType(eggsPrizeSetReq.getEggPrizeType());
@@ -419,23 +424,45 @@ public class EggsServiceImpl implements EggsService {
             }
         }
 
+        if(fenbi > 0){//冻结粉币
+            if( f > 0){
+                if ((fenbi - num) <= (0 - num)) {
+                    throw new EggsException(ResponseEnums.EGGS_HAS9);
+                }
+                // 判断账户中的粉币是否足够
+                if (busUser.getFansCurrency().doubleValue() < (fenbi - num)) {
+                    throw new EggsException(ResponseEnums.EGGS_HAS7);
+                }
+                UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
+                updateFenbiReduceReq.setBusId(busUser.getId());
+                updateFenbiReduceReq.setFkId(eggsMain.getId());
+                updateFenbiReduceReq.setFreType(13);
+                updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi - num));
+                AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
+                if (axisResult.getCode() != 0) {
+                    throw new EggsException(ResponseEnums.EGGS_HAS8);
+                }
+            }else {
+                // 判断账户中的粉币是否足够
+                if(busUser.getFansCurrency().doubleValue() < fenbi.doubleValue()){
+                    throw new EggsException(ResponseEnums.EGGS_HAS7);
+                }
+                //构建冻结信息
+                FenbiFlowRecord ffr=CommonUtil.bulidFenFlow(busUser.getId(), fenbi, eggsMain.getId(), 13, 1, "砸金蛋活动支出", 0);
+                // 保存冻结信息
+                if(ffr!=null){
+                    FenbiFlowRecordReq fenbiFlowRecordReq = new FenbiFlowRecordReq();
+                    BeanUtils.copyProperties(ffr,fenbiFlowRecordReq);
+                    AxisResult axisResult = FenbiflowServer.saveFenbiFlowRecord(fenbiFlowRecordReq);
+                    if(axisResult.getCode() != 0){
+                        throw new EggsException(ResponseEnums.EGGS_HAS8);
+                    }
+                }
+            }
+        }
+
         if(fenbi > 0) {//冻结粉币
-            if ((fenbi - num) <= (0 - num)) {
-                throw new EggsException(ResponseEnums.EGGS_HAS9);
-            }
-            // 判断账户中的粉币是否足够
-            if (busUser.getFansCurrency().doubleValue() < (fenbi - num)) {
-                throw new EggsException(ResponseEnums.EGGS_HAS7);
-            }
-            UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
-            updateFenbiReduceReq.setBusId(busUser.getId());
-            updateFenbiReduceReq.setFkId(eggsMain.getId());
-            updateFenbiReduceReq.setFreType(13);
-            updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi - num));
-            AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
-            if (axisResult.getCode() != 0) {
-                throw new EggsException(ResponseEnums.EGGS_HAS8);
-            }
+
         }
     }
 

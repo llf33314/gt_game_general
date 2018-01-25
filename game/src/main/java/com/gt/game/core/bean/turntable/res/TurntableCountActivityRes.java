@@ -7,8 +7,8 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * Created by psr on 2017/9/20 0020.
  */
-@ApiModel(value = "砸金蛋活动总数返回类")
-public class ScratchCountActivityRes {
+@ApiModel(value = "大转盘活动总数返回类")
+public class TurntableCountActivityRes {
 
     @ApiModelProperty(value = "活动总数")
     private Integer count1;

@@ -6,7 +6,9 @@ import com.gt.api.bean.session.WxPublicUsers;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.core.bean.tree.req.*;
 import com.gt.game.core.bean.tree.res.*;
-import com.gt.game.core.bean.turntable.req.TurntableListReq;
+import com.gt.game.core.bean.turntable.req.*;
+import com.gt.game.core.bean.turntable.res.TurntableCountActivityRes;
+import com.gt.game.core.bean.turntable.res.TurntableGetActivityRes;
 import com.gt.game.core.bean.turntable.res.TurntableListRes;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
@@ -27,11 +29,11 @@ public interface TurntableService {
 
     /**
      * 获取手机端链接
-     * @param busUser
+     * @param loginPbUser
      * @param mobileUrlReq
      * @return
      */
-    MobileUrlRes getMobileUrl(BusUser busUser, MobileUrlReq mobileUrlReq);
+    MobileUrlRes getMobileUrl( WxPublicUsers loginPbUser, MobileUrlReq mobileUrlReq);
 
     /**
      * 分页获取大转盘活动列表
@@ -40,4 +42,42 @@ public interface TurntableService {
      * @return
      */
     ResponseDTO<List<TurntableListRes>> getTurntableList(WxPublicUsers loginPbUser, TurntableListReq turntableListReq);
+
+    /**
+     * 统计大转盘活动总数
+     * @param loginPbUser
+     * @param turntableCountActivityReq
+     * @return
+     */
+    TurntableCountActivityRes countTurntable(WxPublicUsers loginPbUser, TurntableCountActivityReq turntableCountActivityReq);
+
+    /**
+     * 新增大转盘活动
+     * @param loginPbUser
+     * @param turntableAddReq
+     */
+    void addScratch( BusUser busUser,WxPublicUsers loginPbUser, TurntableAddReq turntableAddReq);
+
+    /**
+     * 通过活动id查询大转盘活动
+     * @param busUser
+     * @param turntableGetActivityReq
+     * @return
+     */
+    TurntableGetActivityRes getActivityById(BusUser busUser, TurntableGetActivityReq turntableGetActivityReq);
+
+    /**
+     * 编辑大转盘活动设置
+     * @param busUser
+     * @param turntableModfiyReq
+     */
+    void modfiyTurntable(BusUser busUser, TurntableModfiyReq turntableModfiyReq);
+
+    /**
+     * 大转盘活动暂停/开始活动
+     * @param busUser
+     * @param turntableStopIdReq
+     * @return
+     */
+    ResponseDTO stopTurntable(WxPublicUsers busUser, TurntableStopIdReq turntableStopIdReq);
 }

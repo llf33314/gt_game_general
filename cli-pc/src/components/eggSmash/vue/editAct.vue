@@ -284,15 +284,12 @@ export default {
       this.assignObj = scope;
     },
     getFansData(e) {
-      console.log("获取子组件信息", e);
       if (e.length) {
         let nickname = [];
         e.forEach((item, index, arr) => {
           nickname.push(item.nickname) 
         });
-        console.log(nickname.join(","))
         this.assignObj.nickname = nickname.join(",")
-        console.log(this.assignObj)
       this.$set(this.ruleForm4, this.assignObj.$index, this.assignObj)
       }
       

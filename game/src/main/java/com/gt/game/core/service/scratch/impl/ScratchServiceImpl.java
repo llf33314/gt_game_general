@@ -20,38 +20,16 @@ import com.gt.game.common.config.ApplyProperties;
 import com.gt.game.common.dto.PageDTO;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.common.enums.ResponseEnums;
-import com.gt.game.core.bean.eggs.req.EggsPrizeSetReq;
-import com.gt.game.core.bean.eggs.res.EggsCountActivityRes;
-import com.gt.game.core.bean.eggs.res.EggsGetWinningRes;
-import com.gt.game.core.bean.eggs.res.EggsListRes;
-import com.gt.game.core.bean.eggs.res.EggsPrizeTypeListRes;
-import com.gt.game.core.bean.qixi.req.*;
-import com.gt.game.core.bean.qixi.res.*;
 import com.gt.game.core.bean.scratch.req.*;
 import com.gt.game.core.bean.scratch.res.*;
-import com.gt.game.core.bean.turntable.req.ScratchStartReq;
-import com.gt.game.core.bean.turntable.req.ScratchStopReq;
+import com.gt.game.core.bean.turntable.req.TurntableStopIdReq;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
-import com.gt.game.core.dao.qixi.QixiCashPrizeApplyDAO;
-import com.gt.game.core.dao.qixi.QixiMainDAO;
-import com.gt.game.core.dao.scratch.ScratchMainDAO;
 import com.gt.game.core.dao.scratch.ScratchWinningDAO;
-import com.gt.game.core.entity.dragonboat.*;
-import com.gt.game.core.entity.eggs.EggsDetail;
-import com.gt.game.core.entity.eggs.EggsMain;
-import com.gt.game.core.entity.eggs.EggsWinning;
-import com.gt.game.core.entity.luck.LuckMain;
-import com.gt.game.core.entity.qixi.*;
 import com.gt.game.core.entity.scratch.ScratchDetail;
 import com.gt.game.core.entity.scratch.ScratchMain;
 import com.gt.game.core.entity.scratch.ScratchWinning;
-import com.gt.game.core.exception.dragonboat.DragonboatException;
-import com.gt.game.core.exception.eggs.EggsException;
-import com.gt.game.core.exception.luck.LuckException;
-import com.gt.game.core.exception.qixi.QixiException;
 import com.gt.game.core.exception.scratch.ScratchException;
-import com.gt.game.core.service.qixi.*;
 import com.gt.game.core.service.scratch.ScratchDetailService;
 import com.gt.game.core.service.scratch.ScratchMainService;
 import com.gt.game.core.service.scratch.ScratchService;
@@ -65,9 +43,7 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -420,6 +396,7 @@ public class ScratchServiceImpl implements ScratchService {
 
         Double fenbi = 0.0;
         Double num   = 0.0;
+        int f = 0;
         if(scratchModfiyReq.getPrizeSetList().size()>0){
 
             EntityWrapper<ScratchDetail> entityWrapper5 = new EntityWrapper();
@@ -429,6 +406,7 @@ public class ScratchServiceImpl implements ScratchService {
                 for (ScratchDetail scratchDetail : scratchDetailList) {
                     if (scratchDetail.getScrPrizeType() == 1) {
                         num += scratchDetail.getScrPrizeNums();
+                        f = 1;
                     }
                 }
             }
@@ -443,7 +421,9 @@ public class ScratchServiceImpl implements ScratchService {
             //TODO   添加奖项设置
 
             for(ScratchPrizeSetReq scratchPrizeSetReq:scratchModfiyReq.getPrizeSetList()){
-
+                if (scratchPrizeSetReq.getScrPrizeType() == 1) {
+                    fenbi += scratchPrizeSetReq.getScrPrizeNums();
+                }
                 ScratchDetail scratchDetail = new ScratchDetail();
                 scratchDetail.setScrId(scratchMain.getId());
                 scratchDetail.setScrPrizeType(scratchPrizeSetReq.getScrPrizeType());
@@ -457,22 +437,40 @@ public class ScratchServiceImpl implements ScratchService {
             }
         }
 
-        if(fenbi > 0) {//冻结粉币
-            if ((fenbi - num) <= (0 - num)) {
-                throw new ScratchException(ResponseEnums.SCRATCH_HAS9);
-            }
-            // 判断账户中的粉币是否足够
-            if (busUser.getFansCurrency().doubleValue() < (fenbi - num)) {
-                throw new ScratchException(ResponseEnums.SCRATCH_HAS7);
-            }
-            UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
-            updateFenbiReduceReq.setBusId(busUser.getId());
-            updateFenbiReduceReq.setFkId(scratchMain.getId());
-            updateFenbiReduceReq.setFreType(3);
-            updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi - num));
-            AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
-            if (axisResult.getCode() != 0) {
-                throw new ScratchException(ResponseEnums.SCRATCH_HAS8);
+        if(fenbi > 0){//冻结粉币
+            if( f > 0){
+                if ((fenbi - num) <= (0 - num)) {
+                    throw new ScratchException(ResponseEnums.SCRATCH_HAS9);
+                }
+                // 判断账户中的粉币是否足够
+                if (busUser.getFansCurrency().doubleValue() < (fenbi - num)) {
+                    throw new ScratchException(ResponseEnums.SCRATCH_HAS7);
+                }
+                UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
+                updateFenbiReduceReq.setBusId(busUser.getId());
+                updateFenbiReduceReq.setFkId(scratchMain.getId());
+                updateFenbiReduceReq.setFreType(3);
+                updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi - num));
+                AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
+                if (axisResult.getCode() != 0) {
+                    throw new ScratchException(ResponseEnums.SCRATCH_HAS8);
+                }
+            }else {
+                // 判断账户中的粉币是否足够
+                if(busUser.getFansCurrency().doubleValue() < fenbi.doubleValue()){
+                    throw new ScratchException(ResponseEnums.SCRATCH_HAS7);
+                }
+                //构建冻结信息
+                FenbiFlowRecord ffr=CommonUtil.bulidFenFlow(busUser.getId(), fenbi, scratchMain.getId(), 3, 1, "刮刮乐活动支出", 0);
+                // 保存冻结信息
+                if(ffr!=null){
+                    FenbiFlowRecordReq fenbiFlowRecordReq = new FenbiFlowRecordReq();
+                    BeanUtils.copyProperties(ffr,fenbiFlowRecordReq);
+                    AxisResult axisResult = FenbiflowServer.saveFenbiFlowRecord(fenbiFlowRecordReq);
+                    if(axisResult.getCode() != 0){
+                        throw new ScratchException(ResponseEnums.SCRATCH_HAS8);
+                    }
+                }
             }
         }
     }
@@ -515,7 +513,7 @@ public class ScratchServiceImpl implements ScratchService {
         ScratchMain scratchMain = scratchMainService.selectById(scratchDelReq.getId());
         if(CommonUtil.isNotEmpty(scratchMain)) {
             if (scratchMain.getScrBeginTime().getTime() < new Date().getTime() && scratchMain.getScrEndTime().getTime() > new Date().getTime()) {
-                throw new ScratchException(ResponseEnums.LANTERN_HAS11);
+                throw new ScratchException(ResponseEnums.SCRATCH_HAS11);
             }
 
             List<ScratchWinning> scratchWinningList = scratchWinningService.selectList(

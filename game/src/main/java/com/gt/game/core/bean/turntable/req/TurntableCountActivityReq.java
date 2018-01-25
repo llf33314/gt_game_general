@@ -6,8 +6,8 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * Created by psr on 2017/9/21 0021.
  */
-@ApiModel(value = "获取刮刮乐活动总数请求类")
-public class ScratchCountActivityReq {
+@ApiModel(value = "获取大转盘活动总数请求类")
+public class TurntableCountActivityReq {
 
     @ApiModelProperty("活动名称")
     private  String name;

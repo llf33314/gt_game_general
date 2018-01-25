@@ -54,7 +54,7 @@ public interface CountmoneyService {
      * @param loginPbUser
      * @param countmoneyAddReq
      */
-    void addCountmoney(WxPublicUsers loginPbUser, CountmoneyAddReq countmoneyAddReq);
+    void addCountmoney(BusUser busUser,WxPublicUsers loginPbUser, CountmoneyAddReq countmoneyAddReq);
 
     /**
      * 通过活动id查询疯狂数钱活动
@@ -74,9 +74,8 @@ public interface CountmoneyService {
     /**
      * 删除疯狂数钱活动
      * @param busUser
-     * @param lanternDelReq
      */
-    void delCountmoney(BusUser busUser, LanternDelReq lanternDelReq);
+    void delCountmoney(BusUser busUser, CountmoneyDelReq countmoneyDelReq);
 
     /**
      * 分页获取分页获取中奖记录列表

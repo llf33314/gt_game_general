@@ -133,7 +133,8 @@ public class CountmoneyController extends BaseController {
         try {
             logger.debug(countmoneyAddReq.toString());
             WxPublicUsers loginPbUser = CommonUtil.getLoginPbUser(request);
-            countmoneyService.addCountmoney(loginPbUser, countmoneyAddReq);
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            countmoneyService.addCountmoney(busUser,loginPbUser, countmoneyAddReq);
             return ResponseDTO.createBySuccessMessage("新增疯狂数钱活动成功");
         } catch (CountmoneyException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
@@ -198,11 +199,11 @@ public class CountmoneyController extends BaseController {
     @ApiOperation(value = "删除疯狂数钱活动", notes = "删除疯狂数钱活动")
     @RequestMapping(value = "/delCountmoney", method = RequestMethod.POST)
     protected ResponseDTO delCountmoney(
-            @RequestBody @ApiParam("请求参数") LanternDelReq lanternDelReq,
+            @RequestBody @ApiParam("请求参数") CountmoneyDelReq countmoneyDelReq,
             HttpServletRequest request) {
         try {
             BusUser busUser = CommonUtil.getLoginUser(request);
-            countmoneyService.delCountmoney(busUser, lanternDelReq);
+            countmoneyService.delCountmoney(busUser, countmoneyDelReq);
             return ResponseDTO.createBySuccessMessage("删除疯狂数钱活动成功");
         } catch (CountmoneyException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
