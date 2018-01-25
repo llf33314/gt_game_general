@@ -6,7 +6,7 @@ export const getShortUrl = params => { return axios.get(`${window.BASEDOMAIN}/ap
 export const getMobileUrl   = params => { return axios.post(`${base}/getMobileUrl`, params).then(res => res.data) }
 
 /*获取奖品类型*/
-export const getPrizeType     = params => { return axios.post(`${base}/getLuckPrizeType`, params).then(res => res.data) }
+export const getPrizeType    = params => { return axios.post(`${window.BASEDOMAIN}/app/prize/getPrizeType`, params).then(res => res.data) }
 /*指定中奖人*/
 export const getMembers     = params => { return axios.post(`${window.BASEDOMAIN}/app/member/getMemberList`, params).then(res => res.data) }
 

@@ -377,6 +377,9 @@ export default {
         }else if (this.ruleForm4[i].name0==4&&this.ruleForm4[i].name5.length==0) { 
             this.$message.error("当奖品为实物时，请上传实物图片~");
             return false 
+        }else if(this.ruleForm4[i].name0==4&&this.ruleForm4[i].name5.length>3){
+                this.$message.error("实物图片最多上传3张~");
+                return false 
         }
       }
        this.submit();
@@ -499,12 +502,15 @@ export default {
                 for (var i = 0; i < data.data.newYearAdReqs.length; i++) {
                     var newabc1 = {
                         url  : data.data.newYearAdReqs[i].hrefUrl,  
-                        img  : window.IMAGEURL+data.data.newYearAdReqs[i].url,  
+                        img  : data.data.newYearAdReqs[i].url,  
                     };
+                    if(data.data.newYearAdReqs[i].url){
+                        newabc1.img=window.IMAGEURL+data.data.newYearAdReqs[i].url
+                    }
                     newadv.push(newabc1);  
                 } 
-            }
-            this.ruleForm1.links= newadv 
+                this.ruleForm1.links= newadv 
+            } 
             //规则设置 
             if(data.data.followQrCode){
                 this.ruleForm2.code=window.IMAGEURL+data.data.followQrCode

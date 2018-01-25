@@ -338,6 +338,9 @@ export default {
         }else if (this.ruleForm4[i].name0==4&&this.ruleForm4[i].name5.length==0) { 
             this.$message.error("当奖品为实物时，请上传实物图片~");
             return false 
+        }else if(this.ruleForm4[i].name0==4&&this.ruleForm4[i].name5.length>5){
+                this.$message.error("实物图片最多上传5张~");
+                return false 
         }
       }
        this.submit();
@@ -482,21 +485,8 @@ export default {
                     name4  : String(data.data.goldRushPrizeReqs[i].probabiliy), 
                     // probabiliy :this.ruleForm4[i].name4,  //概率 
                     name5  :[] 
-                };
-                if (newabc1.name0 == 1) {
-                    newabc1.name0  = "粉币";
-                }else if(newabc1.name0  == 2){
-                    newabc1.name0  = "手机流量"; 
-                }else if(newabc1.name0  == 3){
-                    newabc1.name0  = "手机话费";
-                }else if(newabc1.name0  == 4){
-                    newabc1.name0  = "实体物品";
-                }  else if(newabc1.name0  == 6){
-                    newabc1.name0  = "积分";
-                } else if(newabc1.name0  == 7){
-                    newabc1.name0  = "优惠券";
-                } 
-                if(newabc1.name0=="实体物品"){
+                }; 
+                if(newabc1.name0==4){
                     for(var j = 0; j < data.data.goldRushPrizeReqs[i].goldRushPrizeImgReqs.length; j++){
                         var imgarr={
                              url:window.IMAGEURL+data.data.goldRushPrizeReqs[i].goldRushPrizeImgReqs[j].imgUrl
