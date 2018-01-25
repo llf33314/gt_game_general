@@ -139,7 +139,7 @@ public class LuckServiceImpl implements LuckService {
                 LuckListRes.setStatus(3);
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",LuckListResList,pageDTO);
     }
     /**
@@ -177,7 +177,7 @@ public class LuckServiceImpl implements LuckService {
     @Override
    @Transactional(rollbackFor = Exception.class)
     public ResponseDTO saveLuck(WxPublicUsers busUser, BusUser user, LuckReq luckReq) {
-        if(CommonUtil.isNotEmpty(luckReq.getLuckBeginTime())){
+        if(CommonUtil.isEmpty(luckReq.getLuckBeginTime())){
             throw new LuckException(ResponseEnums.LUCK_HAS1);
         }
         if(CommonUtil.isEmpty(luckReq.getLuckDetailReqs())){
@@ -235,6 +235,9 @@ public class LuckServiceImpl implements LuckService {
             throw new LuckException(ResponseEnums.LUCK_HAS5);
         }
         luckDetailService.insertOrUpdateAllColumnBatch(luckDetails);
+        if(fenbi == 0.0 && num > 0.0){
+            throw new LuckException(ResponseEnums.COMMON_HAS18);
+        }
         if(fenbi > 0){//冻结粉币
             if( f > 0){
                 if((fenbi-num) <= (0-num)){
@@ -287,7 +290,7 @@ public class LuckServiceImpl implements LuckService {
             if(luckMain.getLuckBeginTime().getTime() < date.getTime() && luckMain.getLuckEndTime().getTime() > date.getTime()){
                 throw new LuckException(ResponseEnums.LOVEARROW_HAS10);
             }
-            if(luckMain.getLuckBeginTime().getTime() > date.getTime() && DateTimeKit.addDate(luckMain.getLuckEndTime(),luckMain.getLuckCashDay()).getTime() > date.getTime()){
+            if(luckMain.getLuckBeginTime().getTime() < date.getTime() && DateTimeKit.addDate(luckMain.getLuckEndTime(),luckMain.getLuckCashDay()).getTime() > date.getTime()){
                 throw new LuckException(ResponseEnums.LOVEARROW_HAS12);
             }
             List<LuckWinning> luckWinnings = luckWinningService.selectList(
@@ -376,7 +379,7 @@ public class LuckServiceImpl implements LuckService {
                 }
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",luckWinningListResList,pageDTO);
     }
     /**
@@ -487,7 +490,7 @@ public class LuckServiceImpl implements LuckService {
             if(luckMain.getLuckBeginTime().getTime() > date.getTime()){
                 throw new LuckException(ResponseEnums.LUCK_HAS6);
             }
-            if(luckMain.getLuckEndTime().getTime() > date.getTime()){
+            if(luckMain.getLuckEndTime().getTime() < date.getTime()){
                 throw new LuckException(ResponseEnums.LUCK_HAS7);
             }
             luckMain.setLuckStatus(luckStopIdReq.getLuckStatus());

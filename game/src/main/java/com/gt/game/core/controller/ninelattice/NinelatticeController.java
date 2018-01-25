@@ -5,27 +5,13 @@ package com.gt.game.core.controller.ninelattice;
 import com.gt.api.bean.session.BusUser;
 import com.gt.game.common.base.BaseController;
 import com.gt.game.common.dto.ResponseDTO;
-import com.gt.game.core.bean.dragonboat.req.DragonboatDelReq;
-import com.gt.game.core.bean.lantern.req.*;
-import com.gt.game.core.bean.lantern.req.LanternAuthorityListReq;
-import com.gt.game.core.bean.lantern.req.LanternDelAuthorityReq;
-import com.gt.game.core.bean.lantern.req.LanternDelWinningReq;
-import com.gt.game.core.bean.lantern.req.LanternEditApplyReq;
-import com.gt.game.core.bean.lantern.req.LanternGetWinningReq;
-import com.gt.game.core.bean.lantern.req.LanternModfiyAwardsReq;
-import com.gt.game.core.bean.lantern.req.LanternModfiyExpiryReq;
-import com.gt.game.core.bean.lantern.req.LanternModfiyRuleReq;
-import com.gt.game.core.bean.lantern.res.*;
 import com.gt.game.core.bean.lantern.res.LanternPrizeTypeListRes;
 import com.gt.game.core.bean.ninelattice.req.*;
 import com.gt.game.core.bean.ninelattice.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 import com.gt.game.core.exception.demolition.DemolitionException;
-import com.gt.game.core.exception.dragonboat.DragonboatException;
-import com.gt.game.core.exception.lantern.LanternException;
 import com.gt.game.core.exception.ninelattice.NinelatticeException;
-import com.gt.game.core.service.lantern.LanternService;
 import com.gt.game.core.service.ninelattice.NinelatticeService;
 import com.gt.game.core.util.CommonUtil;
 import io.swagger.annotations.*;
@@ -80,6 +66,26 @@ public class NinelatticeController extends BaseController {
         }
     }
 
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+            @ApiResponse(code = 1, message = "响应对象", response = MobileUrlRes.class),
+    })
+    @ApiOperation(value = "获取新增授权链接", notes = "获取新增授权链接")
+    @RequestMapping(value = "/getAuthorityUrl", method = RequestMethod.POST)
+    protected ResponseDTO getAuthorityUrl(@RequestBody @ApiParam(value = "请求参数") MobileUrlReq mobileUrlReq, HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO<MobileUrlRes> mobileUrlRes = ninelatticeService.getAuthorityUrl(busUser, mobileUrlReq);
+            return mobileUrlRes;
+        } catch (NinelatticeException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+
     // TODO  分页获取幸运九宫格活动列表
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
@@ -96,10 +102,10 @@ public class NinelatticeController extends BaseController {
             BusUser busUser = CommonUtil.getLoginUser(request);
             ResponseDTO<List<NinelatticeListRes>> responseDTO = ninelatticeService.getNinelatticeList(busUser, ninelatticeListReq);
             return responseDTO;
-        } catch (LanternException e){
+        } catch (NinelatticeException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
-        } catch (NinelatticeException e){
+        } catch (Exception e){
             e.printStackTrace();
             return ResponseDTO.createByError();
         }
@@ -178,89 +184,20 @@ public class NinelatticeController extends BaseController {
         }
     }
 
-    // TODO  编辑幸运九宫格活动基础设置
+    // TODO  编辑幸运九宫格活动设置
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
     })
-    @ApiOperation(value = "编辑幸运九宫格活动基础设置", notes = "编辑幸运九宫格活动基础设置")
-    @RequestMapping(value = "/modfiyBasicsNinelattice", method = RequestMethod.POST)
-    protected ResponseDTO modfiyBasicsNinelattice(@RequestBody @ApiParam(value = "请求对象") NinelatticeModfiyBasicsReq ninelatticeModfiyBasicsReq, BindingResult bindingResult,
+    @ApiOperation(value = "编辑幸运九宫格活动设置", notes = "编辑幸运九宫格活动设置")
+    @RequestMapping(value = "/modfiyNinelattice", method = RequestMethod.POST)
+    protected ResponseDTO modfiyNinelattice(@RequestBody @ApiParam(value = "请求对象") NinelatticeModfiyReq ninelatticeModfiyReq, BindingResult bindingResult,
                                                   HttpServletRequest request) {
         InvalidParameter(bindingResult);
         try {
-            logger.debug(ninelatticeModfiyBasicsReq.toString());
+            logger.debug(ninelatticeModfiyReq.toString());
             BusUser busUser = CommonUtil.getLoginUser(request);
-            ninelatticeService.modfiyBasicsNinelattice(busUser,ninelatticeModfiyBasicsReq);
-            return ResponseDTO.createBySuccessMessage("编辑幸运九宫格活动基础设置成功");
-        } catch (NinelatticeException e){
-            logger.error(e.getMessage(), e.fillInStackTrace());
-            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
-        } catch (Exception e){
-            e.printStackTrace();
-            return ResponseDTO.createByError();
-        }
-    }
-
-    // TODO  编辑幸运九宫格活动规则设置
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-    })
-    @ApiOperation(value = "编辑幸运九宫格活动规则设置", notes = "编辑幸运九宫格活动规则设置")
-    @RequestMapping(value = "/modfiyRuleNinelattice", method = RequestMethod.POST)
-    protected ResponseDTO modfiyRuleNinelattice(@RequestBody @ApiParam(value = "请求对象") NinelatticeModfiyRuleReq ninelatticeModfiyRuleReq, BindingResult bindingResult,
-                                            HttpServletRequest request) {
-        InvalidParameter(bindingResult);
-        try {
-            logger.debug(ninelatticeModfiyRuleReq.toString());
-            BusUser busUser = CommonUtil.getLoginUser(request);
-            ninelatticeService.modfiyRuleNinelattice(busUser, ninelatticeModfiyRuleReq);
-            return ResponseDTO.createBySuccessMessage("编辑幸运九宫格活动规则设置成功");
-        } catch (NinelatticeException e){
-            logger.error(e.getMessage(), e.fillInStackTrace());
-            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
-        } catch (Exception e){
-            e.printStackTrace();
-            return ResponseDTO.createByError();
-        }
-    }
-
-    // TODO  编辑幸运九宫格活动兑奖设置
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-    })
-    @ApiOperation(value = "编辑幸运九宫格活动兑奖设置", notes = "编辑幸运九宫格活动兑奖设置")
-    @RequestMapping(value = "/modfiyExpiryNinelattice", method = RequestMethod.POST)
-    protected ResponseDTO modfiyExpiryNinelattice(@RequestBody @ApiParam(value = "请求对象") NinelatticeModfiyExpiryReq ninelatticeModfiyExpiryReq, BindingResult bindingResult,
-                                              HttpServletRequest request) {
-        InvalidParameter(bindingResult);
-        try {
-            logger.debug(ninelatticeModfiyExpiryReq.toString());
-            BusUser busUser = CommonUtil.getLoginUser(request);
-            ninelatticeService.modfiyExpiryNinelattice(busUser, ninelatticeModfiyExpiryReq);
-            return ResponseDTO.createBySuccessMessage("编辑幸运九宫格活动兑奖设置成功");
-        } catch (NinelatticeException e){
-            logger.error(e.getMessage(), e.fillInStackTrace());
-            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
-        } catch (Exception e){
-            e.printStackTrace();
-            return ResponseDTO.createByError();
-        }
-    }
-
-    // TODO  编辑幸运九宫格奖项设置
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-    })
-    @ApiOperation(value = "编辑幸运九宫格活动奖项设置", notes = "编辑幸运九宫格奖项设置")
-    @RequestMapping(value = "/modfiyAwardsNinelattice", method = RequestMethod.POST)
-    protected ResponseDTO modfiyAwardsNinelattice(@RequestBody @ApiParam(value = "请求对象") NinelatticeModfiyAwardsReq ninelatticeModfiyAwardsReq, BindingResult bindingResult,
-                                              HttpServletRequest request) {
-        InvalidParameter(bindingResult);
-        try {
-            logger.debug(ninelatticeModfiyAwardsReq.toString());
-            BusUser busUser = CommonUtil.getLoginUser(request);
-            ninelatticeService.modfiyAwardsNinelattice(busUser, ninelatticeModfiyAwardsReq);
-            return ResponseDTO.createBySuccessMessage("编辑幸运九宫格活动奖项设置成功");
+            ninelatticeService.modfiyNinelattice(busUser,ninelatticeModfiyReq);
+            return ResponseDTO.createBySuccessMessage("编辑幸运九宫格活动设置成功");
         } catch (NinelatticeException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());

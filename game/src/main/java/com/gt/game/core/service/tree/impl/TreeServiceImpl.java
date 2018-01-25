@@ -8,26 +8,31 @@ import com.gt.axis.bean.member.member.MemberReq;
 import com.gt.axis.bean.member.member.MemberRes;
 import com.gt.axis.bean.wxmp.dict.DictApiReq;
 import com.gt.axis.bean.wxmp.dict.DictApiRes;
+import com.gt.axis.bean.wxmp.fenbiflow.FenbiFlowRecord;
+import com.gt.axis.bean.wxmp.fenbiflow.FenbiFlowRecordReq;
+import com.gt.axis.bean.wxmp.fenbiflow.FenbiSurplus;
+import com.gt.axis.bean.wxmp.fenbiflow.UpdateFenbiReduceReq;
 import com.gt.axis.content.AxisResult;
 import com.gt.axis.server.member.MemberServer;
 import com.gt.axis.server.wxmp.DictServer;
+import com.gt.axis.server.wxmp.FenbiflowServer;
+import com.gt.game.common.config.ApplyProperties;
 import com.gt.game.common.dto.PageDTO;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.common.enums.ResponseEnums;
-import com.gt.game.core.bean.ninelattice.req.NinelatticePrizeSetReq;
-import com.gt.game.core.bean.ninelattice.res.NinelatticeAuthorityListRes;
-import com.gt.game.core.bean.ninelattice.res.NinelatticeGetWinningRes;
-import com.gt.game.core.bean.ninelattice.res.NinelatticePrizeTypeListRes;
 import com.gt.game.core.bean.tree.req.*;
 import com.gt.game.core.bean.tree.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 import com.gt.game.core.dao.tree.TreeWinningDAO;
-import com.gt.game.core.entity.ninelattice.*;
+import com.gt.game.core.entity.eggs.EggsDetail;
+import com.gt.game.core.entity.eggs.EggsMain;
+import com.gt.game.core.entity.eggs.EggsWinning;
 import com.gt.game.core.entity.tree.TreeDetail;
 import com.gt.game.core.entity.tree.TreeMain;
 import com.gt.game.core.entity.tree.TreeWinning;
-import com.gt.game.core.exception.ninelattice.NinelatticeException;
+import com.gt.game.core.exception.dragonboat.DragonboatException;
+import com.gt.game.core.exception.eggs.EggsException;
 import com.gt.game.core.exception.tree.TreeException;
 import com.gt.game.core.service.tree.TreeDetailService;
 import com.gt.game.core.service.tree.TreeMainService;
@@ -39,6 +44,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
@@ -68,16 +74,21 @@ public class TreeServiceImpl implements TreeService {
     @Autowired
     TreeWinningDAO treeWinningDAO;
 
+    @Autowired
+    ApplyProperties applyProperties;
+
     /**
      * 获取手机端链接
      *
-     * @param busUser
+     * @param loginPbUser
      * @param mobileUrlReq
      * @return
      */
     @Override
-    public MobileUrlRes getMobileUrl(BusUser busUser, MobileUrlReq mobileUrlReq) {
-        return null;
+    public MobileUrlRes getMobileUrl(WxPublicUsers loginPbUser , MobileUrlReq mobileUrlReq) {
+
+        String url = applyProperties.getMobileBaseUrl() + "tree/"+loginPbUser.getId()+"/"+ mobileUrlReq.getMainId() + "/-101"+"/79B4DE7C/userGrant.do";
+        return new MobileUrlRes(url);
     }
 
     /**
@@ -202,6 +213,8 @@ public class TreeServiceImpl implements TreeService {
         }
         treeMain.setTreeDescribe(treeAddReq.getTreeDescribe());
         treeMain.setTreeBeforeTxt(treeAddReq.getTreeBeforeTxt());
+        treeMain.setTreeBgmName(treeAddReq.getTreeBgmName());
+        treeMain.setTreeBgm(treeAddReq.getTreeBgm());
         //TODO  规则设置
         treeMain.setTreeCountOfAll(treeAddReq.getTreeCountOfAll());
         treeMain.setTreeCountOfDay(treeAddReq.getTreeCountOfDay());
@@ -214,8 +227,11 @@ public class TreeServiceImpl implements TreeService {
         treeMainService.insert(treeMain);
 
         //TODO   奖项设置
+        Double fenbi = 0.0;
         for(TreePrizeSetReq treePrizeSetReq:treeAddReq.getPrizeSetList()){
-
+            if (treePrizeSetReq.getType() == 1) {
+                fenbi += treePrizeSetReq.getNum();
+            }
             TreeDetail treeDetail = new TreeDetail();
             treeDetail.setTreeId(treeMain.getId());
             treeDetail.setTreePrizeType(treePrizeSetReq.getType());
@@ -226,6 +242,24 @@ public class TreeServiceImpl implements TreeService {
             treeDetail.setNickname(treePrizeSetReq.getNickName());
 
             treeDetailService.insert(treeDetail);
+        }
+
+        if(fenbi > 0){//冻结粉币
+            // 判断账户中的粉币是否足够
+            if(busUser.getFansCurrency().doubleValue() < fenbi.doubleValue()){
+                throw new TreeException(ResponseEnums.TREE_HAS7);
+            }
+            //构建冻结信息
+            FenbiFlowRecord ffr=CommonUtil.bulidFenFlow(busUser.getId(), fenbi, treeMain.getId(), 40, 1, "圣诞大礼包活动支出", 0);
+            // 保存冻结信息
+            if(ffr!=null){
+                FenbiFlowRecordReq fenbiFlowRecordReq = new FenbiFlowRecordReq();
+                BeanUtils.copyProperties(ffr,fenbiFlowRecordReq);
+                AxisResult axisResult = FenbiflowServer.saveFenbiFlowRecord(fenbiFlowRecordReq);
+                if(axisResult.getCode() != 0){
+                    throw new TreeException(ResponseEnums.TREE_HAS8);
+                }
+            }
         }
     }
 
@@ -259,6 +293,8 @@ public class TreeServiceImpl implements TreeService {
         }
         treeGetActivityRes.setTreeDescribe(treeMain.getTreeDescribe());
         treeGetActivityRes.setTreeBeforeTxt(treeMain.getTreeBeforeTxt());
+        treeGetActivityRes.setTreeBgmName(treeMain.getTreeBgmName());
+        treeGetActivityRes.setTreeBgm(treeMain.getTreeBgm());
         //TODO  规则设置
         treeGetActivityRes.setTreeCountOfAll(treeMain.getTreeCountOfAll());
         treeGetActivityRes.setTreeCountOfDay(treeMain.getTreeCountOfDay());
@@ -290,90 +326,85 @@ public class TreeServiceImpl implements TreeService {
     }
 
     /**
-     * 编辑圣诞大礼包活动基础设置
+     * 编辑圣诞大礼包活动设置
      * @param busUser
-     * @param treeModfiyBasicsReq
+     * @param treeModfiyReq
      */
     @Override
-    public void modfiyBasicsTree(BusUser busUser, TreeModfiyBasicsReq treeModfiyBasicsReq) {
+    public void modfiyTree(BusUser busUser, TreeModfiyReq treeModfiyReq) {
 
-        TreeMain treeMain = new TreeMain();
-        treeMain.setId(treeModfiyBasicsReq.getId());
-        treeMain.setTreeName(treeModfiyBasicsReq.getTreeName());
-        treeMain.setTreeBeginTime(treeModfiyBasicsReq.getActivityBeginTime());
-        treeMain.setTreeEndTime(treeModfiyBasicsReq.getActivityEndTime());
-        treeMain.setTreeEggPartaker(treeModfiyBasicsReq.getTreeEggPartaker());
+        TreeMain treeMain = treeMainService.selectById(treeModfiyReq.getId());
+        if(CommonUtil.isEmpty(treeMain)){
+            throw new TreeException(ResponseEnums.TREE_HAS5);
+        }
+        if(treeMain.getTreeBeginTime().getTime() < new Date().getTime()){
+            throw new TreeException(ResponseEnums.TREE_HAS10);
+        }
 
-        if(treeModfiyBasicsReq.getTreeEggPartaker()==2){
-            treeMain.setTreePway(treeModfiyBasicsReq.getTreePway());
-            if(treeModfiyBasicsReq.getTreePway()==2){
-                treeMain.setTreeMan(treeModfiyBasicsReq.getTreeMan());
-            }else if(treeModfiyBasicsReq.getTreePway()==3){
-                treeMain.setTreeKou(treeModfiyBasicsReq.getTreeKou());
-            }else if(treeModfiyBasicsReq.getTreePway()==4){
-                treeMain.setTreeMan(treeModfiyBasicsReq.getTreeMan());
-                treeMain.setTreeKou(treeModfiyBasicsReq.getTreeKou());
+        // TODO  基础设置
+        treeMain.setTreeName(treeModfiyReq.getTreeName());
+        treeMain.setTreeBeginTime(treeModfiyReq.getActivityBeginTime());
+        treeMain.setTreeEndTime(treeModfiyReq.getActivityEndTime());
+        treeMain.setTreeEggPartaker(treeModfiyReq.getTreeEggPartaker());
+
+        if(treeModfiyReq.getTreeEggPartaker()==2){
+            treeMain.setTreePway(treeModfiyReq.getTreePway());
+            if(treeModfiyReq.getTreePway()==2){
+                treeMain.setTreeMan(treeModfiyReq.getTreeMan());
+            }else if(treeModfiyReq.getTreePway()==3){
+                treeMain.setTreeKou(treeModfiyReq.getTreeKou());
+            }else if(treeModfiyReq.getTreePway()==4){
+                treeMain.setTreeMan(treeModfiyReq.getTreeMan());
+                treeMain.setTreeKou(treeModfiyReq.getTreeKou());
             }
         }
-        treeMain.setTreeDescribe(treeModfiyBasicsReq.getTreeDescribe());
-        treeMain.setTreeBeforeTxt(treeModfiyBasicsReq.getTreeBeforeTxt());
+        treeMain.setTreeDescribe(treeModfiyReq.getTreeDescribe());
+        treeMain.setTreeBeforeTxt(treeModfiyReq.getTreeBeforeTxt());
+        treeMain.setTreeBgmName(treeModfiyReq.getTreeBgmName());
+        treeMain.setTreeBgm(treeModfiyReq.getTreeBgm());
+
+        //TODO 规则设置
+        treeMain.setTreeCountOfAll(treeModfiyReq.getTreeCountOfAll());
+        treeMain.setTreeCountOfDay(treeModfiyReq.getTreeCountOfDay());
+
+        //TODO  兑奖设置
+        treeMain.setTreeCashDay(treeModfiyReq.getTreeCashDay());
+        treeMain.setTreeAddress(treeModfiyReq.getTreeAddress());
+        treeMain.setTreeIsGive(treeModfiyReq.getTreeIsGive());
+        treeMain.setTreeWinningTxt(treeModfiyReq.getTreeWinningTxt());
 
         treeMainService.updateById(treeMain);
-    }
 
-    /**
-     * 编辑圣诞大礼包活动规则设置
-     * @param busUser
-     * @param treeModfiyRuleReq
-     */
-    @Override
-    public void modfiyRuleTree(BusUser busUser, TreeModfiyRuleReq treeModfiyRuleReq) {
+        //TODO 奖项设置
+        Double fenbi = 0.0;
+        Double num   = 0.0;
+        int f = 0;
+        if(treeModfiyReq.getPrizeSetList().size()>0){
 
-        TreeMain treeMain = new TreeMain();
-        treeMain.setId(treeModfiyRuleReq.getId());
-        treeMain.setTreeCountOfAll(treeModfiyRuleReq.getTreeCountOfAll());
-        treeMain.setTreeCountOfDay(treeModfiyRuleReq.getTreeCountOfDay());
+            EntityWrapper<TreeDetail> entityWrapper5 = new EntityWrapper();
+            entityWrapper5.eq("tree_id",treeModfiyReq.getId());
+            List<TreeDetail> treeDetailList = treeDetailService.selectList(entityWrapper5);
+            if(treeDetailList.size() > 0) {
+                for (TreeDetail treeDetail : treeDetailList) {
+                    if (treeDetail.getTreePrizeType()== 1) {
+                        num += treeDetail.getTreePrizeNums();
+                        f = 1;
+                    }
+                }
+            }
 
-        treeMainService.updateById(treeMain);
-    }
-
-    /**
-     * 编辑圣诞大礼包活动兑奖设置
-     * @param busUser
-     * @param treeModfiyExpiryReq
-     */
-    @Override
-    public void modfiyExpiryTree(BusUser busUser, TreeModfiyExpiryReq treeModfiyExpiryReq) {
-
-        TreeMain treeMain = new TreeMain();
-        treeMain.setId(treeModfiyExpiryReq.getId());
-        treeMain.setTreeCashDay(treeModfiyExpiryReq.getTreeCashDay());
-        treeMain.setTreeAddress(treeModfiyExpiryReq.getTreeAddress());
-        treeMain.setTreeIsGive(treeModfiyExpiryReq.getTreeIsGive());
-        treeMain.setTreeWinningTxt(treeModfiyExpiryReq.getTreeWinningTxt());
-
-        treeMainService.updateById(treeMain);
-    }
-
-    /**
-     * 编辑圣诞大礼包奖项设置
-     * @param busUser
-     * @param treeModfiyAwardsReq
-     */
-    @Override
-    public void modfiyAwardsTree(BusUser busUser, TreeModfiyAwardsReq treeModfiyAwardsReq) {
-
-        if(treeModfiyAwardsReq.getPrizeSetList().size()>0){        //TODO  奖品设置
             // TODO  清空奖品设置
             EntityWrapper<TreeDetail> entityWrapper = new EntityWrapper();
-            entityWrapper.eq("tree_id",treeModfiyAwardsReq.getId());
+            entityWrapper.eq("tree_id",treeModfiyReq.getId());
             treeDetailService.delete(entityWrapper);
 
-            //TODO   奖项设置
-            for(TreePrizeSetReq treePrizeSetReq:treeModfiyAwardsReq.getPrizeSetList()){
-
+            //TODO   添加奖项设置
+            for(TreePrizeSetReq treePrizeSetReq:treeModfiyReq.getPrizeSetList()){
+                if (treePrizeSetReq.getType() == 1) {
+                    fenbi += treePrizeSetReq.getNum();
+                }
                 TreeDetail treeDetail = new TreeDetail();
-                treeDetail.setTreeId(treeModfiyAwardsReq.getId());
+                treeDetail.setTreeId(treeModfiyReq.getId());
                 treeDetail.setTreePrizeType(treePrizeSetReq.getType());
                 treeDetail.setTreePrizeLimit(treePrizeSetReq.getPrizeUnit());
                 treeDetail.setTreePrizeName(treePrizeSetReq.getPrizeName());
@@ -384,31 +415,116 @@ public class TreeServiceImpl implements TreeService {
                 treeDetailService.insert(treeDetail);
             }
         }
+
+        if(fenbi > 0){//冻结粉币
+            if( f > 0){
+                if ((fenbi - num) <= (0 - num)) {
+                    throw new TreeException(ResponseEnums.TREE_HAS9);
+                }
+                // 判断账户中的粉币是否足够
+                if (busUser.getFansCurrency().doubleValue() < (fenbi - num)) {
+                    throw new TreeException(ResponseEnums.TREE_HAS7);
+                }
+                UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
+                updateFenbiReduceReq.setBusId(busUser.getId());
+                updateFenbiReduceReq.setFkId(treeMain.getId());
+                updateFenbiReduceReq.setFreType(40);
+                updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi - num));
+                AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
+                if (axisResult.getCode() != 0) {
+                    throw new TreeException(ResponseEnums.TREE_HAS8);
+                }
+            }else {
+                // 判断账户中的粉币是否足够
+                if(busUser.getFansCurrency().doubleValue() < fenbi.doubleValue()){
+                    throw new TreeException(ResponseEnums.TREE_HAS7);
+                }
+                //构建冻结信息
+                FenbiFlowRecord ffr=CommonUtil.bulidFenFlow(busUser.getId(), fenbi, treeMain.getId(), 40, 1, "圣诞大礼包活动支出", 0);
+                // 保存冻结信息
+                if(ffr!=null){
+                    FenbiFlowRecordReq fenbiFlowRecordReq = new FenbiFlowRecordReq();
+                    BeanUtils.copyProperties(ffr,fenbiFlowRecordReq);
+                    AxisResult axisResult = FenbiflowServer.saveFenbiFlowRecord(fenbiFlowRecordReq);
+                    if(axisResult.getCode() != 0){
+                        throw new TreeException(ResponseEnums.TREE_HAS8);
+                    }
+                }
+            }
+        }
     }
 
-
     /**
-     * 批量删除圣诞大礼包活动
+     * 删除圣诞大礼包活动
      * @param busUser
      * @param treeDelReq
      */
     @Override
     public void delTree(BusUser busUser, TreeDelReq treeDelReq) {
 
-        //TODO  批量删除活动
-        treeMainService.deleteBatchIds(treeDelReq.getId());
+        TreeMain treeMain = treeMainService.selectById(treeDelReq.getId());
+        if(CommonUtil.isNotEmpty(treeMain)) {
+            if (treeMain.getTreeBeginTime().getTime() < new Date().getTime() && treeMain.getTreeEndTime().getTime() > new Date().getTime()) {
+                throw new TreeException(ResponseEnums.TREE_HAS11);
+            }
+
+            List<TreeWinning> treeWinningList = treeWinningService.selectList(
+                    new EntityWrapper<TreeWinning>().eq("tree_act_id", treeDelReq.getId()).eq("tree_status", 3));
+            if (treeWinningList.size() > 0) {
+                throw new TreeException(ResponseEnums.TREE_HAS13);
+            }
+        }
+
+        //TODO  删除活动
+        boolean b = treeMainService.deleteById(treeDelReq.getId());
+        if(b==false){
+            throw new TreeException(ResponseEnums.TREE_HAS6);
+        }
+
+        EntityWrapper<TreeDetail> entityWrapper3 = new EntityWrapper<>();
+        entityWrapper3.eq("tree_id",treeDelReq.getId());
+        List<TreeDetail> treeDetailList = treeDetailService.selectList(entityWrapper3);
+
+        boolean ff = false;
+        if(treeDetailList.size() > 0){
+            for(TreeDetail treeDetail : treeDetailList){
+                if(treeDetail.getTreePrizeType() == 1){
+                    ff = true;
+                }
+            }
+        }
+
+        //TODO  删除奖品设置
+        EntityWrapper<TreeDetail> entityWrapper = new EntityWrapper<>();
+        entityWrapper.eq("tree_id",treeDelReq.getId());
+        treeDetailService.delete(entityWrapper);
+
+        //TODO  删除中奖记录
+        EntityWrapper<TreeWinning> entityWrapper2 = new EntityWrapper<>();
+        entityWrapper2.eq("tree_act_id",treeDelReq.getId());
+        treeWinningService.delete(entityWrapper2);
 
 
-        for(Integer treeId:treeDelReq.getId()){
-            //TODO  批量删除奖品设置
-            EntityWrapper<TreeDetail> entityWrapper = new EntityWrapper<>();
-            entityWrapper.eq("tree_id",treeId);
-            treeDetailService.delete(entityWrapper);
-
-            //TODO  批量删除中奖记录
-            EntityWrapper<TreeWinning> entityWrapper2 = new EntityWrapper<>();
-            entityWrapper2.eq("tree_act_id",treeId);
-            treeWinningService.delete(entityWrapper2);
+        //删除冻结信息
+        if(ff){
+            FenbiSurplus fenbiSurplus = new FenbiSurplus();
+            fenbiSurplus.setBusId(busUser.getId());
+            fenbiSurplus.setFkId(treeMain.getId());
+            fenbiSurplus.setFre_type(40);
+            fenbiSurplus.setRec_type(1);
+            AxisResult<FenbiFlowRecord> ffr = FenbiflowServer.getFenbiFlowRecord(fenbiSurplus);
+            if(ffr!=null && ffr.getData() != null && ffr.getData().getRollStatus() == 1){//未回滚
+                // 获取冻结信息中粉币剩余量
+                FenbiSurplus fenbiSurplus1 = new FenbiSurplus();
+                fenbiSurplus1.setBusId(busUser.getId());
+                fenbiSurplus1.setFkId(treeMain.getId());
+                fenbiSurplus1.setRec_type(1);
+                fenbiSurplus1.setFre_type(40);
+                AxisResult axisResult = FenbiflowServer.rollbackFenbiRecord(fenbiSurplus1);
+                if(axisResult.getCode() != 0){
+                    throw new TreeException(ResponseEnums.TREE_HAS14);
+                }
+            }
         }
      }
 
@@ -459,7 +575,7 @@ public class TreeServiceImpl implements TreeService {
                 }
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("分页获取中奖记录列表成功",treeGetWinningResList,pageDTO);
     }
 

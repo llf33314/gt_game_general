@@ -2,6 +2,7 @@ const index = ()=>import( '@/components/gragonBoat/vue/index')
 const prizeRecord = ()=>import( '@/components/gragonBoat/vue/prizeRecord') 
 const cancelOut = ()=>import( '@/components/gragonBoat/vue/cancelOut')
 const addAct = ()=>import( '@/components/gragonBoat/vue/addAct')
+const editAct = ()=>import( '@/components/gragonBoat/vue/editAct')
 export const gragonBoat = [
     {
         path:'/gragonBoat/index',
@@ -17,11 +18,15 @@ export const gragonBoat = [
         path:'/gragonBoat/cancelOut',
         component: cancelOut,
         name:'gragonBoat_cancelOut'
-    }
-    ,
+    },
     {
         path:'/gragonBoat/addAct',
         component: addAct,
         name:'gragonBoat_addAct'
+    },
+    {
+        path:'/gragonBoat/editAct',
+        component: editAct,
+        name:'gragonBoat_editAct'
     }
 ]

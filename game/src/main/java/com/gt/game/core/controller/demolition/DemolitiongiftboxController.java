@@ -14,9 +14,11 @@ import com.gt.game.core.util.CommonUtil;
 import io.swagger.annotations.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.BufferedOutputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
@@ -254,8 +256,9 @@ public class DemolitiongiftboxController  extends BaseController {
     @ApiOperation(value = "保存活动", notes = "保存活动")
     @RequestMapping(value = "/saveDemolition", method = RequestMethod.POST)
     protected ResponseDTO getDemolition(
-            @RequestBody @ApiParam("请求参数") DemolitionSaveReq demolitionSaveReq,
+            @RequestBody @ApiParam("请求参数") @Valid DemolitionSaveReq demolitionSaveReq,BindingResult result ,
             HttpServletRequest request) {
+        InvalidParameter(result);
         try {
             BusUser busUser = CommonUtil.getLoginUser(request);
             ResponseDTO responseDTO = demolitionService.saveDemolition(busUser, demolitionSaveReq);

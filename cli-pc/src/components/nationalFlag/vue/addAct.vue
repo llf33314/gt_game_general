@@ -41,7 +41,7 @@
                     <el-form-item label="赞助商设置：">
                         <el-button type="primary" class="mb10" @click="addlinks()">新增</el-button>  
                     </el-form-item>   
-                   <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark" style="width:900px;margin-left:160px">
+                   <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark" style="width:1000px;margin-left:160px">
                         <el-table-column label="广告链接">
                         <template slot-scope="scope" >
                                 <el-input v-model="scope.row.url">
@@ -220,11 +220,11 @@
         <div class="h80"></div> 
         <div class="btnRow"  v-if="this.active!=5">
             <el-button   @click="upStep()" v-if="this.active!=0">上一步</el-button>
-            <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步1</el-button> 
-            <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
-            <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
+            <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步</el-button> 
+            <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步</el-button>
+            <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步</el-button>   
             <el-button type="primary" @click="lastStep()"    :disabled="this.isSubmit"        v-if="this.active==3">保存</el-button>   
-            <el-button type="primary" @click="submit()">打印</el-button>   
+            <!-- <el-button type="primary" @click="submit()">打印</el-button>    -->
         </div> 
     </div>   
 </div>

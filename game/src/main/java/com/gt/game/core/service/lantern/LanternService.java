@@ -32,6 +32,14 @@ public interface LanternService {
     MobileUrlRes getMobileUrl(BusUser busUser, MobileUrlReq mobileUrlReq);
 
     /**
+     * 获取新增授权链接
+     * @param busUser
+     * @param mobileUrlReq
+     * @return
+     */
+    ResponseDTO<MobileUrlRes> getAuthorityUrl(BusUser busUser, MobileUrlReq mobileUrlReq);
+
+    /**
      * 分页获取元宵点灯活动列表
      * @param busUser
      * @param lanternListReq
@@ -63,32 +71,11 @@ public interface LanternService {
     LanternGetActivityRes getActivityById(BusUser busUser, LanternGetActivityReq lanternGetActivityReq);
 
     /**
-     * 编辑元宵点灯活动基础设置
+     * 编辑元宵点灯活动设置
      * @param busUser
-     * @param lanternModfiyBasicsReq
+     * @param lanternModfiyReq
      */
-    void modfiyBasicsLantern(BusUser busUser, LanternModfiyBasicsReq lanternModfiyBasicsReq);
-
-    /**
-     * 编辑元宵点灯活动规则设置
-     * @param busUser
-     * @param lanternModfiyRuleReq
-     */
-    void modfiyRuleLantern(BusUser busUser, LanternModfiyRuleReq lanternModfiyRuleReq);
-
-    /**
-     * 编辑元宵点灯活动兑奖设置
-     * @param busUser
-     * @param lanternModfiyExpiryReq
-     */
-    void modfiyExpiryLantern(BusUser busUser, LanternModfiyExpiryReq lanternModfiyExpiryReq);
-
-    /**
-     * 编辑元宵点灯活动奖项设置
-     * @param busUser
-     * @param lanternModfiyAwardsReq
-     */
-    void modfiyAwardsLantern(BusUser busUser, LanternModfiyAwardsReq lanternModfiyAwardsReq);
+    void modfiyLantern(BusUser busUser, LanternModfiyReq lanternModfiyReq);
 
     /**
      * 删除元宵点灯活动
@@ -149,6 +136,7 @@ public interface LanternService {
      * @param lanternDelAuthorityReq
      */
     void delLanternAuthority(BusUser busUser, LanternDelAuthorityReq lanternDelAuthorityReq);
+
 
 
 }

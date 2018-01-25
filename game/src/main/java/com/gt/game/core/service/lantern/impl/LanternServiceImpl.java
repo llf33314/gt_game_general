@@ -7,9 +7,15 @@ import com.gt.axis.bean.member.member.MemberReq;
 import com.gt.axis.bean.member.member.MemberRes;
 import com.gt.axis.bean.wxmp.dict.DictApiReq;
 import com.gt.axis.bean.wxmp.dict.DictApiRes;
+import com.gt.axis.bean.wxmp.fenbiflow.FenbiFlowRecord;
+import com.gt.axis.bean.wxmp.fenbiflow.FenbiFlowRecordReq;
+import com.gt.axis.bean.wxmp.fenbiflow.FenbiSurplus;
+import com.gt.axis.bean.wxmp.fenbiflow.UpdateFenbiReduceReq;
 import com.gt.axis.content.AxisResult;
 import com.gt.axis.server.member.MemberServer;
 import com.gt.axis.server.wxmp.DictServer;
+import com.gt.axis.server.wxmp.FenbiflowServer;
+import com.gt.game.common.config.ApplyProperties;
 import com.gt.game.common.dto.PageDTO;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.common.enums.ResponseEnums;
@@ -18,7 +24,9 @@ import com.gt.game.core.bean.lantern.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 import com.gt.game.core.dao.lantern.LanternCashPrizeApplyDAO;
+import com.gt.game.core.entity.dragonboat.*;
 import com.gt.game.core.entity.lantern.*;
+import com.gt.game.core.exception.dragonboat.DragonboatException;
 import com.gt.game.core.exception.lantern.LanternException;
 import com.gt.game.core.service.lantern.*;
 import com.gt.game.core.util.CommonUtil;
@@ -27,6 +35,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
@@ -64,8 +73,17 @@ public class LanternServiceImpl implements LanternService {
     @Autowired
     LanternAuthorityService lanternAuthorityService;
 
-      @Autowired
+    @Autowired
     LanternCashPrizeApplyDAO lanternCashPrizeApplyDAO;
+
+    @Autowired
+    LanternPlayRecordService lanternPlayRecordService;
+
+    @Autowired
+    LanternReportService lanternReportService;
+
+    @Autowired
+    ApplyProperties applyProperties;
 
 
 
@@ -78,7 +96,22 @@ public class LanternServiceImpl implements LanternService {
      */
     @Override
     public MobileUrlRes getMobileUrl(BusUser busUser, MobileUrlReq mobileUrlReq) {
-        return null;
+
+        String url = applyProperties.getMobileBaseUrl() + "lanternMobile/"+ mobileUrlReq.getMainId() + "/79B4DE7C/toPhoneIndex.do";
+        return new MobileUrlRes(url);
+    }
+
+    /**
+     * 获取新增授权链接
+     * @param busUser
+     * @param mobileUrlReq
+     * @return
+     */
+    @Override
+    public ResponseDTO<MobileUrlRes> getAuthorityUrl(BusUser busUser, MobileUrlReq mobileUrlReq) {
+
+        String url = applyProperties.getMobileBaseUrl() + "lanternMobile/"+ mobileUrlReq.getMainId() + "/79B4DE7C/saveAuthorizer.do";
+        return ResponseDTO.createBySuccess("获取新增授权链接成功",new MobileUrlRes(url));
     }
 
     /**
@@ -189,6 +222,8 @@ public class LanternServiceImpl implements LanternService {
         lanternMain.setActivityBeginTime(lanternAddReq.getActivityBeginTime());
         lanternMain.setActivityEndTime(lanternAddReq.getActivityEndTime());
         lanternMain.setFollowQrCode(lanternAddReq.getFollowQrCode());
+        lanternMain.setMusicUrl(lanternAddReq.getMusicUrl());
+        lanternMain.setBgmSp(lanternAddReq.getBgmSp());
         lanternMain.setManTotalChance(lanternAddReq.getManTotalChance());
         lanternMain.setManDayChance(lanternAddReq.getManDayChance());
         lanternMain.setGameTime(lanternAddReq.getGameTime());
@@ -231,8 +266,12 @@ public class LanternServiceImpl implements LanternService {
             }
         }
 
+        Double fenbi = 0.0;
         if(lanternAddReq.getPrizeSetList().size()>0){        //TODO  奖品设置
             for(LanternPrizeSetReq lanternPrizeSetReq:lanternAddReq.getPrizeSetList()){
+                if (lanternPrizeSetReq.getType() == 1) {
+                    fenbi += lanternPrizeSetReq.getNum();
+                }
                 LanternPrize lanternPrize = new LanternPrize();
                 lanternPrize.setActId(lanternMain.getId());
                 lanternPrize.setType(lanternPrizeSetReq.getType());
@@ -250,6 +289,24 @@ public class LanternServiceImpl implements LanternService {
                         lanternPrizeImg.setImgUrl(s);
                         lanternPrizeImgService.insert(lanternPrizeImg);
                     }
+                }
+            }
+        }
+
+        if(fenbi > 0){//冻结粉币
+            // 判断账户中的粉币是否足够
+            if(busUser.getFansCurrency().doubleValue() < fenbi.doubleValue()){
+                throw new LanternException(ResponseEnums.LANTERN_HAS7);
+            }
+            //构建冻结信息
+            FenbiFlowRecord ffr=CommonUtil.bulidFenFlow(busUser.getId(), fenbi, lanternMain.getId(), 97, 1, "元宵点灯活动支出", 0);
+            // 保存冻结信息
+            if(ffr!=null){
+                FenbiFlowRecordReq fenbiFlowRecordReq = new FenbiFlowRecordReq();
+                BeanUtils.copyProperties(ffr,fenbiFlowRecordReq);
+                AxisResult axisResult = FenbiflowServer.saveFenbiFlowRecord(fenbiFlowRecordReq);
+                if(axisResult.getCode() != 0){
+                    throw new LanternException(ResponseEnums.LANTERN_HAS8);
                 }
             }
         }
@@ -272,6 +329,8 @@ public class LanternServiceImpl implements LanternService {
         lanternGetActivityRes.setCashPrizeBeginTime(lanternMain.getCashPrizeBeginTime());
         lanternGetActivityRes.setCashPrizeEndTime(lanternMain.getCashPrizeEndTime());
         lanternGetActivityRes.setFollowQrCode(lanternMain.getFollowQrCode());
+        lanternGetActivityRes.setMusicUrl(lanternMain.getMusicUrl());
+        lanternGetActivityRes.setBgmSp(lanternMain.getBgmSp());
         lanternGetActivityRes.setManTotalChance(lanternMain.getManTotalChance());
         lanternGetActivityRes.setManDayChance(lanternMain.getManDayChance());
         lanternGetActivityRes.setGameTime(lanternMain.getGameTime());
@@ -309,6 +368,7 @@ public class LanternServiceImpl implements LanternService {
             list3.add(lanternAdvertisingPictureReq);
         }
         lanternGetActivityRes.setAdvertisingPictureList(list3);  //TODO  广告轮播图
+
         EntityWrapper<LanternPrize> entityWrapper4 = new EntityWrapper();
         entityWrapper4.eq("act_id", lanternMain.getId());
         List<LanternPrize> lanternPrizeList = lanternPrizeService.selectList(entityWrapper4);
@@ -336,62 +396,49 @@ public class LanternServiceImpl implements LanternService {
     }
 
     /**
-     * 编辑元宵点灯活动基础设置
+     * 编辑元宵点灯活动设置
      * @param busUser
-     * @param lanternModfiyBasicsReq
+     * @param lanternModfiyReq
      */
     @Override
-    public void modfiyBasicsLantern(BusUser busUser, LanternModfiyBasicsReq lanternModfiyBasicsReq) {
+    public void modfiyLantern(BusUser busUser, LanternModfiyReq lanternModfiyReq) {
 
-        LanternMain lanternMain = new LanternMain();
-        lanternMain.setId(lanternModfiyBasicsReq.getId());
-        lanternMain.setName(lanternModfiyBasicsReq.getName());
-        lanternMain.setActivityBeginTime(lanternModfiyBasicsReq.getActivityBeginTime());
-        lanternMain.setActivityEndTime(lanternModfiyBasicsReq.getActivityEndTime());
+        LanternMain lanternMain = lanternMainService.selectById(lanternModfiyReq.getId());
+        if(CommonUtil.isEmpty(lanternMain)){
+            throw new LanternException(ResponseEnums.LANTERN_HAS5);
+        }
+        if(lanternMain.getActivityBeginTime().getTime() < new Date().getTime()){
+            throw new LanternException(ResponseEnums.LANTERN_HAS10);
+        }
+        if(lanternMain.getBusId().intValue() != busUser.getId().intValue()){
+            throw new LanternException(ResponseEnums.DIFF_USER);
+        }
+        //TODO 基础设置
+        lanternMain.setName(lanternModfiyReq.getName());
+        lanternMain.setActivityBeginTime(lanternModfiyReq.getActivityBeginTime());
+        lanternMain.setActivityEndTime(lanternModfiyReq.getActivityEndTime());
+        lanternMain.setBgmSp(lanternModfiyReq.getBgmSp());
+        lanternMain.setMusicUrl(lanternModfiyReq.getMusicUrl());
 
-        lanternMainService.updateById(lanternMain);
-    }
+        //TODO 规则设置
+        lanternMain.setFollowQrCode(lanternModfiyReq.getFollowQrCode());
+        lanternMain.setManTotalChance(lanternModfiyReq.getManTotalChance());
+        lanternMain.setManDayChance(lanternModfiyReq.getManDayChance());
+        lanternMain.setGameTime(lanternModfiyReq.getGameTime());
+        lanternMain.setActRule(lanternModfiyReq.getActRule());
 
-    /**
-     * 编辑元宵点灯活动规则设置
-     * @param busUser
-     * @param lanternModfiyRuleReq
-     */
-    @Override
-    public void modfiyRuleLantern(BusUser busUser, LanternModfiyRuleReq lanternModfiyRuleReq) {
-
-        LanternMain lanternMain = new LanternMain();
-        lanternMain.setId(lanternModfiyRuleReq.getId());
-        lanternMain.setFollowQrCode(lanternModfiyRuleReq.getFollowQrCode());
-        lanternMain.setManTotalChance(lanternModfiyRuleReq.getManTotalChance());
-        lanternMain.setManDayChance(lanternModfiyRuleReq.getManDayChance());
-        lanternMain.setGameTime(lanternModfiyRuleReq.getGameTime());
-        lanternMain.setActRule(lanternModfiyRuleReq.getActRule());
-
-        lanternMainService.updateById(lanternMain);
-    }
-
-    /**
-     * 编辑元宵点灯活动兑奖设置
-     * @param busUser
-     * @param lanternModfiyExpiryReq
-     */
-    @Override
-    public void modfiyExpiryLantern(BusUser busUser, LanternModfiyExpiryReq lanternModfiyExpiryReq) {
-
-        LanternMain lanternMain = new LanternMain();
-        lanternMain.setId(lanternModfiyExpiryReq.getId());
-        lanternMain.setCashPrizeBeginTime(lanternModfiyExpiryReq.getCashPrizeBeginTime());
-        lanternMain.setCashPrizeEndTime(lanternModfiyExpiryReq.getCashPrizeEndTime());
+        //TODO 兑奖设置
+        lanternMain.setCashPrizeBeginTime(lanternModfiyReq.getCashPrizeBeginTime());
+        lanternMain.setCashPrizeEndTime(lanternModfiyReq.getCashPrizeEndTime());
 
         String s1="";
-        for(String s:lanternModfiyExpiryReq.getReceiveTypeList()){
+        for(String s:lanternModfiyReq.getReceiveTypeList()){
             s1 = s1+","+s;
         }
         lanternMain.setReceiveType(s1.substring(1));
-        lanternMain.setPhone(lanternModfiyExpiryReq.getPhone());
-        lanternMain.setCashPrizeInstruction(lanternModfiyExpiryReq.getCashPrizeInstruction());
-
+        lanternMain.setPhone(lanternModfiyReq.getPhone());
+        lanternMain.setCashPrizeInstruction(lanternModfiyReq.getCashPrizeInstruction());
+        lanternMain.setPrizeDescription(lanternModfiyReq.getPrizeDescription());
         lanternMainService.updateById(lanternMain);
 
         //TODO  清空兑奖地址
@@ -399,9 +446,9 @@ public class LanternServiceImpl implements LanternService {
         entityWrapper.eq("act_id",lanternMain.getId());
         lanternAddressService.delete(entityWrapper);
 
-        for(String s:lanternModfiyExpiryReq.getReceiveTypeList()){
+        for(String s:lanternModfiyReq.getReceiveTypeList()){
             if("1".equals(s)){
-                for(String s2:lanternModfiyExpiryReq.getAddressList()){
+                for(String s2:lanternModfiyReq.getAddressList()){
                     LanternAddress lanternAddress = new LanternAddress();
                     lanternAddress.setActId(lanternMain.getId());
                     lanternAddress.setCreatetime(new Date());
@@ -411,30 +458,17 @@ public class LanternServiceImpl implements LanternService {
                 }
             }
         }
-    }
 
-    /**
-     * 编辑元宵点灯活动奖项设置
-     * @param busUser
-     * @param lanternModfiyAwardsReq
-     */
-    @Override
-    public void modfiyAwardsLantern(BusUser busUser, LanternModfiyAwardsReq lanternModfiyAwardsReq) {
-
-        LanternMain lanternMain = new LanternMain();
-        lanternMain.setId(lanternModfiyAwardsReq.getId());
-        lanternMain.setPrizeDescription(lanternModfiyAwardsReq.getPrizeDescription());
-        lanternMainService.updateById(lanternMain);
-
-        if(lanternModfiyAwardsReq.getAdvertisingPictureList().size()>0){  // TODO  广告轮播图
+        //TODO 奖项设置
+        if(lanternModfiyReq.getAdvertisingPictureList().size()>0){  // TODO  广告轮播图
             //TODO  清空广告轮播图
-            EntityWrapper<LanternAd> entityWrapper = new EntityWrapper();
-            entityWrapper.eq("act_id",lanternModfiyAwardsReq.getId());
-            lanternAdService.delete(entityWrapper);
+            EntityWrapper<LanternAd> entityWrapper2 = new EntityWrapper();
+            entityWrapper2.eq("act_id",lanternModfiyReq.getId());
+            lanternAdService.delete(entityWrapper2);
 
-            for(LanternAdvertisingPictureReq lanternAdvertisingPictureReq:lanternModfiyAwardsReq.getAdvertisingPictureList()){
+            for(LanternAdvertisingPictureReq lanternAdvertisingPictureReq:lanternModfiyReq.getAdvertisingPictureList()){
                 LanternAd lanternAd = new LanternAd();
-                lanternAd.setActId(lanternModfiyAwardsReq.getId());
+                lanternAd.setActId(lanternModfiyReq.getId());
                 lanternAd.setUrl(lanternAdvertisingPictureReq.getUrl());
                 lanternAd.setHrefUrl(lanternAdvertisingPictureReq.getHrefUrl());
 
@@ -442,15 +476,35 @@ public class LanternServiceImpl implements LanternService {
             }
         }
 
-        if(lanternModfiyAwardsReq.getPrizeSetList().size()>0){        //TODO  奖品设置
-            // TODO  清空奖品设置
-            EntityWrapper<LanternPrize> entityWrapper = new EntityWrapper();
-            entityWrapper.eq("act_id",lanternMain.getId());
-            lanternPrizeService.delete(entityWrapper);
+        Double fenbi = 0.0;
+        Double num   = 0.0;
+        int f = 0;
+        if(lanternModfiyReq.getPrizeSetList().size()>0){        //TODO  奖品设置
 
-            for(LanternPrizeSetReq lanternPrizeSetReq:lanternModfiyAwardsReq.getPrizeSetList()){
+            //TODO 统计粉币
+            EntityWrapper<LanternPrize> entityWrapper5 = new EntityWrapper();
+            entityWrapper5.eq("act_id",lanternModfiyReq.getId());
+            List<LanternPrize> lanternPrizeList = lanternPrizeService.selectList(entityWrapper5);
+            if(lanternPrizeList.size() > 0) {
+                for (LanternPrize lanternPrize : lanternPrizeList) {
+                    if (lanternPrize.getType() == 1) {
+                        num += lanternPrize.getNum();
+                        f = 1;
+                    }
+                }
+            }
+
+            // TODO  清空奖品设置
+            EntityWrapper<LanternPrize> entityWrapper3 = new EntityWrapper();
+            entityWrapper3.eq("act_id",lanternModfiyReq.getId());
+            lanternPrizeService.delete(entityWrapper3);
+
+            for(LanternPrizeSetReq lanternPrizeSetReq:lanternModfiyReq.getPrizeSetList()){
+                if (lanternPrizeSetReq.getType() == 1) {
+                    fenbi += lanternPrizeSetReq.getNum();
+                }
                 LanternPrize lanternPrize = new LanternPrize();
-                lanternPrize.setActId(lanternMain.getId());
+                lanternPrize.setActId(lanternModfiyReq.getId());
                 lanternPrize.setType(lanternPrizeSetReq.getType());
                 lanternPrize.setPrizeUnit(lanternPrizeSetReq.getPrizeUnit());
                 lanternPrize.setPrizeName(lanternPrizeSetReq.getPrizeName());
@@ -459,9 +513,9 @@ public class LanternServiceImpl implements LanternService {
                 lanternPrizeService.insert(lanternPrize);
 
                 //TODO 清空图片
-                EntityWrapper<LanternPrizeImg> entityWrapper2 = new EntityWrapper();
-                entityWrapper2.eq("prize_id",lanternPrize.getId());
-                lanternPrizeImgService.delete(entityWrapper2);
+                EntityWrapper<LanternPrizeImg> entityWrapper4 = new EntityWrapper();
+                entityWrapper4.eq("prize_id",lanternPrize.getId());
+                lanternPrizeImgService.delete(entityWrapper4);
 
                 if(lanternPrizeSetReq.getImgUrl().size()>0){   ///TODO 添加图片
 
@@ -470,6 +524,43 @@ public class LanternServiceImpl implements LanternService {
                         lanternPrizeImg.setPrizeId(lanternPrize.getId());
                         lanternPrizeImg.setImgUrl(s);
                         lanternPrizeImgService.insert(lanternPrizeImg);
+                    }
+                }
+            }
+        }
+
+        if(fenbi > 0){//冻结粉币
+            if( f > 0){
+                if ((fenbi - num) <= (0 - num)) {
+                    throw new LanternException(ResponseEnums.LANTERN_HAS9);
+                }
+                // 判断账户中的粉币是否足够
+                if (busUser.getFansCurrency().doubleValue() < (fenbi - num)) {
+                    throw new LanternException(ResponseEnums.LANTERN_HAS7);
+                }
+                UpdateFenbiReduceReq updateFenbiReduceReq = new UpdateFenbiReduceReq();
+                updateFenbiReduceReq.setBusId(busUser.getId());
+                updateFenbiReduceReq.setFkId(lanternMain.getId());
+                updateFenbiReduceReq.setFreType(97);
+                updateFenbiReduceReq.setCount(CommonUtil.toDouble(fenbi - num));
+                AxisResult axisResult = FenbiflowServer.updaterecUseCountVer2(updateFenbiReduceReq);
+                if (axisResult.getCode() != 0) {
+                    throw new LanternException(ResponseEnums.LANTERN_HAS8);
+                }
+            }else {
+                // 判断账户中的粉币是否足够
+                if(busUser.getFansCurrency().doubleValue() < fenbi.doubleValue()){
+                    throw new LanternException(ResponseEnums.LANTERN_HAS7);
+                }
+                //构建冻结信息
+                FenbiFlowRecord ffr=CommonUtil.bulidFenFlow(busUser.getId(), fenbi, lanternMain.getId(), 97, 1, "元宵点灯活动支出", 0);
+                // 保存冻结信息
+                if(ffr!=null){
+                    FenbiFlowRecordReq fenbiFlowRecordReq = new FenbiFlowRecordReq();
+                    BeanUtils.copyProperties(ffr,fenbiFlowRecordReq);
+                    AxisResult axisResult = FenbiflowServer.saveFenbiFlowRecord(fenbiFlowRecordReq);
+                    if(axisResult.getCode() != 0){
+                        throw new LanternException(ResponseEnums.LANTERN_HAS8);
                     }
                 }
             }
@@ -483,6 +574,26 @@ public class LanternServiceImpl implements LanternService {
      */
     @Override
     public void delLantern(BusUser busUser, LanternDelReq lanternDelReq) {
+
+        LanternMain lanternMain = lanternMainService.selectById(lanternDelReq.getId());
+        if(CommonUtil.isNotEmpty(lanternMain)) {
+            if (lanternMain.getActivityBeginTime().getTime() < new Date().getTime() && lanternMain.getActivityEndTime().getTime() > new Date().getTime()) {
+                throw new LanternException(ResponseEnums.LANTERN_HAS11);
+            }
+            if (lanternMain.getCashPrizeBeginTime().getTime() < new Date().getTime() && lanternMain.getCashPrizeEndTime().getTime() > new Date().getTime()) {
+                throw new LanternException(ResponseEnums.LANTERN_HAS12);
+            }
+
+            List<LanternCashPrizeApply> lanternCashPrizeApplyList = lanternCashPrizeApplyService.selectList(
+                    new EntityWrapper<LanternCashPrizeApply>().eq("act_id", lanternDelReq.getId()).eq("status", 3));
+            if (lanternCashPrizeApplyList.size() > 0) {
+                throw new LanternException(ResponseEnums.LANTERN_HAS13);
+
+            }
+            if(lanternMain.getBusId().intValue() != busUser.getId().intValue()){
+                throw new LanternException(ResponseEnums.DIFF_USER);
+            }
+        }
 
         //TODO  删除活动
         boolean b = lanternMainService.deleteById(lanternDelReq.getId());
@@ -501,9 +612,18 @@ public class LanternServiceImpl implements LanternService {
         lanternAdService.delete(entityWrapper2);
 
 
-        EntityWrapper< LanternPrize> entityWrapper3 = new EntityWrapper<>();
+        EntityWrapper<LanternPrize> entityWrapper3 = new EntityWrapper<>();
         entityWrapper3.eq("act_id",lanternDelReq.getId());
         List<LanternPrize> lanternPrizeList = lanternPrizeService.selectList(entityWrapper3);
+
+        boolean ff = false;
+        if(lanternPrizeList.size() > 0){
+            for(LanternPrize lanternPrize : lanternPrizeList){
+                if(lanternPrize.getType() == 1){
+                    ff = true;
+                }
+            }
+        }
 
         if(lanternPrizeList.size()>0){
             for(LanternPrize lanternPrize:lanternPrizeList){
@@ -519,6 +639,41 @@ public class LanternServiceImpl implements LanternService {
         EntityWrapper<LanternPrize> entityWrapper5 = new EntityWrapper<>();
         entityWrapper5.eq("act_id",lanternDelReq.getId());
         lanternPrizeService.delete(entityWrapper5);
+
+        //TODO  删除活动用户授权信息
+        EntityWrapper<LanternAuthority> entityWrapper6 = new EntityWrapper<>();
+        entityWrapper6.eq("act_id",lanternDelReq.getId());
+        lanternAuthorityService.delete(entityWrapper6);
+
+        EntityWrapper<LanternReport> entityWrapper7 = new EntityWrapper<>();
+        entityWrapper7.eq("act_id",lanternDelReq.getId());
+        lanternReportService.delete(entityWrapper7);
+
+        EntityWrapper<LanternPlayRecord> entityWrapper8 = new EntityWrapper<>();
+        entityWrapper8.eq("act_id",lanternDelReq.getId());
+        lanternPlayRecordService.delete(entityWrapper8);
+
+        //删除冻结信息
+        if(ff){
+            FenbiSurplus fenbiSurplus = new FenbiSurplus();
+            fenbiSurplus.setBusId(busUser.getId());
+            fenbiSurplus.setFkId(lanternMain.getId());
+            fenbiSurplus.setFre_type(97);
+            fenbiSurplus.setRec_type(1);
+            AxisResult<FenbiFlowRecord> ffr = FenbiflowServer.getFenbiFlowRecord(fenbiSurplus);
+            if(ffr!=null && ffr.getData() != null && ffr.getData().getRollStatus() == 1){//未回滚
+                // 获取冻结信息中粉币剩余量
+                FenbiSurplus fenbiSurplus1 = new FenbiSurplus();
+                fenbiSurplus1.setBusId(busUser.getId());
+                fenbiSurplus1.setFkId(lanternMain.getId());
+                fenbiSurplus1.setRec_type(1);
+                fenbiSurplus1.setFre_type(97);
+                AxisResult axisResult = FenbiflowServer.rollbackFenbiRecord(fenbiSurplus1);
+                if(axisResult.getCode() != 0){
+                    throw new LanternException(ResponseEnums.LANTERN_HAS14);
+                }
+            }
+        }
     }
 
     /**
@@ -568,7 +723,7 @@ public class LanternServiceImpl implements LanternService {
                 }
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("分页获取元宵点灯中奖记录列表成功",lanternGetWinningResList,pageDTO);
 
     }

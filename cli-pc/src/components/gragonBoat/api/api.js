@@ -45,4 +45,7 @@ export const getShortUrl = params => { return axios.get(`${window.BASEDOMAIN}/ap
 export const getWinningList = params => { return axios.post(`${base}/getWinningList`, params).then(res => res.data) }
 
 /*编辑*/
+export const getAct  = params => { return axios.post(`${base}/modfiyDragonboat`, params).then(res => res.data) }
 
+//通过活动id查询幸运九宫格活动
+export const getActivityById  = params => { return axios.post(`${base}/getActivityById`, params).then(res => res.data) }

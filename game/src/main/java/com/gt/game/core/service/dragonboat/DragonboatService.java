@@ -5,6 +5,7 @@ import com.gt.api.bean.session.BusUser;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.core.bean.dragonboat.req.*;
 import com.gt.game.core.bean.dragonboat.res.*;
+import com.gt.game.core.bean.tree.res.TreeGetActivityRes;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 
@@ -13,7 +14,7 @@ import java.util.Map;
 
 /**
  * <p>
- * 元宵点灯 服务类
+ * 端午赛龙舟 服务类
  * </p>
  *
  * @author zwq
@@ -59,33 +60,20 @@ public interface DragonboatService {
      */
     void addDragonboat(BusUser busUser, DragonboatAddReq dragonboatAddReq);
 
-    /**
-     * 编辑端午赛龙舟活动基础设置
-     * @param busUser
-     * @param dragonboatModfiyBasicsReq
-     */
-    void modfiyBasicsDragonboat(BusUser busUser, DragonboatModfiyBasicsReq dragonboatModfiyBasicsReq);
+   /**
+    *
+    * @param busUser
+    * @param dragonboatGetActivityReq
+    * @return
+    */
+   DragonboatGetActivityRes  getActivityById(BusUser busUser, DragonboatGetActivityReq dragonboatGetActivityReq);
 
     /**
-     * 编辑端午赛龙舟活动规则设置
+     * 编辑端午赛龙舟活动设置
      * @param busUser
-     * @param dragonboatModfiyRuleReq
+     * @param dragonboatModfiyReq
      */
-    void modfiyRuleDragonboat(BusUser busUser, DragonboatModfiyRuleReq dragonboatModfiyRuleReq);
-
-    /**
-     * 编辑端午赛龙舟活动兑奖设置
-     * @param busUser
-     * @param dragonboatModfiyExpiryReq
-     */
-    void modfiyExpiryDragonboat(BusUser busUser, DragonboatModfiyExpiryReq dragonboatModfiyExpiryReq);
-
-    /**
-     * 编辑端午赛龙舟活动奖项设置
-     * @param busUser
-     * @param dragonboatModfiyAwardsReq
-     */
-    void modfiyAwardsDragonboat(BusUser busUser, DragonboatModfiyAwardsReq dragonboatModfiyAwardsReq);
+    void modfiyDragonboat(BusUser busUser, DragonboatModfiyReq dragonboatModfiyReq);
 
     /**
      * 批量删除端午赛龙舟活动
@@ -145,4 +133,6 @@ public interface DragonboatService {
      * @return
      */
     ResponseDTO<List<DragonboatPrizeTypeListRes>> getDragonboatPrizeType(BusUser busUser);
+
+
 }

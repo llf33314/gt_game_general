@@ -104,7 +104,7 @@ import { getDragonboatList,getDragonboatCount,getMobileUrl,getShortUrl,delDragon
       },
       //获取数量--------------------------------------star
       getCount(){
-        getDragonboatCount().then(data=>{
+        getDragonboatCount({ name: this.keyWord }).then(data=>{
           if (data.code == 100) {
             console.log(data,'数量')
             this.countNum.all    =data.data.count1 
@@ -172,7 +172,7 @@ import { getDragonboatList,getDragonboatCount,getMobileUrl,getShortUrl,delDragon
         this.$router.push('/gragonBoat/addAct')
       },
       editActive(val){
-        this.$router.push({path:'/cashTree/editAct', query: {id: val}});
+        this.$router.push({path:'/gragonBoat/editAct', query: {id: val}});
       },
     },
     mounted() {

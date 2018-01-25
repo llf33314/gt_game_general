@@ -168,7 +168,7 @@ public class StandServiceImpl implements StandService {
                 standListRes.setStatus(1);
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",StandListResList,pageDTO);
     }
 
@@ -212,7 +212,7 @@ public class StandServiceImpl implements StandService {
                 }
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",standApplyListResList,pageDTO);
     }
     /**
@@ -461,6 +461,9 @@ public class StandServiceImpl implements StandService {
                 standtotheendCashAddressService.insert(standtotheendCashAddress);
             }
         }
+        if(fenbi == 0.0 && num > 0.0){
+            throw new StandException(ResponseEnums.COMMON_HAS18);
+        }
         if(fenbi > 0){//冻结粉币
             if( f > 0){
                 if((fenbi-num) <= (0-num)){
@@ -516,7 +519,7 @@ public class StandServiceImpl implements StandService {
             BeanUtils.copyProperties(standtotheendAuthority,standAuthorityListRes1);
             standAuthorityListRes.add(standAuthorityListRes1);
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",standAuthorityListRes,pageDTO);
     }
     /**

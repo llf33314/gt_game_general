@@ -75,7 +75,7 @@
 </template>
 <script>
 import { 
- getDemolitionAuthorityList,getAuthorityUrl,removeDemolitionAuthority
+ getVerifierList,getAuthorityUrl,delVerifier
 }from './../api/api'
   export default{
     data() {
@@ -94,7 +94,7 @@ import {
             params.actId  =this.$router.history.current.query.id; 
             params.size   =10;
             params.current=this.current;  
-        getDemolitionAuthorityList(params).then(data=>{
+        getVerifierList(params).then(data=>{
           if (data.code == 100) {
             this.tableData=data
             console.log(data,123);
@@ -133,7 +133,7 @@ import {
             type: "warning"
 
             }).then(() => {  
-            removeDemolitionAuthority(params).then(data => {  
+            delVerifier(params).then(data => {  
                 if (data.code == 100) { 
                     this.$message({ message: "操作成功", type: "success"}); 
                     this.getData();
@@ -162,7 +162,7 @@ import {
             cancelButtonText: '取消',
             type: 'warning'
             }).then(() => {
-            removeDemolitionAuthority(params).then(data => {  
+            delVerifier(params).then(data => {  
             if (data.code == 100) { 
                     this.$message({ message: "操作成功", type: "success"}); 
                     this.getData();

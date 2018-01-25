@@ -46,12 +46,12 @@ public class LuckReq {
 	@ApiModelProperty("活动说明")
 	@NotEmpty(message = "请输入活动说明")
 	private String luckDescribe;
-	/**
-	 * 活动结束说明语
-	 */
-	@ApiModelProperty("活动结束说明语")
-	@NotEmpty(message = "请输入活动结束说明语")
-	private String luckOverdescribe;
+//	/**
+//	 * 活动结束说明语
+//	 */
+//	@ApiModelProperty("活动结束说明语")
+//	@NotEmpty(message = "请输入活动结束说明语")
+//	private String luckOverdescribe;
 	/**
 	 * 总次数
 	 */
@@ -85,13 +85,11 @@ public class LuckReq {
 	 * 音乐路径
 	 */
 	@ApiModelProperty("音乐路径")
-	@NotEmpty(message = "请选择背景音乐")
 	private String luckBgm;
 	/**
 	 * 音乐名称
 	 */
 	@ApiModelProperty("音乐名称")
-	@NotEmpty(message = "请选择背景音乐")
 	private String luckBgmName;
 	/**
 	 * 参与人员
@@ -165,13 +163,13 @@ public class LuckReq {
 		this.luckDescribe = luckDescribe;
 	}
 
-	public String getLuckOverdescribe() {
-		return luckOverdescribe;
-	}
-
-	public void setLuckOverdescribe(String luckOverdescribe) {
-		this.luckOverdescribe = luckOverdescribe;
-	}
+//	public String getLuckOverdescribe() {
+//		return luckOverdescribe;
+//	}
+//
+//	public void setLuckOverdescribe(String luckOverdescribe) {
+//		this.luckOverdescribe = luckOverdescribe;
+//	}
 
 	public Integer getLuckCountOfAll() {
 		return luckCountOfAll;

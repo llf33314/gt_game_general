@@ -34,30 +34,30 @@
     </div> 
     <div class="gt-content">        
         <el-table :data="tableData.data"  v-if="this.tableData.data.length!=0">
-          <el-table-column prop="prizeName" label="奖项名称">              
+          <el-table-column prop="luckPrizeName" label="奖项名称">              
           </el-table-column>
-          <el-table-column prop="type" label="奖品类型">  
+          <el-table-column prop="luckPrizeType" label="奖品类型">  
             <template slot-scope="scope">
-              {{scope.row.type |prizeType(scope.row.type)}} 
+              {{scope.row.luckPrizeType |prizeType(scope.row.luckPrizeType)}} 
             </template>                 
           </el-table-column>
-          <el-table-column prop="cashTime" label="兑奖时间"> 
+          <el-table-column prop="luckCashtime" label="兑奖时间"> 
             <template slot-scope="scope">
-              {{scope.row.cashTime|parseTime('{y}-{m}-{d} {h}:{i}')}}
+              {{scope.row.luckCashtime|parseTime('{y}-{m}-{d} {h}:{i}')}}
             </template>           
           </el-table-column>
-          <el-table-column prop="status" label="状态">  
+          <el-table-column prop="luckStatus" label="状态">  
             <template slot-scope="scope">
-              {{scope.row.status |prizeStatus(scope.row.status)}} 
+              {{scope.row.luckStatus  |prizeStatus(scope.row.luckStatus )}} 
             </template>            
           </el-table-column>
-          <el-table-column prop="snCode" label="兑奖码">             
+          <el-table-column prop="luckExchangeCode" label="兑奖码">             
           </el-table-column>
           <el-table-column prop="order_option"  label="操作">
             <template slot-scope="scope"> 
               <el-button class="gt-button-normal blue"  @click="showDetailBtn(scope.row)">详情</el-button>  
-              <el-button class="gt-button-normal blue"  v-if="scope.row.status==3"       @click="handOut(scope.row.id)">发放奖品</el-button> 
-              <el-button class="gt-button-normal blue"  v-if="scope.row.status==1"  :disabled="true"   @click="handOut(scope.row.id)">发放奖品</el-button>  
+              <el-button class="gt-button-normal blue"  v-if="scope.row.luckStatus==3"       @click="handOut(scope.row.id)">发放奖品</el-button> 
+              <el-button class="gt-button-normal blue"  v-if="scope.row.luckStatus==1"  :disabled="true"   @click="handOut(scope.row.id)">发放奖品</el-button>  
             </template>
           </el-table-column>
         </el-table> 
@@ -65,20 +65,20 @@
         <!-- 详情 -->
         <el-dialog title="详情" :visible.sync="showDetail" class="detail-dialog"> 
           <div>
-              <p><span class="w20_demo">中奖人</span><b> : </b> {{showDetailData.nickname}}</p> 
-              <p><span class="w20_demo">兑奖人</span><b> : </b> -</p> 
-              <p><span class="w20_demo">兑奖人联系方式</span><b> : </b> {{showDetailData.memberPhone }}</p> 
-              <p v-if="showDetailData.status==1"><span class="w20_demo">兑奖时间</span><b> : </b> -</p> 
-              <p v-if="showDetailData.status!=1"><span class="w20_demo">领取方式</span><b> : </b> {{showDetailData.receiveType|receiveTypeStatus(showDetailData.receiveType)}}</p> 
-              <p v-if="showDetailData.receiveType==1"><span class="w20_demo">到店领取地址</span><b> : </b> {{showDetailData.addressName}}</p> 
-              <p v-if="showDetailData.receiveType==2"><span class="w20_demo">收货人姓名</span><b> : </b> {{showDetailData.addressName}}</p> 
-              <p v-if="showDetailData.receiveType==2"><span class="w20_demo">收货地址</span><b> : </b> {{showDetailData.address}}</p> 
+              <p><span class="w20_demo">中奖人</span><b> : </b> {{showDetailData.luckMemberName}}</p> 
+              <p><span class="w20_demo">兑奖人</span><b> : </b>{{showDetailData.luckName}}</p> 
+              <p><span class="w20_demo">兑奖人联系方式</span><b> : </b> {{showDetailData.luckPhone}}</p> 
+              <p v-if="showDetailData.status==1"><span class="w20_demo">兑奖时间</span><b> : </b> {{showDetailData.luckCashtime|parseTime('{y}-{m}-{d} {h}:{i}')}} </p> 
+              <p v-if="showDetailData.status!=1"><span class="w20_demo">领取方式</span><b> : </b> {{showDetailData.luckWay |receiveTypeStatus(showDetailData.luckWay )}}</p> 
+              <p v-if="showDetailData.receiveType==1"><span class="w20_demo">到店领取地址</span><b> : </b> {{showDetailData.address }}</p> 
+              <p v-if="showDetailData.receiveType==2"><span class="w20_demo">收货人姓名</span><b> : </b> {{showDetailData.luckName }}</p> 
+              <p v-if="showDetailData.receiveType==2"><span class="w20_demo">收货地址</span><b> : </b> {{showDetailData.luckAddress }}</p> 
           </div> 
         </el-dialog> 
         <div class="public-page-fr" v-if="this.tableData.data.length!=0">
-              <el-pagination @current-change="handleCurrentChange"  :page-size="10" 
-              layout="prev, pager, next, jumper" :total="tableData.page.totalNums">
-              </el-pagination>
+            <el-pagination @current-change="handleCurrentChange"  :page-size="10" 
+            layout="prev, pager, next, jumper" :total="tableData.page.totalNums">
+            </el-pagination>
         </div> 
     </div>
 </div>
@@ -118,8 +118,8 @@ import {
           params.current=this.current;
           params.size   =10;
           params.snCode =this.codeWord;
-          params.status =this.prizeState;
-          params.type   =this.prizeType;
+          params.luckStatus =this.prizeState;
+          params.luckPrizeType   =this.prizeType;
         console.log(params,77)
         getPrizeList(params).then(data=>{
           if (data.code == 100) {
@@ -153,7 +153,7 @@ import {
         params.status = this.prizeState;  
         params.type   = this.prizeType; 
         params.snCode   = this.codeWord;  
-        window.open(window.BASEDOMAIN+'/app/luckTranslate/exports?actId='+params.actId+'&status='+params.status+'&type='+params.type+'&snCode='+params.snCode);   
+        window.open(window.BASEDOMAIN+'/app/luck/exports?actId='+params.actId+'&luckStatus='+params.status+'&luckPrizeType='+params.type+'&snCode='+params.snCode);   
       },
       //发放奖品  
       handOut(id){

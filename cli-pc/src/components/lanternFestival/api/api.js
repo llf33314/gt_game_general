@@ -1,7 +1,7 @@
 import axios from './../../../http' 
 let base = window.BASEDOMAIN + '/app/lantern'
 
-// let base = 'http://192.168.3.68:8080'
+// let base = 'http://192.168.3.68:8080' + '/app/lantern'
 function post(url, params) {
     return axios.post(url, params)
       .then(res => {
@@ -55,22 +55,11 @@ export default {
         return post(`${base}/getActivityById`, params) 
        },
 
-       // 编辑活动基础设置  
-       modfiyBasicsLantern(params) {
-        return post(`${base}/modfiyBasicsLantern`, params) 
+       // 编辑活动
+       modfiyActivity(params) {
+        return post(`${base}/modfiyLantern`, params)  
        },
-       // 编辑活动规则设置  
-       modfiyRuleLantern(params) {
-        return post(`${base}/modfiyRuleLantern`, params) 
-       },
-       // 编辑活动兑奖设置 
-       modfiyExpiryLantern(params) {
-        return post(`${base}/modfiyExpiryLantern`, params) 
-       },
-       // 编辑活动奖项设置  
-       modfiyAwardsLantern(params) {
-        return post(`${base}/modfiyAwardsLantern`, params) 
-       }, 
+       
 
        /* 核销授权 - 接口 */ 
        // 分页获取核销授权列表
@@ -81,8 +70,10 @@ export default {
        delAuthority(params) { 
         return post(`${base}/delLanternAuthority`, params) 
        },
-       // 获取授权二维码
-
+       // 获取新增授权链接 /app/lantern/getAuthorityUrl
+       getAuthorityUrl(params) {
+        return post(`${base}/getAuthorityUrl`, params)   
+       }, 
 
        /* 中奖记录 - 接口 */ 
        // 分页获取中奖记录列表 

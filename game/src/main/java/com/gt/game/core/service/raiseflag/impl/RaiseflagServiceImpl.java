@@ -180,7 +180,7 @@ public class RaiseflagServiceImpl implements RaiseflagService {
                 RaiseflagListRes.setStatus(1);
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",raiseflagList,pageDTO);
     }
     /**
@@ -226,7 +226,7 @@ public class RaiseflagServiceImpl implements RaiseflagService {
                 }
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",RaiseflagApplyListResList,pageDTO);
     }
 
@@ -471,7 +471,7 @@ public class RaiseflagServiceImpl implements RaiseflagService {
             for(RaiseflagSponsorReq raiseflagSponsorReq :RaiseflagSaveReq.getRaiseflagSponsorReqs()){
                 RaiseflagSponsor raiseflagSponsor = new RaiseflagSponsor();
                 BeanUtils.copyProperties(raiseflagSponsorReq,raiseflagSponsor);
-                raiseflagSponsor.setSponsorImgUrl(raiseflagSponsor.getSponsorUrl().split("/upload").length > 1 ? raiseflagSponsor.getSponsorUrl().split("/upload")[1]:"");
+                raiseflagSponsor.setSponsorImgUrl(raiseflagSponsor.getSponsorImgUrl().split("/upload").length > 1 ? raiseflagSponsor.getSponsorImgUrl().split("/upload")[1]:"");
                 raiseflagSponsor.setActId(RaiseflagMain.getId());
                 raiseflagSponsor.setCreatetime(date);
                 raiseflagSponsorService.insert(raiseflagSponsor);
@@ -486,6 +486,9 @@ public class RaiseflagServiceImpl implements RaiseflagService {
                 RaiseflagAddress.setCreatetime(date);
                 raiseflagAddressService.insert(RaiseflagAddress);
             }
+        }
+        if(fenbi == 0.0 && num > 0.0){
+            throw new RaiseflagException(ResponseEnums.COMMON_HAS18);
         }
         if(fenbi > 0){//冻结粉币
             if( f > 0){
@@ -575,7 +578,7 @@ public class RaiseflagServiceImpl implements RaiseflagService {
             }
         }
 
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",RaiseflagAuthorityListRes,pageDTO);
     }
     /**

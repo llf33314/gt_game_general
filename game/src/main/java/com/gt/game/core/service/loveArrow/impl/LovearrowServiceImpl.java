@@ -158,7 +158,7 @@ public class LovearrowServiceImpl implements LovearrowService {
                 LoveArrowListRes.setStatus(1);
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",LoveArrowListResList,pageDTO);
     }
     /**
@@ -204,7 +204,7 @@ public class LovearrowServiceImpl implements LovearrowService {
                 }
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",LoveArrowApplyListResList,pageDTO);
 
     }
@@ -465,6 +465,9 @@ public class LovearrowServiceImpl implements LovearrowService {
                 lovearrowAdService.insert(LovearrowAd);
             }
         }
+        if(fenbi == 0.0 && num > 0.0){
+            throw new LoveArrowException(ResponseEnums.COMMON_HAS18);
+        }
         if(fenbi > 0){//冻结粉币
             if( f > 0){
                 if((fenbi-num) <= (0-num)){
@@ -520,7 +523,7 @@ public class LovearrowServiceImpl implements LovearrowService {
             BeanUtils.copyProperties(LovearrowAuthority,LoveArrowAuthorityListRes1);
             LoveArrowAuthorityListRes.add(LoveArrowAuthorityListRes1);
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",LoveArrowAuthorityListRes,pageDTO);
     }
     /**

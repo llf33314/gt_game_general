@@ -156,7 +156,7 @@ public class ShakeluckServiceImpl  implements ShakeluckService {
                 ShakeluckListRes.setStatus(1);
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",ShakeluckListResList,pageDTO);
     }
     /**
@@ -202,7 +202,7 @@ public class ShakeluckServiceImpl  implements ShakeluckService {
                 }
             }
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",ShakeluckApplyListResList,pageDTO);
     }
     /**
@@ -462,6 +462,9 @@ public class ShakeluckServiceImpl  implements ShakeluckService {
                 shakeluckAdService.insert(ShakeluckAd);
             }
         }
+        if(fenbi == 0.0 && num > 0.0){
+            throw new ShakeluckException(ResponseEnums.COMMON_HAS18);
+        }
         if(fenbi > 0){//冻结粉币
             if( f > 0){
                 if((fenbi-num) <= (0-num)){
@@ -517,7 +520,7 @@ public class ShakeluckServiceImpl  implements ShakeluckService {
             BeanUtils.copyProperties(ShakeluckAuthority,ShakeluckAuthorityListRes1);
             ShakeluckAuthorityListRes.add(ShakeluckAuthorityListRes1);
         }
-        PageDTO pageDTO = new PageDTO(page.getCurrent(),page.getTotal());
+        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
         return ResponseDTO.createBySuccessPage("获取成功",ShakeluckAuthorityListRes,pageDTO);
     }
     /**

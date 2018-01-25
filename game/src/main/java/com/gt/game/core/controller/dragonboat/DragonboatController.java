@@ -7,15 +7,13 @@ import com.gt.game.common.base.BaseController;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.core.bean.dragonboat.req.*;
 import com.gt.game.core.bean.dragonboat.res.*;
-import com.gt.game.core.bean.lantern.req.LanternAuthorityListReq;
-import com.gt.game.core.bean.lantern.req.LanternDelAuthorityReq;
-import com.gt.game.core.bean.lantern.req.LanternDelWinningReq;
 import com.gt.game.core.bean.lantern.res.LanternAuthorityListRes;
 import com.gt.game.core.bean.lantern.res.LanternPrizeTypeListRes;
+import com.gt.game.core.bean.ninelattice.res.NinelatticeGetActivityRes;
+import com.gt.game.core.bean.tree.res.TreeGetActivityRes;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 import com.gt.game.core.exception.dragonboat.DragonboatException;
-import com.gt.game.core.exception.lantern.LanternException;
 import com.gt.game.core.service.dragonboat.DragonboatService;
 import com.gt.game.core.util.CommonUtil;
 import io.swagger.annotations.*;
@@ -115,7 +113,7 @@ public class DragonboatController extends BaseController {
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
             @ApiResponse(code = 1, message = "响应对象", response = DragonboatListRes.class),
     })
-    @ApiOperation(value = "分页端午赛龙舟获取活动列表", notes = "分页端午赛龙舟获取活动列表")
+    @ApiOperation(value = "分页查询端午赛龙舟获取活动列表", notes = "分页查询端午赛龙舟获取活动列表")
     @RequestMapping(value = "/getDragonboatList", method = RequestMethod.POST)
     protected ResponseDTO getDragonboatList(
             @RequestBody @ApiParam("请求参数") DragonboatListPageReq dragonboatListPageReq,
@@ -156,90 +154,45 @@ public class DragonboatController extends BaseController {
         }
     }
 
-    // TODO  编辑端午赛龙舟活动基础设置
+    // TODO    通过活动id查询端午赛龙舟活动
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+            @ApiResponse(code = 1, message = "data对象（数组对象）", response = List.class),
+            @ApiResponse(code = 2, message = "任务对象", response = DragonboatGetActivityRes.class),
+    })
+    @ApiOperation(value = "通过活动id查询端午赛龙舟活动", notes = "通过活动id查询端午赛龙舟活动")
+    @RequestMapping(value = "/getActivityById", method = RequestMethod.POST)
+    public ResponseDTO getActivityById(@RequestBody @ApiParam(value = "请求对象") DragonboatGetActivityReq dragonboatGetActivityReq, BindingResult bindingResult,
+                                       HttpServletRequest request) {
+        InvalidParameter(bindingResult);
+        try {
+            logger.debug(dragonboatGetActivityReq.toString());
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            DragonboatGetActivityRes dragonboatGetActivityRes = dragonboatService.getActivityById(busUser, dragonboatGetActivityReq);
+            return ResponseDTO.createBySuccess("通过活动id查询端午赛龙舟活动成功", dragonboatGetActivityRes);
+        }catch (DragonboatException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+
+    // TODO  编辑端午赛龙舟活动设置
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
     })
-    @ApiOperation(value = "编辑端午赛龙舟活动基础设置", notes = "编辑端午赛龙舟活动基础设置")
-    @RequestMapping(value = "/modfiyBasicsDragonboat", method = RequestMethod.POST)
-    protected ResponseDTO modfiyBasicsDragonboat(@RequestBody @ApiParam(value = "编辑端午赛龙舟活动基础设置对象") DragonboatModfiyBasicsReq dragonboatModfiyBasicsReq, BindingResult bindingResult,
+    @ApiOperation(value = "编辑端午赛龙舟活动设置", notes = "编辑端午赛龙舟活动设置")
+    @RequestMapping(value = "/modfiyDragonboat", method = RequestMethod.POST)
+    protected ResponseDTO modfiyDragonboat(@RequestBody @ApiParam(value = "编辑端午赛龙舟活动设置对象") DragonboatModfiyReq dragonboatModfiyReq, BindingResult bindingResult,
                                                  HttpServletRequest request) {
         InvalidParameter(bindingResult);
         try {
-            logger.debug(dragonboatModfiyBasicsReq.toString());
+            logger.debug(dragonboatModfiyReq.toString());
             BusUser busUser = CommonUtil.getLoginUser(request);
-            dragonboatService.modfiyBasicsDragonboat(busUser,dragonboatModfiyBasicsReq);
-            return ResponseDTO.createBySuccessMessage("编辑端午赛龙舟活动基础设置成功");
-        } catch (DragonboatException e){
-            logger.error(e.getMessage(), e.fillInStackTrace());
-            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
-        } catch (Exception e){
-            e.printStackTrace();
-            return ResponseDTO.createByError();
-        }
-    }
-
-    // TODO  编辑端午赛龙舟活动规则设置
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-    })
-    @ApiOperation(value = "编辑端午赛龙舟活动规则设置", notes = "编辑端午赛龙舟活动规则设置")
-    @RequestMapping(value = "/modfiyRuleDragonboat", method = RequestMethod.POST)
-    protected ResponseDTO modfiyRuleDragonboat(@RequestBody @ApiParam(value = "编辑元宵点灯活动基础规则对象") DragonboatModfiyRuleReq dragonboatModfiyRuleReq, BindingResult bindingResult,
-                                               HttpServletRequest request) {
-        InvalidParameter(bindingResult);
-        try {
-            logger.debug(dragonboatModfiyRuleReq.toString());
-            BusUser busUser = CommonUtil.getLoginUser(request);
-            dragonboatService.modfiyRuleDragonboat(busUser, dragonboatModfiyRuleReq);
-            return ResponseDTO.createBySuccessMessage("编辑端午赛龙舟活动规则设置成功");
-        } catch (DragonboatException e){
-            logger.error(e.getMessage(), e.fillInStackTrace());
-            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
-        } catch (Exception e){
-            e.printStackTrace();
-            return ResponseDTO.createByError();
-        }
-    }
-
-
-    // TODO  编辑端午赛龙舟活动兑奖设置
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-    })
-    @ApiOperation(value = "编辑端午赛龙舟活动兑奖设置", notes = "编辑端午赛龙舟活动兑奖设置")
-    @RequestMapping(value = "/modfiyExpiryDragonboat", method = RequestMethod.POST)
-    protected ResponseDTO modfiyExpiryDragonboat(@RequestBody @ApiParam(value = "编辑端午赛龙舟活动兑奖设置对象") DragonboatModfiyExpiryReq dragonboatModfiyExpiryReq, BindingResult bindingResult,
-                                              HttpServletRequest request) {
-        InvalidParameter(bindingResult);
-        try {
-            logger.debug(dragonboatModfiyExpiryReq.toString());
-            BusUser busUser = CommonUtil.getLoginUser(request);
-            dragonboatService.modfiyExpiryDragonboat(busUser, dragonboatModfiyExpiryReq);
-            return ResponseDTO.createBySuccessMessage("编辑端午赛龙舟活动兑奖设置成功");
-        } catch (DragonboatException e){
-            logger.error(e.getMessage(), e.fillInStackTrace());
-            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
-        } catch (Exception e){
-            e.printStackTrace();
-            return ResponseDTO.createByError();
-        }
-    }
-
-    // TODO  编辑端午赛龙舟活动奖项设置
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-    })
-    @ApiOperation(value = "编辑端午赛龙舟活动奖项设置", notes = "编辑端午赛龙舟活动奖项设置")
-    @RequestMapping(value = "/modfiyAwardsDragonboat", method = RequestMethod.POST)
-    protected ResponseDTO modfiyAwardsDragonboat(@RequestBody @ApiParam(value = "编辑端午赛龙舟活动奖项设置对象") DragonboatModfiyAwardsReq dragonboatModfiyAwardsReq, BindingResult bindingResult,
-                                              HttpServletRequest request) {
-        InvalidParameter(bindingResult);
-        try {
-            logger.debug(dragonboatModfiyAwardsReq.toString());
-            BusUser busUser = CommonUtil.getLoginUser(request);
-            dragonboatService.modfiyAwardsDragonboat(busUser, dragonboatModfiyAwardsReq);
-            return ResponseDTO.createBySuccessMessage("编辑端午赛龙舟活动奖项设置成功");
+            dragonboatService.modfiyDragonboat(busUser,dragonboatModfiyReq);
+            return ResponseDTO.createBySuccessMessage("编辑端午赛龙舟活动设置成功");
         } catch (DragonboatException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());

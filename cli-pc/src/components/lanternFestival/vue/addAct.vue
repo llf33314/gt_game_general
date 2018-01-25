@@ -24,7 +24,7 @@
                 <el-form-item label="活动名称：" prop="name">
                     <el-input class="w_demo"  placeholder="请输入活动名称" v-model="ruleForm1.name" :maxlength="25"></el-input>
                 </el-form-item> 
-                <el-form-item label="游戏时间：" prop="name1">
+                <el-form-item label="活动时间：" prop="name1">
                     <el-date-picker class="w_demo" v-model="ruleForm1.name1" :editable="false"  type="datetimerange"  placeholder="选择时间范围">
                     </el-date-picker>
                 </el-form-item>    
@@ -384,10 +384,6 @@ export default {
       }
        this.submit();
     }, 
-
-          submit11(){
-          console.log(this.ruleForm4,665544)
-      }, 
     getMusic(e) {
       console.log(e)
       this.ruleForm2.bgmSp = e.music.name

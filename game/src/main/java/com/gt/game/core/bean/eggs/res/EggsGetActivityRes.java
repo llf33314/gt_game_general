@@ -41,11 +41,11 @@ public class EggsGetActivityRes {
     @ApiModelProperty("活动未开始提示")
     private String eggBeforeTxt;
 
-/*	@ApiModelProperty("音乐名称")
+	@ApiModelProperty("音乐名称")
 	private String eggBgmName;
 
 	@ApiModelProperty("音乐路径")
-	private String eggBgm;*/
+	private String eggBgm;
 
     @ApiModelProperty("抽奖总数")
     private Integer eggCountOfAll;
@@ -70,6 +70,22 @@ public class EggsGetActivityRes {
 
     @ApiModelProperty("奖品设置")
     private List<EggsPrizeSetReq> prizeSetList;
+
+    public String getEggBgmName() {
+        return eggBgmName;
+    }
+
+    public void setEggBgmName(String eggBgmName) {
+        this.eggBgmName = eggBgmName;
+    }
+
+    public String getEggBgm() {
+        return eggBgm;
+    }
+
+    public void setEggBgm(String eggBgm) {
+        this.eggBgm = eggBgm;
+    }
 
     public String getEggName() {
         return eggName;
