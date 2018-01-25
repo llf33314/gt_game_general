@@ -3,10 +3,11 @@ package com.gt.game.core.bean.turntable.req;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("刮刮乐暂停活动请求类")
-public class ScratchStopReq {
 
-	@ApiModelProperty("主键id")
+@ApiModel("通过活动id查询刮刮乐活动请求类")
+public class TurntableGetActivityReq {
+
+	@ApiModelProperty("活动主键id")
 	private Integer id;
 
 	public Integer getId() {
