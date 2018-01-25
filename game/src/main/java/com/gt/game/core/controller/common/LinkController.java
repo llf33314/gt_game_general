@@ -1,6 +1,13 @@
 package com.gt.game.core.controller.common;
 
+import com.gt.api.util.JsonUtils;
+import com.gt.api.util.ShortUtil;
+import com.gt.axis.bean.wxmp.video.VideoReq;
+import com.gt.axis.content.AxisContent;
+import com.gt.axis.content.AxisResult;
 import com.gt.axis.server.wxmp.ShortUrlServer;
+import com.gt.axis.server.wxmp.VideoServer;
+import com.gt.game.core.util.CommonUtil;
 import com.gt.game.core.util.QRcodeKit;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -11,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 /**
  * 链接controller
@@ -57,8 +65,10 @@ public class LinkController {
     @ApiOperation(value = "获取短信链接", notes = "获取短信链接")
     @RequestMapping(value = "/getShorUrl", method = RequestMethod.GET)
     public String getShorUrl(HttpServletRequest request, HttpServletResponse response, @RequestParam @ApiParam("移动端链接") String url) throws UnsupportedEncodingException {
-      String s = ShortUrlServer.getShorUrl(url);
-      return s;
+        String urls = AxisContent.getInstance().getServiceUrl()+ "service/rest/shortUrl/getNewShortUrl";
+        String s = ShortUtil.sendLongUrlToShortApi(urls, url);
+        Map<String,Object> map = JsonUtils.json2Map(s);
+        return CommonUtil.isNotEmpty(map.get("url"))?map.get("url").toString():"";
     }
 
     /**
@@ -71,8 +81,10 @@ public class LinkController {
     @RequestMapping(value = "{key}/getVideourl", method = RequestMethod.GET)
     public void getVideourl(HttpServletRequest request, HttpServletResponse response, @PathVariable("key") String key ){
         try {
-//            String url = course.urlquery(key);
-            String url = "https://v.qq.com/iframe/player.html?vid=g0550rl08hs&tiny=0&auto=0";
+            VideoReq v = new VideoReq();
+            v.setCourceModel(key);
+            AxisResult<String> result = VideoServer.getVoiceUrl(v);
+            String url = CommonUtil.isNotEmpty(result.getData())?result.getData():"";
             if(!url.equals("")){
                 if(!(url.indexOf("http:")>-1 || url.indexOf("https:")>-1)){
                     url = "http://" + url;

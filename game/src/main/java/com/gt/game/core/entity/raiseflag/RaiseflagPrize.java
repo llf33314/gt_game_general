@@ -61,11 +61,6 @@ public class RaiseflagPrize extends Model<RaiseflagPrize> {
      * 兑奖链接
      */
 	private String cashUrl;
-    /**
-     * 卡券包ID
-     */
-	private Integer cardReceiveId;
-
 
 	@Override
 	protected Serializable pkVal() {

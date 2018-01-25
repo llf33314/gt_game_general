@@ -9,15 +9,17 @@ import com.gt.game.core.bean.eggs.res.EggsCountActivityRes;
 import com.gt.game.core.bean.eggs.res.EggsListRes;
 import com.gt.game.core.bean.ninelattice.res.NinelatticeGetActivityRes;
 import com.gt.game.core.bean.scratch.req.*;
+import com.gt.game.core.bean.scratch.req.ScratchDelWinningReq;
 import com.gt.game.core.bean.scratch.res.*;
 import com.gt.game.core.bean.tree.res.TreeGetWinningRes;
-import com.gt.game.core.bean.turntable.req.TurntableListReq;
+import com.gt.game.core.bean.turntable.req.*;
+import com.gt.game.core.bean.turntable.res.TurntableCountActivityRes;
+import com.gt.game.core.bean.turntable.res.TurntableGetActivityRes;
 import com.gt.game.core.bean.turntable.res.TurntableListRes;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 import com.gt.game.core.exception.scratch.ScratchException;
-import com.gt.game.core.exception.turntable.TurnException;
-import com.gt.game.core.service.scratch.ScratchService;
+import com.gt.game.core.exception.turntable.TurntableException;
 import com.gt.game.core.service.turntable.TurntableService;
 import com.gt.game.core.util.CommonUtil;
 import io.swagger.annotations.*;
@@ -60,10 +62,10 @@ public class TurntableController extends BaseController {
     @Override
     protected ResponseDTO getMobileUrl(@RequestBody @ApiParam(value = "请求参数") MobileUrlReq mobileUrlReq, HttpServletRequest request) {
         try {
-            BusUser busUser = CommonUtil.getLoginUser(request);
-            MobileUrlRes mobileUrlRes = turntableService.getMobileUrl(busUser, mobileUrlReq);
+            WxPublicUsers loginPbUser = CommonUtil.getLoginPbUser(request);
+            MobileUrlRes mobileUrlRes = turntableService.getMobileUrl(loginPbUser, mobileUrlReq);
             return ResponseDTO.createBySuccess("获取手机端链接成功", mobileUrlRes);
-        } catch (TurnException e){
+        } catch (TurntableException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
         } catch (Exception e){
@@ -88,7 +90,7 @@ public class TurntableController extends BaseController {
             WxPublicUsers loginPbUser = CommonUtil.getLoginPbUser(request);
             ResponseDTO<List<TurntableListRes>> responseDTO = turntableService.getTurntableList(loginPbUser, turntableListReq);
             return responseDTO;
-        } catch (TurnException e){
+        } catch (TurntableException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
         } catch (Exception e){
@@ -97,23 +99,23 @@ public class TurntableController extends BaseController {
         }
     }
 
-   /*// TODO    统计刮刮乐活动总数
+   // TODO    统计大转盘活动总数
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
             @ApiResponse(code = 1, message = "data对象（数组对象）", response = List.class),
-            @ApiResponse(code = 2, message = "任务对象", response = EggsCountActivityRes.class),
+            @ApiResponse(code = 2, message = "任务对象", response = TurntableCountActivityRes.class),
     })
-    @ApiOperation(value = "统计刮刮乐活动总数", notes = "统计刮刮乐活动总数")
-    @RequestMapping(value = "/countScratch", method = RequestMethod.POST)
-    public ResponseDTO countScratch(@RequestBody @ApiParam(value = "请求对象") ScratchCountActivityReq scratchCountActivityReq, BindingResult bindingResult,
-                                    HttpServletRequest request) {
+    @ApiOperation(value = "统计大转盘活动总数", notes = "统计大转盘活动总数")
+    @RequestMapping(value = "/countTurntable", method = RequestMethod.POST)
+    public ResponseDTO countTurntable(@RequestBody @ApiParam(value = "请求对象") TurntableCountActivityReq turntableCountActivityReq, BindingResult bindingResult,
+                                      HttpServletRequest request) {
         InvalidParameter(bindingResult);
         try {
-            logger.debug(scratchCountActivityReq.toString());
+            logger.debug(turntableCountActivityReq.toString());
             WxPublicUsers loginPbUser = CommonUtil.getLoginPbUser(request);
-            ScratchCountActivityRes scratchCountActivityRes = scratchService.countScratch(loginPbUser, scratchCountActivityReq);
-            return ResponseDTO.createBySuccess("统计刮刮乐活动总数成功", scratchCountActivityRes);
-        }catch (ScratchException e){
+            TurntableCountActivityRes turntableCountActivityRes = turntableService.countTurntable(loginPbUser, turntableCountActivityReq);
+            return ResponseDTO.createBySuccess("统计大转盘活动总数成功", turntableCountActivityRes);
+        }catch (TurntableException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
         } catch (Exception e){
@@ -126,17 +128,18 @@ public class TurntableController extends BaseController {
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
     })
-    @ApiOperation(value = "新增刮刮乐活动", notes = "新增刮刮乐活动")
+    @ApiOperation(value = "新增大转盘活动", notes = "新增大转盘活动")
     @RequestMapping(value = "/addScratch", method = RequestMethod.POST)
-    protected ResponseDTO addScratch(@RequestBody @ApiParam(value = "请求对象") ScratchAddReq scratchAddReq, BindingResult bindingResult,
+    protected ResponseDTO addScratch(@RequestBody @ApiParam(value = "请求对象") TurntableAddReq turntableAddReq, BindingResult bindingResult,
                                      HttpServletRequest request) {
         InvalidParameter(bindingResult);
         try {
-            logger.debug(scratchAddReq.toString());
+            logger.debug(turntableAddReq.toString());
             WxPublicUsers loginPbUser = CommonUtil.getLoginPbUser(request);
-            scratchService.addScratch(loginPbUser, scratchAddReq);
-            return ResponseDTO.createBySuccessMessage("新增刮刮乐活动成功");
-        } catch (ScratchException e){
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            turntableService.addScratch(busUser,loginPbUser, turntableAddReq);
+            return ResponseDTO.createBySuccessMessage("新增大转盘活动成功");
+        } catch (TurntableException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
         } catch (Exception e){
@@ -145,23 +148,23 @@ public class TurntableController extends BaseController {
         }
     }
 
-    // TODO    通过活动id查询刮刮乐活动
+    // TODO    通过活动id查询大转盘活动
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
             @ApiResponse(code = 1, message = "data对象（数组对象）", response = List.class),
-            @ApiResponse(code = 2, message = "任务对象", response = NinelatticeGetActivityRes.class),
+            @ApiResponse(code = 2, message = "任务对象", response = TurntableGetActivityRes.class),
     })
-    @ApiOperation(value = "通过活动id查询刮刮乐活动", notes = "通过活动id查询刮刮乐活动")
+    @ApiOperation(value = "通过活动id查询大转盘活动", notes = "通过活动id查询大转盘活动")
     @RequestMapping(value = "/getActivityById", method = RequestMethod.POST)
-    public ResponseDTO getActivityById(@RequestBody @ApiParam(value = "请求对象") ScratchGetActivityReq scratchGetActivityReq, BindingResult bindingResult,
+    public ResponseDTO getActivityById(@RequestBody @ApiParam(value = "请求对象") TurntableGetActivityReq turntableGetActivityReq, BindingResult bindingResult,
                                        HttpServletRequest request) {
         InvalidParameter(bindingResult);
         try {
-            logger.debug(scratchGetActivityReq.toString());
+            logger.debug(turntableGetActivityReq.toString());
             BusUser busUser = CommonUtil.getLoginUser(request);
-            ScratchGetActivityRes scratchGetActivityRes = scratchService.getActivityById(busUser, scratchGetActivityReq);
-            return ResponseDTO.createBySuccess("通过活动id查询刮刮乐活动成功", scratchGetActivityRes);
-        }catch (ScratchException e){
+            TurntableGetActivityRes turntableGetActivityRes = turntableService.getActivityById(busUser, turntableGetActivityReq);
+            return ResponseDTO.createBySuccess("通过活动id查询大转盘活动成功", turntableGetActivityRes);
+        }catch (TurntableException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
         } catch (Exception e){
@@ -170,21 +173,21 @@ public class TurntableController extends BaseController {
         }
     }
 
-    // TODO  编辑刮刮乐活动设置
+    // TODO  编辑大转盘活动设置
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
     })
-    @ApiOperation(value = "编辑刮刮乐活动设置", notes = "编辑刮刮乐活动设置")
-    @RequestMapping(value = "/modfiyScratch", method = RequestMethod.POST)
-    protected ResponseDTO modfiyScratch(@RequestBody @ApiParam(value = "请求对象") ScratchModfiyReq scratchModfiyReq, BindingResult bindingResult,
+    @ApiOperation(value = "编辑大转盘活动设置", notes = "编辑大转盘活动设置")
+    @RequestMapping(value = "/modfiyTurntable", method = RequestMethod.POST)
+    protected ResponseDTO modfiyTurntable(@RequestBody @ApiParam(value = "请求对象") TurntableModfiyReq turntableModfiyReq, BindingResult bindingResult,
                                         HttpServletRequest request) {
         InvalidParameter(bindingResult);
         try {
-            logger.debug(scratchModfiyReq.toString());
+            logger.debug(turntableModfiyReq.toString());
             BusUser busUser = CommonUtil.getLoginUser(request);
-            scratchService.modfiyScratch(busUser,scratchModfiyReq);
-            return ResponseDTO.createBySuccessMessage("编辑刮刮乐活动设置成功");
-        } catch (ScratchException e){
+            turntableService.modfiyTurntable(busUser,turntableModfiyReq);
+            return ResponseDTO.createBySuccessMessage("编辑大转盘活动设置成功");
+        } catch (TurntableException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
         } catch (Exception e){
@@ -196,16 +199,16 @@ public class TurntableController extends BaseController {
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
     })
-    @ApiOperation(value = "刮刮乐开始活动", notes = "刮刮乐开始活动")
-    @RequestMapping(value = "/startScratch", method = RequestMethod.POST)
-    protected ResponseDTO startScratch(
-            @RequestBody @ApiParam("请求参数") ScratchStartReq scratchStartReq,
+    @ApiOperation(value = "大转盘活动暂停/开始活动", notes = "大转盘活动暂停/开始活动")
+    @RequestMapping(value = "/stopTurntable", method = RequestMethod.POST)
+    protected ResponseDTO stopTurntable(
+            @RequestBody @ApiParam("请求参数") TurntableStopIdReq turntableStopIdReq,
             HttpServletRequest request) {
         try {
-            BusUser busUser = CommonUtil.getLoginUser(request);
-            scratchService.startScratch(busUser, scratchStartReq);
-            return ResponseDTO.createBySuccessMessage("刮刮乐开始活动成功");
-        } catch (ScratchException e){
+            WxPublicUsers busUser = CommonUtil.getLoginPbUser(request);
+            ResponseDTO responseDTO = turntableService.stopTurntable(busUser, turntableStopIdReq);
+            return responseDTO;
+        } catch (TurntableException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
         } catch (Exception e){
@@ -214,31 +217,10 @@ public class TurntableController extends BaseController {
         }
     }
 
-    @ApiResponses({
+    /*@ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
     })
-    @ApiOperation(value = "刮刮乐暂停活动", notes = "刮刮乐暂停活动")
-    @RequestMapping(value = "/stopScratch", method = RequestMethod.POST)
-    protected ResponseDTO stopScratch(
-            @RequestBody @ApiParam("请求参数") ScratchStopReq scratchStopReq,
-            HttpServletRequest request) {
-        try {
-            BusUser busUser = CommonUtil.getLoginUser(request);
-            scratchService.stopScratch(busUser, scratchStopReq);
-            return ResponseDTO.createBySuccessMessage("刮刮乐暂停活动成功");
-        } catch (ScratchException e){
-            logger.error(e.getMessage(), e.fillInStackTrace());
-            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
-        } catch (Exception e){
-            e.printStackTrace();
-            return ResponseDTO.createByError();
-        }
-    }
-
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-    })
-    @ApiOperation(value = "批量删除刮刮乐活动", notes = "批量删除刮刮乐活动")
+    @ApiOperation(value = "删除刮刮乐活动", notes = "删除刮刮乐活动")
     @RequestMapping(value = "/delScratch", method = RequestMethod.POST)
     protected ResponseDTO delScratch(
             @RequestBody @ApiParam("请求参数") ScratchDelReq scratchDelReq,
@@ -246,7 +228,7 @@ public class TurntableController extends BaseController {
         try {
             BusUser busUser = CommonUtil.getLoginUser(request);
             scratchService.delScratch(busUser, scratchDelReq);
-            return ResponseDTO.createBySuccessMessage("批量删除刮刮乐活动成功");
+            return ResponseDTO.createBySuccessMessage("删除刮刮乐活动成功");
         } catch (ScratchException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
@@ -260,7 +242,7 @@ public class TurntableController extends BaseController {
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
             @ApiResponse(code = 1, message = "data对象（数组对象）", response = List.class),
-            @ApiResponse(code = 2, message = "任务对象", response = TreeGetWinningRes.class),
+            @ApiResponse(code = 2, message = "任务对象", response = ScratchGetWinningRes.class),
     })
     @ApiOperation(value = "分页获取刮刮乐中奖记录列表", notes = "分页获取刮刮乐中奖记录列表")
     @RequestMapping(value = "/getWinningList", method = RequestMethod.POST)
