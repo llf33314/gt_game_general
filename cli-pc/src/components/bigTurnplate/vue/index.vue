@@ -203,17 +203,17 @@ export default {
     },
     //中奖记录
     record(val) {
-      this.$router.push({ path: '/scrapeHappy/prizeRecord', query: { id: val } });
+      this.$router.push({ path: '/bigTurnplate/prizeRecord', query: { id: val } });
     },
     // //核销授权
     // impower(val){
-    //    this.$router.push({path: '/scrapeHappy/cancelOut', query: {id: val}});
+    //    this.$router.push({path: '/bigTurnplate/cancelOut', query: {id: val}});
     // },
     addActive() {
-      this.$router.push('/scrapeHappy/addAct')
+      this.$router.push('/bigTurnplate/addAct')
     },
     editActive(val) {
-      this.$router.push({ path: '/scrapeHappy/editAct', query: { id: val } });
+      this.$router.push({ path: '/bigTurnplate/editAct', query: { id: val } });
     },
   },
   mounted() {
