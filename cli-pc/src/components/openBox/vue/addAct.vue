@@ -1,3 +1,9 @@
+<style>
+.el-table .cell { 
+    display: inline-flex;
+}
+</style>
+
 <template>
 <section>
 <div class="hd-common">
@@ -64,17 +70,17 @@
                   </template>
                 </el-table-column> 
                 <el-table-column label="礼盒音乐">
-                  <template slot-scope="scope">
-                       <el-select  class="w100_demo"  v-model="scope.row.giftSound" placeholder="请选择"> 
+                    <template slot-scope="scope">
+                       <el-select  class="w100_demo pull-left"  v-model="scope.row.giftSound"  @change="boxMusic(scope.$index)" placeholder="请选择"> 
                             <el-option label="音乐一"  value="音乐一"></el-option> 
                             <el-option label="音乐二"  value="音乐二"></el-option> 
                             <el-option label="音乐三"  value="音乐三"></el-option> 
                             <el-option label="音乐四"  value="音乐四"></el-option> 
                             <el-option label="音乐五"  value="音乐五"></el-option>                             
-                        </el-select>
-                        <!-- <el-button size="small" type="primary">播放</el-button>
-                        <el-button size="small" type="primary">暂停</el-button> -->
-                  </template>
+                        </el-select> 
+                        <audio v-show="scope.row.giftSound" controls="controls" :src="scope.row.music" style="width:70px;margin-left:10px;margin-top:3px;"> 
+                        </audio>  
+                    </template>
                 </el-table-column> 
                  <el-table-column label="放置礼品">
                   <template slot-scope="scope">
@@ -87,8 +93,7 @@
                         <el-button class="gt-button-normal" v-show="scope.$index>2" @click="deldemolitionGiftBoxReqs(scope.$index)">删除</el-button>
                   </template>
                 </el-table-column> 
-             </el-table> 
-
+            </el-table>  
             <h1 class="mt30 mb20 pb10 bbtom">广告设置</h1> 
             <el-button type="primary" class="mb20" @click="adddemolitionAdReqs()">新增</el-button>  
             <span class="ml10 el-upload__tip grey">1.仅支持多粉与翼粉开头的链接    2.广告图格式：1000*300px</span>
@@ -290,18 +295,21 @@ export default {
             giftName :"",
             giftImg:"",
             giftSound:"",
+            music:"",
             award:"",
             }, {
             name1:0,
             giftName :"",
             giftImg:"",
             giftSound:"",
+            music:"",
             award:"",
             }, {
             name1:0,
             giftName :"",
             giftImg:"",
             giftSound:"",
+            music:"",
             award:"",
             },
             
@@ -387,7 +395,21 @@ export default {
     };
   },
   methods: {
-     boxStyle(val){
+    boxMusic(val){
+        var k=val
+        if(this.ruleForm1.demolitionGiftBoxReqs[k].giftSound=="音乐一"){
+            this.ruleForm1.demolitionGiftBoxReqs[k].music = gameVoice+'game/openBox/music/'+'1.mp3' 
+        }else if(this.ruleForm1.demolitionGiftBoxReqs[k].giftSound=="音乐二"){
+            this.ruleForm1.demolitionGiftBoxReqs[k].music = gameVoice+'game/openBox/music/'+'2.mp3' 
+        }else if(this.ruleForm1.demolitionGiftBoxReqs[k].giftSound=="音乐三"){
+            this.ruleForm1.demolitionGiftBoxReqs[k].music = gameVoice+'game/openBox/music/'+'3.mp3' 
+        }else if(this.ruleForm1.demolitionGiftBoxReqs[k].giftSound=="音乐四"){
+            this.ruleForm1.demolitionGiftBoxReqs[k].music = gameVoice+'game/openBox/music/'+'4.mp3' 
+        }else if(this.ruleForm1.demolitionGiftBoxReqs[k].giftSound=="音乐五"){
+            this.ruleForm1.demolitionGiftBoxReqs[k].music = gameVoice+'game/openBox/music/'+'5.mp3'  
+        }
+    }, 
+    boxStyle(val){
         var k=val
         var giftNameid= this.ruleForm1.demolitionGiftBoxReqs[k].giftName 
         console.log(val,giftNameid);

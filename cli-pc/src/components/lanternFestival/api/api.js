@@ -55,7 +55,7 @@ export default {
         return post(`${base}/getActivityById`, params) 
        },
 
-       // 编辑元宵点灯 
+       // 编辑活动
        modfiyActivity(params) {
         return post(`${base}/modfiyLantern`, params)  
        },

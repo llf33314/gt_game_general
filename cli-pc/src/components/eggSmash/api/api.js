@@ -56,23 +56,11 @@ export default {
        getActivityById(params) {
         return post(`${base}/getActivityById`, params) 
        },
-
-       // 编辑活动基础设置  
-       modfiyBasicsLantern(params) {
-        return post(`${base}/modfiyBasicsLantern`, params) 
+       // 编辑活动
+       modfiyActivity(params) {
+        return post(`${base}/modfiyEggs`, params)  
        },
-       // 编辑活动规则设置  
-       modfiyRuleLantern(params) {
-        return post(`${base}/modfiyRuleLantern`, params) 
-       },
-       // 编辑活动兑奖设置 
-       modfiyExpiryLantern(params) {
-        return post(`${base}/modfiyExpiryLantern`, params) 
-       },
-       // 编辑活动奖项设置  
-       modfiyAwardsLantern(params) {
-        return post(`${base}/modfiyAwardsLantern`, params) 
-       }, 
+       
 
        /* 核销授权 - 接口 */ 
        // 分页获取核销授权列表
