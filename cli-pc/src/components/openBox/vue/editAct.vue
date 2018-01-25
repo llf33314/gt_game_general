@@ -1,12 +1,16 @@
+<style>
+.el-table .cell { 
+    display: inline-flex;
+}
+</style> 
 <template>
 <section>
 <div class="hd-common">
     <el-breadcrumb separator="/" class="gt-crumbs">
       <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
       <el-breadcrumb-item :to="{ path:'/openBox/index' }">拆礼盒</el-breadcrumb-item>  
-      <el-breadcrumb-item>创建活动</el-breadcrumb-item>   
+      <el-breadcrumb-item>编辑活动</el-breadcrumb-item>   
     </el-breadcrumb> 
-
     <div class="gt-content">
         <el-tabs v-model="active" type="card">
             <el-tab-pane label="基础设置" name="0"></el-tab-pane>
@@ -63,17 +67,17 @@
                   </template>
                 </el-table-column> 
                 <el-table-column label="礼盒音乐">
-                  <template slot-scope="scope">
-                       <el-select  class="w100_demo"  v-model="scope.row.giftSound" placeholder="请选择"> 
+                    <template slot-scope="scope">
+                       <el-select  class="w100_demo pull-left"  v-model="scope.row.giftSound"  @change="boxMusic(scope.$index)" placeholder="请选择"> 
                             <el-option label="音乐一"  value="音乐一"></el-option> 
                             <el-option label="音乐二"  value="音乐二"></el-option> 
                             <el-option label="音乐三"  value="音乐三"></el-option> 
                             <el-option label="音乐四"  value="音乐四"></el-option> 
                             <el-option label="音乐五"  value="音乐五"></el-option>                             
-                        </el-select>
-                        <!-- <el-button size="small" type="primary">播放</el-button>
-                        <el-button size="small" type="primary">暂停</el-button> -->
-                  </template>
+                        </el-select> 
+                        <audio v-show="scope.row.giftSound" controls="controls" :src="scope.row.music" style="width:70px;margin-left:10px;margin-top:3px;"> 
+                        </audio>  
+                    </template>
                 </el-table-column> 
                  <el-table-column label="放置礼品">
                   <template slot-scope="scope">
@@ -86,8 +90,7 @@
                         <el-button class="gt-button-normal" v-show="scope.$index>2" @click="deldemolitionGiftBoxReqs(scope.$index)">删除</el-button>
                   </template>
                 </el-table-column> 
-             </el-table> 
-
+            </el-table>  
             <h1 class="mt30 mb20 pb10 bbtom">广告设置</h1> 
             <el-button type="primary" class="mb20" @click="adddemolitionAdReqs()">新增</el-button>  
             <span class="ml10 el-upload__tip grey">1.仅支持多粉与翼粉开头的链接    2.广告图格式：1000*300px</span>
@@ -214,7 +217,7 @@
                   </template>
                 </el-table-column>
                 <el-table-column label="奖品图片">
-                    <template slot-scope="scope"  v-if="scope.row.name0==4||scope.row.name0=='实体物品'">  
+                    <template slot-scope="scope"  v-if="scope.row.name0==4">  
                         <gt-material v-for="(item,index) in scope.row.name5" :key="index" :prop="scope" :sonIndex="index" selectType="radio" :url="item" @getChangeUrl="getAwardImgList" width="50" height="50" class="mr10"></gt-material>
                         <gt-material :prop="scope" selectType="select"  @getChangeUrl="addAwardImg" width="50" height="50" class="uploadBtn"></gt-material>
                     </template>
@@ -243,7 +246,7 @@
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">保存</el-button>   
             <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>   
             <!-- <el-button type="primary" @click="submit()">打印</el-button>    -->
-        </div> 
+        </div>  
     </div>   
 </div>
 </section>
@@ -289,18 +292,21 @@ export default {
             giftName :"",
             giftImg:"",
             giftSound:"",
+            music:"",
             award:"",
             }, {
             name1:0,
             giftName :"",
             giftImg:"",
             giftSound:"",
+            music:"",
             award:"",
             }, {
             name1:0,
             giftName :"",
             giftImg:"",
             giftSound:"",
+            music:"",
             award:"",
             },
             
@@ -386,7 +392,21 @@ export default {
     };
   },
   methods: {
-     boxStyle(val){
+    boxMusic(val){
+        var k=val
+        if(this.ruleForm1.demolitionGiftBoxReqs[k].giftSound=="音乐一"){
+            this.ruleForm1.demolitionGiftBoxReqs[k].music = gameVoice+'game/openBox/music/'+'1.mp3' 
+        }else if(this.ruleForm1.demolitionGiftBoxReqs[k].giftSound=="音乐二"){
+            this.ruleForm1.demolitionGiftBoxReqs[k].music = gameVoice+'game/openBox/music/'+'2.mp3' 
+        }else if(this.ruleForm1.demolitionGiftBoxReqs[k].giftSound=="音乐三"){
+            this.ruleForm1.demolitionGiftBoxReqs[k].music = gameVoice+'game/openBox/music/'+'3.mp3' 
+        }else if(this.ruleForm1.demolitionGiftBoxReqs[k].giftSound=="音乐四"){
+            this.ruleForm1.demolitionGiftBoxReqs[k].music = gameVoice+'game/openBox/music/'+'4.mp3' 
+        }else if(this.ruleForm1.demolitionGiftBoxReqs[k].giftSound=="音乐五"){
+            this.ruleForm1.demolitionGiftBoxReqs[k].music = gameVoice+'game/openBox/music/'+'5.mp3'  
+        }
+    }, 
+    boxStyle(val){
         var k=val
         var giftNameid= this.ruleForm1.demolitionGiftBoxReqs[k].giftName 
         console.log(val,giftNameid);
@@ -506,13 +526,12 @@ export default {
                 return false
             }
         }
-        this.active=1
-        
+        this.submit()        
     },
     next(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) { 
-          this.active++;
+          this.submit()  
         } else {
          console.log("error submit!!");
         }
@@ -561,7 +580,8 @@ export default {
        this.checkGL(); 
     },  
     //表单提交--------------------------------------star
-    submit(){   
+    submit(){
+        console.log(this.ruleForm1,123);  
         //奖品
         var newPrize=[];
         if(this.ruleForm4){
@@ -579,7 +599,7 @@ export default {
                     arr4.type =1
                 }else if (arr4.type == "手机流量"){
                     arr4.type =2 
-                }else if (arr4.type == "手机话费"){
+                 }else if (arr4.type == "手机话费"){
                     arr4.type =3 
                 }else if (arr4.type == "实体物品"){
                     arr4.type =4 
@@ -608,6 +628,7 @@ export default {
             activityBeginTime: this.ruleForm1.name1[0], 
             activityEndTime  : this.ruleForm1.name1[1], 
             musicUrl  : this.ruleForm1.musicUrl ,  
+            demolitionGiftBoxReqs:this.ruleForm1.demolitionGiftBoxReqs,
             demolitionAdReqs:this.ruleForm1.demolitionAdReqs,
             //规则设置
             followQrCode  : this.ruleForm2.followQrCode, 
@@ -618,7 +639,7 @@ export default {
             cashPrizeBeginTime:this.ruleForm3.date[0], 
             cashPrizeEndTime  :this.ruleForm3.date[1], 
             receiveType       :this.ruleForm3.type.toString(), //兑奖方式
-            seagoldAddressReqs:this.ruleForm3.demolitionAddressReqs,//兑奖地址 
+            demolitionAddressReqs:this.ruleForm3.demolitionAddressReqs,//兑奖地址 
             phone             :this.ruleForm3.phone, 
             cashPrizeInstruction:this.ruleForm3.cashPrizeInstruction,  
             //奖项设置 
@@ -628,13 +649,16 @@ export default {
            
         };
         console.log(data,123); 
-        saveAct(data).then(data=>{ 
+        saveAct(data).then(data=>{
+          this.isSubmit=true
           if (data.code == 100) {  
               this.$message({ message: "操作成功", type: "success"}); 
-          } else { 
+          } else {
+              this.isSubmit=false
               this.$message.error(data.msg);
           }
-        }).catch(() => { 
+        }).catch(() => {
+            this.isSubmit=false
             this.$message({type: "info", message: "网络问题，请刷新重试~" });
         }); 
     },  
@@ -736,7 +760,7 @@ export default {
    },
   mounted() {
     this.getPrizeTypeData()
-     this.getActData()
+    this.getActData()
   }
 };
 </script>

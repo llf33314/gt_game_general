@@ -20,11 +20,11 @@
         <!-- 基础设置 -->
         <div v-show="this.active==0" class="mt40">
             <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="145px" class="demo-ruleForm"> 
-                <el-form-item label="活动名称：" prop="name">
-                    <el-input class="w_demo"  placeholder="请输入活动名称"  v-model="ruleForm1.name"></el-input>
+                <el-form-item label="活动名称：" prop="eggName">
+                    <el-input class="w_demo"  placeholder="请输入活动名称"  v-model="ruleForm1.eggName"></el-input>
                 </el-form-item>
-                 <el-form-item label="游戏时间：" prop="name1">
-                    <el-date-picker class="w_demo" v-model="ruleForm1.name1"   type="datetimerange"  @change="changeDate" placeholder="选择时间范围">
+                 <el-form-item label="活动时间：" prop="date">
+                    <el-date-picker class="w_demo" v-model="ruleForm1.date" :editable="false"   type="datetimerange"  placeholder="选择时间范围">
                     </el-date-picker>
                 </el-form-item>   
                 
@@ -36,43 +36,34 @@
                 </el-form-item>
                 <div class="pd20 bw pt10 bb ml150 mb20" v-if="ruleForm1.eggEggPartaker==2">
                     <el-form-item label="参与方式：" label-width="100px">
-                          <el-radio-group v-model="ruleForm1.way">
+                          <el-radio-group v-model="ruleForm1.eggPway" class="mg-t10">
                             <el-radio :label="1">所有会员不需要积分</el-radio><br><br>
-                            <el-radio :label="2">会员卡积分满<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.way!="2"' v-model="ruleForm1.wayJF"></el-input>即可参加（抽奖不扣除积分）</el-radio><br><br>
-                            <el-radio :label="3">每次抽奖扣除<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.way!="3"' v-model="ruleForm1.wayJF"></el-input>积分</el-radio><br><br>
-                            <el-radio :label="4">会员卡积分满<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.way!="4"' v-model="ruleForm1.wayJF"></el-input>分，
-                                                 每次抽奖扣除<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.way!="4"' v-model="ruleForm1.wayJF1"></el-input>分</el-radio> 
+                            <el-radio :label="2">会员卡积分满<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.eggPway!="2"' v-model="ruleForm1.eggMan"></el-input>即可参加（抽奖不扣除积分）</el-radio><br><br>
+                            <el-radio :label="3">每次抽奖扣除<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.eggPway!="3"' v-model="ruleForm1.eggKou"></el-input>积分</el-radio><br><br>
+                            <el-radio :label="4">会员卡积分满<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.eggPway!="4"' v-model="ruleForm1.eggMan"></el-input>分，
+                                                 每次抽奖扣除<el-input class="w100_demo ml10 mt20 mr10" :disabled='ruleForm1.eggPway!="4"' v-model="ruleForm1.eggKou"></el-input>分</el-radio> 
                           </el-radio-group> 
                     </el-form-item>
                 </div> 
 
-                <el-form-item label="活动说明：" prop="desc">
+                <el-form-item label="活动说明：" prop="eggDescribe">
                     <el-input class="w_demo"  type="textarea" v-model="ruleForm1.eggDescribe" :rows="3" placeholder="请输入活动说明"></el-input>
                     <span class="el-upload__tip grey" >
                         描述活动详情，能让粉丝了解此次活动
                     </span>
                 </el-form-item> 
 
-                 <el-form-item label="活动未开始提示：" prop="desc">
+                 <el-form-item label="活动未开始提示：" prop="eggBeforeTxt">
                     <el-input class="w_demo"  type="textarea" v-model="ruleForm1.eggBeforeTxt" :rows="3" placeholder="如：活动尚未开始，敬请期待!"></el-input>
                     <span class="el-upload__tip grey" >
                         活动未开始提示限制在100个字数以内
                     </span>
                 </el-form-item>  
 
-                <!-- <el-form-item label="背景音乐：">
-                    <div class="pd20 bb bw">
-                        <el-button size="small" type="primary">点击上传</el-button>
-                        <span class="el-upload__tip grey ml20">{{ruleForm1.music}}</span> 
-                        <div class="el-upload__tip grey" style="line-height:25px">
-                            音频文件的格式为mp3、wma、wav,大小不超过3M
-                        </div>
-                    </div>
-                </el-form-item> -->
                  <el-form-item label="背景音乐：">
                     <div class="pd20 bb bw bgMusic">
                         <gt-material class="va-m" :prop="''" :isMusic="true" btnContent="点击上传"  v-on:getChangeUrl="getMusic" width="72" height="72"></gt-material>
-                        <span class="el-upload__tip c333 ml20">{{ruleForm2.bgmSp}}</span> 
+                        <span class="el-upload__tip c333 ml20">{{ruleForm1.eggBgmName}}</span> 
                         <div class="el-upload__tip grey" style="line-height:25px">
                             音频文件的格式为mp3、wma、wav,大小不超过3M
                         </div>
@@ -84,10 +75,10 @@
         <div v-show="this.active==1" class="mt40">
             <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="120px" class="mt40 demo-ruleForm">  
                     <el-form-item label="抽奖次数：" prop="eggCountOfDay">
-                        <el-input class="w_demo mr10" v-model="ruleForm2.eggCountOfDay" placeholder="请输入每人抽奖总次数"></el-input> 次/人
+                        <el-input class="w_demo mr10" v-model.number="ruleForm2.eggCountOfDay" placeholder="请输入每人抽奖总次数"></el-input> 次/人
                     </el-form-item>
                     <el-form-item label="抽奖总数：" prop="eggCountOfAll">
-                        <el-input class="w_demo mr10" v-model="ruleForm2.eggCountOfAll" placeholder="请输入每人/每天抽奖总数"></el-input>次/人
+                        <el-input class="w_demo mr10" v-model.number="ruleForm2.eggCountOfAll" placeholder="请输入每人/每天抽奖总数"></el-input>次/人
                     </el-form-item>   
             </el-form> 
         </div> 
@@ -136,7 +127,7 @@
              <el-table ref="multipleTable" :data="ruleForm4" tooltip-effect="dark">
                 <el-table-column label="奖品类型" :width="200">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.name0" placeholder="请选择" class="w160">
+                        <el-select v-model="scope.row.eggPrizeType" placeholder="请选择" class="w160">
                             <el-option v-for="item in options" :key="item.value" :label="item.name" :value="item.value" v-if="item.value != 4">
                             </el-option>
                         </el-select>
@@ -144,27 +135,27 @@
                 </el-table-column>
                 <el-table-column label="奖品数额" :width="200">
                   <template slot-scope="scope">
-                      <el-input class="w150" type="number" v-model="scope.row.name1" placeholder="数值应大于0"></el-input>
+                      <el-input class="w150" type="number" v-model="scope.row.eggPrizeLimit" placeholder="数值应大于0"></el-input>
                   </template>
                 </el-table-column>
                 <el-table-column label="奖项名称" :width="240">
                   <template slot-scope="scope">
-                      <el-input class="w20_demo"  v-model="scope.row.name2" placeholder="请输入奖项名称"></el-input>
+                      <el-input class="w20_demo"  v-model="scope.row.eggPrizeName" placeholder="请输入奖项名称"></el-input>
                   </template>
                 </el-table-column>
                 <el-table-column label="奖项数量" :width="200">
                   <template slot-scope="scope">
-                      <el-input class="w150"  type="number"  v-model="scope.row.name3" placeholder="数值应大于0"></el-input>
+                      <el-input class="w150"  type="number"  v-model="scope.row.eggPrizeNums" placeholder="数值应大于0"></el-input>
                   </template>
                 </el-table-column>
                 <el-table-column label="中奖概率(%)" :width="200">
                   <template slot-scope="scope">
-                      <el-input class="w160"  v-model="scope.row.name4" placeholder="0-100且保留两位小数"></el-input>
+                      <el-input class="w160"  v-model="scope.row.eggPrizeChance" placeholder="0-100且保留两位小数"></el-input>
                   </template>
                 </el-table-column>
                 <el-table-column label="中奖人"> 
                      <template slot-scope="scope">
-                      {{scope.row.winners}}
+                      {{scope.row.nickname}}
                     </template>
                 </el-table-column>
                 <el-table-column label="操作">
@@ -187,13 +178,15 @@
         <!-- 按钮 -->
         <div class="h80"></div>
         <div class="btnRow"  v-if="this.active!=5">
-            <!-- <el-button   @click="upStep()" v-if="this.active!=0">上一步</el-button> -->
+            <el-button   @click="upStep()" v-if="this.active!=0">上一步</el-button>
             <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步1</el-button> 
             <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
-            <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>   
-            <el-button type="primary" @click="submit()">打印</el-button>   
+            <el-button type="primary" @click="lastStep"        v-if="this.active==3">保存</el-button>   
+            <el-button type="primary" @click="submit">打印</el-button>   
         </div> 
+
+        <gt-Fans-detail :fansKey="key+''" :visible="dialogFans" v-on:getFansData="getFansData"></gt-Fans-detail>  
     </div>   
 </div>
 </section>
@@ -203,33 +196,34 @@ import api from './../api/api'
 export default {
   data() {
     return {
-      active: 3,
+      active: 0,
       ruleForm1: {
-        type:1,
-        name: "",
-        name1: "",
-        eggEggPartaker: 1,
-        eggDescribe: "",
-        eggBeforeTxt: "",
-        music: "暂无上传音乐",
-        way:1,
-        wayJF:"", 
-        wayJF1:"",
+        eggName: '',  // 活动名称
+        date: [],               
+        eggBeginTime: '', // 活动开始时间
+        eggEndTime: '',  // 活动结束时间
+        eggEggPartaker: 1,  // 1.所有粉丝 2.仅会员(持有会员卡的粉丝) 
+        eggPway: 0, // 参与方式
+        eggMan: '', // 可参加抽奖的会员积分
+        eggKou: '', // 每次抽奖扣除积分
+        eggDescribe: '',  // 活动说明/描述
+        eggBeforeTxt : '',   // 活动未开始提示
+        eggBgmName: '',       // 背景音乐名称    
+        eggBgm: '',   // 背景音乐链接
       },
       rules1: {
-        name: [{ required: true, message: "活动名称不能为空", trigger: "blur" }],
-        name1: [
+        eggName: [{ required: true, message: "活动名称不能为空", trigger: "blur" }],
+        date: [
           { required: true, type: "array", message: "开始时间不能为空", trigger: "blur" }
         ],
       },
       ruleForm2: { 
         eggCountOfDay: "",
         eggCountOfAll: "" ,
-       
       },
       rules2: { 
-        eggCountOfDay: [{ required: true, message: "每天抽奖次数不能为空", trigger: "blur" }],
-        eggCountOfAll: [{ required: true, message: "抽奖总数不能为空", trigger: "blur" }]
+        eggCountOfDay: [{ required: true, type:'number', validator: this.$valid.elemIsInteger, trigger: "blur" }],
+        eggCountOfAll: [{ required: true, type:'number', validator: this.$valid.elemIsInteger, trigger: "blur" }]
       },
       ruleForm3: {
         eggCashDay:"",
@@ -243,130 +237,104 @@ export default {
       },  
       ruleForm4:[
         { 
-          name0: "1",
-          name1: "",
-          name2: "",
-          name3: "",
-          name4: "",
-          winners:"大大，小小",
+          eggPrizeType: "",
+          eggPrizeLimit: "",
+          eggPrizeName: "",
+          eggPrizeNums: "",
+          eggPrizeChance: "",
+          nickname:"",
         }
       ],
-      options: []
+      options: [],
+      dialogFans:false,
+      key:0,
     };
   },
-  methods: {  
-      changeDate(val) {
-          console.log(val)
-      },
+  methods: {
+    getMusic(e) {
+      this.ruleForm1.eggBgmName = e.music.name
+      this.ruleForm1.eggBgm = e.music.url
+    },
+    getFansData(e) {
+         console.log('获取子组件信息')
+    },  
     test() {
-      console.log(123); 
-      this.active=5
+      this.dialogFans = true
     },
 
     delForm4(index){
       this.ruleForm4.splice(index, 1);
     },
     addForm4(){  
-      this.ruleForm4.push({name0: 1, name1: "", name2: "", name3: "", name4: ""},)
+      this.ruleForm4.push({ eggPrizeType: "", eggPrizeLimit: "", eggPrizeName: "", eggPrizeNums: "", eggPrizeChance: "", nickname: "" })
     },
     upStep() {
       this.active--;
     },
-    getMusic(e) {
-      console.log(e)
-      this.ruleForm2.bgmSp = e.music.name
-      this.ruleForm2.musicUrl = e.music.url
-    },
+    
     next(formName) {
-        console.log(formName)
-        // console.log(!this.ruleForm4[i].name1)
       this.$refs[formName].validate(valid => {
         if (valid) { 
           this.active++;
         } else {
-          console.log("error submit!!");
+          return false
         }
       });
-    //   this.submit()
     },
     lastStep() {
-      for (let i = 0; i < this.ruleForm4.length; i++) { 
+     for (let i = 0; i < this.ruleForm4.length; i++) { 
         var regu =/^[1-9]\d*$/;
-        if(!this.ruleForm4[i].name1||!this.ruleForm4[i].name2||!this.ruleForm4[i].name3||!this.ruleForm4[i].name4){
+        if(!this.ruleForm4[i].eggPrizeType||!this.ruleForm4[i].eggPrizeLimit||!this.ruleForm4[i].eggPrizeName||!this.ruleForm4[i].eggPrizeNums){
             this.$message.error("表单不能留空，请填写完整~");
             return false
-        }else if (!regu.test(this.ruleForm4[i].name1)) {
-            this.$message.error("奖品数额填写有误，请重新填写~");
+        }else if (!regu.test(this.ruleForm4[i].eggPrizeLimit)) {
+            this.$message.error("奖品单位填写有误，请重新填写~");
             return false
-        }else if (!regu.test(this.ruleForm4[i].name3)) {
+        }else if (!regu.test(this.ruleForm4[i].eggPrizeNums)) {
             this.$message.error("奖项数量填写有误，请重新填写~");
             return false
-        }else{
-            this.ruleForm4[i].name4 = parseFloat(this.ruleForm4[i].name4).toFixed(2); 
-            this.submit();
-        }  
+        }else if (this.ruleForm4[i].eggPrizeType==4&&this.ruleForm4[i].name5.length==0) { 
+            this.$message.error("当奖品为实物时，请上传实物图片~");
+            return false 
+        }
       }
+       this.submit();
     },
     //表单提交--------------------------------------star
     submit(){
         var newarr=[];
         for(let i =0;i< this.ruleForm4.length;i++){
             var arr={
-                name0:this.ruleForm4[i].name0,
-                name1:this.ruleForm4[i].name1,
-                name2:this.ruleForm4[i].name2, 
+                eggPrizeType:this.ruleForm4[i].eggPrizeType,
+                eggPrizeLimit:this.ruleForm4[i].eggPrizeLimit,
+                eggPrizeName:this.ruleForm4[i].eggPrizeName, 
             }
             newarr.push(arr)
         } 
-        console.log(this.ruleForm1.name1)
-
-        //奖品
-        var newYearPrizeReqs=[];
-         if(this.ruleForm4){
-            for(let i =0;i< this.ruleForm4.length;i++){
-                var arr4={
-                    imgInstruction :"",
-                    eggPrizeType:this.ruleForm4[i].name0,//类型
-                    eggPrizeLimit :this.ruleForm4[i].name1,//单位
-                    eggPrizeName:this.ruleForm4[i].name2,//名称
-                    eggPrizeNums:Number(this.ruleForm4[i].name3),//数量
-                    eggPrizeChance :this.ruleForm4[i].name4,  //概率
-                    imgUrl :[]//图片
-                }
-                if(arr4.type==4){
-                    for(var j=0;j<this.ruleForm4[i].name5.length;j++){
-                    //     var imgarr={
-                    //         imgUrl:this.ruleForm4[i].name5[j]
-                    //     }
-                    // arr4.newYearPrizeImgReqs.push(imgarr)
-                    arr4.imgUrl.push(this.ruleForm4[i].name5[j])
-                    } 
-                } 
-                newYearPrizeReqs.push(arr4)
-            } 
-        }
         const data = {
             //基础设置 
-            name: this.ruleForm1.name,  // 活动名称               
-            eggBeginTime: this.ruleForm1.name1[0], // 活动开始时间
-            eggEndTime: this.ruleForm1.name1[1],  // 活动结束时间
-            eggEggPartaker : this.ruleForm1.eggEggPartaker,  // 1.所有粉丝 2.仅会员(持有会员卡的粉丝) 
+            eggName: this.ruleForm1.eggName,  // 活动名称               
+            eggBeginTime: this.ruleForm1.date[0], // 活动开始时间
+            eggEndTime: this.ruleForm1.date[1],  // 活动结束时间
+            eggEggPartaker: this.ruleForm1.eggEggPartaker,  // 1.所有粉丝 2.仅会员(持有会员卡的粉丝) 
+            eggPway: this.ruleForm1.eggPway, // 参与方式
+            eggMan: this.ruleForm1.eggMan, // 可参加抽奖的会员积分
+            eggKou: this.ruleForm1.eggKou, // 每次抽奖扣除积分
             eggDescribe: this.ruleForm1.eggDescribe,  // 活动说明/描述
             eggBeforeTxt : this.ruleForm1.eggBeforeTxt,   // 活动未开始提示
-            bgmSp: '',       // 背景音乐名称    
-            musicUrl: '',   // 背景音乐链接
+            eggBgmName: this.ruleForm1.eggBgmName,       // 背景音乐名称    
+            eggBgm: this.ruleForm1.eggBgm,   // 背景音乐链接
             //规则设置
             eggCountOfDay: this.ruleForm2.eggCountOfDay,   // 抽奖次数
             eggCountOfAll: this.ruleForm2.eggCountOfAll, // 抽奖总数
             //兑奖设置
             eggCashDay: this.ruleForm3.eggCashDay,      // 兑奖期限
             eggAddress: this.ruleForm3.eggAddress,     // 兑奖地址
-            // name11: this.ruleForm3.eggWinningTxt,     // 兑奖时间
             eggCashWay: this.ruleForm3.eggCashWay,  // 兑奖方式
             eggWinningTxt: this.ruleForm3.eggWinningTxt, // 兑奖提示
             eggWinningNotice: this.ruleForm3.eggWinningNotice,// 中奖须知
             //奖项设置 
-            prizeSetList:newYearPrizeReqs
+            prizeSetList: this.ruleForm4
         };
         console.log(data,123); 
         api.addActivity(data).then(data=>{
@@ -389,10 +357,7 @@ export default {
     
   },
   created() {
-      console.log('bbbbbbbbbbbbb')
-  },
-  mounted() { 
-     // 获取奖品类型
+      // 获取奖品类型
      api.getPrizeType().then(res=>{
             if (res.code == 100) {
             this.options=res.data
@@ -402,6 +367,17 @@ export default {
             }
         })
   },
+//   mounted() { 
+//      // 获取奖品类型
+//      api.getPrizeType().then(res=>{
+//             if (res.code == 100) {
+//             this.options=res.data
+//                 console.log(this.options,'获取奖品类型');
+//             } else {
+//                 this.$message.error('获取奖品类型失败');
+//             }
+//         })
+//   },
   filters: {
     prizeStatus(val) {
         if (val == 0) {

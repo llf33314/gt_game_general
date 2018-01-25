@@ -384,10 +384,6 @@ export default {
       }
        this.submit();
     }, 
-
-          submit11(){
-          console.log(this.ruleForm4,665544)
-      }, 
     getMusic(e) {
       console.log(e)
       this.ruleForm2.bgmSp = e.music.name

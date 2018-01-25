@@ -356,6 +356,9 @@ public class GoldRushServiceImpl  implements GoldRushService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResponseDTO saveGoldRush(BusUser busUser, GoldRushSaveReq GoldRushSaveReq) {
+        if(GoldRushSaveReq.getGoldRushPrizeReqs() == null || GoldRushSaveReq.getGoldRushPrizeReqs().size() < 1){
+            throw new GoldRushException(ResponseEnums.COMMON_HAS20);
+        }
         GoldRushMain GoldRushMain = null;
         Double num = 0.0;
         int f = 0;
@@ -437,6 +440,9 @@ public class GoldRushServiceImpl  implements GoldRushService {
                 GoldRushAddress.setActId(GoldRushMain.getId());
                 goldRushAddressService.insert(GoldRushAddress);
             }
+        }
+        if(fenbi == 0.0 && num > 0.0){
+            throw new GoldRushException(ResponseEnums.COMMON_HAS18);
         }
         if(fenbi > 0){//冻结粉币
             if( f > 0){
