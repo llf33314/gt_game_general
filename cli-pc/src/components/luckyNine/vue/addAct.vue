@@ -28,28 +28,6 @@
                     <el-date-picker class="w_demo" v-model="ruleForm1.name1" :editable="false"  type="datetimerange"  placeholder="选择时间范围">
                     </el-date-picker>
                 </el-form-item>    
-            <!-- <h1 class="mt30 mb20 pb10 bbtom" style="width:80%">广告设置</h1> 
-            <el-button type="primary" class="mb20" @click="addlinks">新增</el-button>  
-            <span class="ml10 el-upload__tip grey">1.仅支持多粉与一点揩油的链接    2.广告图格式：1000*300px</span>
-            <el-table ref="multipleTable" :data="ruleForm1.links" tooltip-effect="dark" style="width:80%">
-                <el-table-column label="广告链接">
-                  <template slot-scope="scope" >
-                        <el-input v-model="scope.row.hrefUrl" :maxlength="100">
-                          <template slot="prepend">Http://</template>
-                        </el-input>
-                  </template>
-                </el-table-column> 
-                <el-table-column label="选择图片">
-                  <template slot-scope="scope">
-                      <gt-material prop="url" :url="scope.row.url" v-on:getChangeUrl="getChangeUrl(scope.$index, $event)" width="60" height="60"></gt-material>
-                  </template>
-                </el-table-column> 
-                <el-table-column label="操作">
-                  <template slot-scope="scope">
-                        <el-button class="gt-button-normal" @click="delLinks(scope.$index)">删除</el-button>
-                  </template>
-                </el-table-column> 
-             </el-table>   -->
         </el-form> 
         </div>
         <!-- 规则设置 -->
@@ -59,15 +37,6 @@
                   <gt-material prop="url" :url="ruleForm2.code" v-on:getChangeUrl="getChangeUrl2" width="72" height="72"></gt-material>
                   <span class="el-upload__tip grey ml10">上传1:1二维码，将会在活动规则中显示商家二维码</span>  
                 </el-form-item>  
-                <el-form-item label="背景音乐：">
-                    <div class="pd20 bb bw bgMusic">
-                        <gt-material class="va-m" :prop="''" :isMusic="true" btnContent="点击上传"  v-on:getChangeUrl="getMusic" width="72" height="72"></gt-material>
-                        <span class="el-upload__tip c333 ml20">{{ruleForm2.bgmSp}}</span> 
-                        <div class="el-upload__tip grey" style="line-height:25px">
-                            音频文件的格式为mp3、wma、wav,大小不超过3M
-                        </div>
-                    </div>
-                </el-form-item> 
                 <el-form-item label="游戏总数：" prop="manTotalChance">
                     <el-input class="w25_demo mr10" type="number" placeholder="请输入游戏总数"  v-model="ruleForm2.manTotalChance" :maxlength="10" @keydown.native="$util.KeydownNumber"></el-input>次/人
                 </el-form-item> 
@@ -115,12 +84,6 @@
         </div>
         <!-- 奖项设置 -->
         <div v-if="this.active==3" class="mt40">
-            <div>
-                <span style="color: #333; position:absolute;margin-top:0px;" >奖品说明：</span>
-                <el-input type="textarea" class="bw ml120"  :maxlength="300"  :rows="3" placeholder="请输入兑奖说明" v-model="explain">
-                </el-input>
-                <span class="el-upload__tip grey ml10">300字以内</span>
-            </div> 
             <div class="gt-gray-region mt20" style="color:#666;line-height:20px">
                 <p>奖品类型：奖品的内容;奖品单位：奖品的数量货内容；奖项数量:该奖品的可领取次数</p>
                 <p>如：奖品类型：粉币；奖品数额：2；奖项名称：粉币；奖项数量：3；中奖概率：12</p> 
@@ -189,7 +152,6 @@
             <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
             <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>   
-            <el-button type="primary" @click="submit11">打印</el-button>   
         </div> 
     </div>      
 </div>
@@ -384,10 +346,6 @@ export default {
       }
        this.submit();
     }, 
-
-          submit11(){
-          console.log(this.ruleForm4,665544)
-      }, 
     getMusic(e) {
       console.log(e)
       this.ruleForm2.bgmSp = e.music.name

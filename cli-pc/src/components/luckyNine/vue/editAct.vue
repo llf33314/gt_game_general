@@ -43,15 +43,6 @@
                   <gt-material prop="url" :url="ruleForm2.code" v-on:getChangeUrl="getChangeUrl2" width="72" height="72"></gt-material>
                   <span class="el-upload__tip grey ml10">上传1:1二维码，将会在活动规则中显示商家二维码</span>  
                 </el-form-item> 
-                 <el-form-item label="背景音乐：">
-                    <div class="pd20 bb bw bgMusic">
-                        <gt-material class="va-m" :prop="''" :isMusic="true" btnContent="点击上传"  v-on:getChangeUrl="getMusic" width="72" height="72"></gt-material>
-                        <span class="el-upload__tip c333 ml20">{{ruleForm2.bgmSp}}</span> 
-                        <div class="el-upload__tip grey" style="line-height:25px">
-                            音频文件的格式为mp3、wma、wav,大小不超过3M
-                        </div>
-                    </div>
-                </el-form-item>  
                 <el-form-item label="游戏总数：" prop="manTotalChance">
                     <el-input class="w25_demo mr10" type="number" placeholder="请输入游戏总数" v-model="ruleForm2.manTotalChance" :maxlength="10" @keydown.native="$util.KeydownNumber"></el-input>次/人
                 </el-form-item> 
@@ -111,12 +102,6 @@
         </div>
         <!-- 奖项设置 -->
         <div v-if="this.active==3" class="mt40">
-            <div>
-                <span style="color: #333; position:absolute;margin-top:0px;" >奖品说明：</span>
-                <el-input type="textarea" class="bw ml120"  :maxlength="300"  :rows="3" placeholder="请输入兑奖说明" v-model="explain">
-                </el-input>
-                <span class="el-upload__tip grey ml10">300字以内</span>
-            </div> 
             <div class="gt-gray-region mt20" style="color:#666;line-height:20px">
                 <p>奖品类型：奖品的内容;奖品单位：奖品的数量货内容；奖项数量:该奖品的可领取次数</p>
                 <p>如：奖品类型：粉币；奖品数额：2；奖项名称：粉币；奖项数量：3；中奖概率：12</p> 
@@ -409,15 +394,6 @@ export default {
         this.$refs[formName].validate(valid => {
           if (valid) {
             if (formName == "ruleForm1") {
-              //广告
-              // var newadv = [];
-              // for (let i = 0; i < this.ruleForm1.links.length; i++) {
-              //   var arr = {
-              //     hrefUrl: this.ruleForm1.links[i].hrefUrl,
-              //     url: this.ruleForm1.links[i].url
-              //   };
-              //   newadv.push(arr);
-              // }
 
               let params1 = {
                 id: this.$route.query.id,
@@ -425,7 +401,6 @@ export default {
                 name: this.ruleForm1.name,
                 activityBeginTime: this.ruleForm1.name1[0],
                 activityEndTime: this.ruleForm1.name1[1],
-                // advertisingPictureList: newadv
               };
             }
 
@@ -433,8 +408,6 @@ export default {
               let params2 = {
                 //规则设置
                 followQrCode: this.ruleForm2.code,
-                bgmSp: this.ruleForm2.bgmSp, // 背景音乐名
-                musicUrl: this.ruleForm2.musicUrl, // 背景音乐地址
                 manTotalChance: Number(this.ruleForm2.manTotalChance),
                 manDayChance: Number(this.ruleForm2.manDayChance),
                 gameTime: this.ruleForm2.gameTime,
