@@ -188,7 +188,7 @@
             </div>
         </div> 
         <div class="h80"></div>
-        <gt-Fans-detail  :visible.sync="dialogFans" v-on:getFansData="getFansData"></gt-Fans-detail>   
+        <gt-Fans-detail  :visible.sync="dialogFans" :peopleNums="10" v-on:getFansData="getFansData"></gt-Fans-detail>   
     </div>   
 </div>
 </section>
@@ -264,6 +264,14 @@ export default {
       },
       ruleForm4: [
         {
+          eggPrizeType: "5",
+          eggPrizeLimit: "",
+          eggPrizeName: "",
+          eggPrizeNums: "",
+          eggPrizeChance: "",
+          nickname: ""
+        },
+        {
           eggPrizeType: "",
           eggPrizeLimit: "",
           eggPrizeName: "",
@@ -279,7 +287,6 @@ export default {
   },
   methods: {
     assign(scope) {
-      //   this.active=5
       this.dialogFans = true;
       this.assignObj = scope;
     },
@@ -292,7 +299,6 @@ export default {
         this.assignObj.nickname = nickname.join(",")
       this.$set(this.ruleForm4, this.assignObj.$index, this.assignObj)
       }
-      
     },
     delForm4(index) {
       this.ruleForm4.splice(index, 1);

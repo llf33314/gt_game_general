@@ -182,11 +182,10 @@
             <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步1</el-button> 
             <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
-            <el-button type="primary" @click="lastStep"        v-if="this.active==3">保存</el-button>   
-            <el-button type="primary" @click="submit">打印</el-button>   
+            <el-button type="primary" @click="lastStep"   :loading="loading"    v-if="this.active==3">保存</el-button>   
         </div> 
 
-        <gt-Fans-detail :visible.sync="dialogFans" v-on:getFansData="getFansData"></gt-Fans-detail>  
+        <gt-Fans-detail :visible.sync="dialogFans" :peopleNums="10"   v-on:getFansData="getFansData"></gt-Fans-detail>  
     </div>   
 </div>
 </section>
@@ -196,7 +195,8 @@ import api from "./../api/api";
 export default {
   data() {
     return {
-      active: 0,
+      loading: false,
+      active: 3,
       ruleForm1: {
         eggName: "", // 活动名称
         date: [],
@@ -262,6 +262,14 @@ export default {
       },
       ruleForm4: [
         {
+          eggPrizeType: "5",
+          eggPrizeLimit: "",
+          eggPrizeName: "",
+          eggPrizeNums: "",
+          eggPrizeChance: "",
+          nickname: ""
+        },
+        {
           eggPrizeType: "",
           eggPrizeLimit: "",
           eggPrizeName: "",
@@ -272,29 +280,27 @@ export default {
       ],
       options: [],
       dialogFans: false,
-     
+      assignObj: {}
     };
   },
   methods: {
     assign(scope) {
-      //   this.active=5
       this.dialogFans = true;
-    },
-    getMusic(e) {
-      this.ruleForm1.eggBgmName = e.music.name;
-      this.ruleForm1.eggBgm = e.music.url;
+      this.assignObj = scope;
     },
     getFansData(e) {
       if (e.length) {
         let nickname = [];
-        let openid = []
         e.forEach((item, index, arr) => {
-          nickname.push(item.nickname);
+          nickname.push(item.nickname) 
         });
-        this.assignObj.nickname = nickname.join("，");
-        this.assignObj.openid = openid ;
-        this.$set(this.ruleForm4, this.assignObj.$index, this.assignObj);
+        this.assignObj.nickname = nickname.join(",")
+      this.$set(this.ruleForm4, this.assignObj.$index, this.assignObj)
       }
+    },
+    getMusic(e) {
+      this.ruleForm1.eggBgmName = e.music.name;
+      this.ruleForm1.eggBgm = e.music.url;
     },
     test() {
       this.dialogFans = true;
@@ -389,23 +395,17 @@ export default {
         //奖项设置
         prizeSetList: this.ruleForm4
       };
-      console.log(data, 123);
+      this.loading = true
       api
         .addActivity(data)
-        .then(data => {
-          this.isSubmit = true;
-          if (data.code == 100) {
-            console.log(12336666);
+        .then(res => {
+          if (res.code == 100) {
             this.active = 5;
           } else {
-            this.isSubmit = false;
-            this.$message.error(data.msg + "错误码：[" + data.code + "]");
+            this.$message.error(res.msg || '保存失败');
           }
+          this.loading = false
         })
-        .catch(() => {
-          this.isSubmit = false;
-          this.$message({ type: "info", message: "网络问题，请刷新重试~" });
-        });
     },
     backUrl() {
       window.history.go(-1);
