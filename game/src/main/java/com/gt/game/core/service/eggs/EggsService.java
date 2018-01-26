@@ -73,6 +73,14 @@ public interface EggsService {
     void modfiyEggs(BusUser busUser, EggsModfiyReq eggsModfiyReq);
 
     /**
+     * 开始/暂停砸金蛋活动
+     * @param loginPbUser
+     * @param eggsStopIdReq
+     * @return
+     */
+    ResponseDTO stopEggs( WxPublicUsers loginPbUser, EggsStopIdReq eggsStopIdReq);
+
+    /**
      * 删除砸金蛋活动
      * @param busUser
      * @param eggsDelReq
@@ -116,4 +124,6 @@ public interface EggsService {
      * @return
      */
     ResponseDTO<List<EggsPrizeTypeListRes>> getEggsPrizeType(BusUser busUser);
+
+
 }

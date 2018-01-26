@@ -9,10 +9,12 @@ import com.gt.game.core.bean.eggs.req.*;
 import com.gt.game.core.bean.eggs.res.*;
 import com.gt.game.core.bean.lantern.res.LanternPrizeTypeListRes;
 import com.gt.game.core.bean.ninelattice.res.NinelatticeGetActivityRes;
+import com.gt.game.core.bean.scratch.req.ScratchStopIdReq;
 import com.gt.game.core.bean.tree.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 import com.gt.game.core.exception.eggs.EggsException;
+import com.gt.game.core.exception.scratch.ScratchException;
 import com.gt.game.core.exception.tree.TreeException;
 import com.gt.game.core.service.eggs.EggsService;
 import com.gt.game.core.util.CommonUtil;
@@ -181,6 +183,28 @@ public class EggsController extends BaseController {
             BusUser busUser = CommonUtil.getLoginUser(request);
             eggsService.modfiyEggs(busUser,eggsModfiyReq);
             return ResponseDTO.createBySuccessMessage("编辑砸金蛋活动设置成功");
+        } catch (EggsException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+
+    // TODO  开始/暂停砸金蛋活动
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+    })
+    @ApiOperation(value = "开始/暂停砸金蛋活动", notes = "开始/暂停砸金蛋活动")
+    @RequestMapping(value = "/stopEggs", method = RequestMethod.POST)
+    protected ResponseDTO stopEggs(
+            @RequestBody @ApiParam("请求参数") EggsStopIdReq eggsStopIdReq,
+            HttpServletRequest request) {
+        try {
+            WxPublicUsers loginPbUser = CommonUtil.getLoginPbUser(request);
+            ResponseDTO responseDTO = eggsService.stopEggs(loginPbUser, eggsStopIdReq);
+            return responseDTO;
         } catch (EggsException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());

@@ -20,32 +20,15 @@ import com.gt.game.common.config.ApplyProperties;
 import com.gt.game.common.dto.PageDTO;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.common.enums.ResponseEnums;
-import com.gt.game.core.bean.scratch.req.ScratchPrizeSetReq;
-import com.gt.game.core.bean.scratch.res.*;
-import com.gt.game.core.bean.tree.req.*;
-import com.gt.game.core.bean.tree.res.*;
 import com.gt.game.core.bean.turntable.req.*;
 import com.gt.game.core.bean.turntable.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
-import com.gt.game.core.dao.tree.TreeWinningDAO;
 import com.gt.game.core.dao.turntable.WinningRecordDAO;
-import com.gt.game.core.entity.scratch.ScratchDetail;
-import com.gt.game.core.entity.scratch.ScratchMain;
-import com.gt.game.core.entity.scratch.ScratchWinning;
-import com.gt.game.core.entity.tree.TreeDetail;
-import com.gt.game.core.entity.tree.TreeMain;
-import com.gt.game.core.entity.tree.TreeWinning;
 import com.gt.game.core.entity.turntable.TurntableDetail;
 import com.gt.game.core.entity.turntable.TurntableMain;
 import com.gt.game.core.entity.turntable.WinningRecord;
-import com.gt.game.core.exception.scratch.ScratchException;
-import com.gt.game.core.exception.tree.TreeException;
 import com.gt.game.core.exception.turntable.TurntableException;
-import com.gt.game.core.service.tree.TreeDetailService;
-import com.gt.game.core.service.tree.TreeMainService;
-import com.gt.game.core.service.tree.TreeService;
-import com.gt.game.core.service.tree.TreeWinningService;
 import com.gt.game.core.service.turntable.TurntableDetailService;
 import com.gt.game.core.service.turntable.TurntableMainService;
 import com.gt.game.core.service.turntable.TurntableService;
@@ -59,8 +42,6 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -331,7 +312,6 @@ public class TurntableServiceImpl implements TurntableService {
         turntableGetActivityRes.setActCashWay(turntableMain.getActCashWay());
         turntableGetActivityRes.setActCashtext(turntableMain.getActCashtext());
         turntableGetActivityRes.setActWinningNotice(turntableMain.getActWinningNotice());
-
 
         //TODO   奖项设置
         EntityWrapper<TurntableDetail> entityWrapper = new EntityWrapper();
@@ -647,7 +627,7 @@ public class TurntableServiceImpl implements TurntableService {
         if(CommonUtil.isNotEmpty(winningRecord)){
             TurntableMain turntableMain = turntableMainService.selectById(winningRecord.getWinActId());
             TurntableDetail turntableDetail = turntableDetailService.selectById(winningRecord.getWinPrizeId());
-            if(winningRecord.getWinPrizeType()!= 4){    //非兑奖
+            if(turntableDetail.getTurPrizeType()!= "4"){    //非兑奖
                 if (DateTimeKit.laterThanNow(turntableMain.getActBeginTime())) {
                     //"未到兑奖时间！"
                     throw  new TurntableException(ResponseEnums.TURNTABLE_HAS1);

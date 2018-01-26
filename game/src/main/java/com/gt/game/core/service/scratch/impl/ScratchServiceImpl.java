@@ -22,7 +22,6 @@ import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.common.enums.ResponseEnums;
 import com.gt.game.core.bean.scratch.req.*;
 import com.gt.game.core.bean.scratch.res.*;
-import com.gt.game.core.bean.turntable.req.TurntableStopIdReq;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 import com.gt.game.core.dao.scratch.ScratchWinningDAO;

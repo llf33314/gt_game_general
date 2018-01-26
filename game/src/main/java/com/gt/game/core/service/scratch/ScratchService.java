@@ -8,7 +8,7 @@ import com.gt.game.core.bean.qixi.req.*;
 import com.gt.game.core.bean.qixi.res.*;
 import com.gt.game.core.bean.scratch.req.*;
 import com.gt.game.core.bean.scratch.res.*;
-import com.gt.game.core.bean.turntable.req.ScratchStartReq;
+
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 

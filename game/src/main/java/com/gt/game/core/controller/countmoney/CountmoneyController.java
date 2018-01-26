@@ -149,7 +149,7 @@ public class CountmoneyController extends BaseController {
     @ApiResponses({
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
             @ApiResponse(code = 1, message = "data对象（数组对象）", response = List.class),
-            @ApiResponse(code = 2, message = "任务对象", response = LanternCountActivityRes.class),
+            @ApiResponse(code = 2, message = "任务对象", response = CountmoneyGetActivityRes.class),
     })
     @ApiOperation(value = "通过活动id查询疯狂数钱活动", notes = "通过活动id查询疯狂数钱活动")
     @RequestMapping(value = "/getActivityById", method = RequestMethod.POST)

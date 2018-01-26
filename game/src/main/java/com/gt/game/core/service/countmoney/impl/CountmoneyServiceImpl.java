@@ -21,10 +21,6 @@ import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.common.enums.ResponseEnums;
 import com.gt.game.core.bean.countmoney.req.*;
 import com.gt.game.core.bean.countmoney.res.*;
-import com.gt.game.core.bean.lantern.req.LanternDelReq;
-import com.gt.game.core.bean.lantern.req.LanternDelWinningReq;
-import com.gt.game.core.bean.lantern.res.LanternGetWinningRes;
-import com.gt.game.core.bean.lantern.res.LanternPrizeTypeListRes;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 import com.gt.game.core.dao.countmoney.CountmoneyRecordDAO;
@@ -32,19 +28,10 @@ import com.gt.game.core.entity.countmoney.CountmoneyDetail;
 import com.gt.game.core.entity.countmoney.CountmoneyMain;
 import com.gt.game.core.entity.countmoney.CountmoneyProbabilityset;
 import com.gt.game.core.entity.countmoney.CountmoneyRecord;
-import com.gt.game.core.entity.lantern.LanternCashPrizeApply;
-import com.gt.game.core.entity.lantern.LanternMain;
-import com.gt.game.core.entity.lantern.LanternPrize;
-import com.gt.game.core.entity.scratch.ScratchDetail;
-import com.gt.game.core.entity.scratch.ScratchMain;
-import com.gt.game.core.entity.scratch.ScratchWinning;
 import com.gt.game.core.exception.countmoney.CountmoneyException;
-import com.gt.game.core.exception.lantern.LanternException;
-import com.gt.game.core.exception.scratch.ScratchException;
 import com.gt.game.core.service.countmoney.*;
 import com.gt.game.core.util.CommonUtil;
 import com.gt.game.core.util.DateTimeKit;
-import org.apache.poi.hssf.record.CountryRecord;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -52,8 +39,6 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -164,7 +149,6 @@ public class CountmoneyServiceImpl implements CountmoneyService {
         int count2 = 0;
         int count3 = 0;
         int count4 = 0;
-
         List<CountmoneyMain> countmoneyMainList = countmoneyMainService.selectList(entityWrapper);
         Date date = new Date();
         for (CountmoneyMain countmoneyMain : countmoneyMainList) {
@@ -194,6 +178,7 @@ public class CountmoneyServiceImpl implements CountmoneyService {
 
         CountmoneyMain countmoneyMain = new CountmoneyMain();
         countmoneyMain.setActWxUserid(loginPbUser.getId());
+
         //TODO 基础设置
         countmoneyMain.setActType(countmoneyAddReq.getActType());
         countmoneyMain.setActName(countmoneyAddReq.getActName());
