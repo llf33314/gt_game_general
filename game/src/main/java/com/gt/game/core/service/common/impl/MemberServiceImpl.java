@@ -5,8 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.BusUser;
 import com.gt.api.bean.session.WxPublicUsers;
+import com.gt.api.exception.SignException;
 import com.gt.api.util.HttpClienUtils;
 import com.gt.api.util.RequestUtils;
+import com.gt.api.util.sign.SignHttpUtils;
 import com.gt.axis.content.AxisContent;
 import com.gt.axis.content.AxisResult;
 import com.gt.game.common.dto.PageDTO;
@@ -14,6 +16,7 @@ import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.common.enums.ResponseEnums;
 import com.gt.game.core.bean.common.req.FansInfoReq;
 import com.gt.game.core.bean.common.req.MemberListPageReq;
+import com.gt.game.core.bean.common.res.CardReceiveListRes;
 import com.gt.game.core.bean.common.res.MemberListPageRes;
 import com.gt.game.core.dao.common.FansInfoMapper;
 import com.gt.game.core.exception.common.MemberException;
@@ -37,19 +40,6 @@ import java.util.*;
 @Service
 public class MemberServiceImpl implements MemberService {
 
-    @Autowired
-    FansInfoMapper fansInfoMapper;
-
-//    @Override
-//    public ResponseDTO<List<MemberListPageRes>> getMemberList(WxPublicUsers wxPublicUsers, MemberListPageReq memberListPageReq) {
-//        Page<MemberListPageRes> page = new Page<>(memberListPageReq.getCurrent(),memberListPageReq.getSize());
-//        Map<String,Object> map = new HashMap<>();
-//        map.put("wxUserId",wxPublicUsers.getUserName());
-//        map.put("search",memberListPageReq.getMemberName());
-//        List<MemberListPageRes> listPageResList = fansInfoMapper.getMemberList(page,map);
-//        PageDTO pageDTO = new PageDTO(page.getPages(),page.getTotal());
-//        return ResponseDTO.createBySuccessPage("获取成功",listPageResList,pageDTO);
-//    }
     @Override
     public ResponseDTO<List<MemberListPageRes>> getMemberList(BusUser busUser, MemberListPageReq memberListPageReq) {
         PageDTO pageDTO = null;
@@ -90,14 +80,31 @@ public class MemberServiceImpl implements MemberService {
         }else {
             pageDTO = new PageDTO(0,0);
         }
-
-//        String msg = resMap.get("msg").toString();
-//        List<CityRes> listProvinceRes = null;
-//        if (resMap.get("data") != null){
-//            String json = resMap.get("data").toString();
-//            listProvinceRes = JSON.parseArray(json, CityRes.class);
-//        }
-//        AxisResult<List<CityRes>> axisResult = AxisResult.create(code, msg, listProvinceRes);
         return ResponseDTO.createBySuccessPage("获取成功",listPageResList,pageDTO);
+    }
+
+    @Override
+    public ResponseDTO<List<CardReceiveListRes>> getCardReceviceList(BusUser busUser) throws SignException {
+        List<CardReceiveListRes> cardReceiveListResList = new ArrayList<>();
+        String url = AxisContent.getInstance().getMemberUrl() + "memberAPI/cardCouponseApi/gameDuofenCardRecevice";
+        String signKey = AxisContent.getInstance().getMemberSignKey();
+        Map<String,Object> params = new HashMap<>();
+        params.put("busId",36);
+        String result = SignHttpUtils.WxmppostByHttp(url, params, signKey);
+        if(CommonUtil.isNotEmpty(result)){
+            Map resMap = JSON.parseObject(result, Map.class);
+            int code = (int) resMap.get("code");
+            if (code == 0 && resMap.get("data") != null){
+                String json = resMap.get("data").toString();
+                List<Map<String,Object>> list = JsonUtil.json2List(json);
+                for(int i = 0 ; i < list.size() ; i++ ){
+                    CardReceiveListRes cardReceiveListRes = new CardReceiveListRes();
+                    cardReceiveListRes.setCardsName(CommonUtil.isNotEmpty(list.get(i).get("cardsName"))? list.get(i).get("cardsName").toString():"未知名称");
+                    cardReceiveListRes.setId(CommonUtil.isNotEmpty(list.get(i).get("id"))? Integer.parseInt(list.get(i).get("id").toString()):0);
+                    cardReceiveListResList.add(cardReceiveListRes);
+                }
+            }
+        }
+        return ResponseDTO.createBySuccess("获取成功",cardReceiveListResList);
     }
 }
