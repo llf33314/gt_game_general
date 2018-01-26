@@ -1,6 +1,5 @@
-<style lang="less">
 
-</style>
+
 <template>
 <section>
 <div class="hd-common turnPlate">
@@ -14,7 +13,7 @@
             <el-tab-pane label="基础设置" name="0"></el-tab-pane>
             <el-tab-pane label="规则设置" name="1"></el-tab-pane>
             <el-tab-pane label="兑奖设置" name="2"></el-tab-pane>
-            <el-tab-pane label="奖项设置" name="3"></el-tab-pane>
+            <el-tab-pane label="奖项设置" name="3" v-if="ruleForm1.actType == 1"></el-tab-pane>
         </el-tabs>
         <!-- 基础设置 -->
         <div v-show="this.active==0" class="mt40">
@@ -81,31 +80,31 @@
                         <div slot="content">
                              已勾选面额的概率之和必须等于100%
                         </div>
-                        <span class="el-icon-warning  ml10" style="position: absolute;  z-index: 1;margin-left: 495px;margin-top: 14px;color: #ccc;font-size: 17px;"></span>
+                        <span class="el-icon-warning  ml10" style="position: absolute;  z-index: 1;margin-left: 435px;margin-top: 12px;color: #ccc;font-size: 17px;"></span>
                     </el-tooltip>
 
                      <el-tooltip placement="top" effect="light">
                         <div slot="content">
                             勾选后该面额的钞票会在数钱过程中出现 
                         </div>
-                        <span class="el-icon-warning  ml10" style="position: absolute;  z-index: 1;margin-left: 180px;margin-top: 14px;color: #ccc;font-size: 17px;"></span>
+                        <span class="el-icon-warning  ml10" style="position: absolute;  z-index: 1;margin-left: 145px;margin-top: 12px;color: #ccc;font-size: 17px;"></span>
                     </el-tooltip>
 
-                    <el-table ref="multipleTable" :data="ruleForm2.countmoneyProbabilitysetList" tooltip-effect="dark"  class="bw">
-                        <el-table-column label="面额" align="center" >
+                    <el-table ref="multipleTable" :data="ruleForm2.countmoneyProbabilitysetList" tooltip-effect="dark" width="560" class="bw lh1">
+                        <el-table-column label="面额" align="center" width="260"  header-align="center" label-class-name="miane">
                         <template slot-scope="scope" >
-                            <el-checkbox  v-model="scope.row.checked">
-                            </el-checkbox>
-                            {{scope.row.fenbiType}}元
+                            <el-checkbox  v-model="scope.row.checked"></el-checkbox>
+                            <span class="mg-l8 va-m">{{scope.row.fenbiType}}元</span>
                         </template> 
                         </el-table-column>  
-                        <el-table-column label="出现概率"  align="center">
+                        <el-table-column label="出现概率"  align="center"  header-align="center" label-class-name="chuxiangailv">
                         <template slot-scope="scope">
-                            <el-input  class="w100_demo mr10 ml20" v-model="scope.row.fenbiChance"> 
+                            <el-input  class="w100_demo mr10" v-model.number="scope.row.fenbiChance"> 
                             </el-input>%
                         </template>
                         </el-table-column>   
                     </el-table> 
+                     
                 </el-form-item>    
             </el-form> 
             <div class="btnRow">
@@ -137,7 +136,7 @@
                         </div>
         </div>
         <!-- 奖项设置 -->
-        <div v-show="this.active==3" class="mt40">
+        <div v-if="this.active==3 && ruleForm1.actType == 1" class="mt40">
             <div class="gt-gray-region" style="color:#666;line-height:20px">
                 <p>奖品数额：奖品的数量或内容；奖项数量：该奖品的可领取次数；中奖概率：每种奖项在转盘中的中奖概率</p>
                 <p>如：奖品类型：粉币；奖品数额：2；奖项名称：粉币；奖项数量：3；中奖概率：12</p>
@@ -146,7 +145,7 @@
             </div> 
             <div class="mt20 mb20">
                 <span class="mr20 ">奖品数量：</span> 
-                <el-radio-group v-model="isShow">
+                <el-radio-group v-model="actIsShowNums">
                     <el-radio :label="1">显示</el-radio>
                     <el-radio :label="2">不显示</el-radio>
                 </el-radio-group> 
@@ -297,7 +296,7 @@ export default {
           { required: true, message: "兑奖地址不能为空", trigger: "blur" }
         ]
       },
-      isShow: 1,
+      actIsShowNums: 1,
       ruleForm4: [
         {
           turPrizeType: "",
@@ -324,6 +323,21 @@ export default {
     },
     Save(formName) {
       this.$refs[formName].validate(valid => {
+        // 判断概率设置 之和是否100
+        if (this.active == 1) {
+              let probability = 0
+              let checked = false
+              this.ruleForm2.countmoneyProbabilitysetList.forEach((item, index, arr)=> {
+                 if (item.checked) {
+                     checked = true
+                     probability += Number(item.fenbiChance) 
+                 }
+              })
+              if(checked && probability !== 100) {
+                valid = false
+                this.$message.error('已勾选面额的概率之和必须等于100%')
+              }
+        }
         if (valid) {
           this.submit()
         } else {
@@ -386,6 +400,7 @@ export default {
         actAwardingAddress: this.ruleForm3.actAwardingAddress, // 兑奖地址
         actAwardingTips: this.ruleForm3.actAwardingTips, // 兑奖提示
         //奖项设置
+        actIsShowNums: this.actIsShowNums, // 是否显示奖品数量
         prizeSetList: this.ruleForm4
       };
       api.modfiyActivity(data).then(data => {
@@ -442,6 +457,7 @@ export default {
           (this.ruleForm3.actAwardingTips = res.data.actAwardingTips); // 兑奖提示
 
         //奖项设置
+        this.actactIsShowNumsNums = res.data.actactIsShowNumsNums, // 是否显示奖品数量
         res.data.prizeSetList.forEach((item, idnex, arr) => {
           item.eggPrizeType = item.eggPrizeType + "";
         });
@@ -478,3 +494,13 @@ export default {
   }
 };
 </script>
+<style lang="less">
+  .miane {
+    padding-left: 90px;
+  }
+
+  .chuxiangailv {
+    padding-left: 85px;
+  }
+
+</style>
