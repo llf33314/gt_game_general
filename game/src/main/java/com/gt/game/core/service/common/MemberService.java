@@ -1,6 +1,6 @@
 package com.gt.game.core.service.common;
 
-import com.gt.api.bean.session.WxPublicUsers;
+import com.gt.api.bean.session.BusUser;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.core.bean.common.req.MemberListPageReq;
 import com.gt.game.core.bean.common.res.MemberListPageRes;
@@ -17,5 +17,5 @@ import java.util.List;
  */
 public interface MemberService {
 
-    ResponseDTO<List<MemberListPageRes>> getMemberList(WxPublicUsers busUser, MemberListPageReq loveArrowListPageReq);
+    ResponseDTO<List<MemberListPageRes>> getMemberList(BusUser busUser, MemberListPageReq loveArrowListPageReq);
 }
