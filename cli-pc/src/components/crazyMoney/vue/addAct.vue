@@ -1,6 +1,4 @@
-<style lang="less">
 
-</style>
 <template>
 <section>
 <div class="hd-common turnPlate">
@@ -78,27 +76,26 @@
                         <div slot="content">
                              已勾选面额的概率之和必须等于100%
                         </div>
-                        <span class="el-icon-warning  ml10" style="position: absolute;  z-index: 1;margin-left: 495px;margin-top: 14px;color: #ccc;font-size: 17px;"></span>
+                        <span class="el-icon-warning  ml10" style="position: absolute;  z-index: 1;margin-left: 435px;margin-top: 12px;color: #ccc;font-size: 17px;"></span>
                     </el-tooltip>
 
                      <el-tooltip placement="top" effect="light">
                         <div slot="content">
                             勾选后该面额的钞票会在数钱过程中出现 
                         </div>
-                        <span class="el-icon-warning  ml10" style="position: absolute;  z-index: 1;margin-left: 180px;margin-top: 14px;color: #ccc;font-size: 17px;"></span>
+                        <span class="el-icon-warning  ml10" style="position: absolute;  z-index: 1;margin-left: 145px;margin-top: 12px;color: #ccc;font-size: 17px;"></span>
                     </el-tooltip>
 
-                    <el-table ref="multipleTable" :data="ruleForm2.countmoneyProbabilitysetList" tooltip-effect="dark"  class="bw">
-                        <el-table-column label="面额" align="center" >
+                    <el-table ref="multipleTable" :data="ruleForm2.countmoneyProbabilitysetList" tooltip-effect="dark" width="560" class="bw lh1">
+                        <el-table-column label="面额" align="center" width="260"  header-align="center" label-class-name="miane">
                         <template slot-scope="scope" >
-                            <el-checkbox  v-model="scope.row.checked">
-                            </el-checkbox>
-                            {{scope.row.fenbiType}}元
+                            <el-checkbox  v-model="scope.row.checked"></el-checkbox>
+                            <span class="mg-l8 va-m">{{scope.row.fenbiType}}元</span>
                         </template> 
                         </el-table-column>  
-                        <el-table-column label="出现概率"  align="center">
+                        <el-table-column label="出现概率"  align="center"  header-align="center" label-class-name="chuxiangailv">
                         <template slot-scope="scope">
-                            <el-input  class="w100_demo mr10 ml20" v-model.number="scope.row.fenbiChance"> 
+                            <el-input  class="w100_demo mr10" v-model.number="scope.row.fenbiChance"> 
                             </el-input>%
                         </template>
                         </el-table-column>   
@@ -136,7 +133,7 @@
             </div> 
             <div class="mt20 mb20">
                 <span class="mr20 ">奖品数量：</span> 
-                <el-radio-group v-model="isShow">
+                <el-radio-group v-model="actIsShowNums ">
                     <el-radio :label="1">显示</el-radio>
                     <el-radio :label="2">不显示</el-radio>
                 </el-radio-group> 
@@ -290,7 +287,7 @@ export default {
           { required: true, message: "兑奖地址不能为空", trigger: "blur" }
         ]
       },
-      isShow: 1,
+      actIsShowNums : 1,
       ruleForm4: [
         {
           turPrizeName: "", // 奖品名称
@@ -321,9 +318,23 @@ export default {
     },
     next(formName) {
       this.$refs[formName].validate(valid => {
+        // 判断概率设置 之和是否100
+        if (this.active == 1) {
+              let probability = 0
+              let checked = false
+              this.ruleForm2.countmoneyProbabilitysetList.forEach((item, index, arr)=> {
+                 if (item.checked) {
+                     checked = true
+                     probability += Number(item.fenbiChance) 
+                 }
+              })
+              if(checked && probability !== 100) {
+                valid = false
+                this.$message.error('已勾选面额的概率之和必须等于100%')
+              }
+              console.log(probability, checked)
+        }
         if (valid) {
-          console.log(this.ruleForm1.actType)
-          console.log(this.active)
           if (this.ruleForm1.actType == 2 && this.active == 2) {
              this.active = 5
           } else {
@@ -385,6 +396,7 @@ export default {
         actAwardingAddress: this.ruleForm3.actAwardingAddress, // 兑奖地址
         actAwardingTips: this.ruleForm3.actAwardingTips, // 兑奖提示
         //奖项设置
+        actIsShowNums: this.actIsShowNums, // 是否显示奖品数量
         prizeSetList: this.ruleForm4
       };
       api.addActivity(data).then(data => {
@@ -422,3 +434,12 @@ export default {
   }
 };
 </script>
+
+<style lang="less">
+         .miane {
+           padding-left: 90px;
+         }
+         .chuxiangailv{
+           padding-left: 85px;
+         }
+</style>

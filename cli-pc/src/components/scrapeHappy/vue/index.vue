@@ -94,11 +94,9 @@ export default {
       params.name = this.keyWord;
       params.current = this.current;
       params.size = 10;
-      console.log(params, 77)
       getActList(params).then(data => {
         if (data.code == 100) {
           this.tableData = data
-          console.log(data, '获取首页');
         } else {
           this.$message.errorthis.$message.error(data.msg);;
         }
@@ -122,10 +120,8 @@ export default {
     askPreview(mainId) {
       getMobileUrl({ mainId }).then(data => {
         if (data.code == 100) {
-          console.log(data, '连接')
           this.copeData.url = data.data.mobileUrl;
           getShortUrl(data.data.mobileUrl).then(res => {
-            console.log(res, '短链接')
             this.copeData.shortUrl = res;
           });
           this.copeData.copyUrlVisible = true;
