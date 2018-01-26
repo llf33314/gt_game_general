@@ -92,28 +92,7 @@ export default {
       cancelCode: false,
 
       multipleSelection: [],
-      tableData: [
-        {
-          id: 0,
-          memberName: "熊小猫",
-          createtime: "1514252903"
-        },
-        {
-          id: 12,
-          memberName: "王小虎",
-          createtime: "1514252903"
-        },
-        {
-          id: 0,
-          memberName: "熊小猫",
-          createtime: "1514252903"
-        },
-        {
-          id: 12,
-          memberName: "王小虎",
-          createtime: "1514252903"
-        }
-      ],
+      tableData: [],
       showSuccee: false
     };
   },

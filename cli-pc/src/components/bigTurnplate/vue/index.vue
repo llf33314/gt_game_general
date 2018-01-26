@@ -52,7 +52,7 @@
               <!-- <el-button class="gt-button-normal blue" @click="impower(scope.row.id)">核销授权</el-button> -->
               <el-button class="gt-button-normal blue" v-if="scope.row.status==3" @click="handleActive1(scope.row.id)">开始活动</el-button>
               <el-button class="gt-button-normal blue" v-if="scope.row.status==1" @click="handleActive2(scope.row.id)">暂停活动</el-button>
-              <el-button class="gt-button-normal" v-if="scope.row.status!=1" @click="delBtn(scope.row.id)">删除</el-button>
+              <el-button class="gt-button-normal" v-if="scope.row.status!=1&&scope.row.status!=3" @click="delBtn(scope.row.id)">删除</el-button>
 
             </template>
           </el-table-column>

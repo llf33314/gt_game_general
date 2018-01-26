@@ -49,10 +49,10 @@
               <el-button class="gt-button-normal blue" v-if="scope.row.status!=0" @click="record(scope.row.id)">中奖纪录</el-button>
               <el-button class="gt-button-normal blue" @click="askPreview(scope.row.id)">预览链接</el-button>
               <!-- <el-button class="gt-button-normal blue" @click="impower(scope.row.id)">核销授权</el-button> -->
-              <el-button class="gt-button-normal blue" v-if="scope.row.status==3" @click="handleActive1(scope.row.id)">开始活动</el-button>
-              <el-button class="gt-button-normal blue" v-if="scope.row.status==1" @click="handleActive2(scope.row.id)">暂停活动</el-button>
-              <el-button class="gt-button-normal blue" v-if="scope.row.status==0" @click="editActive(scope.row.id)">编辑</el-button>
-              <el-button class="gt-button-normal" v-if="scope.row.status!=1" @click="delBtn(scope.row.id)">删除</el-button>
+              <el-button class="gt-button-normal blue" @click="stopBtn(scope.row.id)" v-if="scope.row.status == 1">暂停活动</el-button>    
+              <el-button class="gt-button-normal blue" @click="startBtn(scope.row.id)" v-if="scope.row.status == 2">开始活动</el-button> 
+              <el-button class="gt-button-normal blue"  @click="editActive(scope.row.id)" v-if="scope.row.status==0">编辑</el-button>
+              <el-button class="gt-button-normal" @click="delBtn(scope.row.id)" v-if="scope.row.status == 0 || scope.row.status == 3">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -109,10 +109,10 @@ export default {
     //获取数量--------------------------------------star
     getCount() {
       getActCount({ name: this.keyWord }).then(res => {
-        if (data.code == 100) {
+        if (res.code == 100) {
           this.countNum = res.data
         } else {
-          this.$message.error(data.msg);
+          this.$message.error(res.msg);
         }
       }).catch(() => {
         this.$message({ type: "info", message: "网络问题，请刷新重试~" });
@@ -154,7 +154,7 @@ export default {
       });
     },
     //开始按钮=======================================================
-    handleActive1(val) {
+    startBtn(val) {
       var params = {}
       params.id = val
       params.status = 1
@@ -171,7 +171,7 @@ export default {
       });
     },
     //暂停按钮=======================================================
-    handleActive2(val) {
+    stopBtn(val) {
       var params = {}
       params.id = val
       params.status = 2

@@ -14,11 +14,11 @@
             <el-step title="基础设置"></el-step>
             <el-step title="规则设置"></el-step>
             <el-step title="兑奖设置"></el-step>
-            <el-step title="奖项设置"></el-step>
+            <el-step title="奖项设置" v-if="ruleForm1.actType == 1"></el-step>
             <el-step title="新建完成"></el-step>
         </el-steps>
         <!-- 基础设置 -->
-        <div v-show="this.active==0" class="mt40">
+        <div v-if="this.active==0" class="mt40">
             <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="145px" class="demo-ruleForm">
                  <el-form-item label="游戏模式：">
                     <el-radio-group v-model="ruleForm1.actType">
@@ -60,7 +60,7 @@
             </el-form> 
         </div>
         <!-- 规则设置 -->
-        <div v-show="this.active==1" class="mt40">
+        <div v-if="this.active==1" class="mt40">
             <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="120px" class="mt40 demo-ruleForm">
                 <el-form-item label="游戏时间" prop="gameTime">
                     <el-input class="w_demo mr10" type="number" v-model="ruleForm2.gameTime" placeholder="请输入游戏持续时间"></el-input> 秒
@@ -108,7 +108,7 @@
             </el-form> 
         </div> 
         <!-- 兑奖设置 -->
-        <div v-show="this.active==2" class="mt40">
+        <div v-if="this.active==2" class="mt40">
             <el-form :model="ruleForm3" :rules="rules3" ref="ruleForm3" label-width="120px" class="mt40 demo-ruleForm">
                 <el-form-item label="兑奖期限：" prop="actAwardingTime">
                     <el-input class="w_demo mr10" type="number" v-model="ruleForm3.actAwardingTime" placeholder="请输入兑奖期限"></el-input>天
@@ -127,7 +127,7 @@
             </el-form> 
         </div>
         <!-- 奖项设置 -->
-        <div v-show="this.active==3" class="mt40">
+        <div v-if="this.active==3 && ruleForm1.actType == 1" class="mt40">
             <div class="gt-gray-region" style="color:#666;line-height:20px">
                 <p>奖品数额：奖品的数量或内容；奖项数量：该奖品的可领取次数；中奖概率：每种奖项在转盘中的中奖概率</p>
                 <p>如：奖品类型：粉币；奖品数额：2；奖项名称：粉币；奖项数量：3；中奖概率：12</p>
@@ -306,11 +306,6 @@ export default {
       this.ruleForm1.bgmSp = e.music.name;
       this.ruleForm1.musicUrl = e.music.url;
     },
-    test() {
-      console.log(123);
-      this.active = 5;
-    },
-
     delForm4(index) {
       this.ruleForm4.splice(index, 1);
     },
@@ -327,9 +322,15 @@ export default {
     next(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.active++;
+          console.log(this.ruleForm1.actType)
+          console.log(this.active)
+          if (this.ruleForm1.actType == 2 && this.active == 2) {
+             this.active = 5
+          } else {
+             this.active++;
+          }
         } else {
-          console.log("error submit!!");
+          return false
         }
       });
     },
