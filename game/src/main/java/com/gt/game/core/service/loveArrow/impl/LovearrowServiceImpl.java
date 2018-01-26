@@ -457,13 +457,15 @@ public class LovearrowServiceImpl implements LovearrowService {
             }
         }
         //广告轮播图
-        if(CommonUtil.isNotEmpty(loveArrowSaveReq.getLoveArrowAdReqs())){
+        if(CommonUtil.isNotEmpty(loveArrowSaveReq.getLoveArrowAdReqs()) && loveArrowSaveReq.getLoveArrowAdReqs().size() > 0){
             for(LoveArrowAdReq LoveArrowAdReq :loveArrowSaveReq.getLoveArrowAdReqs()){
                 LovearrowAd LovearrowAd = new LovearrowAd();
                 BeanUtils.copyProperties(LoveArrowAdReq,LovearrowAd);
                 LovearrowAd.setActId(LovearrowMain.getId());
-                LovearrowAd.setUrl(LovearrowAd.getUrl().split("/upload").length>1?
-                        LovearrowAd.getUrl().split("/upload")[1]:LovearrowAd.getUrl());
+                if(LovearrowAd.getUrl() != null){
+                    LovearrowAd.setUrl(LovearrowAd.getUrl().split("/upload").length>1?
+                            LovearrowAd.getUrl().split("/upload")[1]:LovearrowAd.getUrl());
+                }
                 lovearrowAdService.insert(LovearrowAd);
             }
         }
