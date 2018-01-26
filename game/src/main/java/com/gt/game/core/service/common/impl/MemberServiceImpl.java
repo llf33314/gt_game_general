@@ -52,7 +52,8 @@ public class MemberServiceImpl implements MemberService {
         RequestUtils<FansInfoReq> reqRequestUtils = new RequestUtils<>();
         reqRequestUtils.setReqdata(fansInfoReq);
         String messsageJson = JSONObject.toJSONString(reqRequestUtils);
-        String url = AxisContent.getInstance().getWxmpUrl() + "8A5DA52E/fanInfo/6F6D9AD2/79B4DE7C/6F6D9AD2/79B4DE7C/getPage.do";
+//      String url = AxisContent.getInstance().getWxmpUrl() + "8A5DA52E/fanInfo/6F6D9AD2/79B4DE7C/6F6D9AD2/79B4DE7C/getPage.do";
+        String url = "https://deeptel.com.cn/8A5DA52E/fanInfo/6F6D9AD2/79B4DE7C/6F6D9AD2/79B4DE7C/getPage.do";
         Map<String, Object> resMap = HttpClienUtils.reqPost(messsageJson, url, Map.class, AxisContent.getInstance().getWxmpSignKey());
         int code = (int) resMap.get("code");
         if(code != 0){
