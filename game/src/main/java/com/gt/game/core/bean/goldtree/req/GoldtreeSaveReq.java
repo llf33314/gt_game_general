@@ -2,7 +2,9 @@ package com.gt.game.core.bean.goldtree.req;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -25,6 +27,7 @@ public class GoldtreeSaveReq {
 	private Integer id;
 
 	@ApiModelProperty("活动名称")
+	@NotEmpty(message = "请输入活动名称")
 	private String name;
     /**
      * 活动开始时间
@@ -41,6 +44,7 @@ public class GoldtreeSaveReq {
 	private String followQrCode;
 
 	@ApiModelProperty("活动规则")
+	@NotEmpty(message = "请输入活动规则")
 	private String actRule;
 
 	@ApiModelProperty("兑奖开始时间")
@@ -50,18 +54,22 @@ public class GoldtreeSaveReq {
 	private Date cashPrizeEndTime;
 
 	@ApiModelProperty("兑奖方式（1，到店领取 2，邮寄）两个都有用 , 号隔开")
+	@NotEmpty(message = "请选择兑奖方式")
 	private String receiveType;
 
 	@ApiModelProperty("兑奖地址")
 	private List<GoldtreeAddressReq> goldtreeAddressReqs;
 
 	@ApiModelProperty("联系电话")
+	@NotEmpty(message = "请输入联系电话")
 	private String phone;
 
 	@ApiModelProperty("兑奖说明")
+	@NotEmpty(message = "请输入兑奖说明")
 	private String cashPrizeInstruction;
 
 	@ApiModelProperty("奖品说明")
+	@NotEmpty(message = "请输入奖品说明")
 	private String prizeSetInstruction;
 
 	@ApiModelProperty("广告轮播图")
@@ -71,15 +79,19 @@ public class GoldtreeSaveReq {
 	private List<GoldtreePrizeReq> goldtreePrizeReqs;
 
 	@ApiModelProperty("免费次数")
+	@NotNull(message = "请输入免费次数")
 	private Integer freeTimes;
 
 	@ApiModelProperty("每天免费次数")
+	@NotNull(message = "请输入每天免费次数")
 	private Integer dayFreeTimes;
 
 	@ApiModelProperty("每次游戏粉币数")
+	@NotNull(message = "请输入每次游戏粉币数")
 	private Integer gameFb;
 
 	@ApiModelProperty("每次游戏积分数")
+	@NotNull(message = "请输入每次游戏积分数")
 	private Integer gameJf;
 
 	@ApiModelProperty(" 1元宝=多少金钱")
@@ -89,12 +101,14 @@ public class GoldtreeSaveReq {
 	private Integer moneyCoin;
 
 	@ApiModelProperty("1开启模板，0关闭模板")
+	@NotNull(message = "请选择是否开启模板")
 	private Integer isMsgTemplate;
 
 	@ApiModelProperty("模板id")
 	private String msgTemplateId;
 
 	@ApiModelProperty("游戏时间")
+	@NotNull(message = "请输入游戏时间")
 	private Integer gameTime;
 
 	public Integer getFreeTimes() {
