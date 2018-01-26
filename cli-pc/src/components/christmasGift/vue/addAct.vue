@@ -185,7 +185,7 @@
             <el-button type="primary" @click="lastStep"        v-if="this.active==3">保存</el-button>   
         </div> 
 
-        <gt-Fans-detail :visible.sync="dialogFans" v-on:getFansData="getFansData"></gt-Fans-detail>  
+        <gt-Fans-detail :visible.sync="dialogFans" :peopleNums="1" v-on:getFansData="getFansData"></gt-Fans-detail>  
     </div>   
 </div>
 </section>
@@ -271,30 +271,29 @@ export default {
       ],
       options: [],
       dialogFans: false,
-     
+      assignObj: {}
     };
   },
   methods: {
     assign(scope) {
-      //   this.active=5
       this.dialogFans = true;
+      this.assignObj = scope;
+    },
+    getFansData(e) {
+      if (e.length) {
+        let nickname = [];
+        e.forEach((item, index, arr) => {
+          nickname.push(item.nickname) 
+        });
+        this.assignObj.nickname = nickname.join(",")
+      this.$set(this.ruleForm4, this.assignObj.$index, this.assignObj)
+      }
     },
     getMusic(e) {
       this.ruleForm1.treeBgmName = e.music.name;
       this.ruleForm1.treeBgm = e.music.url;
     },
-    getFansData(e) {
-      if (e.length) {
-        let nickname = [];
-        let openid = []
-        e.forEach((item, index, arr) => {
-          nickname.push(item.nickname);
-        });
-        this.assignObj.nickname = nickname.join("，");
-        this.assignObj.openid = openid ;
-        this.$set(this.ruleForm4, this.assignObj.$index, this.assignObj);
-      }
-    },
+    
     test() {
       this.dialogFans = true;
     },

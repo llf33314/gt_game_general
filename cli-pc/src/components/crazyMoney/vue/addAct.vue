@@ -60,8 +60,8 @@
         <!-- 规则设置 -->
         <div v-if="this.active==1" class="mt40">
             <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="120px" class="mt40 demo-ruleForm">
-                <el-form-item label="游戏时间" prop="gameTime">
-                    <el-input class="w_demo mr10" type="number" v-model="ruleForm2.gameTime" placeholder="请输入游戏持续时间"></el-input> 秒
+                <el-form-item label="游戏时间" prop="actGameTime">
+                    <el-input class="w_demo mr10" type="number" v-model="ruleForm2.actGameTime" placeholder="请输入游戏持续时间"></el-input> 秒
                 </el-form-item>
                 <el-form-item label="抽奖次数：" prop="actCountOfDay">
                     <el-input class="w_demo mr10"  type="number" v-model="ruleForm2.actCountOfDay" placeholder="请输入每人抽奖总次数"></el-input> 次/人
@@ -227,7 +227,7 @@ export default {
         ]
       },
       ruleForm2: {  
-        gameTime: "",      // 游戏时间
+        actGameTime: "",      // 游戏时间
         actCountOfDay: "", // 抽奖次数
         actTotalOfAct: "", // 抽奖总数
         countmoneyProbabilitysetList: [
@@ -264,7 +264,7 @@ export default {
         ]
       },
       rules2: {
-        gameTime: [
+        actGameTime: [
           { required: true, message: "游戏时间不能为空", trigger: "blur" }
         ],
         actCountOfDay: [

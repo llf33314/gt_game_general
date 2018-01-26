@@ -2,7 +2,7 @@ const index       = ()=>import( '@/components/christmasGift/vue/index')
 const prizeRecord = ()=>import( '@/components/christmasGift/vue/prizeRecord')
 const addAct = ()=>import( '@/components/christmasGift/vue/addAct') 
 const editAct = ()=>import( '@/components/christmasGift/vue/editAct') 
-const cancelOut= () => import('@/components/christmasGift/vue/cancelOut')
+// const cancelOut= () => import('@/components/christmasGift/vue/cancelOut')
 export const christmasGift = [
     {
         path:'/christmasGift/index',
@@ -22,9 +22,9 @@ export const christmasGift = [
         component: editAct,
         name:'christmasGift_editAct'
     },
-    {
-        path:'/christmasGift/cancelOut',
-        component: cancelOut,
-        name:'christmasGift_cancelOut'
-    }
+    // {
+    //     path:'/christmasGift/cancelOut',
+    //     component: cancelOut,
+    //     name:'christmasGift_cancelOut'
+    // }
 ]
