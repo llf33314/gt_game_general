@@ -50,8 +50,10 @@
               <el-button class="gt-button-normal blue" @click="askPreview(scope.row.id)">预览链接</el-button>
               <el-button class="gt-button-normal blue" @click="impower(scope.row.id)">核销授权</el-button>
               <el-button class="gt-button-normal blue" @click="record(scope.row.id)">中奖纪录</el-button>
+              <el-button class="gt-button-normal blue" @click="stopBtn(scope.row.id)" v-if="scope.row.status == 1">暂停活动</el-button>    
+              <el-button class="gt-button-normal blue" @click="startBtn(scope.row.id)" v-if="scope.row.status == 2">开始活动</el-button> 
               <el-button class="gt-button-normal blue" @click="edit(scope.row.id)" v-if="scope.row.status == 0">编辑</el-button>
-              <el-button class="gt-button-normal" @click="delOne(scope.row.id)">删除</el-button>
+              <el-button class="gt-button-normal" @click="delOne(scope.row.id)" v-if="scope.row.status == 0 || scope.row.status == 3">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -158,7 +160,7 @@ export default {
         });
     },
     //开始------------------------------------------------------------star
-    actBtn(val) {
+    startBtn(val) {
       this.$confirm("确定要开启该活动吗？", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",

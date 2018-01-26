@@ -183,7 +183,6 @@
             <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
             <el-button type="primary" @click="lastStep"        v-if="this.active==3">保存</el-button>   
-            <el-button type="primary" @click="submit">打印</el-button>   
         </div> 
 
         <gt-Fans-detail :visible.sync="dialogFans" v-on:getFansData="getFansData"></gt-Fans-detail>  
@@ -384,13 +383,11 @@ export default {
         //奖项设置
         prizeSetList: this.ruleForm4
       };
-      console.log(data, 123);
       api
         .addActivity(data)
         .then(data => {
           this.isSubmit = true;
           if (data.code == 100) {
-            console.log(12336666);
             this.active = 5;
           } else {
             this.isSubmit = false;
