@@ -3,9 +3,6 @@ package com.gt.game.core.service.scratch;
 import com.gt.api.bean.session.BusUser;
 import com.gt.api.bean.session.WxPublicUsers;
 import com.gt.game.common.dto.ResponseDTO;
-import com.gt.game.core.bean.eggs.res.EggsListRes;
-import com.gt.game.core.bean.qixi.req.*;
-import com.gt.game.core.bean.qixi.res.*;
 import com.gt.game.core.bean.scratch.req.*;
 import com.gt.game.core.bean.scratch.res.*;
 

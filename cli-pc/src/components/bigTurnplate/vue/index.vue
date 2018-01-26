@@ -52,7 +52,7 @@
               <!-- <el-button class="gt-button-normal blue" @click="impower(scope.row.id)">核销授权</el-button> -->
               <el-button class="gt-button-normal blue" v-if="scope.row.status==3" @click="handleActive1(scope.row.id)">开始活动</el-button>
               <el-button class="gt-button-normal blue" v-if="scope.row.status==1" @click="handleActive2(scope.row.id)">暂停活动</el-button>
-              <el-button class="gt-button-normal" v-if="scope.row.status!=1" @click="delBtn(scope.row.id)">删除</el-button>
+              <el-button class="gt-button-normal" v-if="scope.row.status!=1&&scope.row.status!=3" @click="delBtn(scope.row.id)">删除</el-button>
 
             </template>
           </el-table-column>
@@ -203,17 +203,17 @@ export default {
     },
     //中奖记录
     record(val) {
-      this.$router.push({ path: '/scrapeHappy/prizeRecord', query: { id: val } });
+      this.$router.push({ path: '/bigTurnplate/prizeRecord', query: { id: val } });
     },
     // //核销授权
     // impower(val){
-    //    this.$router.push({path: '/scrapeHappy/cancelOut', query: {id: val}});
+    //    this.$router.push({path: '/bigTurnplate/cancelOut', query: {id: val}});
     // },
     addActive() {
-      this.$router.push('/scrapeHappy/addAct')
+      this.$router.push('/bigTurnplate/addAct')
     },
     editActive(val) {
-      this.$router.push({ path: '/scrapeHappy/editAct', query: { id: val } });
+      this.$router.push({ path: '/bigTurnplate/editAct', query: { id: val } });
     },
   },
   mounted() {

@@ -47,6 +47,19 @@ public class ShakeluckPrizeReq {
 
 	@ApiModelProperty("奖品图片")
 	private List<ShakeluckPrizeImgReq> shakeluckPrizeImgReqs;
+	/**
+	 * 卡券包ID
+	 */
+	@ApiModelProperty("卡券包ID")
+	private String cardReceiveId;
+
+	public String getCardReceiveId() {
+		return cardReceiveId;
+	}
+
+	public void setCardReceiveId(String cardReceiveId) {
+		this.cardReceiveId = cardReceiveId;
+	}
 
 	public String getPrizeName() {
 		return prizeName;

@@ -366,6 +366,9 @@ export default {
         }else if (this.ruleForm4[i].name0==4&&this.ruleForm4[i].name5.length==0) { 
             this.$message.error("当奖品为实物时，请上传实物图片~");
             return false 
+        }else if(this.ruleForm4[i].name0==4&&this.ruleForm4[i].name5.length>3){
+                this.$message.error("实物图片最多上传3张~");
+                return false 
         }
       }
        this.submit();

@@ -257,6 +257,7 @@ public class ShakeluckServiceImpl  implements ShakeluckService {
                 for (ShakeluckPrize ShakeluckPrize : ShakeluckPrizes) {
                     ShakeluckPrizeReq ShakeluckPrizeReq = new ShakeluckPrizeReq();
                     BeanUtils.copyProperties(ShakeluckPrize, ShakeluckPrizeReq);
+                    ShakeluckPrizeReq.setCardReceiveId(CommonUtil.isNotEmpty(ShakeluckPrize.getCardReceiveId())?ShakeluckPrize.getCardReceiveId().toString():"");
                     List<ShakeluckPrizeImg> ShakeluckPrizeImgs = shakeluckPrizeImgService.selectList(new EntityWrapper<ShakeluckPrizeImg>().eq("prize_id", ShakeluckPrize.getId()));
                     List<ShakeluckPrizeImgReq> ShakeluckPrizeImgReqs = new ArrayList<>();
                     for (ShakeluckPrizeImg ShakeluckPrizeImg : ShakeluckPrizeImgs) {
@@ -428,6 +429,7 @@ public class ShakeluckServiceImpl  implements ShakeluckService {
                 }
                 ShakeluckPrize ShakeluckPrize = new ShakeluckPrize();
                 BeanUtils.copyProperties(ShakeluckPrizeReq,ShakeluckPrize);
+                ShakeluckPrize.setCardReceiveId(CommonUtil.isNotEmpty(ShakeluckPrizeReq.getCardReceiveId())?CommonUtil.toInteger(ShakeluckPrizeReq.getCardReceiveId()):null);
                 ShakeluckPrize.setActId(ShakeluckMain.getId());
                 shakeluckPrizeService.insert(ShakeluckPrize);
                 if(ShakeluckPrizeReq.getShakeluckPrizeImgReqs().size() > 0){

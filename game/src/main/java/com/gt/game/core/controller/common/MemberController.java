@@ -5,6 +5,7 @@ import com.gt.api.bean.session.WxPublicUsers;
 import com.gt.axis.server.wxmp.ShortUrlServer;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.core.bean.common.req.MemberListPageReq;
+import com.gt.game.core.bean.common.res.CardReceiveListRes;
 import com.gt.game.core.bean.common.res.MemberListPageRes;
 import com.gt.game.core.service.common.MemberService;
 import com.gt.game.core.util.CommonUtil;
@@ -41,8 +42,27 @@ public class MemberController {
             @RequestBody @ApiParam("请求参数") MemberListPageReq LoveArrowListPageReq,
             HttpServletRequest request) {
         try {
-            WxPublicUsers busUser = CommonUtil.getLoginPbUser(request);
+
+            BusUser busUser = CommonUtil.getLoginUser(request);
             ResponseDTO<List<MemberListPageRes>> responseDTO = memberService.getMemberList(busUser, LoveArrowListPageReq);
+            return responseDTO;
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+            @ApiResponse(code = 1, message = "响应对象", response = CardReceiveListRes.class),
+    })
+    @ApiOperation(value = "获取优惠劵列表", notes = "获取优惠劵列表")
+    @RequestMapping(value = "/getCardReceviceList", method = RequestMethod.POST)
+    protected ResponseDTO getCardReceviceList( HttpServletRequest request) {
+        try {
+
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO<List<CardReceiveListRes>> responseDTO = memberService.getCardReceviceList(busUser);
             return responseDTO;
         } catch (Exception e){
             e.printStackTrace();

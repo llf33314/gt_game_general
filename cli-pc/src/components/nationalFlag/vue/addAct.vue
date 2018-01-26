@@ -166,11 +166,11 @@
                 <span class="el-upload__tip grey ml10">最多设置9个奖项</span> 
             </div> 
                <el-tooltip placement="top" effect="light">
-                <div slot="content">
-                    当奖品为实物时，请上传实物图片
-                </div>
-                <span class="el-icon-warning" style="font-size:18px; margin-left:67%;z-index:11;position: absolute;margin-top: 12px; color:#ccc"></span> 
-            </el-tooltip>
+                    <div slot="content">
+                        当奖品为实物时，请上传实物图片
+                    </div>
+                    <span class="el-icon-warning" style="font-size:18px; margin-left:67%;z-index:11;position: absolute;margin-top: 12px; color:#ccc"></span> 
+                </el-tooltip>
             <el-table ref="multipleTable" :data="ruleForm4" tooltip-effect="dark">
                 <el-table-column label="奖品类型">
                     <template slot-scope="scope">
@@ -257,7 +257,7 @@ export default {
       }
     }; 
     return {
-      active:0,
+      active:3,
       isSubmit:false,
       ruleForm1: {
         name: "",
@@ -433,12 +433,12 @@ export default {
         }
       });
     },  
-    lastStep() {
+    lastStep() { 
       if(this.isJoinPrize==1&&!this.ruleForm5.name1){
             this.$message.error("参与链接不能为空，请填写完整~");
             return false
       }
-      for (let i = 0; i < this.ruleForm4.length; i++) { 
+      for (let i = 0; i < this.ruleForm4.length; i++) {  
         var regu =/^[1-9]\d*$/;
         if(!this.ruleForm4[i].name0||!this.ruleForm4[i].name1||!this.ruleForm4[i].name2||!this.ruleForm4[i].name3){
             this.$message.error("表单不能留空，请填写完整~");
@@ -449,13 +449,16 @@ export default {
         }else if (!regu.test(this.ruleForm4[i].name3)) {
             this.$message.error("奖项数量填写有误，请重新填写~");
             return false 
-        }else{
-            this.ruleForm4[i].name4 = parseFloat(this.ruleForm4[i].name4).toFixed(2);  
-        }  
+        }else if(this.ruleForm4[i].name0==4&&this.ruleForm4[i].name5.length==0) { 
+                this.$message.error("当奖品为实物时，请上传实物图片~");
+                return false 
+        }else if(this.ruleForm4[i].name0==4&&this.ruleForm4[i].name5.length>5){
+                this.$message.error("实物图片最多上传5张~");
+                return false 
+        } 
       }
       this.submit(); 
-    }, 
-    
+    },    
     //表单提交--------------------------------------star
     submit(){
         if(this.isSubmit){

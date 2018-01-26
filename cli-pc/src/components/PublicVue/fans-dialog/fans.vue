@@ -65,13 +65,14 @@
 import { getMembers } from "./api";
 export default {
   props: { 
-    // fansKey:{
-    //   type: String,
-    //   default: "" 
-    // },
     visible: {
       type: Boolean,
       default: true 
+    },
+    // 指定中奖人的数量 默认不允许超过5个
+    peopleNums: {
+      type: Number,
+      default: 5
     } 
   },
   data() {
@@ -92,10 +93,8 @@ export default {
             params.current = this.current;
             params.size = 8;
             params.memberName = this.memberName;
-            console.log(params);
             getMembers(params).then(data => {
                 if (data.code == 100) {
-                    console.log(data,1234);
                 this.fansDetail = data;
                 } else {
                 this.$message.error(data.msg);
@@ -109,8 +108,8 @@ export default {
         prizeSubmit() {
             if(this.multipleTable.length==0){
                 this.$message.error("指定中奖人个数不能为0，请重新选择");
-            }else if(this.multipleTable.length > 4){
-                this.$message.error("指定中奖人不能超过5个，请重新选择");
+            }else if(this.multipleTable.length > this.peopleNums){
+                this.$message.error("指定中奖人不能超过" + this.peopleNums + "个，请重新选择");
             }else{
                 this.$emit("getFansData", this.multipleTable);
                 this.dialogFans = false
@@ -126,9 +125,7 @@ export default {
         }
     }, 
     created(){
-        //console.log(this.fansKey,'fansKey')
         this.getMembersData();
-        console.log(this.visible,123)        
     },
     filters: {
         sexStatus(val) {
@@ -143,12 +140,6 @@ export default {
         }, 
     },
     watch: {
-        // fansKey: function(val, old) {
-        //     console.log(val,11111111111111)
-        //     console.log(old,22222222222222)
-        //     // this.dialogFans = val
-        //     // this.$refs.multipleTable && this.$refs.multipleTable.clearSelection()
-        // },
         visible: function(val, old) {            
             this.dialogFans = val
             this.$refs.multipleTable && this.$refs.multipleTable.clearSelection()

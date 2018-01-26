@@ -11,12 +11,12 @@
     </el-breadcrumb> 
     <div class="gt-gray-region mb20">  
         <span class="padding-left-md ml30 mb10">
-            <el-select v-model="type"  placeholder="请选择奖品类型"> 
+            <el-select v-model="type"  placeholder="请选择奖品类型" @change="changeType"> 
                  <el-option  v-for="(item, index) in options.type"  :key="index"  :label="item.label"  :value="item.value"></el-option>
             </el-select>
         </span> 
         <span class="padding-left-md ml10 mb10">
-                <el-select v-model="status" placeholder="请选择状态"> 
+                <el-select v-model="status" placeholder="请选择状态" @change="changeStatus"> 
                   <el-option  v-for="(item, index) in options.status" :key="index" :label="item.label" :value="item.value"></el-option>
                 </el-select>
         </span> 
@@ -86,25 +86,7 @@ export default {
       status: -1,
       type: -1,
 
-      tableData: [
-        {
-          address: "string",
-          addressName: "string",
-          cashTime: "1516341837149",
-          id: 0,
-          memberId: 0,
-          memberName: "string",
-          memberPhone: "string",
-          nickname: "string",
-          prizeName: "string",
-          prizeUnit: 0,
-          receiveType: 2,
-          score: 0,
-          snCode: "string",
-          status: 2,
-          type: 1
-        }
-      ],
+      tableData: [],
       options: {
         type: [
           { label: "全部", value: -1 },
@@ -128,6 +110,12 @@ export default {
     };
   },
   methods: {
+    changeType() {
+      this.fetchData()
+    },
+    changeStatus() {
+      this.fetchData()
+    },
     searchFuc() {
       this.currentPage = this.initCurrentPage;
       this.fetchData();

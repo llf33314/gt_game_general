@@ -368,6 +368,7 @@ public class SeagoldServiceImpl implements SeagoldService {
                 SeagoldPrize seagoldPrize = new SeagoldPrize();
                 BeanUtils.copyProperties(seagoldPrizeReq,seagoldPrize);
                 seagoldPrize.setActId(seagoldMain.getId());
+                seagoldPrize.setCardReceiveId(CommonUtil.isNotEmpty(seagoldPrizeReq.getCardReceiveId())?CommonUtil.toInteger(seagoldPrizeReq.getCardReceiveId()):null);
                 seagoldPrizeService.insert(seagoldPrize);
                 if(seagoldPrizeReq.getSeagoldPrizeImgReqs().size() > 0){
                     for(SeagoldPrizeImgReq seagoldPrizeImgReq : seagoldPrizeReq.getSeagoldPrizeImgReqs()){
@@ -520,6 +521,7 @@ public class SeagoldServiceImpl implements SeagoldService {
                 for (SeagoldPrize seagoldPrize : seagoldPrizes) {
                     SeagoldPrizeReq seagoldPrizeReq = new SeagoldPrizeReq();
                     BeanUtils.copyProperties(seagoldPrize, seagoldPrizeReq);
+                    seagoldPrizeReq.setCardReceiveId(CommonUtil.isNotEmpty(seagoldPrize.getCardReceiveId())?seagoldPrize.getCardReceiveId().toString():"");
                     List<SeagoldPrizeImg> seagoldPrizeImgs = seagoldPrizeImgService.selectList(new EntityWrapper<SeagoldPrizeImg>().eq("prize_id", seagoldPrize.getId()));
                     List<SeagoldPrizeImgReq> seagoldPrizeImgReqs = new ArrayList<>();
                     for (SeagoldPrizeImg seagoldPrizeImg : seagoldPrizeImgs) {

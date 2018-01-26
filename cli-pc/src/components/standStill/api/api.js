@@ -2,7 +2,7 @@ import axios from './../../../http'
 let base = window.BASEDOMAIN + '/app/stand'
 
 /*获取奖品类型*/
-export const getPrizeType     = params => { return axios.post(`${base}/getStandPrizeType`, params).then(res => res.data) }
+export const getPrizeType    = params => { return axios.post(`${window.BASEDOMAIN}/app/prize/getPrizeTypeOne`, params).then(res => res.data) }
 
 /*连接*/
 export const getShortUrl = params => { return axios.get(`${window.BASEDOMAIN}/app/link/getShorUrl?url=${params}`).then(res => res.data) }

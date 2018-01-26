@@ -52,6 +52,40 @@ public class PrizeTypeController {
             @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
             @ApiResponse(code = 1, message = "响应对象", response = PrizeTypeListRes.class),
     })
+    @ApiOperation(value = "获取奖品类型列表(去掉谢谢参与、手机话费、优惠劵)", notes = "获取奖品类型列表(去掉谢谢参与、手机话费、优惠劵)")
+    @RequestMapping(value = "/getPrizeTypeTow", method = RequestMethod.POST)
+    protected ResponseDTO getPrizeTypeTow(
+            HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO<List<PrizeTypeListRes>> responseDTO = prizeTypeService.getPrizeTypeTow(busUser);
+            return responseDTO;
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+            @ApiResponse(code = 1, message = "响应对象", response = PrizeTypeListRes.class),
+    })
+    @ApiOperation(value = "获取奖品类型列表(去掉优惠劵)", notes = "获取奖品类型列表（去掉优惠劵）")
+    @RequestMapping(value = "/getPrizeTypeThree", method = RequestMethod.POST)
+    protected ResponseDTO getPrizeTypeThree(
+            HttpServletRequest request) {
+        try {
+            BusUser busUser = CommonUtil.getLoginUser(request);
+            ResponseDTO<List<PrizeTypeListRes>> responseDTO = prizeTypeService.getPrizeTypeThree(busUser);
+            return responseDTO;
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+            @ApiResponse(code = 1, message = "响应对象", response = PrizeTypeListRes.class),
+    })
     @ApiOperation(value = "获取奖品类型列表", notes = "获取奖品类型列表")
     @RequestMapping(value = "/getPrizeType", method = RequestMethod.POST)
     protected ResponseDTO getPrizeType(

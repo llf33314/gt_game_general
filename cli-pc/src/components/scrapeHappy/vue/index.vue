@@ -19,10 +19,10 @@
       </div>
       <div class="gt-content">
         <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-          <el-tab-pane :label="'全部  ('+countNum.all+')'" name="-1"></el-tab-pane>
-          <el-tab-pane :label="'未开始('+countNum.nostar+')'" name="0"></el-tab-pane>
-          <el-tab-pane :label="'进行中('+countNum.started+')'" name="1"></el-tab-pane>
-          <el-tab-pane :label="'已结束('+countNum.over+')'" name="2"></el-tab-pane>
+          <el-tab-pane :label="'全部  ('+countNum.count1+')'" name="-1"></el-tab-pane>
+          <el-tab-pane :label="'未开始('+countNum.count2+')'" name="0"></el-tab-pane>
+          <el-tab-pane :label="'进行中('+countNum.count3+')'" name="1"></el-tab-pane>
+          <el-tab-pane :label="'已结束('+countNum.count4+')'" name="2"></el-tab-pane>
         </el-tabs>
         <gt-null-data v-if="this.tableData.page.totalNums==0">还没有创建相关活动，
           <span @click="addActive()">点击这里</span>创建活动吧
@@ -49,10 +49,10 @@
               <el-button class="gt-button-normal blue" v-if="scope.row.status!=0" @click="record(scope.row.id)">中奖纪录</el-button>
               <el-button class="gt-button-normal blue" @click="askPreview(scope.row.id)">预览链接</el-button>
               <!-- <el-button class="gt-button-normal blue" @click="impower(scope.row.id)">核销授权</el-button> -->
-              <el-button class="gt-button-normal blue" v-if="scope.row.status==3" @click="handleActive1(scope.row.id)">开始活动</el-button>
-              <el-button class="gt-button-normal blue" v-if="scope.row.status==1" @click="handleActive2(scope.row.id)">暂停活动</el-button>
-              <el-button class="gt-button-normal blue" v-if="scope.row.status==0" @click="editActive(scope.row.id)">编辑</el-button>
-              <el-button class="gt-button-normal" v-if="scope.row.status!=1" @click="delBtn(scope.row.id)">删除</el-button>
+              <el-button class="gt-button-normal blue" @click="stopBtn(scope.row.id)" v-if="scope.row.status == 1">暂停活动</el-button>    
+              <el-button class="gt-button-normal blue" @click="startBtn(scope.row.id)" v-if="scope.row.status == 2">开始活动</el-button> 
+              <el-button class="gt-button-normal blue"  @click="editActive(scope.row.id)" v-if="scope.row.status==0">编辑</el-button>
+              <el-button class="gt-button-normal" @click="delBtn(scope.row.id)" v-if="scope.row.status == 0 || scope.row.status == 3">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -75,7 +75,7 @@ export default {
       activeName: "-1",
       dialogTip: false,
       // countNum:{first:"10",second:"20",third:"30",fourth:"40",fifth:"2"},
-      countNum: { all: "", nostar: "", started: "", stop: "", over: "" },
+      countNum: { count1: "", count2: "", count3: "", count4: "", count5: "" },
       tableData: { data: [], page: {} },
       current: 1,
       //预览连接
@@ -94,11 +94,9 @@ export default {
       params.name = this.keyWord;
       params.current = this.current;
       params.size = 10;
-      console.log(params, 77)
       getActList(params).then(data => {
         if (data.code == 100) {
           this.tableData = data
-          console.log(data, '获取首页');
         } else {
           this.$message.errorthis.$message.error(data.msg);;
         }
@@ -108,15 +106,11 @@ export default {
     },
     //获取数量--------------------------------------star
     getCount() {
-      getActCount({ name: this.keyWord }).then(data => {
-        if (data.code == 100) {
-          console.log(data, '数量')
-          this.countNum.all = data.data.count1
-          this.countNum.nostar = data.data.count2
-          this.countNum.started = data.data.count3
-          this.countNum.over = data.data.count4
+      getActCount({ name: this.keyWord }).then(res => {
+        if (res.code == 100) {
+          this.countNum = res.data
         } else {
-          this.$message.errorthis.$message.error(data.msg);;
+          this.$message.error(res.msg);
         }
       }).catch(() => {
         this.$message({ type: "info", message: "网络问题，请刷新重试~" });
@@ -126,10 +120,8 @@ export default {
     askPreview(mainId) {
       getMobileUrl({ mainId }).then(data => {
         if (data.code == 100) {
-          console.log(data, '连接')
           this.copeData.url = data.data.mobileUrl;
           getShortUrl(data.data.mobileUrl).then(res => {
-            console.log(res, '短链接')
             this.copeData.shortUrl = res;
           });
           this.copeData.copyUrlVisible = true;
@@ -158,11 +150,10 @@ export default {
       });
     },
     //开始按钮=======================================================
-    handleActive1(val) {
+    startBtn(val) {
       var params = {}
       params.id = val
       params.status = 1
-      console.log(params, 12345);
       stopLuck(params).then(data => {
         if (data.code == 100) {
           this.$message({ message: "操作成功", type: "success" });
@@ -176,11 +167,10 @@ export default {
       });
     },
     //暂停按钮=======================================================
-    handleActive2(val) {
+    stopBtn(val) {
       var params = {}
       params.id = val
       params.status = 2
-      console.log(params, 12345);
       stopLuck(params).then(data => {
         if (data.code == 100) {
           this.$message({ message: "操作成功", type: "success" });

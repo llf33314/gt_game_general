@@ -1,6 +1,7 @@
 const index       = ()=>import( '@/components/christmasGift/vue/index')
 const prizeRecord = ()=>import( '@/components/christmasGift/vue/prizeRecord')
 const addAct = ()=>import( '@/components/christmasGift/vue/addAct') 
+const editAct = ()=>import( '@/components/christmasGift/vue/editAct') 
 const cancelOut= () => import('@/components/christmasGift/vue/cancelOut')
 export const christmasGift = [
     {
@@ -15,6 +16,11 @@ export const christmasGift = [
         path:'/christmasGift/addAct',
         component: addAct,
         name:'christmasGift_addAct'
+    },
+    {
+        path:'/christmasGift/editAct',
+        component: editAct,
+        name:'christmasGift_editAct'
     },
     {
         path:'/christmasGift/cancelOut',

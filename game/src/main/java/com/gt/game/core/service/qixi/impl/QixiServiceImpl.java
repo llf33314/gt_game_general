@@ -259,6 +259,7 @@ public class QixiServiceImpl implements QixiService {
                 for (QixiPrize QixiPrize : QixiPrizes) {
                     QixiPrizeReq QixiPrizeReq = new QixiPrizeReq();
                     BeanUtils.copyProperties(QixiPrize, QixiPrizeReq);
+                    QixiPrizeReq.setCardReceiveId(CommonUtil.isNotEmpty(QixiPrize.getCardReceiveId())?QixiPrize.getCardReceiveId().toString():"");
                     List<QixiPrizeImg> QixiPrizeImgs = qixiPrizeImgService.selectList(new EntityWrapper<QixiPrizeImg>().eq("prize_id", QixiPrize.getId()));
                     List<QixiPrizeImgReq> QixiPrizeImgReqs = new ArrayList<>();
                     for (QixiPrizeImg QixiPrizeImg : QixiPrizeImgs) {
@@ -431,6 +432,7 @@ public class QixiServiceImpl implements QixiService {
                 }
                 QixiPrize QixiPrize = new QixiPrize();
                 BeanUtils.copyProperties(QixiPrizeReq,QixiPrize);
+                QixiPrize.setCardReceiveId(CommonUtil.isNotEmpty(QixiPrizeReq.getCardReceiveId())?CommonUtil.toInteger(QixiPrizeReq.getCardReceiveId()):null);
                 QixiPrize.setActId(QixiMain.getId());
                 qixiPrizeService.insert(QixiPrize);
                 if(QixiPrizeReq.getQixiPrizeImgReqs().size() > 0){
