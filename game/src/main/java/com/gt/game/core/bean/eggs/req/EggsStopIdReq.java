@@ -1,11 +1,11 @@
-package com.gt.game.core.bean.scratch.req;
+package com.gt.game.core.bean.eggs.req;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 
-@ApiModel("开始/暂停 刮刮乐活动请求类")
-public class ScratchStopIdReq {
+@ApiModel("砸金蛋活动开始/暂停请求类")
+public class EggsStopIdReq {
 
 	@ApiModelProperty("活动id")
 	private Integer id;

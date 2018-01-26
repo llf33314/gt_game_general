@@ -127,10 +127,14 @@
                     <el-input class="w20_demo" type="number" v-model="scope.row.name1" placeholder="数值应大于0"></el-input>
                 </template>
                 </el-table-column>
-                <el-table-column label="奖品名称">
-                <template slot-scope="scope">
-                    <el-input class="w20_demo"  v-model="scope.row.name2" placeholder="请输入奖品名称"></el-input>
-                </template>
+              <el-table-column label="奖品名称">
+                    <template slot-scope="scope">
+                        <el-select v-model="scope.row.name2" v-if="scope.row.name0==7"   placeholder="请选择" @change="optionsData(scope.$index)"> 
+                            <el-option v-for="item in memberOptions" :key="item.id"  :label="item.cardsName"  :value="item.id">
+                            </el-option>
+                        </el-select>  
+                        <el-input v-else class="w20_demo"   v-model="scope.row.name2"></el-input> 
+                    </template>
                 </el-table-column>
                 <el-table-column label="奖项数量">
                 <template slot-scope="scope">
@@ -172,8 +176,7 @@
 </template>
 <script>
 import { 
- saveAct,getQuesbank,getPrizeType,getAct
-}from './../api/api'
+ saveAct,getQuesbank,getPrizeType,getAct,getMemberType}from './../api/api'
 export default {
   data() {
     let iiPass = (rule, value, callback) => {
@@ -246,6 +249,7 @@ export default {
             return time.getTime() < Date.now() - 8.64e7;
           }
       }, 
+      memberOptions:[],
       ruleForm4: [{ 
           name0: "",
           name1: "",
@@ -368,6 +372,13 @@ export default {
       }
       this.submit();
     }, 
+    optionsData(val){
+        for(var i=0;i<this.memberOptions.length;i++){
+            if(this.memberOptions[i].id==this.ruleForm4[val].name2||this.ruleForm4[val].name2==this.memberOptions[i].id){
+                this.ruleForm4[val].name6=this.memberOptions[i].cardsName
+            } 
+        } 
+      }  ,
     //表单提交--------------------------------------star
     submit(){  
         //兑奖地址
@@ -381,28 +392,32 @@ export default {
             }    
         }
         //奖品
-        var newPrize=[];
+        var newPrize=[]; 
         if(this.ruleForm4){
             for(let i =0;i< this.ruleForm4.length;i++){
                 var arr4={
                     imgInstruction :"",
                     type :this.ruleForm4[i].name0,//类型
                     prizeUnit :Number(this.ruleForm4[i].name1),//单位
-                    prizeName :this.ruleForm4[i].name2,//名称
-                    num :Number(this.ruleForm4[i].name3),//数量
-                    // probabiliy :this.ruleForm4[i].name4,  //概率
-                    standPrizeImgReqs :[]//图片
-                } 
+                    prizeName :this.ruleForm4[i].name2,//名称 
+                    num :Number(this.ruleForm4[i].name3),//数量 
+                    cardReceiveId:"",
+                    standPrizeImgReqs:[]//图片
+                }
+                if(arr4.type==7){
+                    arr4.prizeName=this.ruleForm4[i].name6//id
+                    arr4.cardReceiveId=this.ruleForm4[i].name2//name
+                }
                 if(arr4.type==4){
                     for(var j=0;j<this.ruleForm4[i].name5.length;j++){
                         var imgarr={
-                            picUrl:this.ruleForm4[i].name5[j]
+                            imgUrl:this.ruleForm4[i].name5[j]
                         }
                     arr4.standPrizeImgReqs.push(imgarr)
                     } 
                 } 
                 newPrize.push(arr4)
-            } 
+            }  
         } 
         const data = {
             id:this.$router.history.current.query.id,
@@ -457,6 +472,18 @@ export default {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
         }); 
     },
+    //获取奖品名称-----------star
+    getMemberTypeData(){
+        getMemberType().then(data=>{
+          if (data.code == 100) { 
+            this.memberOptions=data.data 
+          } else {
+              this.$message.error(data.msg);
+          }
+        }).catch(() => {
+            this.$message({ type: "info", message: "网络问题，请刷新重试~" });
+        }); 
+    }, 
     //获取题库-----------star
     getQuesbankData(){
         getQuesbank().then(data=>{
@@ -504,27 +531,26 @@ export default {
             } 
             this.ruleForm3.addrRow= newaddr
             //奖项设置  
-            var newPraise = [];//兑奖
+            var newPraise = [];//兑奖 
             for (var i = 0; i < data.data.standPrizeReqs.length; i++) {
                 var newabc1 = {
                     name0  : data.data.standPrizeReqs[i].type, 
-                    name1  : data.data.standPrizeReqs[i].prizeUnit, 
+                    name1  : String(data.data.standPrizeReqs[i].prizeUnit), 
                     name2  : data.data.standPrizeReqs[i].prizeName, 
-                    name3  : String(data.data.standPrizeReqs[i].num), 
-                    name4  : data.data.standPrizeReqs[i].probabiliy, 
-                    name5  :[] 
-                };
-                
+                    name3  : String(data.data.standPrizeReqs[i].num),  
+                    name5  :[] ,
+                    cardReceiveId  : data.data.standPrizeReqs[i].cardReceiveId,
+                }; 
                 if(newabc1.name0==4){
-                    for(var j = 0; j < data.data.standPrizeReqs[i].standPrizeImgReqs.length; j++){
+                    for(var j = 0; j < data.data.standPrizeReqs[i].loveArrowPrizeImgReqs.length; j++){
                         var imgarr={
-                             url:window.IMAGEURL+data.data.standPrizeReqs[i].standPrizeImgReqs[j].picUrl
+                             url:window.IMAGEURL+data.data.standPrizeReqs[i].loveArrowPrizeImgReqs[j].imgUrl
                         }
                         newabc1.name5.push(imgarr.url)
                     }
                 }
                newPraise.push(newabc1);  
-            } 
+            }  
             this.ruleForm4=newPraise 
             this.explain=data.data.cashPrizeInstruction  
           } else {
@@ -539,6 +565,7 @@ export default {
     this.getPrizeTypeData()
     this.getQuesbankData()
     this.getActData()
+    this.getMemberTypeData()
   }
 };
 </script>

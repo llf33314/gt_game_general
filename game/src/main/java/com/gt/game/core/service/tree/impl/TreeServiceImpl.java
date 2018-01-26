@@ -25,14 +25,9 @@ import com.gt.game.core.bean.tree.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 import com.gt.game.core.dao.tree.TreeWinningDAO;
-import com.gt.game.core.entity.eggs.EggsDetail;
-import com.gt.game.core.entity.eggs.EggsMain;
-import com.gt.game.core.entity.eggs.EggsWinning;
 import com.gt.game.core.entity.tree.TreeDetail;
 import com.gt.game.core.entity.tree.TreeMain;
 import com.gt.game.core.entity.tree.TreeWinning;
-import com.gt.game.core.exception.dragonboat.DragonboatException;
-import com.gt.game.core.exception.eggs.EggsException;
 import com.gt.game.core.exception.tree.TreeException;
 import com.gt.game.core.service.tree.TreeDetailService;
 import com.gt.game.core.service.tree.TreeMainService;
@@ -117,27 +112,33 @@ public class TreeServiceImpl implements TreeService {
             if (treeListReq.getStatus() == 2) {
                 entityWrapper.where("tree_endTime <= {0}", new Date());
             }
+            if(treeListReq.getStatus()==3){    //TODO   已暂停
+                entityWrapper.eq("tree_status", 2);
+            }
         }
         Page<TreeMain> page = new Page<>(treeListReq.getCurrent(), treeListReq.getSize());
         List<TreeMain> treeMainList = treeMainService.selectPage(page, entityWrapper).getRecords();
 
         List<TreeListRes> treeListResList = new ArrayList<>();
-        for (TreeMain TreeMain : treeMainList) {
+        for (TreeMain treeMain : treeMainList) {
             TreeListRes treeListResRes = new TreeListRes();
-            treeListResRes.setId(TreeMain.getId());
-            treeListResRes.setName(TreeMain.getTreeName());
-            treeListResRes.setActivityBeginTime(TreeMain.getTreeBeginTime());
-            treeListResRes.setActivityEndTime(TreeMain.getTreeEndTime());
+            treeListResRes.setId(treeMain.getId());
+            treeListResRes.setName(treeMain.getTreeName());
+            treeListResRes.setActivityBeginTime(treeMain.getTreeBeginTime());
+            treeListResRes.setActivityEndTime(treeMain.getTreeEndTime());
 
-            Date date = new Date();
-            if (TreeMain.getTreeBeginTime().getTime() > date.getTime()) {
-                treeListResRes.setStatus(0);
-            } else if (TreeMain.getTreeBeginTime().getTime() <= date.getTime() && TreeMain.getTreeEndTime().getTime() >= date.getTime()) {
-                treeListResRes.setStatus(1);
-            } else if (TreeMain.getTreeEndTime().getTime() < date.getTime()) {
-                treeListResRes.setStatus(2);
+            if(treeMain.getTreeStatus()==2){    //TODO   已暂停
+                treeListResRes.setStatus(3);
+            }else {
+                Date date = new Date();
+                if (treeMain.getTreeBeginTime().getTime() > date.getTime()) {
+                    treeListResRes.setStatus(0);
+                } else if (treeMain.getTreeBeginTime().getTime() <= date.getTime() && treeMain.getTreeEndTime().getTime() >= date.getTime()) {
+                    treeListResRes.setStatus(1);
+                } else if (treeMain.getTreeEndTime().getTime() < date.getTime()) {
+                    treeListResRes.setStatus(2);
+                }
             }
-
             treeListResList.add(treeListResRes);
         }
         PageDTO pageDTO = new PageDTO(page.getPages(), page.getTotal());
@@ -162,23 +163,31 @@ public class TreeServiceImpl implements TreeService {
         int count2 = 0;
         int count3 = 0;
         int count4 = 0;
+        int count5 = 0;
 
         List<TreeMain> treeMainList = treeMainService.selectList(entityWrapper);
-        Date date = new Date();
+
+
         for (TreeMain treeMain : treeMainList) {
-            if (treeMain.getTreeBeginTime().getTime() > date.getTime()) {
-                count2++; //  TODO    未开始
-            } else if (treeMain.getTreeBeginTime().getTime() <= date.getTime() && treeMain.getTreeEndTime().getTime() >= date.getTime()) {
-                count3++;  // TODO    进行中
-            } else if (treeMain.getTreeEndTime().getTime() < date.getTime()) {
-                count4++;  // TODO    已结束
-            }
+                if(treeMain.getTreeStatus()==2){    //TODO   已暂停
+                    count5++;
+                }else {
+                    Date date = new Date();
+                    if (treeMain.getTreeBeginTime().getTime() > date.getTime()) {
+                        count2++; //  TODO    未开始
+                    } else if (treeMain.getTreeBeginTime().getTime() <= date.getTime() && treeMain.getTreeEndTime().getTime() >= date.getTime()) {
+                        count3++;  // TODO    进行中
+                    } else if (treeMain.getTreeEndTime().getTime() < date.getTime()) {
+                        count4++;  // TODO    已结束
+                    }
+                }
         }
         TreeCountActivityRes treeCountActivityRes = new TreeCountActivityRes();
         treeCountActivityRes.setCount2(count2);
         treeCountActivityRes.setCount3(count3);
         treeCountActivityRes.setCount4(count4);
-        treeCountActivityRes.setCount1(count2+count3+count4);  //  TODO 全部
+        treeCountActivityRes.setCount5(count5);
+        treeCountActivityRes.setCount1(count2+count3+count4+count5);  //  TODO 全部
         return  treeCountActivityRes;
     }
 
@@ -452,6 +461,33 @@ public class TreeServiceImpl implements TreeService {
                 }
             }
         }
+    }
+
+    /**
+     * 开始/暂停圣诞大礼包活动
+     * @param loginPbUser
+     * @param treeStopIdReq
+     * @return
+     */
+    @Override
+    public ResponseDTO stopTree(WxPublicUsers loginPbUser, TreeStopIdReq treeStopIdReq) {
+
+        TreeMain treeMain = treeMainService.selectById(treeStopIdReq.getId());
+        if(CommonUtil.isNotEmpty(treeMain)){
+            if(treeMain.getTreeWxUserid().intValue() != loginPbUser.getId().intValue()){
+                throw new TreeException(ResponseEnums.DIFF_USER);
+            }
+            Date date = new Date();
+            if(treeMain.getTreeBeginTime().getTime() > date.getTime()){
+                throw new TreeException(ResponseEnums.TREE_HAS15);
+            }
+            if(treeMain.getTreeEndTime().getTime() < date.getTime()){
+                throw new TreeException(ResponseEnums.TREE_HAS16);
+            }
+            treeMain.setTreeStatus(treeStopIdReq.getStatus());
+            treeMainService.updateById(treeMain);
+        }
+        return ResponseDTO.createBySuccess("操作成功");
     }
 
     /**
