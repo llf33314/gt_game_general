@@ -1,6 +1,6 @@
 import axios from './../../../http'
-// let base = window.BASEDOMAIN + '/app/turntable'
-let base = 'http://192.168.3.68:8080' + '/app/turntable'
+let base = window.BASEDOMAIN + '/app/turntable'
+// let base = 'http://192.168.3.68:8080' + '/app/turntable'
 
 //新增大转盘活动/
 export const saveAct = params => {
