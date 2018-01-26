@@ -14,16 +14,16 @@ import java.util.Date;
 public class CardReceiveListRes {
 
 	@ApiModelProperty("id")
-	private Integer id;
+	private String id;
 
 	@ApiModelProperty("卡包名称")
 	private String cardsName;
 
-	public Integer getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

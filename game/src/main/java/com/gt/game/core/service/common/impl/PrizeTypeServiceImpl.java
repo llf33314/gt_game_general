@@ -50,6 +50,52 @@ public class PrizeTypeServiceImpl implements PrizeTypeService {
         return ResponseDTO.createBySuccess("获取成功",luckPrizeTypeListResList);
     }
     @Override
+    public ResponseDTO<List<PrizeTypeListRes>> getPrizeTypeTow(BusUser busUser) {
+        DictApiReq dictApiReq = new DictApiReq();
+        dictApiReq.setStyle("1062");
+        AxisResult<List<DictApiRes>> axisResult = null;
+        try {
+            axisResult =  DictServer.getDictApi(dictApiReq);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        List<PrizeTypeListRes> luckPrizeTypeListResList = new ArrayList<>();
+        if(CommonUtil.isNotEmpty(axisResult) && CommonUtil.isNotEmpty(axisResult.getData())){
+            for(DictApiRes dictApiRes : axisResult.getData()){
+                if(!dictApiRes.getItemKey().equals("3") && !dictApiRes.getItemKey().equals("5") && !dictApiRes.getItemKey().equals("7")){
+                    PrizeTypeListRes luckPrizeTypeListRes = new PrizeTypeListRes();
+                    luckPrizeTypeListRes.setName(dictApiRes.getItemValue());
+                    luckPrizeTypeListRes.setValue(CommonUtil.toInteger(dictApiRes.getItemKey()));
+                    luckPrizeTypeListResList.add(luckPrizeTypeListRes);
+                }
+            }
+        }
+        return ResponseDTO.createBySuccess("获取成功",luckPrizeTypeListResList);
+    }
+    @Override
+    public ResponseDTO<List<PrizeTypeListRes>> getPrizeTypeThree(BusUser busUser) {
+        DictApiReq dictApiReq = new DictApiReq();
+        dictApiReq.setStyle("1062");
+        AxisResult<List<DictApiRes>> axisResult = null;
+        try {
+            axisResult =  DictServer.getDictApi(dictApiReq);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        List<PrizeTypeListRes> luckPrizeTypeListResList = new ArrayList<>();
+        if(CommonUtil.isNotEmpty(axisResult) && CommonUtil.isNotEmpty(axisResult.getData())){
+            for(DictApiRes dictApiRes : axisResult.getData()){
+                if(!dictApiRes.getItemKey().equals("7")) {
+                    PrizeTypeListRes luckPrizeTypeListRes = new PrizeTypeListRes();
+                    luckPrizeTypeListRes.setName(dictApiRes.getItemValue());
+                    luckPrizeTypeListRes.setValue(CommonUtil.toInteger(dictApiRes.getItemKey()));
+                    luckPrizeTypeListResList.add(luckPrizeTypeListRes);
+                }
+            }
+        }
+        return ResponseDTO.createBySuccess("获取成功",luckPrizeTypeListResList);
+    }
+    @Override
     public ResponseDTO<List<PrizeTypeListRes>> getPrizeType(BusUser busUser) {
         DictApiReq dictApiReq = new DictApiReq();
         dictApiReq.setStyle("1062");

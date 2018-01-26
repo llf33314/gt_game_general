@@ -259,6 +259,7 @@ public class LovearrowServiceImpl implements LovearrowService {
                 for (LovearrowPrize LovearrowPrize : LovearrowPrizes) {
                     LoveArrowPrizeReq loveArrowPrizeReq = new LoveArrowPrizeReq();
                     BeanUtils.copyProperties(LovearrowPrize, loveArrowPrizeReq);
+                    loveArrowPrizeReq.setCardReceiveId(CommonUtil.isNotEmpty(LovearrowPrize.getCardReceiveId())?LovearrowPrize.getCardReceiveId().toString():"");
                     List<LovearrowPrizeImg> lovearrowPrizeImgs = lovearrowPrizeImgService.selectList(new EntityWrapper<LovearrowPrizeImg>().eq("prize_id", LovearrowPrize.getId()));
                     List<LoveArrowPrizeImgReq> loveArrowPrizeImgReqs = new ArrayList<>();
                     for (LovearrowPrizeImg lovearrowPrizeImg : lovearrowPrizeImgs) {
@@ -431,6 +432,7 @@ public class LovearrowServiceImpl implements LovearrowService {
                 }
                 LovearrowPrize LovearrowPrize = new LovearrowPrize();
                 BeanUtils.copyProperties(LoveArrowPrizeReq,LovearrowPrize);
+                LovearrowPrize.setCardReceiveId(CommonUtil.isNotEmpty(LoveArrowPrizeReq.getCardReceiveId())?CommonUtil.toInteger(LoveArrowPrizeReq.getCardReceiveId()):null);
                 LovearrowPrize.setActId(LovearrowMain.getId());
                 lovearrowPrizeService.insert(LovearrowPrize);
                 if(LoveArrowPrizeReq.getLoveArrowPrizeImgReqs().size() > 0){

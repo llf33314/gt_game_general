@@ -100,7 +100,7 @@ public class MemberServiceImpl implements MemberService {
                 for(int i = 0 ; i < list.size() ; i++ ){
                     CardReceiveListRes cardReceiveListRes = new CardReceiveListRes();
                     cardReceiveListRes.setCardsName(CommonUtil.isNotEmpty(list.get(i).get("cardsName"))? list.get(i).get("cardsName").toString():"未知名称");
-                    cardReceiveListRes.setId(CommonUtil.isNotEmpty(list.get(i).get("id"))? Integer.parseInt(list.get(i).get("id").toString()):0);
+                    cardReceiveListRes.setId(CommonUtil.isNotEmpty(list.get(i).get("id"))? list.get(i).get("id").toString():"0");
                     cardReceiveListResList.add(cardReceiveListRes);
                 }
             }
