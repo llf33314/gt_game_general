@@ -92,10 +92,8 @@ export default {
             params.current = this.current;
             params.size = 8;
             params.memberName = this.memberName;
-            console.log(params);
             getMembers(params).then(data => {
                 if (data.code == 100) {
-                    console.log(data,1234);
                 this.fansDetail = data;
                 } else {
                 this.$message.error(data.msg);

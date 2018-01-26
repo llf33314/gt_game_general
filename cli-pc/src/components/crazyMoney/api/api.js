@@ -1,5 +1,5 @@
 import axios from './../../../http' 
-let base = window.BASEDOMAIN + '/app/Countmoney' 
+let base = window.BASEDOMAIN + '/app/countmoney' 
 
 // let base = 'http://192.168.3.68:8080'
 
@@ -28,7 +28,7 @@ export default {
        /* 活动数据列表 - 接口 */
        // 获取活动列表 
        getActivityList(params) {
-           return post(`${base}/getCountmoneyList`, params)
+           return post(`${base}/getCountMoneyList`, params)
        },
        // 删除活动
        delActivity(params) { 
@@ -40,7 +40,7 @@ export default {
        },
        // 统计活动总数 
        countActivity(params) {
-        return post(`${base}/countCountmoney`, params) 
+        return post(`${base}/countActivity`, params) 
        },
 
        /* 修改/编辑活动 - 接口 */ 
@@ -57,21 +57,9 @@ export default {
         return post(`${base}/getActivityById`, params) 
        },
 
-       // 编辑活动基础设置  
-       modfiyBasicsCountmoney(params) {
-        return post(`${base}/modfiyBasicsCountmoney`, params) 
-       },
-       // 编辑活动规则设置  
-       modfiyRuleCountmoney(params) {
-        return post(`${base}/modfiyRuleCountmoney`, params) 
-       },
-       // 编辑活动兑奖设置 
-       modfiyExpiryCountmoney(params) {
-        return post(`${base}/modfiyExpiryCountmoney`, params) 
-       },
-       // 编辑活动奖项设置  
-       modfiyAwardsCountmoney(params) {
-        return post(`${base}/modfiyAwardsCountmoney`, params) 
+       // 编辑活动
+       modfiyActivity(params) {
+        return post(`${base}/modfiyCountmoney`, params)  
        }, 
 
        /* 核销授权 - 接口 */ 

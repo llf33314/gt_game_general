@@ -396,7 +396,7 @@ export default {
     lastStep() {
       for (let i = 0; i < this.ruleForm4.length; i++) { 
         var regu =/^[1-9]\d*$/;
-        if(!this.ruleForm4[i].name0||!this.ruleForm4[i].name1||!this.ruleForm4[i].name2||!this.ruleForm4[i].name3||!this.ruleForm4[i].name4){
+        if(!this.ruleForm4[i].name1||!this.ruleForm4[i].name2||!this.ruleForm4[i].name3||!this.ruleForm4[i].name4){
             this.$message.error("表单不能留空，请填写完整~");
             return false
         }else if (!regu.test(this.ruleForm4[i].name1)) {
@@ -408,6 +408,9 @@ export default {
         }else if (this.ruleForm4[i].name0==4&&this.ruleForm4[i].name5.length==0) { 
                 this.$message.error("当奖品为实物时，请上传实物图片~");
                 return false 
+        }else if(this.ruleForm4[i].name0==4&&this.ruleForm4[i].name5.length>5){
+                this.$message.error("实物图片最多上传5张~");
+                return false
         }else{
             this.ruleForm4[i].name4 = parseFloat(this.ruleForm4[i].name4).toFixed(2);  
         }  

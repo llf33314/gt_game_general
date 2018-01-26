@@ -429,12 +429,12 @@ export default {
         }
       });
     },  
-    lastStep() {
+    lastStep() { 
       if(this.isJoinPrize==1&&!this.ruleForm5.name1){
             this.$message.error("参与链接不能为空，请填写完整~");
             return false
       }
-      for (let i = 0; i < this.ruleForm4.length; i++) { 
+      for (let i = 0; i < this.ruleForm4.length; i++) {  
         var regu =/^[1-9]\d*$/;
         if(!this.ruleForm4[i].name0||!this.ruleForm4[i].name1||!this.ruleForm4[i].name2||!this.ruleForm4[i].name3){
             this.$message.error("表单不能留空，请填写完整~");
@@ -445,15 +445,20 @@ export default {
         }else if (!regu.test(this.ruleForm4[i].name3)) {
             this.$message.error("奖项数量填写有误，请重新填写~");
             return false 
-        }else{
-            this.ruleForm4[i].name4 = parseFloat(this.ruleForm4[i].name4).toFixed(2);  
-        }  
+        }else if(this.ruleForm4[i].name0==4&&this.ruleForm4[i].name5.length==0) { 
+                this.$message.error("当奖品为实物时，请上传实物图片~");
+                return false 
+        }else if(this.ruleForm4[i].name0==4&&this.ruleForm4[i].name5.length>5){
+                this.$message.error("实物图片最多上传5张~");
+                return false 
+        } 
       }
       this.submit(); 
     }, 
     
     //表单提交--------------------------------------star
     submit(){
+        
         if(this.isSubmit){
              this.$message({type: "info", message: "请不要重复提交~" });
         }else{
@@ -654,21 +659,8 @@ export default {
                     name2  : data.data.raiseflagPrizeReqs [i].prizeName, 
                     name3  : String(data.data.raiseflagPrizeReqs[i].num),  
                     name5  :[] 
-                };
-                if (newabc1.name0 == 1) {
-                newabc1.name0  = "粉币";
-                }else if(newabc1.name0  == 2){
-                newabc1.name0  = "手机流量"; 
-                }else if(newabc1.name0  == 3){
-                newabc1.name0  = "手机话费"; 
-                }else if(newabc1.name0  == 4){
-                newabc1.name0  = "实体物品";
-                }  else if(newabc1.name0  == 6){
-                newabc1.name0  = "积分";
-                } else if(newabc1.name0  == 7){
-                newabc1.name0  = "优惠券";
-                } 
-                if(newabc1.name0=="实体物品"){
+                }; 
+                if(newabc1.name0==4){
                     for(var j = 0; j < data.data.raiseflagPrizeReqs [i].raiseflagPrizeImgReqs.length; j++){
                         var imgarr={
                              url:window.IMAGEURL+data.data.raiseflagPrizeReqs [i].raiseflagPrizeImgReqs[j].imgUrl
@@ -690,7 +682,7 @@ export default {
   mounted() {
       this.getPrizeTypeData()
       this.getmsgModelData()  
-       this.getActData()  
+      this.getActData()  
   }
 };
 </script>

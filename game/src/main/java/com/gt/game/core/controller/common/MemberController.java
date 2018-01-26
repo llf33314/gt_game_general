@@ -41,7 +41,8 @@ public class MemberController {
             @RequestBody @ApiParam("请求参数") MemberListPageReq LoveArrowListPageReq,
             HttpServletRequest request) {
         try {
-            WxPublicUsers busUser = CommonUtil.getLoginPbUser(request);
+
+            BusUser busUser = CommonUtil.getLoginUser(request);
             ResponseDTO<List<MemberListPageRes>> responseDTO = memberService.getMemberList(busUser, LoveArrowListPageReq);
             return responseDTO;
         } catch (Exception e){

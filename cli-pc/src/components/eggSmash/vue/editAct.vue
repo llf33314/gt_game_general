@@ -393,8 +393,8 @@ export default {
     api.getActivityById({ id: this.$route.query.id }).then(res => {
       if (res.code == 100) {
         //基础设置
-        (this.ruleForm1.eggName = res.data.eggName), // 活动名称
-          (this.ruleForm1.date = [res.data.eggBeginTime, res.data.eggEndTime]); // 活动时间
+        this.ruleForm1.eggName = res.data.eggName, // 活动名称
+        this.ruleForm1.date = [res.data.eggBeginTime, res.data.eggEndTime]; // 活动时间
         this.ruleForm1.eggEggPartaker = res.data.eggEggPartaker; // 1.所有粉丝 2.仅会员(持有会员卡的粉丝)
         this.ruleForm1.eggPway = res.data.eggPway; // 参与方式
         this.ruleForm1.eggMan = res.data.eggMan; // 可参加抽奖的会员积分
@@ -405,10 +405,10 @@ export default {
         this.ruleForm1.eggBgm = res.data.eggBgm; // 背景音乐链接
 
         //规则设置
-        (this.ruleForm2.eggCountOfDay = res.data.eggCountOfDay), // 抽奖次数
-          (this.ruleForm2.eggCountOfAll = res.data.eggCountOfAll), // 抽奖总数
-          //兑奖设置
-          (this.ruleForm3.eggCashDay = res.data.eggCashDay); // 兑奖期限
+        this.ruleForm2.eggCountOfDay = res.data.eggCountOfDay, // 抽奖次数
+        this.ruleForm2.eggCountOfAll = res.data.eggCountOfAll, // 抽奖总数
+        //兑奖设置
+        this.ruleForm3.eggCashDay = res.data.eggCashDay; // 兑奖期限
         this.ruleForm3.eggAddress = res.data.eggAddress; // 兑奖地址
         this.ruleForm3.eggCashWay = res.data.eggCashWay; // 兑奖方式
         this.ruleForm3.eggWinningTxt = res.data.eggWinningTxt; // 兑奖提示

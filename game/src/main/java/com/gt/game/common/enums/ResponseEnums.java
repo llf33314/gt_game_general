@@ -124,6 +124,9 @@ public enum ResponseEnums {
     COMMON_HAS18(418,"请选择粉币类型的奖品"),
     COMMON_HAS19(419,"广告链接必须为多粉或翼粉"),
     COMMON_HAS20(420,"请添加奖品"),
+    COMMON_HAS21(421,"请添加实体物品的奖品图片"),
+    COMMON_HAS22(422,"实体物品的奖品图片最多添加五张"),
+    COMMON_HAS23(423,"获取粉丝列表失败"),
     //升国旗响应
     RAISEFLAG_HAS1(401,"该奖品已发放!"),
     RAISEFLAG_HAS2(402,"手动发放只能选择[已提交]状态的数据！!"),

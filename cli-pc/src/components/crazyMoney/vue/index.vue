@@ -30,15 +30,15 @@
           <span @click="addActive">点击这里</span>创建活动吧
         </gt-null-data>
         <el-table :data="tableData" v-else>
-          <el-table-column prop="name" label="活动名称" min-width="160" show-overflow-tooltip></el-table-column>
-          <el-table-column prop="activityBeginTime" label="活动开始时间" min-width="200">
+          <el-table-column prop="actName" label="活动名称" min-width="160" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="actBeginTime" label="活动开始时间" min-width="200">
             <template slot-scope="scope" >
-              {{ scope.row.activityBeginTime | DateFormat('yyyy-MM-dd hh:mm:ss') }}
+              {{ scope.row.actBeginTime | DateFormat('yyyy-MM-dd hh:mm:ss') }}
             </template>
           </el-table-column>
-          <el-table-column prop="activityEndTime" label="活动结束时间" min-width="200">
+          <el-table-column prop="actEndTime" label="活动结束时间" min-width="200">
             <template slot-scope="scope">
-              {{ scope.row.activityEndTime | DateFormat('yyyy-MM-dd hh:mm:ss') }}
+              {{ scope.row.actEndTime | DateFormat('yyyy-MM-dd hh:mm:ss') }}
             </template>
           </el-table-column>
           <el-table-column prop="status" label="活动状态" min-width="100">
@@ -49,7 +49,7 @@
           <el-table-column prop="order_option" width="450" label="操作">
             <template slot-scope="scope">
               <el-button class="gt-button-normal blue" @click="askPreview(scope.row.id)">预览链接</el-button>
-              <el-button class="gt-button-normal blue" @click="impower(scope.row.id)">核销授权</el-button>
+              <!-- <el-button class="gt-button-normal blue" @click="impower(scope.row.id)">核销授权</el-button> -->
               <el-button class="gt-button-normal blue" @click="record(scope.row.id)">中奖纪录</el-button>
               <el-button class="gt-button-normal blue" @click="edit(scope.row.id)"  v-if="scope.row.status == 0">编辑</el-button>
               <el-button class="gt-button-normal" @click="delOne(scope.row.id)">删除</el-button>
@@ -88,10 +88,10 @@ export default {
       },
       tableData: [
         {
-          name: "活动名称",
+          actName: "活动名称",
           status: 1,
-          activityBeginTime: 1513007900000,
-          activityEndTime: 1514476790000
+          actBeginTime: 1513007900000,
+          actEndTime: 1514476790000
         }
       ],
       //预览连接
@@ -201,12 +201,12 @@ export default {
     addActive() {
       this.$router.push("/crazyMoney/addAct");
     },
-    // edit(id) {
-    //   this.$router.push({
-    //     path: "/crazyMoney/editAct",
-    //     query: { id: id }
-    //   });
-    // },
+    edit(id) {
+      this.$router.push({
+        path: "/crazyMoney/editAct",
+        query: { id: id }
+      });
+    },
     //中奖记录
     record(val) {
       this.$router.push({
