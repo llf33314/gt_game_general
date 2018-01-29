@@ -354,7 +354,7 @@ export default {
                 this.ruleForm4[val].name6=this.memberOptions[i].cardsName
             } 
         } 
-      }  ,
+      }  , 
         // 添加实物图 
     addAwardImg(val) {
          JSON.parse(val.url).forEach(function (item, index, arr) {
@@ -445,13 +445,6 @@ export default {
       } 
          this.checkGL(); 
     }, 
-     optionsData(val){
-        for(var i=0;i<this.memberOptions.length;i++){
-            if(this.memberOptions[i].id==this.ruleForm4[val].name2){
-                this.ruleForm4[val].name6=this.memberOptions[i].cardsName
-            } 
-        } 
-      }  ,
     //表单提交--------------------------------------star
     submit(){
         // console.log(this.ruleForm3,123); 
