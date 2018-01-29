@@ -128,7 +128,7 @@
                 <el-table-column label="奖品类型">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.name0" placeholder="请选择"> 
-                            <el-option v-for="item in options" :key="item.value" :label="item.name"  :value="item.value">
+                            <el-option v-for="item in options" :key="item.value" :label="item.name"  :value="item.id">
                             </el-option>
                         </el-select>
                     </template>
@@ -141,7 +141,7 @@
                 <el-table-column label="奖品名称">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.name2" v-if="scope.row.name0==7"   placeholder="请选择" @change="optionsData(scope.$index)"> 
-                            <el-option v-for="item in memberOptions" :key="item.id"  :label="item.cardsName"  :value="item.id">
+                            <el-option v-for="item in memberOptions" :key="item.id"  :label="item.name"  :value="item.value">
                             </el-option>
                         </el-select>  
                         <el-input v-else class="w20_demo"   v-model="scope.row.name2"></el-input> 
@@ -495,8 +495,13 @@ export default {
                     loveArrowPrizeImgReqs:[]//图片
                 }
                 if(arr4.type==7){
+                    arr4.prizeName=this.ruleForm4[i].name2//名称 
                     arr4.cardReceiveId=this.ruleForm4[i].name6//名称 
                 }
+                // if(arr4.type==7){ 
+                //     arr4.prizeName=this.ruleForm4[i].name6//名称 
+                //     arr4.cardReceiveId=this.ruleForm4[i].name2//名称 
+                // }
                 if(arr4.type==4){
                     for(var j=0;j<this.ruleForm4[i].name5.length;j++){
                         var imgarr={
