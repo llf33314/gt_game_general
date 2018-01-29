@@ -145,7 +145,7 @@
                 </el-table-column>
                 <el-table-column label="奖项数量" :width="200">
                   <template slot-scope="scope">
-                      <el-input class="w150"  type="number"  v-model="scope.row.scrPrizeNums" placeholder="数值应大于0"></el-input>
+                      <el-input class="w150"  type="number"  v-model.number="scope.row.scrPrizeNums" placeholder="数值应大于0"></el-input>
                   </template>
                 </el-table-column>
                 <el-table-column label="中奖概率(%)" :width="200">
@@ -186,7 +186,7 @@
             <el-button type="primary" @click="submit">打印</el-button>   
         </div> 
 
-        <gt-Fans-detail :visible.sync="dialogFans" :peopleNums="1" v-on:getFansData="getFansData"></gt-Fans-detail>  
+        <gt-Fans-detail :visible.sync="dialogFans" :peopleNums="peopleNums" v-on:getFansData="getFansData"></gt-Fans-detail>  
     </div>  
         </div>
     </section>
@@ -198,6 +198,7 @@ export default {
     return {
       loading: false,
       active: 0,
+      peopleNums: 1 ,
       ruleForm1: {
         scrName: "", // 活动名称
         date: [],
@@ -287,8 +288,13 @@ export default {
   },
   methods: {
     assign(scope) {
+      if (!scope.row.scrPrizeNums) {
+        this.$message.info('请先输入奖项数量')
+        return
+      }
       this.dialogFans = true;
       this.assignObj = scope.row;
+      this.peopleNums = scope.row.scrPrizeNums;
     },
     getFansData(e) {
       if (e.length) {

@@ -145,7 +145,7 @@
                 </el-table-column>
                 <el-table-column label="奖项数量" :width="200">
                   <template slot-scope="scope">
-                      <el-input class="w150"  type="number"  v-model="scope.row.eggPrizeNums" placeholder="数值应大于0"></el-input>
+                      <el-input class="w150"  type="number"  v-model.number="scope.row.eggPrizeNums" placeholder="数值应大于0"></el-input>
                   </template>
                 </el-table-column>
                 <el-table-column label="中奖概率(%)" :width="200">
@@ -185,7 +185,7 @@
             <el-button type="primary" @click="lastStep"   :loading="loading"    v-if="this.active==3">保存</el-button>   
         </div> 
 
-        <gt-Fans-detail :visible.sync="dialogFans" :peopleNums="10"   v-on:getFansData="getFansData"></gt-Fans-detail>  
+        <gt-Fans-detail :visible.sync="dialogFans" :peopleNums="peopleNums"   v-on:getFansData="getFansData"></gt-Fans-detail>  
     </div>   
 </div>
 </section>
@@ -197,6 +197,7 @@ export default {
     return {
       loading: false,
       active: 0,
+      peopleNums: 1,
       ruleForm1: {
         eggName: "", // 活动名称
         date: [],
@@ -278,8 +279,13 @@ export default {
   },
   methods: {
     assign(scope) {
+      if (!scope.row.eggPrizeNums) {
+        this.$message.info('请先输入奖项数量')
+        return
+      }
       this.dialogFans = true;
       this.assignObj = scope.row;
+      this.peopleNums = scope.row.eggPrizeNums;
     },
     getFansData(e) {
       if (e.length) {

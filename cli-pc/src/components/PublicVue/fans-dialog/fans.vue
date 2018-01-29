@@ -108,8 +108,8 @@ export default {
         prizeSubmit() {
             if(this.multipleTable.length==0){
                 this.$message.error("指定中奖人个数不能为0，请重新选择");
-            }else if(this.multipleTable.length > this.peopleNums){
-                this.$message.error("指定中奖人不能超过" + this.peopleNums + "个，请重新选择");
+            }else if(this.multipleTable.length != this.peopleNums){
+                this.$message.error("请指定" + this.peopleNums + "个中奖人");
             }else{
                 this.$emit("getFansData", this.multipleTable);
                 this.dialogFans = false
