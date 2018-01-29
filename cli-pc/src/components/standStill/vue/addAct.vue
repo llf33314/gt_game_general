@@ -99,13 +99,7 @@
             </el-form> 
         </div>
         <!-- 奖项设置 -->
-        <div v-show="this.active==3" class="mt40">
-            <!-- <div>
-                <span style="color: #333; position:absolute;margin-top:0px;" >奖品说明：</span>
-                <el-input type="textarea" class="bw ml120"  :maxlength="300"  :rows="3" placeholder="请输入兑奖说明" v-model="explain">
-                </el-input>
-                <span class="el-upload__tip grey ml10">300字以内</span>
-            </div>  -->
+        <div v-show="this.active==3" class="mt40"> 
             <div class="gt-gray-region mt20" style="color:#666;line-height:20px">
                 <p>奖品类型：奖品的内容;奖品单位：奖品的数量货内容；奖项数量:该奖品的可领取次数</p>
                 <p>如：奖品类型：粉币；奖品数额：2；奖项名称：粉币；奖项数量：3；中奖概率：12</p> 
@@ -138,8 +132,8 @@
                 </el-table-column>
                <el-table-column label="奖品名称">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.name2" v-if="scope.row.name0==7"   placeholder="请选择" @change="optionsData(scope.$index)"> 
-                            <el-option v-for="item in memberOptions" :key="item.id"  :label="item.cardsName"  :value="item.id">
+                        <el-select v-model="scope.row.name2" v-if="scope.row.name0==7"   placeholder="请选择"> 
+                            <el-option v-for="item in memberOptions" :key="item.id"  :label="item.name"  :value="item.value">
                             </el-option>
                         </el-select>  
                         <el-input v-else class="w20_demo"   v-model="scope.row.name2"></el-input> 
@@ -202,7 +196,7 @@ export default {
       }
     }; 
     return {
-      active:3, 
+      active:0, 
       isSubmit:false,
       Quesbank:[],
       options:[],
@@ -269,8 +263,7 @@ export default {
           name2: "",
           name3: "",
           name4: "",
-          name5:[] ,
-          name6 :""
+          name5:[] , 
         },
         { 
           name0: "",
@@ -278,8 +271,7 @@ export default {
           name2: "",
           name3: "",
           name4: "" ,
-          name5:[],
-          name6 :""
+          name5:[], 
         }], 
     };
   },
@@ -335,14 +327,7 @@ export default {
     }, 
     getChangeUrl2(e) { 
       this.ruleForm2.code=e.url
-    }, 
-    optionsData(val){
-        for(var i=0;i<this.memberOptions.length;i++){
-            if(this.memberOptions[i].id==this.ruleForm4[val].name2){
-                this.ruleForm4[val].name6=this.memberOptions[i].cardsName
-            } 
-        } 
-      }  ,
+    },  
    // 添加实物图 
     addAwardImg(val) {
          JSON.parse(val.url).forEach(function (item, index, arr) {
@@ -360,7 +345,7 @@ export default {
       this.ruleForm4[i].name5=e.url
     }, 
      addForm4(){ 
-        this.ruleForm4.push({ name0:"", name1: "", name2: "", name3: "", name4: "", name5: [],name6 :""},)
+        this.ruleForm4.push({ name0:"", name1: "", name2: "", name3: "", name4: "", name5: []},)
     },
     delForm4(val){
         this.ruleForm4.splice(val, 1); 
@@ -425,15 +410,11 @@ export default {
                     probabiliy :this.ruleForm4[i].name4,  //概率
                     cardReceiveId:"",
                     standPrizeImgReqs:[]//图片
-                }
-                if(arr4.type==7){
-                    arr4.prizeName=this.ruleForm4[i].name6//id
-                    arr4.cardReceiveId=this.ruleForm4[i].name2//name
-                }
+                } 
                 if(arr4.type==4){
                     for(var j=0;j<this.ruleForm4[i].name5.length;j++){
                         var imgarr={
-                            imgUrl:this.ruleForm4[i].name5[j]
+                            picUrl:this.ruleForm4[i].name5[j]
                         }
                     arr4.standPrizeImgReqs.push(imgarr)
                     } 

@@ -129,8 +129,8 @@
                 </el-table-column>
               <el-table-column label="奖品名称">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.name2" v-if="scope.row.name0==7"   placeholder="请选择" @change="optionsData(scope.$index)"> 
-                            <el-option v-for="item in memberOptions" :key="item.id"  :label="item.cardsName"  :value="item.id">
+                        <el-select v-model="scope.row.name2" v-if="scope.row.name0==7"   placeholder="请选择" > 
+                            <el-option v-for="item in memberOptions" :key="item.id"  :label="item.name"  :value="item.id">
                             </el-option>
                         </el-select>  
                         <el-input v-else class="w20_demo"   v-model="scope.row.name2"></el-input> 
@@ -250,19 +250,21 @@ export default {
           }
       }, 
       memberOptions:[],
-      ruleForm4: [{ 
+       ruleForm4: [{ 
           name0: "",
           name1: "",
           name2: "",
           name3: "",
-          name5:[] 
+          name4: "",
+          name5:[] , 
         },
         { 
           name0: "",
           name1: "",
           name2: "",
           name3: "",
-          name5:[]
+          name4: "" ,
+          name5:[], 
         }],    
     };
   },
@@ -335,8 +337,8 @@ export default {
     getChangeUrl4(i,e) {   
       this.ruleForm4[i].name5=e.url
     }, 
-    addForm4(){ 
-        this.ruleForm4.push({ name0:"", name1: "", name2: "", name3: "", name5: []},)
+     addForm4(){ 
+        this.ruleForm4.push({ name0:"", name1: "", name2: "", name3: "", name4: "", name5: []},)
     },
     delForm4(val){
         this.ruleForm4.splice(val, 1); 
@@ -371,14 +373,7 @@ export default {
         }   
       }
       this.submit();
-    }, 
-    optionsData(val){
-        for(var i=0;i<this.memberOptions.length;i++){
-            if(this.memberOptions[i].id==this.ruleForm4[val].name2||this.ruleForm4[val].name2==this.memberOptions[i].id){
-                this.ruleForm4[val].name6=this.memberOptions[i].cardsName
-            } 
-        } 
-      }  ,
+    },  
     //表单提交--------------------------------------star
     submit(){  
         //兑奖地址
@@ -403,15 +398,11 @@ export default {
                     num :Number(this.ruleForm4[i].name3),//数量 
                     cardReceiveId:"",
                     standPrizeImgReqs:[]//图片
-                }
-                if(arr4.type==7){
-                    arr4.prizeName=this.ruleForm4[i].name6//id
-                    arr4.cardReceiveId=this.ruleForm4[i].name2//name
-                }
+                } 
                 if(arr4.type==4){
                     for(var j=0;j<this.ruleForm4[i].name5.length;j++){
                         var imgarr={
-                            imgUrl:this.ruleForm4[i].name5[j]
+                            picUrl:this.ruleForm4[i].name5[j]
                         }
                     arr4.standPrizeImgReqs.push(imgarr)
                     } 
@@ -442,7 +433,7 @@ export default {
             //奖项设置  
             standPrizeReqs:newPrize,   
         };
-        console.log(data,123); 
+        console.log(data,1235566); 
         saveAct(data).then(data=>{ 
           if (data.code == 100) {  
               this.$message({ message: "操作成功", type: "success"}); 
@@ -529,7 +520,7 @@ export default {
                 };
                 newaddr.push(newabc1);  
             } 
-            this.ruleForm3.addrRow= newaddr
+            this.ruleForm3.addrRow= newaddr 
             //奖项设置  
             var newPraise = [];//兑奖 
             for (var i = 0; i < data.data.standPrizeReqs.length; i++) {
@@ -538,13 +529,12 @@ export default {
                     name1  : String(data.data.standPrizeReqs[i].prizeUnit), 
                     name2  : data.data.standPrizeReqs[i].prizeName, 
                     name3  : String(data.data.standPrizeReqs[i].num),  
-                    name5  :[] ,
-                    cardReceiveId  : data.data.standPrizeReqs[i].cardReceiveId,
+                    name5  :[] , 
                 }; 
                 if(newabc1.name0==4){
-                    for(var j = 0; j < data.data.standPrizeReqs[i].loveArrowPrizeImgReqs.length; j++){
+                    for(var j = 0; j < data.data.standPrizeReqs[i].standPrizeImgReqs.length; j++){
                         var imgarr={
-                             url:window.IMAGEURL+data.data.standPrizeReqs[i].loveArrowPrizeImgReqs[j].imgUrl
+                             url:window.IMAGEURL+data.data.standPrizeReqs[i].standPrizeImgReqs[j].picUrl
                         }
                         newabc1.name5.push(imgarr.url)
                     }
@@ -552,7 +542,7 @@ export default {
                newPraise.push(newabc1);  
             }  
             this.ruleForm4=newPraise 
-            this.explain=data.data.cashPrizeInstruction  
+          
           } else {
               this.$message.error(data.msg);
           }

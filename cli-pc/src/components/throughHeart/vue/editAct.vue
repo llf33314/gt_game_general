@@ -127,19 +127,21 @@
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.name0" placeholder="请选择"> 
                                 <el-option v-for="item in options" :key="item.value" :label="item.name"  :value="item.value">
+                                    
                                 </el-option>
                         </el-select>
                     </template>
                 </el-table-column> 
                 <el-table-column label="奖品单位">
-                <template slot-scope="scope">
-                    <el-input class="w20_demo" type="number" v-model="scope.row.name1" placeholder="数值应大于0"></el-input>
-                </template>
-                </el-table-column>
+                    <template slot-scope="scope">
+                        <el-input class="w20_demo" type="number" v-model="scope.row.name1" placeholder="数值应大于0"></el-input>
+                    </template>
+                    </el-table-column>
                 <el-table-column label="奖品名称">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.name2" v-if="scope.row.name0==7"   placeholder="请选择" @change="optionsData(scope.$index)"> 
-                            <el-option v-for="item in memberOptions" :key="item.id"  :label="item.cardsName"  :value="item.id">
+                            <el-option v-for="item in memberOptions" :key="item.id"   :value="item.id" :label="item.cardsName" >
+                                 <span style="float:left">{{item.cardsName}}</span>
                             </el-option>
                         </el-select>  
                         <el-input v-else class="w20_demo"   v-model="scope.row.name2"></el-input> 
@@ -175,6 +177,9 @@
             <el-button type="primary" @click="submit()"          v-if="this.active==0||this.active==1">保存</el-button>   
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">保存</el-button>   
             <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>   
+            <el-button type="primary" @click="lastStep()">打印</el-button>   
+            
+
         </div> 
     </div>   
 </div>
@@ -283,7 +288,7 @@ export default {
           name3: "",
           name4: "",
           name5:[] ,
-          name6 :""
+          cardsName :""
         },
         { 
           name0: "",
@@ -292,7 +297,7 @@ export default {
           name3: "",
           name4: "" ,
           name5:[],
-          name6 :""
+          cardsName :""
         }],   
       // 时间的筛选
       pickerOptions: {
@@ -349,12 +354,13 @@ export default {
         this.ruleForm1.musicUrl = e.music.url
     },  
      optionsData(val){
-        for(var i=0;i<this.memberOptions.length;i++){
-            if(this.memberOptions[i].id==this.ruleForm4[val].name2){
-                this.ruleForm4[val].name6=this.memberOptions[i].cardsName
+        for(var i=0;i<this.memberOptions.length;i++){ 
+            if(this.memberOptions[i].id==this.ruleForm4[val].name2||this.ruleForm4[val].name2==this.memberOptions[i].id){
+                console.log(this.memberOptions[i].cardsName,985);
+                this.ruleForm4[val].cardsName=this.memberOptions[i].cardsName 
             } 
         } 
-      }  ,
+      }  , 
         // 添加实物图 
     addAwardImg(val) {
          JSON.parse(val.url).forEach(function (item, index, arr) {
@@ -383,7 +389,7 @@ export default {
         }); 
     }, 
      addForm4(){ 
-        this.ruleForm4.push({ name0:"", name1: "", name2: "", name3: "", name4: "", name5: [],name6 :""},)
+        this.ruleForm4.push({ name0:"", name1: "", name2: "", name3: "", name4: "", name5: [],cardsName :""},)
     },
     delForm4(val){
         this.ruleForm4.splice(val, 1); 
@@ -445,13 +451,6 @@ export default {
       } 
          this.checkGL(); 
     }, 
-     optionsData(val){
-        for(var i=0;i<this.memberOptions.length;i++){
-            if(this.memberOptions[i].id==this.ruleForm4[val].name2){
-                this.ruleForm4[val].name6=this.memberOptions[i].cardsName
-            } 
-        } 
-      }  ,
     //表单提交--------------------------------------star
     submit(){
         // console.log(this.ruleForm3,123); 
@@ -488,8 +487,10 @@ export default {
                     cardReceiveId:"",
                     loveArrowPrizeImgReqs:[]//图片
                 }
-                if(arr4.type==7){
-                    arr4.cardReceiveId=this.ruleForm4[i].name6
+                if(arr4.type==7){ 
+                    console.log(this.ruleForm4[i],"================")
+                    arr4.prizeName=this.ruleForm4[i].cardsName//名称 
+                    arr4.cardReceiveId=this.ruleForm4[i].name2//名称 
                 }
                 if(arr4.type==4){
                     for(var j=0;j<this.ruleForm4[i].name5.length;j++){
@@ -614,7 +615,7 @@ export default {
                     name3  : String(data.data.loveArrowPrizeReqs[i].num), 
                     name4  : String(data.data.loveArrowPrizeReqs[i].probabiliy), 
                     name5  :[] ,
-                    cardReceiveId  : data.data.loveArrowPrizeReqs[i].cardReceiveId,
+                    cardsName  : data.data.loveArrowPrizeReqs[i].cardReceiveId,
                 }; 
                 if(newabc1.name0==4){
                     for(var j = 0; j < data.data.loveArrowPrizeReqs[i].loveArrowPrizeImgReqs.length; j++){
@@ -624,9 +625,15 @@ export default {
                         newabc1.name5.push(imgarr.url)
                     }
                 }
+                if(newabc1.name0==7){
+                  newabc1.cardsName=data.data.loveArrowPrizeReqs[i].prizeName
+                  newabc1.name2=data.data.loveArrowPrizeReqs[i].cardReceiveId
+                }
                newPraise.push(newabc1);  
+               console.log(newPraise,741);
             } 
             this.ruleForm4=newPraise 
+            console.log(this.ruleForm4,741147);
           } else {
               this.$message.error(data.msg);
           }
