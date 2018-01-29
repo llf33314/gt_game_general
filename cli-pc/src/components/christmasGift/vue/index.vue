@@ -10,7 +10,7 @@
     </el-breadcrumb>
     <div class="gt-gray-region mb20"> 
       <span class="padding-left-md ml30 mb10">
-        <el-input placeholder="输入标题关键字查询" icon="search" v-model="keyWord" style="width:250px" @change="getdata()"> 
+        <el-input placeholder="输入标题关键字查询" icon="search" v-model="keyWord" style="width:250px" @keyup.native.enter="searchFuc" :on-icon-click="searchFuc" :maxlength="25"> 
         </el-input>
       </span> 
        <gt-video-btn videoId="22" class="gt-video-btn mr70"></gt-video-btn> 
@@ -19,11 +19,11 @@
     </div> 
     <div class="gt-content"> 
         <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-          <el-tab-pane :label="'全部  ('+countNum.count1+')'"   name="0"></el-tab-pane>
-          <el-tab-pane :label="'未开始('+countNum.count2+')'"  name="2"></el-tab-pane> 
-          <el-tab-pane :label="'进行中('+countNum.count3+')'"   name="3"></el-tab-pane> 
-          <el-tab-pane :label="'已暂停('+countNum.count5+')'"  name="4"></el-tab-pane>
-          <el-tab-pane :label="'已结束('+countNum.count4+')'"   name="5"></el-tab-pane>
+          <el-tab-pane :label="'全部  ('+countNum.count1+')'"   name="-1"></el-tab-pane>
+          <el-tab-pane :label="'未开始('+countNum.count2+')'"  name="0"></el-tab-pane> 
+          <el-tab-pane :label="'进行中('+countNum.count3+')'"   name="1"></el-tab-pane> 
+          <el-tab-pane :label="'已暂停('+countNum.count5+')'"  name="3"></el-tab-pane>
+          <el-tab-pane :label="'已结束('+countNum.count4+')'"   name="2"></el-tab-pane>
         </el-tabs>
         <gt-null-data v-if="initRequest && tableData.length < 1">还没有创建相关活动，
           <span @click="addActive">点击这里</span>创建活动吧
@@ -50,8 +50,8 @@
               <el-button class="gt-button-normal blue" @click="askPreview(scope.row.id)">预览链接</el-button>              
               <!-- <el-button class="gt-button-normal blue" @click="impower(scope.row.id)">核销授权</el-button> -->
               <el-button class="gt-button-normal blue" @click="record(scope.row.id)">中奖纪录</el-button>  
-              <el-button class="gt-button-normal blue" @click="stopBtn(scope.row.id)" v-if="scope.row.status == 1">暂停活动</el-button>    
-              <el-button class="gt-button-normal blue" @click="startBtn(scope.row.id)" v-if="scope.row.status == 3">开始活动</el-button> 
+              <el-button class="gt-button-normal blue" @click="stopBtn(scope.row)" v-if="scope.row.status == 1">暂停活动</el-button>    
+              <el-button class="gt-button-normal blue" @click="startBtn(scope.row)" v-if="scope.row.status == 3">开始活动</el-button> 
               <el-button class="gt-button-normal blue" @click="edit(scope.row.id)" v-if="scope.row.status == 0">编辑</el-button>
               <el-button class="gt-button-normal"      @click="delOne(scope.row.id)" v-if="scope.row.status == 0 || scope.row.status == 2">删除</el-button> 
             </template>

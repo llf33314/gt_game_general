@@ -153,12 +153,12 @@
                       <el-input class="w160"  v-model="scope.row.eggPrizeChance" placeholder="0-100且保留两位小数"></el-input>
                   </template>
                 </el-table-column>
-                <el-table-column label="中奖人"> 
+                <el-table-column label="中奖人" min-width="120"> 
                      <template slot-scope="scope">
                       {{scope.row.nickname}}
                     </template>
                 </el-table-column>
-                <el-table-column label="操作">
+                <el-table-column label="操作" min-width="250">
                   <template slot-scope="scope">
                       <el-button class="gt-button-normal blue" @click="assign(scope)">指定中奖人</el-button>
                       <el-button class="gt-button-normal"  v-if="scope.$index!=0"  @click="delForm4(scope.$index)">删除</el-button>
@@ -182,7 +182,7 @@
             <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步1</el-button> 
             <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
-            <el-button type="primary" @click="lastStep"        v-if="this.active==3">保存</el-button>   
+            <el-button type="primary" @click="lastStep"    :loading="loading"     v-if="this.active==3">保存</el-button>   
         </div> 
 
         <gt-Fans-detail :visible.sync="dialogFans" :peopleNums="1" v-on:getFansData="getFansData"></gt-Fans-detail>  
@@ -195,6 +195,7 @@ import api from "./../api/api";
 export default {
   data() {
     return {
+      loading: false,
       active: 0,
       ruleForm1: {
         treeName: "", // 活动名称
@@ -261,6 +262,14 @@ export default {
       },
       ruleForm4: [
         {
+          type: 5,
+          prizeUnit: "",
+          prizeName: "",
+          num: "",
+          eggPrizeChance: "",
+          nickname: ""
+        },
+        {
           type: "",
           prizeUnit: "",
           prizeName: "",
@@ -277,7 +286,7 @@ export default {
   methods: {
     assign(scope) {
       this.dialogFans = true;
-      this.assignObj = scope;
+      this.assignObj = scope.row;
     },
     getFansData(e) {
       if (e.length) {
@@ -325,6 +334,7 @@ export default {
       });
     },
     lastStep() {
+      let percentage = 0
       for (let i = 0; i < this.ruleForm4.length; i++) {
         var regu = /^[1-9]\d*$/;
         if (
@@ -348,6 +358,11 @@ export default {
           this.$message.error("当奖品为实物时，请上传实物图片~");
           return false;
         }
+        percentage += Number(this.ruleForm4[i].eggPrizeChance)
+      }
+      if (percentage != 100) {
+         this.$message.error("中奖概率之和加起来应为100%");
+         return false;
       }
       this.submit();
     },
@@ -382,21 +397,19 @@ export default {
         //奖项设置
         prizeSetList: this.ruleForm4
       };
+      this.loading = true
       api
         .addActivity(data)
         .then(data => {
-          this.isSubmit = true;
           if (data.code == 100) {
             this.active = 5;
+            this.$message.success('保存成功')
           } else {
-            this.isSubmit = false;
-            this.$message.error(data.msg + "错误码：[" + data.code + "]");
+            this.$message.error(data.msg || '保存失败');
           }
+          this.loading = true
         })
-        .catch(() => {
-          this.isSubmit = false;
-          this.$message({ type: "info", message: "网络问题，请刷新重试~" });
-        });
+        
     },
     backUrl() {
       window.history.go(-1);
@@ -404,7 +417,7 @@ export default {
   },
   created() {
     // 获取奖品类型
-    api.getPrizeType().then(res => {
+    this.$api.getPrizeTypeThree().then(res => {
       if (res.code == 100) {
         this.options = res.data;
       } else {

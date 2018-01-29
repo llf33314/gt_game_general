@@ -1,4 +1,4 @@
-import axios from './../../../http'
+import axios from './index'
 
 let base = window.BASEDOMAIN + '/app/prize'
 

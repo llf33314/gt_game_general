@@ -5,6 +5,7 @@ import * as filters from './filters'
 import router from './router'
 import isJs from 'is_js'
 import valid from './assets/js/validate'
+import commonApi from './http/commonApi'
 //加载全局方法
 import  util  from './assets/js/util'
 Object.keys(filters).forEach(key => {
@@ -34,6 +35,7 @@ require('./assets/css/common.less')
 require('./assets/iconfont/iconfont.css')
 //挂载全局axsio方法
 Vue.prototype.$axios = axios
+Vue.prototype.$api =  commonApi
 //在启动时生成生产提示
 Vue.config.productionTip = true
 Vue.config.devtools = true
