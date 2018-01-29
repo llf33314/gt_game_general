@@ -33,17 +33,17 @@
                     </el-date-picker>
                 </el-form-item>     
                 <el-form-item label="活动说明：" prop="actDescribe">
-                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.actDescribe" :rows="3" placeholder="请输入活动说明"></el-input>
-                    <span class="el-upload__tip grey" >
+                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.actDescribe" :rows="3" placeholder="描述活动详情，能让粉丝了解此次活动"></el-input>
+                    <!-- <span class="el-upload__tip grey" >
                         描述活动详情，能让粉丝了解此次活动
-                    </span>
+                    </span> -->
                 </el-form-item> 
 
                  <el-form-item label="活动未开始提示：" prop="actNotStartedTips">
-                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.actNotStartedTips" :rows="3" placeholder="如：活动尚未开始，敬请期待!"></el-input>
-                    <span class="el-upload__tip grey" >
+                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.actNotStartedTips" :rows="3" placeholder="请控制字数在100以内，如：活动尚未开始，敬请期待!"></el-input>
+                    <!-- <span class="el-upload__tip grey" >
                         活动未开始提示限制在100个字数以内
-                    </span>
+                    </span> -->
                 </el-form-item>  
 
                  <el-form-item label="背景音乐：">
@@ -143,31 +143,27 @@
                 <span class="el-upload__tip grey ml10">最多设置五个奖项</span> 
             </div> 
             <el-table ref="multipleTable" :data="ruleForm4" tooltip-effect="dark">
-                <el-table-column label="奖品类型">
+                <el-table-column label="奖品类型" width="200">
                   <template slot-scope="scope">  
                       {{scope.$index | prizeStatus(scope.$index)}}
                   </template>
                 </el-table-column> 
-                <el-table-column label="奖品类型">
+                <el-table-column label="奖品类型" width="200">
                   <template slot-scope="scope">
-                      <el-select v-model="scope.row.turPrizeType" placeholder="请选择"> 
-                      <el-option label="粉币"      :value="1"></el-option>
-                      <el-option label="手机流量"   :value="2"></el-option>
-                      <el-option label="手机话费"   :value="3"></el-option>
-                      <el-option label="实体物品"   :value="4"></el-option>
-                      <el-option label="谢谢参与"   :value="5"></el-option> 
-                      <el-option label="积分"       :value="6"></el-option> 
+                      <el-select v-model="scope.row.turPrizeType" placeholder="请选择" class="w150"> 
+                         <el-option v-for="item in options" :key="item.value" :label="item.name" :value="item.value" v-if="item.value != 4">
+                         </el-option>
                       </el-select>
                   </template>
                 </el-table-column> 
-                <el-table-column label="奖品数额">
+                <el-table-column label="奖品数额" width="200">
                     <template slot-scope="scope">
-                        <el-input class="w20_demo" type="number" v-model="scope.row.turPrizeUnit" placeholder="数值应大于0"></el-input>
+                        <el-input class="w150" type="number" v-model="scope.row.turPrizeUnit" placeholder="数值应大于0"></el-input>
                     </template>
                 </el-table-column>
-                <el-table-column label="奖项数量">
+                <el-table-column label="奖项数量" width="200">
                     <template slot-scope="scope">
-                        <el-input class="w20_demo"  type="number"  v-model="scope.row.turPrizeNums" placeholder="数值应大于0"></el-input>
+                        <el-input class="w150"  type="number"  v-model="scope.row.turPrizeNums" placeholder="数值应大于0"></el-input>
                     </template>
                 </el-table-column> 
                 <el-table-column label="操作">
@@ -295,7 +291,9 @@ export default {
           turPrizeType: "", // 奖品类型
           turPrizeUnit: "" // 奖品数额
         }
-      ]
+      ],
+      options: []
+
     };
   },
   methods: {
@@ -412,6 +410,16 @@ export default {
     backUrl() {
       window.history.go(-1);
     }
+  },
+  created() {
+      // 获取奖品类型
+      this.$api.getPrizeTypeThree().then(res => {
+          if (res.code == 100) {
+            this.options = res.data;
+          } else {
+            this.$message.error("获取奖品类型失败");
+          }
+      });
   },
   mounted() {},
   filters: {

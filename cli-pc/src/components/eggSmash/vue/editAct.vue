@@ -261,7 +261,8 @@ export default {
           eggPrizeName: "",
           eggPrizeNums: "",
           eggPrizeChance: "",
-          nickname: ""
+          nickname: "",
+          openid: ""
         },
         {
           eggPrizeType: "",
@@ -269,7 +270,8 @@ export default {
           eggPrizeName: "",
           eggPrizeNums: "",
           eggPrizeChance: "",
-          nickname: ""
+          nickname: "",
+          openid: ""
         }
       ],
       options: [],
@@ -285,11 +287,14 @@ export default {
     getFansData(e) {
       if (e.length) {
         let nickname = [];
+        let openid = []
         e.forEach((item, index, arr) => {
           nickname.push(item.nickname) 
+          openid.push(item.openid) 
         });
         this.assignObj.nickname = nickname.join(",")
-      this.$set(this.ruleForm4, this.assignObj.$index, this.assignObj)
+        this.assignObj.openid = openid.join(",")
+        this.$set(this.ruleForm4, this.assignObj.$index, this.assignObj)
       }
     },
     delForm4(index) {
@@ -302,7 +307,8 @@ export default {
         eggPrizeName: "",
         eggPrizeNums: "",
         eggPrizeChance: "",
-        nickname: ""
+        nickname: "",
+        openid: ""
       });
     },
     getMusic(e) {

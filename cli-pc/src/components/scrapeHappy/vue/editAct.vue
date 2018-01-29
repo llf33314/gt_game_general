@@ -272,7 +272,7 @@ export default {
       ruleForm4: [
         {
           scrPrizeType: 5, // 奖品类型
-          sscrPrizeLimit: "", // 奖品数额
+          scrPrizeLimit: "", // 奖品数额
           scrPrizeName: "", // 奖项名称
           scrPrizeNums: "", // 奖项数量
           scrPrizeChance: "", // 中奖概率
@@ -280,7 +280,7 @@ export default {
         },
         {
           scrPrizeType: "", // 奖品类型
-          sscrPrizeLimit: "", // 奖品数额
+          scrPrizeLimit: "", // 奖品数额
           scrPrizeName: "", // 奖项名称
           scrPrizeNums: "", // 奖项数量
           scrPrizeChance: "", // 中奖概率
@@ -300,10 +300,13 @@ export default {
     getFansData(e) {
       if (e.length) {
         let nickname = [];
+        let openid = []
         e.forEach((item, index, arr) => {
           nickname.push(item.nickname) 
+          openid.push(item.openid)
         });
         this.assignObj.nickname = nickname.join(",")
+        this.assignObj.openid = openid.join(",")
       this.$set(this.ruleForm4, this.assignObj.$index, this.assignObj)
       }
     },
@@ -321,7 +324,7 @@ export default {
     addForm4() {
       this.ruleForm4.push({
         scrPrizeType: "",
-        sscrPrizeLimit: "",
+        scrPrizeLimit: "",
         scrPrizeName: "",
         scrPrizeNums: "",
         scrPrizeChance: "",
@@ -345,14 +348,14 @@ export default {
       for (let i = 0; i < this.ruleForm4.length; i++) {
         var regu = /^[1-9]\d*$/;
         if (
-          !this.ruleForm4[i].sscrPrizeLimit ||
+          !this.ruleForm4[i].scrPrizeLimit ||
           !this.ruleForm4[i].scrPrizeName ||
           !this.ruleForm4[i].scrPrizeNums ||
           !this.ruleForm4[i].scrPrizeChance
         ) {
           this.$message.error("表单不能留空，请填写完整~");
           return false;
-        } else if (!regu.test(this.ruleForm4[i].sscrPrizeLimit)) {
+        } else if (!regu.test(this.ruleForm4[i].scrPrizeLimit)) {
           this.$message.error("奖品数额填写有误，请重新填写~");
           return false;
         } else if (!regu.test(this.ruleForm4[i].scrPrizeNums)) {
