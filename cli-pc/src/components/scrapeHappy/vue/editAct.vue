@@ -47,17 +47,17 @@
                 </div> 
 
                 <el-form-item label="活动说明：" prop="scrDescribe">
-                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.scrDescribe" :rows="3" placeholder="请输入活动说明"></el-input>
-                    <span class="el-upload__tip grey" >
+                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.scrDescribe" :rows="3" placeholder="描述活动详情，能让粉丝了解此次活动" :maxlength="100"></el-input>
+                    <!-- <span class="el-upload__tip grey" >
                         描述活动详情，能让粉丝了解此次活动
-                    </span>
+                    </span> -->
                 </el-form-item> 
 
                  <el-form-item label="活动未开始提示：" prop="scrBeforeTxt">
-                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.scrBeforeTxt" :rows="3" placeholder="如：活动尚未开始，敬请期待!"></el-input>
-                    <span class="el-upload__tip grey" >
+                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.scrBeforeTxt" :rows="3" placeholder="请控制字数在100以内，如：活动尚未开始，敬请期待!" :maxlength="100"></el-input>
+                    <!-- <span class="el-upload__tip grey" >
                         活动未开始提示限制在100个字数以内
-                    </span>
+                    </span> -->
                 </el-form-item>  
 
                  <el-form-item label="背景音乐：">
@@ -72,7 +72,7 @@
 
                 <el-form-item>
                       <div class="btnRow">
-                           <el-button type="primary" @click="Save('ruleForm2')" >保存</el-button>
+                           <el-button type="primary" @click="Save('ruleForm2')" :loading="loading">保存</el-button>
                            <el-button   @click="backUrl">返回</el-button>
                       </div>
                 </el-form-item>
@@ -89,7 +89,7 @@
                     </el-form-item>
                     <el-form-item>
                       <div class="btnRow">
-                           <el-button type="primary" @click="Save('ruleForm2')" >保存</el-button>
+                           <el-button type="primary" @click="Save('ruleForm2')" :loading="loading">保存</el-button>
                            <el-button   @click="backUrl">返回</el-button>
                       </div>
                     </el-form-item>   
@@ -99,7 +99,7 @@
         <div v-show="this.active==2" class="mt40">
             <el-form :model="ruleForm3" :rules="rules3" ref="ruleForm3" label-width="120px" class="mt40 demo-ruleForm">
                 <el-form-item label="兑奖期限：" prop="scrCashDay">
-                    <el-input class="w_demo mr10" type="number" v-model="ruleForm3.scrCashDay" placeholder="请输入兑奖期限"></el-input>天
+                    <el-input class="w_demo mr10" type="number" v-model.number="ruleForm3.scrCashDay" placeholder="请输入兑奖期限"></el-input>天
                     <span class="el-upload__tip grey">
                         从活动结束后开始计算
                     </span>
@@ -126,7 +126,7 @@
 
                 <el-form-item>
                       <div class="btnRow">
-                           <el-button type="primary" @click="Save('ruleForm2')" >保存</el-button>
+                           <el-button type="primary" @click="Save('ruleForm2')" :loading="loading">保存</el-button>
                            <el-button   @click="backUrl">返回</el-button>
                       </div>
                 </el-form-item>  
@@ -165,20 +165,20 @@
                 </el-table-column>
                 <el-table-column label="奖项数量" :width="200">
                   <template slot-scope="scope">
-                      <el-input class="w150"  type="number"  v-model="scope.row.scrPrizeNums" placeholder="数值应大于0"></el-input>
+                      <el-input class="w150"  type="number"  v-model.number="scope.row.scrPrizeNums" placeholder="数值应大于0"></el-input>
                   </template>
                 </el-table-column>
                 <el-table-column label="中奖概率(%)" :width="200">
                   <template slot-scope="scope">
-                      <el-input class="w160"  v-model="scope.row.scrPrizeChance" placeholder="0-100且保留两位小数"></el-input>
+                      <el-input class="w160" type="number"  v-model="scope.row.scrPrizeChance" placeholder="0-100且保留两位小数"></el-input>
                   </template>
                 </el-table-column>
-                <el-table-column label="中奖人"> 
+                <el-table-column label="中奖人" min-width="120"> 
                      <template slot-scope="scope">
                       {{scope.row.nickname}}
                     </template>
                 </el-table-column>
-                <el-table-column label="操作">
+                <el-table-column label="操作" min-width="250">
                   <template slot-scope="scope">
                       <el-button class="gt-button-normal blue" @click="assign(scope)">指定中奖人</el-button>
                       <el-button class="gt-button-normal"  v-if="scope.$index!=0"  @click="delForm4(scope.$index)">删除</el-button>
@@ -186,14 +186,14 @@
                 </el-table-column>
             </el-table>  
                       <div class="btnRow">
-                           <el-button type="primary" @click="Save('ruleForm2')" >保存</el-button>
+                           <el-button type="primary" @click="Save('ruleForm2')" :loading="loading" >保存</el-button>
                            <el-button   @click="backUrl">返回</el-button>
                       </div>
         </div>       
        
         <!-- 按钮 -->
         <div class="h80"></div>
-        <gt-Fans-detail :visible.sync="dialogFans" :peopleNums="1" v-on:getFansData="getFansData"></gt-Fans-detail>  
+        <gt-Fans-detail :visible.sync="dialogFans" :peopleNums="peopleNums" v-on:getFansData="getFansData"></gt-Fans-detail>  
     </div>  
         </div>
     </section>
@@ -203,7 +203,9 @@ import { modfiyActivity, getActivityById, getPrizeType } from "./../api/api";
 export default {
   data() {
     return {
+      loading: false,
       active: '0',
+      peopleNums: 1,
       ruleForm1: {
         scrName: "", // 活动名称
         date: [],
@@ -262,7 +264,7 @@ export default {
       },
       rules3: {
         scrCashDay: [
-          { required: true, message: "兑奖期限不能为空", trigger: "blur" }
+          { type:'number', required: true, message: "兑奖期限不能为空", trigger: "blur" }
         ],
         scrAddress: [
           { required: true, message: "兑奖地址不能为空", trigger: "blur" }
@@ -270,8 +272,16 @@ export default {
       },
       ruleForm4: [
         {
+          scrPrizeType: 5, // 奖品类型
+          scrPrizeLimit: "", // 奖品数额
+          scrPrizeName: "", // 奖项名称
+          scrPrizeNums: "", // 奖项数量
+          scrPrizeChance: "", // 中奖概率
+          nickname: "" // 中奖人
+        },
+        {
           scrPrizeType: "", // 奖品类型
-          sscrPrizeLimit: "", // 奖品数额
+          scrPrizeLimit: "", // 奖品数额
           scrPrizeName: "", // 奖项名称
           scrPrizeNums: "", // 奖项数量
           scrPrizeChance: "", // 中奖概率
@@ -285,16 +295,24 @@ export default {
   },
   methods: {
     assign(scope) {
+      if (!scope.row.scrPrizeNums) {
+        this.$message.info('请先输入奖项数量')
+        return
+      }
       this.dialogFans = true;
-      this.assignObj = scope;
+      this.assignObj = scope.row;
+      this.peopleNums = scope.row.scrPrizeNums
     },
     getFansData(e) {
       if (e.length) {
         let nickname = [];
+        let openid = []
         e.forEach((item, index, arr) => {
           nickname.push(item.nickname) 
+          openid.push(item.openid)
         });
         this.assignObj.nickname = nickname.join(",")
+        this.assignObj.openid = openid.join(",")
       this.$set(this.ruleForm4, this.assignObj.$index, this.assignObj)
       }
     },
@@ -312,7 +330,7 @@ export default {
     addForm4() {
       this.ruleForm4.push({
         scrPrizeType: "",
-        sscrPrizeLimit: "",
+        scrPrizeLimit: "",
         scrPrizeName: "",
         scrPrizeNums: "",
         scrPrizeChance: "",
@@ -336,14 +354,14 @@ export default {
       for (let i = 0; i < this.ruleForm4.length; i++) {
         var regu = /^[1-9]\d*$/;
         if (
-          !this.ruleForm4[i].sscrPrizeLimit ||
+          !this.ruleForm4[i].scrPrizeLimit ||
           !this.ruleForm4[i].scrPrizeName ||
           !this.ruleForm4[i].scrPrizeNums ||
           !this.ruleForm4[i].scrPrizeChance
         ) {
           this.$message.error("表单不能留空，请填写完整~");
           return false;
-        } else if (!regu.test(this.ruleForm4[i].sscrPrizeLimit)) {
+        } else if (!regu.test(this.ruleForm4[i].scrPrizeLimit)) {
           this.$message.error("奖品数额填写有误，请重新填写~");
           return false;
         } else if (!regu.test(this.ruleForm4[i].scrPrizeNums)) {
@@ -359,9 +377,6 @@ export default {
     },
     //表单提交--------------------------------------star
     submit() {
-      this.ruleForm4.forEach((item, idnex, arr) => {
-        item.scrPrizeType = Number(item.scrPrizeType);
-      });
       const data = {
         id: this.$route.query.id,
         //基础设置
@@ -388,18 +403,17 @@ export default {
         //奖项设置
         prizeSetList: this.ruleForm4
       };
+      this.loading = true
       modfiyActivity(data)
         .then(data => {
-          this.isSubmit = true;
           if (data.code == 100) {
             this.$message.success('保存成功');
           } else {
-            this.isSubmit = false;
             this.$message.error(data.msg || '保存失败');
           }
+          this.loading = false
         })
         .catch(() => {
-          this.isSubmit = false;
           this.$message({ type: "info", message: "网络问题，请刷新重试~" });
         });
     },
@@ -408,46 +422,41 @@ export default {
     }
   },
   created() {
-      getActivityById({ id: this.$route.query.id }).then(res => {
-      if (res.code == 100) {
-        //基础设置
-        this.ruleForm1.scrName = res.data.scrName, // 活动名称
-        this.ruleForm1.date = [res.data.scrBeginTime, res.data.scrEndTime]
-        this.ruleForm1.scrPartaker = res.data.scrPartaker // 1.所有粉丝 2.仅会员(持有会员卡的粉丝)
-        this.ruleForm1.scrPway = res.data.scrPway, // 参与方式
-        this.ruleForm1.scrMan = res.data.scrMan, // 可参加抽奖的会员积分
-        this.ruleForm1.scrKou = res.data.scrKou, // 每次抽奖扣除积分
-        this.ruleForm1.scrDescribe = res.data.scrDescribe, // 活动说明/描述
-        this.ruleForm1.scrBeforeTxt = res.data.scrBeforeTxt // 活动未开始提示
-        this.ruleForm1.scrBgmName = res.data.scrBgmName // 背景音乐名称
-        this.ruleForm1.scrBgm = res.data.scrBgm, // 背景音乐链接
-        //规则设置
-        this.ruleForm2.scrCountOfDay = res.data.scrCountOfDay // 抽奖次数
-        this.ruleForm2.scrCountOfAll = res.data.scrCountOfAll // 抽奖总数
-        //兑奖设置
-        this.ruleForm3.scrCashDay = res.data.scrCashDay // 兑奖期限
-        this.ruleForm3.scrAddress = res.data.scrAddress // 兑奖地址
-        this.ruleForm3.scrCashWay = res.data.scrCashWay // 兑奖方式
-        this.ruleForm3.scrWinningTxt = res.data.scrWinningTxt // 兑奖提示
-        this.ruleForm3.scrWinningNotice = res.data.scrWinningNotice // 中奖须知
-        //奖项设置
-        res.data.prizeSetList.forEach((item, idnex, arr) => {
-          item.scrPrizeType = item.scrPrizeType + "";
-        });
-        this.ruleForm4 = res.data.prizeSetList;
-        console.log(this.ruleForm4,9999999)
-      } else {
-        this.$message.error("获取编辑数据失败");
-      }
-    });
-    // 获取奖品类型
-    getPrizeType().then(res => {
-      if (res.code == 100) {
-        this.options = res.data;
-      } else {
-        this.$message.error("获取奖品类型失败");
-      }
-    });
+    Promise.all([
+        // 获取详情信息
+        getActivityById({ id: this.$route.query.id }),
+        // 获取奖品类型
+        this.$api.getPrizeTypeThree()
+      ]).then(res => {
+        if (res[0].code == 100) {
+            // 步骤一详情
+            for(let key in this.ruleForm1) {
+              this.ruleForm1[key] = res[0].data[key] || ''
+            }
+            this.ruleForm1.date = [ res[0].data.scrBeginTime,  res[0].data.scrEndTime ]
+
+            // 步骤二详情
+            for(let key in this.ruleForm2) {
+              this.ruleForm2[key] = res[0].data[key] || ''
+            }
+
+            // 步骤三详情
+            for(let key in this.ruleForm3) {
+              this.ruleForm3[key] = res[0].data[key] || ''
+            }
+
+            // 步骤四详情
+             this.ruleForm4 = res[0].data.prizeSetList
+           
+        } else {
+            this.$message.error("获取编辑数据失败");
+        }
+        if (res[1].code == 100) {
+          this.options = res[1].data;
+        } else {
+          this.$message.error("获取奖品类型失败");  
+        }
+      });
   },
   filters: {
     prizeStatus(val) {

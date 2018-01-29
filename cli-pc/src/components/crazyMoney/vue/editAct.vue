@@ -40,7 +40,7 @@
                 </el-form-item> 
 
                  <el-form-item label="活动未开始提示：" prop="actNotStartedTips">
-                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.actNotStartedTips" :rows="3" placeholder="如：活动尚未开始，敬请期待!"></el-input>
+                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.actNotStartedTips" :rows="3" placeholder="请控制字数在100以内，如：活动尚未开始，敬请期待!"></el-input>
                     <span class="el-upload__tip grey" >
                         活动未开始提示限制在100个字数以内
                     </span>
@@ -154,29 +154,25 @@
                 <span class="el-upload__tip grey ml10">最多设置五个奖项</span> 
             </div> 
             <el-table ref="multipleTable" :data="ruleForm4" tooltip-effect="dark">
-                <el-table-column label="奖品类型">
+                <el-table-column label="奖品类型" width="200">
                   <template slot-scope="scope">  
                       {{scope.$index |prizeStatus(scope.$index)}}
                   </template>
                 </el-table-column> 
-                <el-table-column label="奖品类型" :width="200">
+                <el-table-column label="奖品类型" width="200">
                   <template slot-scope="scope">
                       <el-select class="w150"  v-model="scope.row.turPrizeType" placeholder="请选择"> 
-                      <el-option label="粉币"      :value="1"></el-option>
-                      <el-option label="手机流量"   :value="2"></el-option>
-                      <el-option label="手机话费"   :value="3"></el-option>
-                      <el-option label="实体物品"   :value="4"></el-option>
-                      <el-option label="谢谢参与"   :value="5"></el-option> 
-                      <el-option label="积分"       :value="6"></el-option> 
+                         <el-option v-for="item in options" :key="item.value" :label="item.name" :value="item.value" v-if="item.value != 4">
+                         </el-option> 
                       </el-select>
                   </template>
                 </el-table-column> 
-                <el-table-column label="奖品数额" :width="200">
+                <el-table-column label="奖品数额" width="200">
                     <template slot-scope="scope">
                         <el-input class="w150"   type="number" v-model="scope.row.turPrizeUnit" placeholder="数值应大于0"></el-input>
                     </template>
                 </el-table-column>
-                <el-table-column label="奖项数量" :width="200">
+                <el-table-column label="奖项数量" width="200">
                     <template slot-scope="scope">
                         <el-input class="w150"   type="number"  v-model="scope.row.turPrizeNums" placeholder="数值应大于0"></el-input>
                     </template>
@@ -421,17 +417,17 @@ export default {
     api.getActivityById({ id: this.$route.query.id }).then(res => {
       if (res.code == 100) {
         //基础设置
-        (this.ruleForm1.actType = res.data.actType), // 游戏模式(1-排名中奖；2-数钱折算),
-          (this.ruleForm1.actName = res.data.actName), // 活动名称
-          (this.ruleForm1.date = [res.data.actBeginTime, res.data.actEndTime]); // 活动时间
-        (this.ruleForm1.actDescribe = res.data.actDescribe), // 活动说明
-          (this.ruleForm1.actNotStartedTips = res.data.actNotStartedTips), // 活动尚未开始提示
-          (this.ruleForm1.bgmSp = res.data.bgmSp), // 音乐名称
-          (this.ruleForm1.musicUrl = res.data.musicUrl), // 音乐地址
-          //规则设置
-          (this.ruleForm2.actGameTime = res.data.actGameTime), // 游戏时间
-          (this.ruleForm2.actCountOfDay = res.data.actCountOfDay), // 抽奖次数
-          (this.ruleForm2.actTotalOfAct = res.data.actTotalOfAct); // 抽奖总数
+        this.ruleForm1.actType = res.data.actType, // 游戏模式(1-排名中奖；2-数钱折算),
+        this.ruleForm1.actName = res.data.actName, // 活动名称
+        this.ruleForm1.date = [res.data.actBeginTime, res.data.actEndTime]; // 活动时间
+        this.ruleForm1.actDescribe = res.data.actDescribe, // 活动说明
+        this.ruleForm1.actNotStartedTips = res.data.actNotStartedTips, // 活动尚未开始提示
+        this.ruleForm1.bgmSp = res.data.bgmSp, // 音乐名称
+        this.ruleForm1.musicUrl = res.data.musicUrl, // 音乐地址
+        //规则设置
+        this.ruleForm2.actGameTime = res.data.actGameTime, // 游戏时间
+        this.ruleForm2.actCountOfDay = res.data.actCountOfDay, // 抽奖次数
+        this.ruleForm2.actTotalOfAct = res.data.actTotalOfAct; // 抽奖总数
         // 概率设置
         res.data.countmoneyProbabilitysetList.forEach((item, idnex, arr) => {
           for (
@@ -451,9 +447,9 @@ export default {
           }
         });
         //兑奖设置
-        (this.ruleForm3.actAwardingTime = res.data.actAwardingTime), // 兑奖期限
-          (this.ruleForm3.actAwardingAddress = res.data.actAwardingAddress), // 兑奖地址
-          (this.ruleForm3.actAwardingTips = res.data.actAwardingTips); // 兑奖提示
+        this.ruleForm3.actAwardingTime = res.data.actAwardingTime, // 兑奖期限
+        this.ruleForm3.actAwardingAddress = res.data.actAwardingAddress, // 兑奖地址
+        this.ruleForm3.actAwardingTips = res.data.actAwardingTips; // 兑奖提示
 
         //奖项设置
         this.actactIsShowNumsNums = res.data.actactIsShowNumsNums, // 是否显示奖品数量

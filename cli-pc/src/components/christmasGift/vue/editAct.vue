@@ -46,17 +46,17 @@
                 </div> 
 
                 <el-form-item label="活动说明：" prop="treeDescribe">
-                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.treeDescribe" :rows="3" placeholder="请输入活动说明"></el-input>
-                    <span class="el-upload__tip grey" >
+                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.treeDescribe" :rows="3" placeholder="描述活动详情，能让粉丝了解此次活动" :maxlength="100"></el-input>
+                    <!-- <span class="el-upload__tip grey" >
                         描述活动详情，能让粉丝了解此次活动
-                    </span>
+                    </span> -->
                 </el-form-item> 
 
                  <el-form-item label="活动未开始提示：" prop="treeBeforeTxt">
-                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.treeBeforeTxt" :rows="3" placeholder="如：活动尚未开始，敬请期待!"></el-input>
-                    <span class="el-upload__tip grey" >
+                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.treeBeforeTxt" :rows="3" placeholder="请控制字数在100以内，如：活动尚未开始，敬请期待!" :maxlength="100"></el-input>
+                    <!-- <span class="el-upload__tip grey" >
                         活动未开始提示限制在100个字数以内
-                    </span>
+                    </span> -->
                 </el-form-item>  
 
                  <el-form-item label="背景音乐：">
@@ -70,7 +70,7 @@
                 </el-form-item>
             </el-form> 
              <div class="btnRow">
-                            <el-button type="primary" @click="Save('ruleForm1')" >保存</el-button>
+                            <el-button type="primary" @click="Save('ruleForm1')" :loading="loading">保存</el-button>
                             <el-button   @click="backUrl">返回</el-button>
                     </div>
         </div>
@@ -85,7 +85,7 @@
                     </el-form-item>   
             </el-form> 
              <div class="btnRow">
-                            <el-button type="primary" @click="Save('ruleForm2')" >保存</el-button>
+                            <el-button type="primary" @click="Save('ruleForm2')" :loading="loading">保存</el-button>
                             <el-button   @click="backUrl">返回</el-button>
                     </div>
         </div> 
@@ -93,7 +93,7 @@
         <div v-show="this.active==2" class="mt40">
             <el-form :model="ruleForm3" :rules="rules3" ref="ruleForm3" label-width="120px" class="mt40 demo-ruleForm">
                 <el-form-item label="兑奖期限：" prop="treeCashDay">
-                    <el-input class="w_demo mr10" type="number" v-model="ruleForm3.treeCashDay" placeholder="请输入兑奖期限"></el-input>天
+                    <el-input class="w_demo mr10" type="number" v-model.number="ruleForm3.treeCashDay" placeholder="请输入兑奖期限"></el-input>天
                     <span class="el-upload__tip grey">
                         从活动结束后开始计算
                     </span>
@@ -119,7 +119,7 @@
                 </el-form-item>    
             </el-form> 
              <div class="btnRow">
-                            <el-button type="primary" @click="Save('ruleForm3')" >保存</el-button>
+                            <el-button type="primary" @click="Save('ruleForm3')" :loading="loading">保存</el-button>
                             <el-button   @click="backUrl">返回</el-button>
                     </div>
         </div>
@@ -156,20 +156,20 @@
                 </el-table-column>
                 <el-table-column label="奖项数量" :width="200">
                   <template slot-scope="scope">
-                      <el-input class="w150"  type="number"  v-model="scope.row.num" placeholder="数值应大于0"></el-input>
+                      <el-input class="w150"  type="number"  v-model.number="scope.row.num" placeholder="数值应大于0"></el-input>
                   </template>
                 </el-table-column>
                 <el-table-column label="中奖概率(%)" :width="200">
                   <template slot-scope="scope">
-                      <el-input class="w160"  v-model="scope.row.eggPrizeChance" placeholder="0-100且保留两位小数"></el-input>
+                      <el-input class="w160"  type="number"  v-model="scope.row.probabiliy" placeholder="0-100且保留两位小数"></el-input>
                   </template>
                 </el-table-column>
-                <el-table-column label="中奖人"> 
+                <el-table-column label="中奖人" min-width="120"> 
                      <template slot-scope="scope">
                       {{scope.row.nickname}}
                     </template>
                 </el-table-column>
-                <el-table-column label="操作">
+                <el-table-column label="操作" min-width="250">
                   <template slot-scope="scope">
                       <el-button class="gt-button-normal blue" @click="assign(scope)">指定中奖人</el-button>
                       <el-button class="gt-button-normal"  v-if="scope.$index!=0"  @click="delForm4(scope.$index)">删除</el-button>
@@ -177,7 +177,7 @@
                 </el-table-column>
             </el-table>  
              <div class="btnRow">
-                            <el-button type="primary" @click="lastStep" >保存</el-button>
+                            <el-button type="primary" @click="lastStep" :loading="loading" >保存</el-button>
                             <el-button   @click="backUrl">返回</el-button>
                     </div>
         </div>       
@@ -185,7 +185,7 @@
         <!-- 按钮 -->
         <div class="h80"></div>
 
-        <gt-Fans-detail :visible.sync="dialogFans" :peopleNums="1" v-on:getFansData="getFansData"></gt-Fans-detail>  
+        <gt-Fans-detail :visible.sync="dialogFans" :peopleNums="peopleNums" v-on:getFansData="getFansData"></gt-Fans-detail>  
     </div>   
 </div>
 </section>
@@ -195,7 +195,9 @@ import api from "./../api/api";
 export default {
   data() {
     return {
+      loading: false,
       active: 0,
+      peopleNums: 1,
       ruleForm1: {
         treeName: "", // 活动名称
         date: [],
@@ -253,7 +255,7 @@ export default {
       },
       rules3: {
         treeCashDay: [
-          { required: true, message: "兑奖期限不能为空", trigger: "blur" }
+          { type:'number', required: true, message: "兑奖期限不能为空", trigger: "blur" }
         ],
         treeAddress: [
           { required: true, message: "兑奖地址不能为空", trigger: "blur" }
@@ -265,7 +267,7 @@ export default {
           prizeUnit: "",
           prizeName: "",
           num: "",
-          eggPrizeChance: "",
+          probabiliy: "",
           nickname: ""
         }
       ],
@@ -276,16 +278,24 @@ export default {
   },
   methods: {
     assign(scope) {
+      if (!scope.row.num) {
+        this.$message.info('请先输入奖项数量')
+        return
+      }
       this.dialogFans = true;
-      this.assignObj = scope;
+      this.assignObj = scope.row;
+      this.peopleNums = scope.row.num;
     },
     getFansData(e) {
       if (e.length) {
         let nickname = [];
+        let openid = []
         e.forEach((item, index, arr) => {
           nickname.push(item.nickname) 
+          openid.push(item.openid)
         });
         this.assignObj.nickname = nickname.join(",")
+        this.assignObj.openid = openid.join(",")
       this.$set(this.ruleForm4, this.assignObj.$index, this.assignObj)
       }
     },
@@ -305,7 +315,7 @@ export default {
         prizeUnit: "",
         prizeName: "",
         num: "",
-        eggPrizeChance: "",
+        probabiliy: "",
         nickname: ""
       });
     },
@@ -323,13 +333,15 @@ export default {
       });
     },
     lastStep() {
+      let percentage = 0
       for (let i = 0; i < this.ruleForm4.length; i++) {
         var regu = /^[1-9]\d*$/;
         if (
           !this.ruleForm4[i].type ||
           !this.ruleForm4[i].prizeUnit ||
           !this.ruleForm4[i].prizeName ||
-          !this.ruleForm4[i].num
+          !this.ruleForm4[i].num ||
+          !this.ruleForm4[i].probabiliy
         ) {
           this.$message.error("表单不能留空，请填写完整~");
           return false;
@@ -346,14 +358,19 @@ export default {
           this.$message.error("当奖品为实物时，请上传实物图片~");
           return false;
         }
+        percentage += Number(this.ruleForm4[i].probabiliy)
+      }
+      if (percentage != 100) {
+         this.$message.error("中奖概率之和加起来应为100%");
+         return false;
       }
       this.submit();
     },
     //表单提交--------------------------------------star
     submit() {
-        this.ruleForm4.forEach((item, idnex, arr) => {
-            item.eggPrizeType = Number(item.eggPrizeType);
-        });
+        // this.ruleForm4.forEach((item, idnex, arr) => {
+        //     item.eggPrizeType = Number(item.eggPrizeType);
+        // });
         const data = {
             id: this.$route.query.id,
             //基础设置
@@ -380,16 +397,18 @@ export default {
             //奖项设置
             prizeSetList: this.ruleForm4
         };
+        this.loading = true
         api
             .modfiyActivity(data)
             .then(data => {
-            this.isSubmit = true;
-            if (data.code == 100) {
-                this.$message.success('保存成功');
-            } else {
-                this.isSubmit = false;
-                this.$message.error(data.msg || '保存失败');
-            }
+              this.isSubmit = true;
+              if (data.code == 100) {
+                  this.$message.success('保存成功');
+              } else {
+                  this.isSubmit = false;
+                  this.$message.error(data.msg || '保存失败');
+              }
+              this.loading = false
             })
     },
     backUrl() {
@@ -397,38 +416,31 @@ export default {
     }
   },
   created() {
-
-    
     Promise.all([
+        // 获取详情信息
         api.getActivityById({ id: this.$route.query.id }),
-        api.getPrizeType()
+        // 获取奖品类型
+        this.$api.getPrizeTypeThree()
       ]).then(res => {
         if (res[0].code == 100) {
-            //基础设置
-            this.ruleForm1.treeName = res[0].data.treeName, // 活动名称
+           // 步骤一详情 基础设置
+            for(let key in this.ruleForm1) {
+              this.ruleForm1[key] = res[0].data[key] || ''
+            }
             this.ruleForm1.date = [ res[0].data.activityBeginTime,  res[0].data.activityEndTime ]
-            this.ruleForm1.treeEggPartaker = res[0].data.treeEggPartaker, // 1.所有粉丝 2.仅会员(持有会员卡的粉丝)
-            this.ruleForm1.treePway = res[0].data.treePway, // 参与方式
-            this.ruleForm1.treeMan = res[0].data.treeMan, // 可参加抽奖的会员积分
-            this.ruleForm1.treeKou = res[0].data.treeKou, // 每次抽奖扣除积分
-            this.ruleForm1.treeDescribe = res[0].data.treeDescribe, // 活动说明/描述
-            this.ruleForm1.treeBeforeTxt = res[0].data.treeBeforeTxt, // 活动未开始提示
-            this.ruleForm1.treeBgmName = res[0].data.treeBgmName, // 背景音乐名称
-            this.ruleForm1.treeBgm = res[0].data.treeBgm, // 背景音乐链接
-            //规则设置
-            this.ruleForm2.treeCountOfDay = res[0].data.treeCountOfDay, // 抽奖次数
-            this.ruleForm2.treeCountOfAll = res[0].data.treeCountOfAll, // 抽奖总数
-            //兑奖设置
-            this.ruleForm3.treeCashDay = res[0].data.treeCashDay, // 兑奖期限
-            this.ruleForm3.treeAddress = res[0].data.treeAddress, // 兑奖地址
-            this.ruleForm3.eggCashWay = res[0].data.eggCashWay, // 兑奖方式
-            this.ruleForm3.treeWinningTxt = res[0].data.treeWinningTxt, // 兑奖提示
-            this.ruleForm3.eggWinningNotice = res[0].data.eggWinningNotice, // 中奖须知
-            //奖项设置
-            res[0].data.prizeSetList.forEach((item, idnex, arr) => {
-            item.type = item.type + "";
-            });
-            this.ruleForm4 = res[0].data.prizeSetList
+
+            // 步骤二详情 规则设置
+            for(let key in this.ruleForm2) {
+              this.ruleForm2[key] = res[0].data[key] || ''
+            }
+
+            // 步骤三详情 兑奖设置
+            for(let key in this.ruleForm3) {
+              this.ruleForm3[key] = res[0].data[key] || ''
+            }
+
+            // 步骤四详情 奖项设置
+             this.ruleForm4 = res[0].data.prizeSetList
         } else {
             this.$message.error("获取编辑数据失败");
         }

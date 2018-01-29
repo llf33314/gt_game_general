@@ -47,17 +47,17 @@
                 </div> 
 
                 <el-form-item label="活动说明：" prop="scrDescribe">
-                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.scrDescribe" :rows="3" placeholder="请输入活动说明"></el-input>
-                    <span class="el-upload__tip grey" >
+                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.scrDescribe" :rows="3" placeholder="描述活动详情，能让粉丝了解此次活动" :maxlength="100"></el-input>
+                    <!-- <span class="el-upload__tip grey" >
                         描述活动详情，能让粉丝了解此次活动
-                    </span>
+                    </span> -->
                 </el-form-item> 
 
                  <el-form-item label="活动未开始提示：" prop="scrBeforeTxt">
-                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.scrBeforeTxt" :rows="3" placeholder="如：活动尚未开始，敬请期待!"></el-input>
-                    <span class="el-upload__tip grey" >
+                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.scrBeforeTxt" :rows="3" placeholder="请控制字数在100以内，如：活动尚未开始，敬请期待!" :maxlength="100"></el-input>
+                    <!-- <span class="el-upload__tip grey" >
                         活动未开始提示限制在100个字数以内
-                    </span>
+                    </span> -->
                 </el-form-item>  
 
                  <el-form-item label="背景音乐：">
@@ -145,7 +145,7 @@
                 </el-table-column>
                 <el-table-column label="奖项数量" :width="200">
                   <template slot-scope="scope">
-                      <el-input class="w150"  type="number"  v-model="scope.row.scrPrizeNums" placeholder="数值应大于0"></el-input>
+                      <el-input class="w150"  type="number"  v-model.number="scope.row.scrPrizeNums" placeholder="数值应大于0"></el-input>
                   </template>
                 </el-table-column>
                 <el-table-column label="中奖概率(%)" :width="200">
@@ -153,12 +153,12 @@
                       <el-input class="w160"  v-model="scope.row.scrPrizeChance" placeholder="0-100且保留两位小数"></el-input>
                   </template>
                 </el-table-column>
-                <el-table-column label="中奖人"> 
+                <el-table-column label="中奖人" min-width="120"> 
                      <template slot-scope="scope">
                       {{scope.row.nickname}}
                     </template>
                 </el-table-column>
-                <el-table-column label="操作">
+                <el-table-column label="操作" min-width="250">
                   <template slot-scope="scope">
                       <el-button class="gt-button-normal blue" @click="assign(scope)">指定中奖人</el-button>
                       <el-button class="gt-button-normal"  v-if="scope.$index!=0"  @click="delForm4(scope.$index)">删除</el-button>
@@ -182,11 +182,11 @@
             <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步1</el-button> 
             <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
-            <el-button type="primary" @click="lastStep"        v-if="this.active==3">保存</el-button>   
+            <el-button type="primary" @click="lastStep"    :loading="loading"    v-if="this.active==3">保存</el-button>   
             <el-button type="primary" @click="submit">打印</el-button>   
         </div> 
 
-        <gt-Fans-detail :visible.sync="dialogFans" :peopleNums="1" v-on:getFansData="getFansData"></gt-Fans-detail>  
+        <gt-Fans-detail :visible.sync="dialogFans" :peopleNums="peopleNums" v-on:getFansData="getFansData"></gt-Fans-detail>  
     </div>  
         </div>
     </section>
@@ -196,7 +196,9 @@ import { addActivity, getPrizeType } from "./../api/api";
 export default {
   data() {
     return {
+      loading: false,
       active: 0,
+      peopleNums: 1 ,
       ruleForm1: {
         scrName: "", // 活动名称
         date: [],
@@ -263,8 +265,16 @@ export default {
       },
       ruleForm4: [
         {
+          scrPrizeType: 5,  // 奖品类型
+          scrPrizeLimit: "", // 奖品数额
+          scrPrizeName: "",  // 奖项名称
+          scrPrizeNums: "",  // 奖项数量
+          scrPrizeChance: "",// 中奖概率
+          nickname: ""       // 中奖人
+        },
+        {
           scrPrizeType: "",  // 奖品类型
-          sscrPrizeLimit: "", // 奖品数额
+          scrPrizeLimit: "", // 奖品数额
           scrPrizeName: "",  // 奖项名称
           scrPrizeNums: "",  // 奖项数量
           scrPrizeChance: "",// 中奖概率
@@ -278,16 +288,23 @@ export default {
   },
   methods: {
     assign(scope) {
+      if (!scope.row.scrPrizeNums) {
+        this.$message.info('请先输入奖项数量')
+        return
+      }
       this.dialogFans = true;
-      this.assignObj = scope;
+      this.assignObj = scope.row;
+      this.peopleNums = scope.row.scrPrizeNums;
     },
     getFansData(e) {
       if (e.length) {
         let nickname = [];
+        let openid = [];
         e.forEach((item, index, arr) => {
           nickname.push(item.nickname) 
+          openid.push(item.openid)
         });
-        this.assignObj.nickname = nickname.join(",")
+        this.assignObj.openid = openid.join(",")
       this.$set(this.ruleForm4, this.assignObj.$index, this.assignObj)
       }
     },
@@ -306,7 +323,7 @@ export default {
     addForm4() {
       this.ruleForm4.push({
         scrPrizeType: "",
-        sscrPrizeLimit: "",
+        scrPrizeLimit: "",
         scrPrizeName: "",
         scrPrizeNums: "",
         scrPrizeChance: "",
@@ -327,18 +344,19 @@ export default {
       });
     },
     lastStep() {
-      console.log(this.ruleForm4)
+      let percentage = 0
       for (let i = 0; i < this.ruleForm4.length; i++) {
         var regu = /^[1-9]\d*$/;
         if (
           !this.ruleForm4[i].scrPrizeType ||
-          !this.ruleForm4[i].sscrPrizeLimit ||
+          !this.ruleForm4[i].scrPrizeLimit ||
           !this.ruleForm4[i].scrPrizeName ||
-          !this.ruleForm4[i].scrPrizeNums
+          !this.ruleForm4[i].scrPrizeNums ||
+          !this.ruleForm4[i].scrPrizeChance
         ) {
           this.$message.error("表单不能留空，请填写完整~");
           return false;
-        } else if (!regu.test(this.ruleForm4[i].sscrPrizeLimit)) {
+        } else if (!regu.test(this.ruleForm4[i].scrPrizeLimit)) {
           this.$message.error("奖品单位填写有误，请重新填写~");
           return false;
         } else if (!regu.test(this.ruleForm4[i].scrPrizeNums)) {
@@ -351,20 +369,16 @@ export default {
           this.$message.error("当奖品为实物时，请上传实物图片~");
           return false;
         }
+        percentage += Number(this.ruleForm4[i].scrPrizeChance)
+      }
+      if (percentage != 100) {
+         this.$message.error("中奖概率之和加起来应为100%");
+         return false;
       }
       this.submit();
     },
     //表单提交--------------------------------------star
     submit() {
-      var newarr = [];
-      for (let i = 0; i < this.ruleForm4.length; i++) {
-        var arr = {
-          scrPrizeType: this.ruleForm4[i].scrPrizeType,
-          sscrPrizeLimit: this.ruleForm4[i].sscrPrizeLimit,
-          scrPrizeName: this.ruleForm4[i].scrPrizeName
-        };
-        newarr.push(arr);
-      }
       const data = {
         //基础设置
         scrName: this.ruleForm1.scrName, // 活动名称
@@ -390,18 +404,18 @@ export default {
         //奖项设置
         prizeSetList: this.ruleForm4
       };
+      this.loading = true
       addActivity(data)
-        .then(data => {
-          this.isSubmit = true;
-          if (data.code == 100) {
+        .then(res => {
+          if (res.code == 100) {
             this.active = 5;
+            this.$message.success(res.msg  || '保存成功');
           } else {
-            this.isSubmit = false;
-            this.$message.error(data.msg + "错误码：[" + data.code + "]");
+            this.$message.error(res.msg  || '保存失败');
           }
+          this.loading = false
         })
         .catch(() => {
-          this.isSubmit = false;
           this.$message({ type: "info", message: "网络问题，请刷新重试~" });
         });
     },
@@ -411,10 +425,9 @@ export default {
   },
   created() {
     // 获取奖品类型
-    getPrizeType().then(res => {
+    this.$api.getPrizeTypeThree().then(res => {
       if (res.code == 100) {
         this.options = res.data;
-        console.log(this.options, "获取奖品类型");
       } else {
         this.$message.error("获取奖品类型失败");
       }

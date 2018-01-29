@@ -33,7 +33,7 @@
          <el-table-column prop="name" label="活动名称" min-width="160" show-overflow-tooltip></el-table-column>
           <el-table-column prop="activityBeginTime" label="活动开始时间" min-width="200">
             <template slot-scope="scope" >
-              {{ scope.row.activityBeginTime | DateFormat('yyyy-MM-dd hh:mm:ss') }}
+              {{ scope.row.activityBeginTime | DateFormat('yyyy-MM-dd hh:mm') }}
             </template>
           </el-table-column>
           <el-table-column prop="activityEndTime" label="活动结束时间" min-width="200">

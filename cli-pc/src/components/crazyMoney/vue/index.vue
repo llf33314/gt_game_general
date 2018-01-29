@@ -230,7 +230,7 @@ export default {
       let params = {
         current: this.currentPage,
         size: this.pageSize,
-        name: this.keyWord,
+        actName: this.keyWord,
         status: parseFloat(this.activeName)
       };
       Promise.all([

@@ -10,7 +10,7 @@
       </el-breadcrumb>
       <div class="gt-gray-region mb20">
         <span class="padding-left-md ml30 mb10">
-          <el-input placeholder="输入标题关键字查询" icon="search" v-model="keyWord" style="width:250px" :on-icon-click="getdata" @keyup.native.enter="getdata" @blur="getdata($event)">
+          <el-input placeholder="输入标题关键字查询" icon="search" v-model="keyWord" style="width:250px" :on-icon-click="getdata" @keyup.native.enter="getdata">
           </el-input>
         </span>
         <gt-video-btn videoId="22" class="gt-video-btn mr70"></gt-video-btn>
@@ -50,9 +50,9 @@
               <el-button class="gt-button-normal blue" @click="askPreview(scope.row.id)">预览链接</el-button>
               <!-- <el-button class="gt-button-normal blue" @click="impower(scope.row.id)">核销授权</el-button> -->
               <el-button class="gt-button-normal blue" @click="stopBtn(scope.row.id)" v-if="scope.row.status == 1">暂停活动</el-button>    
-              <el-button class="gt-button-normal blue" @click="startBtn(scope.row.id)" v-if="scope.row.status == 2">开始活动</el-button> 
+              <el-button class="gt-button-normal blue" @click="startBtn(scope.row.id)" v-if="scope.row.status == 3">开始活动</el-button> 
               <el-button class="gt-button-normal blue"  @click="editActive(scope.row.id)" v-if="scope.row.status==0">编辑</el-button>
-              <el-button class="gt-button-normal" @click="delBtn(scope.row.id)" v-if="scope.row.status == 0 || scope.row.status == 3">删除</el-button>
+              <el-button class="gt-button-normal" @click="delBtn(scope.row.id)" v-if="scope.row.status == 0 || scope.row.status == 2">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -220,7 +220,6 @@ export default {
       } else if (val == 3) {
         val = "已暂停";
       }
-
       return val;
     },
   }
