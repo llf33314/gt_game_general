@@ -22,8 +22,8 @@
           <el-tab-pane :label="'全部  ('+countNum.count1+')'"   name="0"></el-tab-pane>
           <el-tab-pane :label="'未开始('+countNum.count2+')'"  name="2"></el-tab-pane> 
           <el-tab-pane :label="'进行中('+countNum.count3+')'"   name="3"></el-tab-pane> 
-          <el-tab-pane :label="'已暂停('+countNum.count4+')'"  name="4"></el-tab-pane>
-          <el-tab-pane :label="'已结束('+countNum.count5+')'"   name="5"></el-tab-pane>
+          <el-tab-pane :label="'已暂停('+countNum.count5+')'"  name="4"></el-tab-pane>
+          <el-tab-pane :label="'已结束('+countNum.count4+')'"   name="5"></el-tab-pane>
         </el-tabs>
         <gt-null-data v-if="initRequest && tableData.length < 1">还没有创建相关活动，
           <span @click="addActive">点击这里</span>创建活动吧
@@ -48,12 +48,12 @@
           <el-table-column prop="order_option" width="450" label="操作">
             <template slot-scope="scope"> 
               <el-button class="gt-button-normal blue" @click="askPreview(scope.row.id)">预览链接</el-button>              
-              <el-button class="gt-button-normal blue" @click="impower(scope.row.id)">核销授权</el-button>
+              <!-- <el-button class="gt-button-normal blue" @click="impower(scope.row.id)">核销授权</el-button> -->
               <el-button class="gt-button-normal blue" @click="record(scope.row.id)">中奖纪录</el-button>  
               <el-button class="gt-button-normal blue" @click="stopBtn(scope.row.id)" v-if="scope.row.status == 1">暂停活动</el-button>    
-              <el-button class="gt-button-normal blue" @click="startBtn(scope.row.id)" v-if="scope.row.status == 2">开始活动</el-button> 
+              <el-button class="gt-button-normal blue" @click="startBtn(scope.row.id)" v-if="scope.row.status == 3">开始活动</el-button> 
               <el-button class="gt-button-normal blue" @click="edit(scope.row.id)" v-if="scope.row.status == 0">编辑</el-button>
-              <el-button class="gt-button-normal"      @click="delOne(scope.row.id)" v-if="scope.row.status == 0 || scope.row.status == 3">删除</el-button> 
+              <el-button class="gt-button-normal"      @click="delOne(scope.row.id)" v-if="scope.row.status == 0 || scope.row.status == 2">删除</el-button> 
             </template>
           </el-table-column>
         </el-table>
@@ -161,38 +161,58 @@ export default {
           });
         });
     },
-    //开始------------------------------------------------------------star
-    startBtn(val) {
+     //开始------------------------------------------------------------star
+    startBtn(row) {
       this.$confirm("确定要开启该活动吗？", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
-        .then(() => {
-          this.$message({
-            type: "success",
-            message: "成功!"
-          });
-        })
-        .catch(() => {
+      .then(() => {
+          api.startOrStopActivity({
+               id: row.id,
+               status: 1
+          }).then(res => {
+            if (res.code == 100) {
+                 this.$message({
+                    type: "success",
+                    message: "开始成功"
+                 });
+                 this.fetchData()
+            } else {
+              this.$message.error(res.msg || '开始失败')
+            }
+          })
+      })
+      .catch(() => {
           this.$message({
             type: "info",
             message: "已取消"
           });
-        });
+      });
     },
     //暂停------------------------------------------------------------star
-    stopBtn(val) {
+    stopBtn(row) {
       this.$confirm("确定要暂停该活动吗？", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
-          this.$message({
-            type: "success",
-            message: "成功!"
-          });
+          api.startOrStopActivity({
+               id: row.id,
+               status: 2
+          }).then(res => {
+            if (res.code == 100) {
+                 this.$message({
+                    type: "success",
+                    message: "暂停成功"
+                 });
+                 this.fetchData()
+            } else {
+              this.$message.error(res.msg || '暂停失败')
+            }
+          })
         })
         .catch(() => {
           this.$message({
@@ -253,6 +273,24 @@ export default {
   },
   created() {
     this.fetchData(true);
+  },
+  filters: {
+    activityStatus(val) {
+      switch (val) {
+        case 0:
+          return "未开始";
+          break;
+        case 1:
+          return "进行中";
+          break;
+        case 2:
+          return "已结束";
+          break;
+        case 3:
+        return "已暂停";
+        break;
+      }
+    }
   }
 };
 </script>

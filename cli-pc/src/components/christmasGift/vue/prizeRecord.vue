@@ -87,25 +87,7 @@ export default {
       status: -1,
       type: -1,
 
-      tableData: [
-        {
-          address: "string",
-          addressName: "string",
-          cashTime: "1516341837149",
-          id: 0,
-          memberId: 0,
-          memberName: "string",
-          memberPhone: "string",
-          nickname: "string",
-          prizeName: "string",
-          prizeUnit: 0,
-          receiveType: 2,
-          score: 0,
-          snCode: "string",
-          status: 2,
-          type: 1
-        }
-      ],
+      tableData: [],
       options: {
         type: [
           { label: "全部", value: -1 },

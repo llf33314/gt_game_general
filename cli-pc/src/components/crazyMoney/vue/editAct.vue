@@ -61,17 +61,17 @@
                                 <el-button   @click="backUrl">返回</el-button>
                         </div>
         </div>
-        <!-- 规则设置 -->
-        <div v-show="this.active==1" class="mt40">
+         <!-- 规则设置 -->
+        <div v-if="this.active==1" class="mt40">
             <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="120px" class="mt40 demo-ruleForm">
-                <el-form-item label="游戏时间" prop="gameTime">
-                    <el-input class="w_demo mr10" type="number" v-model="ruleForm2.gameTime" placeholder="请输入游戏持续时间"></el-input> 秒
+                <el-form-item label="游戏时间" prop="actGameTime">
+                    <el-input class="w_demo mr10" type="number" v-model="ruleForm2.actGameTime" placeholder="请输入游戏持续时间"></el-input> 秒
                 </el-form-item>
-                <el-form-item label="抽奖次数：" prop="cishu">
-                    <el-input class="w_demo mr10"  type="number" v-model="ruleForm2.cishu" placeholder="请输入每人抽奖总次数"></el-input> 次/人
+                <el-form-item label="抽奖次数：" prop="actCountOfDay">
+                    <el-input class="w_demo mr10"  type="number" v-model="ruleForm2.actCountOfDay" placeholder="请输入每人抽奖总次数"></el-input> 次/人
                 </el-form-item>
-                <el-form-item label="抽奖总数：" prop="zongshu">
-                    <el-input class="w_demo mr10" type="number" v-model="ruleForm2.zongshu" placeholder="请输入每人/每天抽奖总数"></el-input>次/人
+                <el-form-item label="抽奖总数：" prop="actTotalOfAct">
+                    <el-input class="w_demo mr10" type="number" v-model="ruleForm2.actTotalOfAct" placeholder="请输入每人/每天抽奖总数"></el-input>次/人
                 </el-form-item>
 
                 <el-form-item label="概率设置：" class="mt10" prop="">
@@ -104,14 +104,13 @@
                         </template>
                         </el-table-column>   
                     </el-table> 
-                     
                 </el-form-item>    
             </el-form> 
             <div class="btnRow">
                                 <el-button type="primary" @click="Save('ruleForm2')" >保存</el-button>
                                 <el-button   @click="backUrl">返回</el-button>
                         </div>
-        </div> 
+        </div>  
         <!-- 兑奖设置 -->
         <div v-show="this.active==2" class="mt40">
             <el-form :model="ruleForm3" :rules="rules3" ref="ruleForm3" label-width="120px" class="mt40 demo-ruleForm">

@@ -1,7 +1,7 @@
 import axios from './../../../http' 
 let base = window.BASEDOMAIN + '/app/tree'
 
-// let base = 'http://192.168.3.68:8080'
+// let base = 'http://192.168.3.68:8080' + '/app/tree'
 function post(url, params) {
     return axios.post(url, params)
       .then(res => {
@@ -39,6 +39,10 @@ export default {
        // 统计活动总数 
        countActivity(params) {
         return post(`${base}/countTree`, params) 
+       },
+       // 开始/暂停  
+       startOrStopActivity(params) {
+        return post(`${base}/stopTree`, params) 
        },
 
        /* 修改/编辑活动 - 接口 */ 
