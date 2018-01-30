@@ -178,11 +178,11 @@
         <div class="h80"></div>
         <div class="btnRow" v-if="this.active!=5">
           <el-button @click="upStep()" v-if="this.active!=0">上一步</el-button>
-          <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步1</el-button>
-          <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
-          <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>
+          <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步</el-button>
+          <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步</el-button>
+          <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步</el-button>
           <el-button type="primary" @click="lastStep" :loading="loading" v-if="this.active==3">保存</el-button>
-          <el-button type="primary" @click="submit">打印</el-button>
+          <!-- <el-button type="primary" @click="submit">打印</el-button> -->
         </div>
         <!-- 中奖人弹窗 -->
         <gt-Fans-detail :visible.sync="dialogFans" :peopleNums="peopleNums" v-on:getFansData="getFansData"></gt-Fans-detail>
@@ -194,25 +194,6 @@
 import { saveAct, getPrizeType } from "./../api/api";
 export default {
   data() {
-    let numPass = (rule, value, callback) => {
-      if (this.ruleForm1.luckPway == 2 && this.ruleForm1.name1 == '') {
-        callback(new Error("不能为空"));
-      } else if (this.ruleForm1.luckPway == 2 && this.ruleForm1.name1 < 0) {
-        callback(new Error("请输入大于0的整数"));
-      } else if (this.ruleForm1.luckPway == 3 && this.ruleForm1.name2 == '') {
-        callback(new Error("不能为空"));
-      } else if (this.ruleForm1.luckPway == 3 && this.ruleForm1.name2 < 0) {
-        callback(new Error("请输入大于0的整数"));
-      } else if ((this.ruleForm1.luckPway == 4 && this.ruleForm1.name3 == '') || (this.ruleForm1.luckPway == 4 && this.ruleForm1.name4 == '')) {
-        callback(new Error("不能为空"));
-      } else if (this.ruleForm1.luckPway == 4 && this.ruleForm1.name3 < 0) {
-        callback(new Error("请输入大于0的整数"));
-      } else if (this.ruleForm1.luckPway == 4 && this.ruleForm1.name4 < 0) {
-        callback(new Error("请输入大于0的整数"));
-      } else {
-        callback();
-      }
-    };
     return {
       loading: false,
       active: 3,
