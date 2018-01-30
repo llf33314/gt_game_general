@@ -353,15 +353,14 @@ export default {
         this.ruleForm1.music = e.music.name
         this.ruleForm1.musicUrl = e.music.url
     },  
-     optionsData(val){
+    optionsData(val){
         for(var i=0;i<this.memberOptions.length;i++){ 
             if(this.memberOptions[i].id==this.ruleForm4[val].name2||this.ruleForm4[val].name2==this.memberOptions[i].id){
-                console.log(this.memberOptions[i].cardsName,985);
                 this.ruleForm4[val].cardsName=this.memberOptions[i].cardsName 
             } 
         } 
-      }  , 
-        // 添加实物图 
+    }, 
+    // 添加实物图 
     addAwardImg(val) {
          JSON.parse(val.url).forEach(function (item, index, arr) {
                this.ruleForm4[val.prop.$index].name5.push(item.url)
@@ -487,8 +486,7 @@ export default {
                     cardReceiveId:"",
                     loveArrowPrizeImgReqs:[]//图片
                 }
-                if(arr4.type==7){ 
-                    console.log(this.ruleForm4[i],"================")
+                if(arr4.type==7){  
                     arr4.prizeName=this.ruleForm4[i].cardsName//名称 
                     arr4.cardReceiveId=this.ruleForm4[i].name2//名称 
                 }
@@ -629,6 +627,7 @@ export default {
                   newabc1.cardsName=data.data.loveArrowPrizeReqs[i].prizeName
                   newabc1.name2=data.data.loveArrowPrizeReqs[i].cardReceiveId
                 }
+                
                newPraise.push(newabc1);  
                console.log(newPraise,741);
             } 

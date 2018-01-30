@@ -5,8 +5,7 @@
       <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
       <el-breadcrumb-item :to="{ path:'/romanceValentine/index' }">浪漫七夕</el-breadcrumb-item>  
       <el-breadcrumb-item>创建活动</el-breadcrumb-item>   
-    </el-breadcrumb> 
-
+    </el-breadcrumb>  
     <div class="gt-content">
         <el-steps :active="active" :center="true" :align-center="true" class="bbtom pb20">
             <el-step title="基础设置"></el-step>
@@ -172,7 +171,7 @@
             <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步</el-button>
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步</el-button>   
             <el-button type="primary" @click="lastStep()"    :disabled="isSubmit"       v-if="this.active==3">保存</el-button>   
-            <!-- <el-button type="primary" @click="submit()">打印</el-button>    -->
+            <el-button type="primary" @click="submit()">打印</el-button>   
         </div> 
     </div>   
 </div>
@@ -259,7 +258,7 @@ export default {
           name3: "",
           name4: "",
           name5:[] ,
-          name6 :""
+          cardsName :""
         },
         { 
           name0: "",
@@ -268,7 +267,7 @@ export default {
           name3: "",
           name4: "" ,
           name5:[],
-          name6 :""
+          cardsName :""
         }], 
               // 时间的筛选
       pickerOptions: {
@@ -279,13 +278,13 @@ export default {
     };
   },
   methods: {    
-      optionsData(val){
+    optionsData(val){
         for(var i=0;i<this.memberOptions.length;i++){
             if(this.memberOptions[i].id==this.ruleForm4[val].name2){
-                this.ruleForm4[val].name6=this.memberOptions[i].name
+                this.ruleForm4[val].cardsName=this.memberOptions[i].cardsName
             } 
         } 
-      }  ,
+    }  ,
     addrPass(rule, value, callback) {
       if (!value) {
        callback(new Error("到店领取地址不能为空"));
@@ -339,7 +338,7 @@ export default {
       }
     }, 
     addForm4(){ 
-        this.ruleForm4.push({name0: "", name1: "", name2: "", name3: "", name5: [], name6 :""},)
+        this.ruleForm4.push({name0: "", name1: "", name2: "", name3: "", name5: [], cardsName :""},)
     },
     delForm4(val){
         this.ruleForm4.splice(val, 1); 
@@ -377,7 +376,7 @@ export default {
         }  
       }
       this.submit(); 
-    }, 
+    },  
     //表单提交--------------------------------------star
     submit(){ 
         //广告
@@ -414,7 +413,7 @@ export default {
                 }
                  if(arr4.type==7){
                     arr4.cardReceiveId=this.ruleForm4[i].name2//id  
-                    arr4.prizeName=this.ruleForm4[i].name6//id  
+                    arr4.prizeName=this.ruleForm4[i].cardsName//id  
                 }
                 if(arr4.type==4){
                     for(var j=0;j<this.ruleForm4[i].name5.length;j++){
@@ -450,6 +449,8 @@ export default {
             qixiPrizeReqs        :newPrize,   
         };
         console.log(data,123); 
+        console.log(data.qixiPrizeReqs,66666); 
+        // return false
         saveAct(data).then(data=>{
           this.isSubmit=true
           if (data.code == 100) {  

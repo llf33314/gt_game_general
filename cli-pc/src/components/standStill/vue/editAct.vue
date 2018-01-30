@@ -128,12 +128,8 @@
                 </template>
                 </el-table-column>
               <el-table-column label="奖品名称">
-                    <template slot-scope="scope">
-                        <el-select v-model="scope.row.name2" v-if="scope.row.name0==7"   placeholder="请选择" > 
-                            <el-option v-for="item in memberOptions" :key="item.id"  :label="item.name"  :value="item.id">
-                            </el-option>
-                        </el-select>  
-                        <el-input v-else class="w20_demo"   v-model="scope.row.name2"></el-input> 
+                    <template slot-scope="scope"> 
+                        <el-input class="w20_demo" v-model="scope.row.name2"></el-input> 
                     </template>
                 </el-table-column>
                 <el-table-column label="奖项数量">
@@ -395,8 +391,7 @@ export default {
                     type :this.ruleForm4[i].name0,//类型
                     prizeUnit :Number(this.ruleForm4[i].name1),//单位
                     prizeName :this.ruleForm4[i].name2,//名称 
-                    num :Number(this.ruleForm4[i].name3),//数量 
-                    cardReceiveId:"",
+                    num :Number(this.ruleForm4[i].name3),//数量  
                     standPrizeImgReqs:[]//图片
                 } 
                 if(arr4.type==4){

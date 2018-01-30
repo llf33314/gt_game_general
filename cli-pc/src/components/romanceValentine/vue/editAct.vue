@@ -244,7 +244,7 @@ export default {
         phone:"",
         desc:""
       },
-            // 时间的筛选
+      // 时间的筛选
       pickerOptions: {
           disabledDate(time) {
             return time.getTime() < Date.now() - 8.64e7;
@@ -264,21 +264,23 @@ export default {
           name1: "",
           name2: "",
           name3: "",
-          name5:[],name6 :""
+          name5:[],
+          cardsName :""
         },
         { 
           name0: "",
           name1: "",
           name2: "",
           name3: "",
-          name5: [],name6 :""
+          name5: [],
+          cardsName :""
         }],
-              // 时间的筛选
-      pickerOptions: {
+        // 时间的筛选
+        pickerOptions: {
           disabledDate(time) {
             return time.getTime() < Date.now() - 8.64e7;
           }
-      }, 
+        }, 
     };
   },
   methods: {    
@@ -337,13 +339,12 @@ export default {
     optionsData(val){
         for(var i=0;i<this.memberOptions.length;i++){ 
             if(this.memberOptions[i].id==this.ruleForm4[val].name2||this.ruleForm4[val].name2==this.memberOptions[i].id){
-                //  console.log(this.memberOptions[i].cardsName,985);
-                this.ruleForm4[val].name6=this.memberOptions[i].cardsName
+                this.ruleForm4[val].cardsName=this.memberOptions[i].cardsName 
             } 
         } 
-      }  ,
+    }, 
     addForm4(){ 
-        this.ruleForm4.push({ name0:"", name1: "", name2: "", name3: "", name4: "", name5: [],name6 :""},)
+        this.ruleForm4.push({ name0:"", name1: "", name2: "", name3: "", name4: "", name5: [],cardsName :""},)
     },
     delForm4(val){
         this.ruleForm4.splice(val, 1); 
@@ -357,8 +358,7 @@ export default {
         }
       });
     }, 
-    lastStep() {
-        console.log(this.ruleForm4,1243)
+    lastStep() { 
       for (let i = 0; i < this.ruleForm4.length; i++) { 
         var regu =/^[1-9]\d*$/;
         if(!this.ruleForm4[i].name0||!this.ruleForm4[i].name1||!this.ruleForm4[i].name2||!this.ruleForm4[i].name3){
@@ -412,12 +412,12 @@ export default {
                     prizeUnit :Number(this.ruleForm4[i].name1),//单位
                     prizeName :this.ruleForm4[i].name2,//名称
                     num :Number(this.ruleForm4[i].name3),//数量
-                    cardReceiveId:"",
-                    // probabiliy :this.ruleForm4[i].name4,  //概率
+                    cardReceiveId:"", 
                     qixiPrizeImgReqs :[]//图片
                 } 
-                 if(arr4.type==7){
-                    arr4.cardReceiveId=this.ruleForm4[i].name6//名称 
+                if(arr4.type==7){  
+                    arr4.prizeName    =this.ruleForm4[i].cardsName//名称 
+                    arr4.cardReceiveId=this.ruleForm4[i].name2//名称 
                 }
                 if(arr4.type==4){
                     for(var j=0;j<this.ruleForm4[i].name5.length;j++){
@@ -519,11 +519,12 @@ export default {
                     name2  : data.data.qixiPrizeReqs[i].prizeName, 
                     name3  : String(data.data.qixiPrizeReqs[i].num),  
                     name5  :[] ,
-                    name6  :data.data.qixiPrizeReqs[i].cardReceiveId, 
-                }; 
-                 if(newabc1.name0==7){ 
-                      newabc1.name2=data.data.qixiPrizeReqs[i].cardReceiveId 
-                 }
+                    cardsName  :data.data.qixiPrizeReqs[i].cardReceiveId, 
+                };  
+                 if(newabc1.name0==7){
+                  newabc1.cardsName=data.data.qixiPrizeReqs[i].prizeName
+                  newabc1.name2=data.data.qixiPrizeReqs[i].cardReceiveId
+                }
                 if(newabc1.name0==4){
                     for(var j = 0; j < data.data.qixiPrizeReqs[i].qixiPrizeImgReqs.length; j++){
                         var imgarr={

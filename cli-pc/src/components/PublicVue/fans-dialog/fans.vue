@@ -1,7 +1,7 @@
 <template>
 <section>
 <!-- 选择粉丝弹窗 -->
-<el-dialog title="粉丝列表"  :visible.sync="dialogFans"  >
+<el-dialog title="粉丝列表"  :visible.sync="dialogFans">
     <div class="mb10"> 
       <el-input placeholder="请输入昵称" icon="search" v-model="memberName" style="width:250px"  @keyup.native.enter="getMembersData" :on-icon-click="getMembersData" @blur="getMembersData($event)"> 
           </el-input>
