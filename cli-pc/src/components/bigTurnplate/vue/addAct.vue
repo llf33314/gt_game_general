@@ -58,7 +58,7 @@
             <el-form-item label="背景音乐：">
               <div class="pd20 bb bw bgMusic">
                 <gt-material class="va-m" :prop="''" :isMusic="true" btnContent="点击上传" v-on:getChangeUrl="getMusic" width="72" height="72"></gt-material>
-                <span class="el-upload__tip c333 ml20">{{ruleForm1.actBgmName}}</span>
+                <span class="el-upload__tip grey ml20">{{ruleForm1.actBgmName}}</span>
                 <div class="el-upload__tip grey" style="line-height:25px">
                   音频文件的格式为mp3、wma、wav,大小不超过3M
                 </div>
@@ -181,11 +181,11 @@
           <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步1</el-button>
           <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
           <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>
-          <el-button type="primary" @click="lastStep" v-if="this.active==3">保存</el-button>
+          <el-button type="primary" @click="lastStep" :loading="loading" v-if="this.active==3">保存</el-button>
           <el-button type="primary" @click="submit">打印</el-button>
         </div>
         <!-- 中奖人弹窗 -->
-        <gt-Fans-detail :visible.sync="dialogFans" :peopleNums="1" v-on:getFansData="getFansData"></gt-Fans-detail>
+        <gt-Fans-detail :visible.sync="dialogFans" :peopleNums="peopleNums" v-on:getFansData="getFansData"></gt-Fans-detail>
       </div>
     </div>
   </section>
@@ -194,8 +194,29 @@
 import { saveAct, getPrizeType } from "./../api/api";
 export default {
   data() {
+    let numPass = (rule, value, callback) => {
+      if (this.ruleForm1.luckPway == 2 && this.ruleForm1.name1 == '') {
+        callback(new Error("不能为空"));
+      } else if (this.ruleForm1.luckPway == 2 && this.ruleForm1.name1 < 0) {
+        callback(new Error("请输入大于0的整数"));
+      } else if (this.ruleForm1.luckPway == 3 && this.ruleForm1.name2 == '') {
+        callback(new Error("不能为空"));
+      } else if (this.ruleForm1.luckPway == 3 && this.ruleForm1.name2 < 0) {
+        callback(new Error("请输入大于0的整数"));
+      } else if ((this.ruleForm1.luckPway == 4 && this.ruleForm1.name3 == '') || (this.ruleForm1.luckPway == 4 && this.ruleForm1.name4 == '')) {
+        callback(new Error("不能为空"));
+      } else if (this.ruleForm1.luckPway == 4 && this.ruleForm1.name3 < 0) {
+        callback(new Error("请输入大于0的整数"));
+      } else if (this.ruleForm1.luckPway == 4 && this.ruleForm1.name4 < 0) {
+        callback(new Error("请输入大于0的整数"));
+      } else {
+        callback();
+      }
+    };
     return {
+      loading: false,
       active: 3,
+      peopleNums: 1,
       // 时间的筛选
       pickerOptions: {
         disabledDate(time) {
@@ -214,7 +235,7 @@ export default {
         actKou: "", // 每次抽奖扣除积分
         actOverdescribe: "", // 结束说明/描述
         // scrBeforeTxt: "", // 活动未开始提示
-        actBgmName: "", // 背景音乐名称
+        actBgmName: "暂无上传音乐", // 背景音乐名称
         actBgm: "" // 背景音乐链接
       },
       rules1: {
@@ -486,8 +507,15 @@ export default {
   methods: {
     //指定中奖人
     assign(scope) {
+      if (!scope.row.turPrizeNums) {
+        this.$message.info('请先输入奖项数量')
+        return
+      }
       this.dialogFans = true;
-      this.assignObj = scope;
+      this.assignObj = scope.row;
+      // this.peopleNums = scope.row.turPrizeNums;
+      this.peopleNums = Number(scope.row.turPrizeNums);
+      // alert(typeof this.peopleNums)
     },
     //中奖人弹窗
     getFansData(e) {
@@ -525,14 +553,15 @@ export default {
     },
     //保存验证奖项设置-------------------------------------------
     lastStep() {
-      console.log(this.ruleForm4)
+      let percentage = 0
       for (let i = 0; i < this.ruleForm4.length; i++) {
         var regu = /^[1-9]\d*$/;
         if (
           !this.ruleForm4[i].turPrizeType ||
           !this.ruleForm4[i].turPrizeLimit ||
           !this.ruleForm4[i].turPrizeName ||
-          !this.ruleForm4[i].turPrizeNums
+          !this.ruleForm4[i].turPrizeNums ||
+          !this.ruleForm4[i].turPrizeChance
         ) {
           this.$message.error("表单不能留空，请填写完整~");
           return false;
@@ -543,26 +572,35 @@ export default {
           this.$message.error("奖项数量填写有误，请重新填写~");
           return false;
         } else if (
-          this.ruleForm4[i].turPrizeType == 4 &&
-          this.ruleForm4[i].name5.length == 0
-        ) {
-          this.$message.error("当奖品为实物时，请上传实物图片~");
-          return false;
-        }
+          this.ruleForm4[i].turPrizeType == 4
+          // this.ruleForm4[i].name5.length == 0
+        )
+          // {
+          //   this.$message.error("当奖品为实物时，请上传实物图片~");
+          //   return false;
+          // }
+          console.log(this.ruleForm4[i])
+        percentage += parseFloat(this.ruleForm4[i].turPrizeChance)
+      }
+      console.log(percentage)
+      if (percentage != 100) {
+        this.$message.error("中奖概率之和加起来应为100%");
+        return false;
       }
       this.submit();
+
     },
     //表单提交--------------------------------------star
     submit() {
-      var newarr = [];
-      for (let i = 0; i < this.ruleForm4.length; i++) {
-        var arr = {
-          turPrizeType: this.ruleForm4[i].turPrizeType,
-          turPrizeLimit: this.ruleForm4[i].turPrizeLimit,
-          turPrizeName: this.ruleForm4[i].turPrizeName
-        };
-        newarr.push(arr);
-      }
+      // var newarr = [];
+      // for (let i = 0; i < this.ruleForm4.length; i++) {
+      //   var arr = {
+      //     turPrizeType: this.ruleForm4[i].turPrizeType,
+      //     turPrizeLimit: this.ruleForm4[i].turPrizeLimit,
+      //     turPrizeName: this.ruleForm4[i].turPrizeName
+      //   };
+      //   newarr.push(arr);
+      // }
       const data = {
         //基础设置
         actName: this.ruleForm1.actName, // 活动名称
@@ -588,20 +626,24 @@ export default {
         //奖项设置
         prizeSetList: this.ruleForm4
       };
-      console.log(data)
-      saveAct(data).then(data => {
-        this.isSubmit = true;
-        if (data.code == 100) {
+      this.loading = true;
+      console.log(333333333333)
+      saveAct(data).then(res => {
+        console.log(11111)
+        // this.isSubmit = true;
+        if (res.code == 100) {
           this.active = 5;
+          this.$message.success(res.msg || '保存成功');
         } else {
-          this.isSubmit = false;
-          this.$message.error(data.msg + "错误码：[" + data.code + "]");
+          // this.isSubmit = false;
+          this.$message.error(res.msg || '保存失败');
         }
-      })
-        .catch(() => {
-          this.isSubmit = false;
-          this.$message({ type: "info", message: "网络问题，请刷新重试~" });
-        });
+        this.loading = false
+      }).catch(() => {
+        console.log(222)
+        // this.isSubmit = false;
+        this.$message({ type: "info", message: "网络问题，请刷新重试~" });
+      });
     },
     //返回=====================
     backUrl() {
@@ -619,7 +661,7 @@ export default {
     },
   },
   created() {
-    // this.ruleForm4 = this.ruleForm46;
+    this.ruleForm4 = this.ruleForm46;
     // 获取奖品类型
     getPrizeType().then(res => {
       if (res.code == 100) {
@@ -630,23 +672,5 @@ export default {
       }
     });
   },
-  filters: {
-    prizeStatus(val) {
-      if (val == 0) {
-        val = "一等奖";
-      } else if (val == 1) {
-        val = "二等奖";
-      } else if (val == 2) {
-        val = "三等奖";
-      } else if (val == 3) {
-        val = "四等奖";
-      } else if (val == 4) {
-        val = "五等奖";
-      } else if (val == 5) {
-        val = "六等奖";
-      }
-      return val;
-    }
-  }
 };
 </script>
