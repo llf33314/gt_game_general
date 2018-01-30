@@ -15,12 +15,14 @@ import com.gt.game.core.util.CommonUtil;
 import io.swagger.annotations.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.BufferedOutputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
@@ -210,8 +212,9 @@ public class GoldtreeController extends BaseController {
     @ApiOperation(value = "保存活动", notes = "保存活动")
     @RequestMapping(value = "/saveGoldtree", method = RequestMethod.POST)
     protected ResponseDTO getGoldtree(
-            @RequestBody @ApiParam("请求参数") GoldtreeSaveReq GoldtreeSaveReq,
+            @RequestBody @ApiParam("请求参数") @Valid GoldtreeSaveReq GoldtreeSaveReq, BindingResult result ,
             HttpServletRequest request) {
+        InvalidParameter(result);
         try {
             BusUser busUser = CommonUtil.getLoginUser(request);
             ResponseDTO responseDTO = goldtreeService.saveGoldtree(busUser, GoldtreeSaveReq);
@@ -231,7 +234,7 @@ public class GoldtreeController extends BaseController {
     @ApiOperation(value = "分页获取核销授权列表", notes = "分页获取核销授权列表")
     @RequestMapping(value = "/getGoldtreeAuthorityList", method = RequestMethod.POST)
     protected ResponseDTO getGoldtreeAuthorityList(
-            @RequestBody @ApiParam("请求参数") GoldtreeAuthorityListPageReq GoldtreeAuthorityListPageReq,
+            @RequestBody @ApiParam("请求参数")  GoldtreeAuthorityListPageReq GoldtreeAuthorityListPageReq,
             HttpServletRequest request) {
         try {
             BusUser busUser = CommonUtil.getLoginUser(request);
