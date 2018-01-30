@@ -3,7 +3,7 @@
 
 ```  
 
-<gt-Fans-detail :fansKey="key+''" :visible="dialogFans" v-on:getFansData="getFansData"></gt-Fans-detail>  
+ <gt-Fans-detail :visible.sync="dialogFans" :peopleNums="peopleNums" v-on:getFansData="getFansData"></gt-Fans-detail>  
 
 
 <script> 
@@ -12,6 +12,7 @@ export default {
         return {
             dialogFans:false,
             key:0,
+            peopleNums:1,
         }
     },
     methods: {  

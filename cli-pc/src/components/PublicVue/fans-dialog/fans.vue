@@ -71,7 +71,7 @@ export default {
         // 指定中奖人的数量 默认不允许超过5个
         peopleNums: {
             type: Number,
-            default: 5
+            default: 1
         }
     },
     data() {
@@ -98,8 +98,7 @@ export default {
                 } else {
                     this.$message.error(data.msg);
                 }
-            })
-                .catch(() => {
+            }).catch(() => {
                     this.$message({ type: "info", message: "网络问题，请刷新重试~" });
                 });
         },
@@ -107,8 +106,8 @@ export default {
         prizeSubmit() {
             if (this.multipleTable.length == 0) {
                 this.$message.error("指定中奖人个数不能为0，请重新选择");
-            } else if (this.multipleTable.length != this.peopleNums) {
-                this.$message.error("请指定" + this.peopleNums + "个中奖人");
+            } else if (this.multipleTable.length > this.peopleNums) {
+                this.$message.error(" 指定中奖人个数不能超过" + this.peopleNums + "个，请重新选择");
             } else {
                 this.$emit("getFansData", this.multipleTable);
                 this.dialogFans = false

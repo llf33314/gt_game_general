@@ -151,7 +151,7 @@
                 </el-table-column>
                 <el-table-column label="操作">
                   <template slot-scope="scope">
-                      <el-button class="gt-button-normal blue" @click="shoeDialogFans(scope.$index)">指定中奖人</el-button>
+                      <el-button class="gt-button-normal blue" @click="shoeDialogFans(scope)">指定中奖人</el-button>
                       <el-button class="gt-button-normal"  v-if="scope.$index!=0"  @click="delForm4(scope.$index)">删除</el-button>
                   </template>
                 </el-table-column>
@@ -177,7 +177,7 @@
             <!-- <el-button type="primary" @click="submit()">打印</el-button>    -->
         </div> 
         <!-- 选择粉丝弹窗 --> 
-        <gt-Fans-detail  :visible.sync="dialogFans"   v-on:getFansData="getFansData"></gt-Fans-detail>  
+        <gt-Fans-detail  :visible.sync="dialogFans" :peopleNums="peopleNums"  v-on:getFansData="getFansData"></gt-Fans-detail>  
 </div>   
 </div>
 </section>
@@ -217,7 +217,7 @@ export default {
         }         
     }; 
     return {
-      active:0,
+      active:3,
       // 时间的筛选
       pickerOptions: {
         disabledDate(time) { return time.getTime() < Date.now() - 8.64e7; }
@@ -274,15 +274,25 @@ export default {
       ],
       dialogFans:false,
       key:0, 
+      peopleNums: 0,
       isSubmit:false,
     };
   },
   methods: { 
-    shoeDialogFans(val){
-        this.key=val
-        this.dialogFans=true 
-        console.log(this.key);
-    }, 
+    // shoeDialogFans(val){
+    //     this.key=val
+    //     this.dialogFans=true 
+    //     console.log(this.key);
+    // }, 
+    shoeDialogFans(scope){
+      if (!scope.row.name3) {
+        this.$message.error('请先输入奖项数量')
+        return false
+      }
+      this.dialogFans = true;
+      this.key=scope.$index
+      this.peopleNums = scope.row.name3
+    },
     getFansData(e){ 
         console.log(e,'子组件的信息')
         this.dialogFans=false
