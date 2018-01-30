@@ -291,7 +291,7 @@ export default {
       }
       this.dialogFans = true;
       this.key=scope.$index
-      this.peopleNums = scope.row.name3
+      this.peopleNums =Number(scope.row.name3)
     },
     getFansData(e){ 
         console.log(e,'子组件的信息')

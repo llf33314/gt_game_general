@@ -45,7 +45,7 @@
                             <div class="prizeName">
                                 {{item.nickname}}
                             </div>
-                            <span @click="delPrize(item.id)" class="blueee mr10 pull-right mt20">删除</span>
+                            <span @click="delPrize(index)" class="blueee mr10 pull-right mt20">删除</span>
                         </div>
                     </div>
                 </div>
@@ -116,10 +116,10 @@ export default {
         //多选名单
         handleSelectionChange(val) {
             this.multipleTable = val;
-        },
-        delPrize(val) {
-            this.multipleTable.pop();
-        },
+        }, 
+        delPrize(index){
+            this.multipleTable.splice(index, 1); 
+        }, 
         //翻页
         handleCurrentChange(val) {
             this.getMembersData();
