@@ -217,7 +217,7 @@ export default {
         }         
     }; 
     return {
-      active:3,
+      active:0,
       // 时间的筛选
       pickerOptions: {
         disabledDate(time) { return time.getTime() < Date.now() - 8.64e7; }
@@ -274,16 +274,11 @@ export default {
       ],
       dialogFans:false,
       key:0, 
-      peopleNums: 0,
+      peopleNums: 1,
       isSubmit:false,
     };
   },
-  methods: { 
-    // shoeDialogFans(val){
-    //     this.key=val
-    //     this.dialogFans=true 
-    //     console.log(this.key);
-    // }, 
+  methods: {  
     shoeDialogFans(scope){
       if (!scope.row.name3) {
         this.$message.error('请先输入奖项数量')
