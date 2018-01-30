@@ -850,3 +850,25 @@ color: #fff;
     text-overflow:ellipsis;
     white-space: nowrap;
   }
+
+   /**
+  * 层级问题
+  * @xiandan
+  * 1. 最外层v-model 设置为2007
+  * 2. 弹框父元素     设置为2008
+  * 3. 弹框           设置为2009
+  * 4. 下拉菜单        设置为2010
+  */
+.v-modal{
+  z-index: 2000!important;
+}
+.el-dialog__wrapper {
+  z-index: 2008!important;
+}
+.el-dialog {
+  z-index: 2009!important;
+} 
+
+.el-select-dropdown {
+  z-index: 2010!important;
+}

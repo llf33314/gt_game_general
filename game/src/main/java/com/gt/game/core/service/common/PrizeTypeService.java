@@ -22,4 +22,8 @@ public interface PrizeTypeService {
     ResponseDTO<List<PrizeTypeListRes>> getPrizeTypeOne(BusUser busUser);
 
     ResponseDTO<List<PrizeTypeListRes>> getPrizeType(BusUser busUser);
+
+    ResponseDTO<List<PrizeTypeListRes>> getPrizeTypeTow(BusUser busUser);
+
+    ResponseDTO<List<PrizeTypeListRes>> getPrizeTypeThree(BusUser busUser);
 }

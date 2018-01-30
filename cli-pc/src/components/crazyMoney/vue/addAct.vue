@@ -1,6 +1,4 @@
-<style lang="less">
 
-</style>
 <template>
 <section>
 <div class="hd-common turnPlate">
@@ -14,11 +12,11 @@
             <el-step title="基础设置"></el-step>
             <el-step title="规则设置"></el-step>
             <el-step title="兑奖设置"></el-step>
-            <el-step title="奖项设置"></el-step>
+            <el-step title="奖项设置" v-if="ruleForm1.actType == 1"></el-step>
             <el-step title="新建完成"></el-step>
         </el-steps>
         <!-- 基础设置 -->
-        <div v-show="this.active==0" class="mt40">
+        <div v-if="this.active==0" class="mt40">
             <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="145px" class="demo-ruleForm">
                  <el-form-item label="游戏模式：">
                     <el-radio-group v-model="ruleForm1.actType">
@@ -35,17 +33,17 @@
                     </el-date-picker>
                 </el-form-item>     
                 <el-form-item label="活动说明：" prop="actDescribe">
-                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.actDescribe" :rows="3" placeholder="请输入活动说明"></el-input>
-                    <span class="el-upload__tip grey" >
+                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.actDescribe" :rows="3" placeholder="描述活动详情，能让粉丝了解此次活动"></el-input>
+                    <!-- <span class="el-upload__tip grey" >
                         描述活动详情，能让粉丝了解此次活动
-                    </span>
+                    </span> -->
                 </el-form-item> 
 
                  <el-form-item label="活动未开始提示：" prop="actNotStartedTips">
-                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.actNotStartedTips" :rows="3" placeholder="如：活动尚未开始，敬请期待!"></el-input>
-                    <span class="el-upload__tip grey" >
+                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.actNotStartedTips" :rows="3" placeholder="请控制字数在100以内，如：活动尚未开始，敬请期待!"></el-input>
+                    <!-- <span class="el-upload__tip grey" >
                         活动未开始提示限制在100个字数以内
-                    </span>
+                    </span> -->
                 </el-form-item>  
 
                  <el-form-item label="背景音乐：">
@@ -60,10 +58,10 @@
             </el-form> 
         </div>
         <!-- 规则设置 -->
-        <div v-show="this.active==1" class="mt40">
+        <div v-if="this.active==1" class="mt40">
             <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="120px" class="mt40 demo-ruleForm">
-                <el-form-item label="游戏时间" prop="gameTime">
-                    <el-input class="w_demo mr10" type="number" v-model="ruleForm2.gameTime" placeholder="请输入游戏持续时间"></el-input> 秒
+                <el-form-item label="游戏时间" prop="actGameTime">
+                    <el-input class="w_demo mr10" type="number" v-model="ruleForm2.actGameTime" placeholder="请输入游戏持续时间"></el-input> 秒
                 </el-form-item>
                 <el-form-item label="抽奖次数：" prop="actCountOfDay">
                     <el-input class="w_demo mr10"  type="number" v-model="ruleForm2.actCountOfDay" placeholder="请输入每人抽奖总次数"></el-input> 次/人
@@ -78,27 +76,26 @@
                         <div slot="content">
                              已勾选面额的概率之和必须等于100%
                         </div>
-                        <span class="el-icon-warning  ml10" style="position: absolute;  z-index: 1;margin-left: 495px;margin-top: 14px;color: #ccc;font-size: 17px;"></span>
+                        <span class="el-icon-warning  ml10" style="position: absolute;  z-index: 1;margin-left: 435px;margin-top: 12px;color: #ccc;font-size: 17px;"></span>
                     </el-tooltip>
 
                      <el-tooltip placement="top" effect="light">
                         <div slot="content">
                             勾选后该面额的钞票会在数钱过程中出现 
                         </div>
-                        <span class="el-icon-warning  ml10" style="position: absolute;  z-index: 1;margin-left: 180px;margin-top: 14px;color: #ccc;font-size: 17px;"></span>
+                        <span class="el-icon-warning  ml10" style="position: absolute;  z-index: 1;margin-left: 145px;margin-top: 12px;color: #ccc;font-size: 17px;"></span>
                     </el-tooltip>
 
-                    <el-table ref="multipleTable" :data="ruleForm2.countmoneyProbabilitysetList" tooltip-effect="dark"  class="bw">
-                        <el-table-column label="面额" align="center" >
+                    <el-table ref="multipleTable" :data="ruleForm2.countmoneyProbabilitysetList" tooltip-effect="dark" width="560" class="bw lh1">
+                        <el-table-column label="面额" align="center" width="260"  header-align="center" label-class-name="miane">
                         <template slot-scope="scope" >
-                            <el-checkbox  v-model="scope.row.checked">
-                            </el-checkbox>
-                            {{scope.row.fenbiType}}元
+                            <el-checkbox  v-model="scope.row.checked"></el-checkbox>
+                            <span class="mg-l8 va-m">{{scope.row.fenbiType}}元</span>
                         </template> 
                         </el-table-column>  
-                        <el-table-column label="出现概率"  align="center">
+                        <el-table-column label="出现概率"  align="center"  header-align="center" label-class-name="chuxiangailv">
                         <template slot-scope="scope">
-                            <el-input  class="w100_demo mr10 ml20" v-model.number="scope.row.fenbiChance"> 
+                            <el-input  class="w100_demo mr10" v-model.number="scope.row.fenbiChance"> 
                             </el-input>%
                         </template>
                         </el-table-column>   
@@ -108,7 +105,7 @@
             </el-form> 
         </div> 
         <!-- 兑奖设置 -->
-        <div v-show="this.active==2" class="mt40">
+        <div v-if="this.active==2" class="mt40">
             <el-form :model="ruleForm3" :rules="rules3" ref="ruleForm3" label-width="120px" class="mt40 demo-ruleForm">
                 <el-form-item label="兑奖期限：" prop="actAwardingTime">
                     <el-input class="w_demo mr10" type="number" v-model="ruleForm3.actAwardingTime" placeholder="请输入兑奖期限"></el-input>天
@@ -127,7 +124,7 @@
             </el-form> 
         </div>
         <!-- 奖项设置 -->
-        <div v-show="this.active==3" class="mt40">
+        <div v-if="this.active==3 && ruleForm1.actType == 1" class="mt40">
             <div class="gt-gray-region" style="color:#666;line-height:20px">
                 <p>奖品数额：奖品的数量或内容；奖项数量：该奖品的可领取次数；中奖概率：每种奖项在转盘中的中奖概率</p>
                 <p>如：奖品类型：粉币；奖品数额：2；奖项名称：粉币；奖项数量：3；中奖概率：12</p>
@@ -136,7 +133,7 @@
             </div> 
             <div class="mt20 mb20">
                 <span class="mr20 ">奖品数量：</span> 
-                <el-radio-group v-model="isShow">
+                <el-radio-group v-model="actIsShowNums ">
                     <el-radio :label="1">显示</el-radio>
                     <el-radio :label="2">不显示</el-radio>
                 </el-radio-group> 
@@ -146,31 +143,27 @@
                 <span class="el-upload__tip grey ml10">最多设置五个奖项</span> 
             </div> 
             <el-table ref="multipleTable" :data="ruleForm4" tooltip-effect="dark">
-                <el-table-column label="奖品类型">
+                <el-table-column label="奖品类型" width="200">
                   <template slot-scope="scope">  
                       {{scope.$index | prizeStatus(scope.$index)}}
                   </template>
                 </el-table-column> 
-                <el-table-column label="奖品类型">
+                <el-table-column label="奖品类型" width="200">
                   <template slot-scope="scope">
-                      <el-select v-model="scope.row.turPrizeType" placeholder="请选择"> 
-                      <el-option label="粉币"      :value="1"></el-option>
-                      <el-option label="手机流量"   :value="2"></el-option>
-                      <el-option label="手机话费"   :value="3"></el-option>
-                      <el-option label="实体物品"   :value="4"></el-option>
-                      <el-option label="谢谢参与"   :value="5"></el-option> 
-                      <el-option label="积分"       :value="6"></el-option> 
+                      <el-select v-model="scope.row.turPrizeType" placeholder="请选择" class="w150"> 
+                         <el-option v-for="item in options" :key="item.value" :label="item.name" :value="item.value" v-if="item.value != 4">
+                         </el-option>
                       </el-select>
                   </template>
                 </el-table-column> 
-                <el-table-column label="奖品数额">
+                <el-table-column label="奖品数额" width="200">
                     <template slot-scope="scope">
-                        <el-input class="w20_demo" type="number" v-model="scope.row.turPrizeUnit" placeholder="数值应大于0"></el-input>
+                        <el-input class="w150" type="number" v-model="scope.row.turPrizeUnit" placeholder="数值应大于0"></el-input>
                     </template>
                 </el-table-column>
-                <el-table-column label="奖项数量">
+                <el-table-column label="奖项数量" width="200">
                     <template slot-scope="scope">
-                        <el-input class="w20_demo"  type="number"  v-model="scope.row.turPrizeNums" placeholder="数值应大于0"></el-input>
+                        <el-input class="w150"  type="number"  v-model="scope.row.turPrizeNums" placeholder="数值应大于0"></el-input>
                     </template>
                 </el-table-column> 
                 <el-table-column label="操作">
@@ -230,7 +223,7 @@ export default {
         ]
       },
       ruleForm2: {  
-        gameTime: "",      // 游戏时间
+        actGameTime: "",      // 游戏时间
         actCountOfDay: "", // 抽奖次数
         actTotalOfAct: "", // 抽奖总数
         countmoneyProbabilitysetList: [
@@ -267,7 +260,7 @@ export default {
         ]
       },
       rules2: {
-        gameTime: [
+        actGameTime: [
           { required: true, message: "游戏时间不能为空", trigger: "blur" }
         ],
         actCountOfDay: [
@@ -290,7 +283,7 @@ export default {
           { required: true, message: "兑奖地址不能为空", trigger: "blur" }
         ]
       },
-      isShow: 1,
+      actIsShowNums : 1,
       ruleForm4: [
         {
           turPrizeName: "", // 奖品名称
@@ -298,7 +291,9 @@ export default {
           turPrizeType: "", // 奖品类型
           turPrizeUnit: "" // 奖品数额
         }
-      ]
+      ],
+      options: []
+
     };
   },
   methods: {
@@ -306,11 +301,6 @@ export default {
       this.ruleForm1.bgmSp = e.music.name;
       this.ruleForm1.musicUrl = e.music.url;
     },
-    test() {
-      console.log(123);
-      this.active = 5;
-    },
-
     delForm4(index) {
       this.ruleForm4.splice(index, 1);
     },
@@ -326,10 +316,30 @@ export default {
     },
     next(formName) {
       this.$refs[formName].validate(valid => {
+        // 判断概率设置 之和是否100
+        if (this.active == 1) {
+              let probability = 0
+              let checked = false
+              this.ruleForm2.countmoneyProbabilitysetList.forEach((item, index, arr)=> {
+                 if (item.checked) {
+                     checked = true
+                     probability += Number(item.fenbiChance) 
+                 }
+              })
+              if(checked && probability !== 100) {
+                valid = false
+                this.$message.error('已勾选面额的概率之和必须等于100%')
+              }
+              console.log(probability, checked)
+        }
         if (valid) {
-          this.active++;
+          if (this.ruleForm1.actType == 2 && this.active == 2) {
+             this.active = 5
+          } else {
+             this.active++;
+          }
         } else {
-          console.log("error submit!!");
+          return false
         }
       });
     },
@@ -384,6 +394,7 @@ export default {
         actAwardingAddress: this.ruleForm3.actAwardingAddress, // 兑奖地址
         actAwardingTips: this.ruleForm3.actAwardingTips, // 兑奖提示
         //奖项设置
+        actIsShowNums: this.actIsShowNums, // 是否显示奖品数量
         prizeSetList: this.ruleForm4
       };
       api.addActivity(data).then(data => {
@@ -399,6 +410,16 @@ export default {
     backUrl() {
       window.history.go(-1);
     }
+  },
+  created() {
+      // 获取奖品类型
+      this.$api.getPrizeTypeThree().then(res => {
+          if (res.code == 100) {
+            this.options = res.data;
+          } else {
+            this.$message.error("获取奖品类型失败");
+          }
+      });
   },
   mounted() {},
   filters: {
@@ -421,3 +442,12 @@ export default {
   }
 };
 </script>
+
+<style lang="less">
+         .miane {
+           padding-left: 90px;
+         }
+         .chuxiangailv{
+           padding-left: 85px;
+         }
+</style>

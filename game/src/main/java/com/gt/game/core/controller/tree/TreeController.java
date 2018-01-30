@@ -6,12 +6,14 @@ import com.gt.api.bean.session.BusUser;
 import com.gt.api.bean.session.WxPublicUsers;
 import com.gt.game.common.base.BaseController;
 import com.gt.game.common.dto.ResponseDTO;
+import com.gt.game.core.bean.eggs.req.EggsStopIdReq;
 import com.gt.game.core.bean.lantern.res.LanternPrizeTypeListRes;
 import com.gt.game.core.bean.ninelattice.res.*;
 import com.gt.game.core.bean.tree.req.*;
 import com.gt.game.core.bean.tree.res.*;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
+import com.gt.game.core.exception.eggs.EggsException;
 import com.gt.game.core.exception.ninelattice.NinelatticeException;
 import com.gt.game.core.exception.tree.TreeException;
 import com.gt.game.core.service.tree.TreeService;
@@ -181,6 +183,28 @@ public class TreeController extends BaseController {
             BusUser busUser = CommonUtil.getLoginUser(request);
             treeService.modfiyTree(busUser,treeModfiyReq);
             return ResponseDTO.createBySuccessMessage("编辑圣诞大礼包活动设置成功");
+        } catch (TreeException e){
+            logger.error(e.getMessage(), e.fillInStackTrace());
+            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseDTO.createByError();
+        }
+    }
+
+    // TODO  开始/暂停圣诞大礼包活动
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+    })
+    @ApiOperation(value = "开始/暂停圣诞大礼包活动", notes = "开始/暂停圣诞大礼包活动")
+    @RequestMapping(value = "/stopTree", method = RequestMethod.POST)
+    protected ResponseDTO stopTree(
+            @RequestBody @ApiParam("请求参数") TreeStopIdReq treeStopIdReq,
+            HttpServletRequest request) {
+        try {
+            WxPublicUsers loginPbUser = CommonUtil.getLoginPbUser(request);
+            ResponseDTO responseDTO = treeService.stopTree(loginPbUser, treeStopIdReq);
+            return responseDTO;
         } catch (TreeException e){
             logger.error(e.getMessage(), e.fillInStackTrace());
             return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());

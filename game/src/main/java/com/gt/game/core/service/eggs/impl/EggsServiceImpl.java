@@ -28,10 +28,6 @@ import com.gt.game.core.dao.eggs.EggsWinningDAO;
 import com.gt.game.core.entity.eggs.EggsDetail;
 import com.gt.game.core.entity.eggs.EggsMain;
 import com.gt.game.core.entity.eggs.EggsWinning;
-import com.gt.game.core.entity.scratch.ScratchDetail;
-import com.gt.game.core.entity.scratch.ScratchMain;
-import com.gt.game.core.entity.scratch.ScratchWinning;
-import com.gt.game.core.exception.dragonboat.DragonboatException;
 import com.gt.game.core.exception.eggs.EggsException;
 import com.gt.game.core.exception.scratch.ScratchException;
 import com.gt.game.core.service.eggs.EggsDetailService;
@@ -119,6 +115,9 @@ public class EggsServiceImpl implements EggsService {
             if (eggsListReq.getStatus() == 2) {
                 entityWrapper.where("egg_endTime <= {0}", new Date());
             }
+            if(eggsListReq.getStatus()==3){    //TODO   已暂停
+                entityWrapper.eq("egg_status", 2);
+            }
         }
         Page<EggsMain> page = new Page<>(eggsListReq.getCurrent(), eggsListReq.getSize());
         List<EggsMain> eggsMainList = eggsMainService.selectPage(page, entityWrapper).getRecords();
@@ -131,14 +130,19 @@ public class EggsServiceImpl implements EggsService {
             eggsListRes.setActivityBeginTime(eggsMain.getEggBeginTime());
             eggsListRes.setActivityEndTime(eggsMain.getEggEndTime());
 
-            Date date = new Date();
-            if (eggsMain.getEggBeginTime().getTime() > date.getTime()) {
-                eggsListRes.setStatus(0);
-            } else if (eggsMain.getEggBeginTime().getTime() <= date.getTime() && eggsMain.getEggEndTime().getTime() >= date.getTime()) {
-                eggsListRes.setStatus(1);
-            } else if (eggsMain.getEggEndTime().getTime() < date.getTime()) {
-                eggsListRes.setStatus(2);
+            if(eggsMain.getEggStatus()==2){    //TODO  已暂停
+                eggsListRes.setStatus(3);
+            }else {
+                Date date = new Date();
+                if (eggsMain.getEggBeginTime().getTime() > date.getTime()) {
+                    eggsListRes.setStatus(0);
+                } else if (eggsMain.getEggBeginTime().getTime() <= date.getTime() && eggsMain.getEggEndTime().getTime() >= date.getTime()) {
+                    eggsListRes.setStatus(1);
+                } else if (eggsMain.getEggEndTime().getTime() < date.getTime()) {
+                    eggsListRes.setStatus(2);
+                }
             }
+
 
             eggsListResList.add(eggsListRes);
         }
@@ -164,23 +168,30 @@ public class EggsServiceImpl implements EggsService {
         int count2 = 0;
         int count3 = 0;
         int count4 = 0;
+        int count5 = 0;
 
         List<EggsMain> eggsMainList = eggsMainService.selectList(entityWrapper);
-        Date date = new Date();
         for (EggsMain eggsMain : eggsMainList) {
-            if (eggsMain.getEggBeginTime().getTime() > date.getTime()) {
-                count2++; //  TODO    未开始
-            } else if (eggsMain.getEggBeginTime().getTime() <= date.getTime() && eggsMain.getEggEndTime().getTime() >= date.getTime()) {
-                count3++;  // TODO    进行中
-            } else if (eggsMain.getEggEndTime().getTime() < date.getTime()) {
-                count4++;  // TODO    已结束
+            if(eggsMain.getEggStatus()==2){    //TODO   已暂停
+                count5++;
+            }else {
+                Date date = new Date();
+                if (eggsMain.getEggBeginTime().getTime() > date.getTime()) {
+                    count2++; //  TODO    未开始
+                } else if (eggsMain.getEggBeginTime().getTime() <= date.getTime() && eggsMain.getEggEndTime().getTime() >= date.getTime()) {
+                    count3++;  // TODO    进行中
+                } else if (eggsMain.getEggEndTime().getTime() < date.getTime()) {
+                    count4++;  // TODO    已结束
+                }
             }
+
         }
         EggsCountActivityRes eggsCountActivityRes = new EggsCountActivityRes();
         eggsCountActivityRes.setCount2(count2);
         eggsCountActivityRes.setCount3(count3);
         eggsCountActivityRes.setCount4(count4);
-        eggsCountActivityRes.setCount1(count2+count3+count4);  //  TODO 全部
+        eggsCountActivityRes.setCount5(count5);
+        eggsCountActivityRes.setCount1(count2+count3+count4+count5);  //  TODO 全部
         return  eggsCountActivityRes;
     }
 
@@ -460,10 +471,33 @@ public class EggsServiceImpl implements EggsService {
                 }
             }
         }
+    }
 
-        if(fenbi > 0) {//冻结粉币
+    /**
+     * 开始/暂停砸金蛋活动
+     * @param loginPbUser
+     * @param eggsStopIdReq
+     * @return
+     */
+    @Override
+    public ResponseDTO stopEggs(WxPublicUsers loginPbUser, EggsStopIdReq eggsStopIdReq) {
 
+        EggsMain eggsMain = eggsMainService.selectById(eggsStopIdReq.getId());
+        if(CommonUtil.isNotEmpty(eggsMain)){
+            if(eggsMain.getEggWxUserid().intValue() != loginPbUser.getId().intValue()){
+                throw new EggsException(ResponseEnums.DIFF_USER);
+            }
+            Date date = new Date();
+            if(eggsMain.getEggBeginTime().getTime() > date.getTime()){
+                throw new EggsException(ResponseEnums.EGGS_HAS15);
+            }
+            if(eggsMain.getEggEndTime().getTime() < date.getTime()){
+                throw new ScratchException(ResponseEnums.EGGS_HAS16);
+            }
+            eggsMain.setEggStatus(eggsStopIdReq.getStatus());
+            eggsMainService.updateById(eggsMain);
         }
+        return ResponseDTO.createBySuccess("操作成功");
     }
 
     /**

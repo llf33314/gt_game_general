@@ -1,7 +1,7 @@
 import axios from './../../../http' 
-let base = window.BASEDOMAIN + '/app/eggs' 
+// let base = window.BASEDOMAIN + '/app/eggs' 
  
-// let base = 'http://192.168.3.68:8080'
+let base = 'http://192.168.3.68:8080' + '/app/eggs'
 
 
 function post(url, params) {
@@ -40,13 +40,17 @@ export default {
        },
        // 统计活动总数 
        countActivity(params) {
-        return post(`${base}/countEggs`, params) 
+           return post(`${base}/countEggs`, params) 
+       },
+       // 开始/暂停  
+       startOrStopActivity(params) {
+           return post(`${base}/stopEggs`, params) 
        },
 
        /* 修改/编辑活动 - 接口 */ 
        // 获取奖品类型列表 
        getPrizeType(params) {
-           return post(`${base}/getEggsPrizeType`, params)    
+           return post(`${base}/getPrizeTypeThree`, params)    
        },
        // 新增活动 
        addActivity(params) {

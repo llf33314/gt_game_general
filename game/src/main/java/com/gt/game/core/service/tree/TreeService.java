@@ -72,6 +72,14 @@ public interface TreeService {
     void modfiyTree(BusUser busUser, TreeModfiyReq treeModfiyReq);
 
     /**
+     * 开始/暂停圣诞大礼包活动
+     * @param loginPbUser
+     * @param treeStopIdReq
+     * @return
+     */
+    ResponseDTO stopTree(WxPublicUsers loginPbUser, TreeStopIdReq treeStopIdReq);
+
+    /**
      * 删除圣诞大礼包活动
      * @param busUser
      * @param treeDelReq
@@ -114,4 +122,7 @@ public interface TreeService {
      * @return
      */
     ResponseDTO<List<TreePrizeTypeListRes>> getTreePrizeType(BusUser busUser);
+
+
+
 }

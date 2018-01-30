@@ -11,7 +11,7 @@ public class ScratchStopIdReq {
 	private Integer id;
 
 	@ApiModelProperty("活动状态 1.开始 2.暂停")
-	private Integer Status;
+	private Integer status;
 
 	public Integer getId() {
 		return id;
@@ -22,10 +22,10 @@ public class ScratchStopIdReq {
 	}
 
 	public Integer getStatus() {
-		return Status;
+		return status;
 	}
 
 	public void setStatus(Integer status) {
-		Status = status;
+		this.status = status;
 	}
 }

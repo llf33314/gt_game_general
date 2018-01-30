@@ -127,19 +127,25 @@
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.name0" placeholder="请选择"> 
                                 <el-option v-for="item in options" :key="item.value" :label="item.name"  :value="item.value">
+                                    
                                 </el-option>
                         </el-select>
                     </template>
                 </el-table-column> 
                 <el-table-column label="奖品单位">
-                <template slot-scope="scope">
-                    <el-input class="w20_demo" type="number" v-model="scope.row.name1" placeholder="数值应大于0"></el-input>
-                </template>
-                </el-table-column>
+                    <template slot-scope="scope">
+                        <el-input class="w20_demo" type="number" v-model="scope.row.name1" placeholder="数值应大于0"></el-input>
+                    </template>
+                    </el-table-column>
                 <el-table-column label="奖品名称">
-                <template slot-scope="scope">
-                    <el-input class="w20_demo"  v-model="scope.row.name2" placeholder="请输入奖品名称"></el-input>
-                </template>
+                    <template slot-scope="scope">
+                        <el-select v-model="scope.row.name2" v-if="scope.row.name0==7"   placeholder="请选择" @change="optionsData(scope.$index)"> 
+                            <el-option v-for="item in memberOptions" :key="item.id"   :value="item.id" :label="item.cardsName" >
+                                 <span style="float:left">{{item.cardsName}}</span>
+                            </el-option>
+                        </el-select>  
+                        <el-input v-else class="w20_demo"   v-model="scope.row.name2"></el-input> 
+                    </template>
                 </el-table-column>
                 <el-table-column label="奖项数量">
                 <template slot-scope="scope">
@@ -171,6 +177,9 @@
             <el-button type="primary" @click="submit()"          v-if="this.active==0||this.active==1">保存</el-button>   
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">保存</el-button>   
             <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>   
+            <el-button type="primary" @click="lastStep()">打印</el-button>   
+            
+
         </div> 
     </div>   
 </div>
@@ -178,7 +187,7 @@
 </template>
 <script>
 import { 
- saveAct,getPrizeType,getAct
+ saveAct,getPrizeType,getAct,getMemberType
 }from './../api/api'
 export default {
   data() {
@@ -271,13 +280,15 @@ export default {
         desc: [{ required: true,message: "兑奖说明不能为空", trigger: "blur" }], 
       },
       options: [],
-      ruleForm4: [{ 
+      memberOptions:[],
+       ruleForm4: [{ 
           name0: "",
           name1: "",
           name2: "",
           name3: "",
           name4: "",
-          name5:[] 
+          name5:[] ,
+          cardsName :""
         },
         { 
           name0: "",
@@ -285,7 +296,8 @@ export default {
           name2: "",
           name3: "",
           name4: "" ,
-          name5:[]
+          name5:[],
+          cardsName :""
         }],   
       // 时间的筛选
       pickerOptions: {
@@ -341,7 +353,14 @@ export default {
         this.ruleForm1.music = e.music.name
         this.ruleForm1.musicUrl = e.music.url
     },  
-        // 添加实物图 
+    optionsData(val){
+        for(var i=0;i<this.memberOptions.length;i++){ 
+            if(this.memberOptions[i].id==this.ruleForm4[val].name2||this.ruleForm4[val].name2==this.memberOptions[i].id){
+                this.ruleForm4[val].cardsName=this.memberOptions[i].cardsName 
+            } 
+        } 
+    }, 
+    // 添加实物图 
     addAwardImg(val) {
          JSON.parse(val.url).forEach(function (item, index, arr) {
                this.ruleForm4[val.prop.$index].name5.push(item.url)
@@ -368,8 +387,8 @@ export default {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
         }); 
     }, 
-    addForm4(){ 
-        this.ruleForm4.push({ name0:"", name1: "", name2: "", name3: "", name4: "", name5: []},)
+     addForm4(){ 
+        this.ruleForm4.push({ name0:"", name1: "", name2: "", name3: "", name4: "", name5: [],cardsName :""},)
     },
     delForm4(val){
         this.ruleForm4.splice(val, 1); 
@@ -433,7 +452,7 @@ export default {
     }, 
     //表单提交--------------------------------------star
     submit(){
-        console.log(this.ruleForm3,123); 
+        // console.log(this.ruleForm3,123); 
         //广告
         var newadv=[];
         for(let i =0;i< this.ruleForm1.links.length;i++){ 
@@ -459,13 +478,18 @@ export default {
             for(let i =0;i< this.ruleForm4.length;i++){
                 var arr4={
                     imgInstruction :"",
-                    type :this.ruleForm4[i].name0,//类型
+                    type      :this.ruleForm4[i].name0,//类型
                     prizeUnit :Number(this.ruleForm4[i].name1),//单位
-                    prizeName :this.ruleForm4[i].name2,//名称
-                    num :Number(this.ruleForm4[i].name3),//数量
-                    probabiliy :this.ruleForm4[i].name4,  //概率
+                    prizeName :this.ruleForm4[i].name2,//名称 
+                    num       :Number(this.ruleForm4[i].name3),//数量
+                    probabiliy:this.ruleForm4[i].name4,  //概率
+                    cardReceiveId:"",
                     loveArrowPrizeImgReqs:[]//图片
-                } 
+                }
+                if(arr4.type==7){  
+                    arr4.prizeName=this.ruleForm4[i].cardsName//名称 
+                    arr4.cardReceiveId=this.ruleForm4[i].name2//名称 
+                }
                 if(arr4.type==4){
                     for(var j=0;j<this.ruleForm4[i].name5.length;j++){
                         var imgarr={
@@ -517,6 +541,18 @@ export default {
     test(){
         console.log(1122);
     },
+     //获取奖品名称-----------star
+    getMemberTypeData(){
+        getMemberType().then(data=>{
+          if (data.code == 100) { 
+            this.memberOptions=data.data 
+          } else {
+              this.$message.error(data.msg);
+          }
+        }).catch(() => {
+            this.$message({ type: "info", message: "网络问题，请刷新重试~" });
+        }); 
+    },
      //初始化-------------------
     getActData(){
         // console.log(this.$router.history.current.query.id,88522);
@@ -531,18 +567,21 @@ export default {
             if(data.data.musicUrl){
                this.ruleForm1.music = data.data.musicUrl.split("/")[data.data.musicUrl.split("/").length-1]
             } 
-            //广告设置 
-            var newadv = [];//兑奖地址
-            if(data.data.loveArrowAdReqs.length!=0){
+             //广告设置  
+            var newadv = []; 
+            if(data.data.loveArrowAdReqs.length!=0){           
                 for (var i = 0; i < data.data.loveArrowAdReqs.length; i++) {
                     var newabc1 = {
-                        url     : data.data.loveArrowAdReqs[i].hrefUrl,  
-                        imgUrl  : window.IMAGEURL+data.data.loveArrowAdReqs[i].url,  
+                        url  : data.data.loveArrowAdReqs[i].hrefUrl,  
+                        img  : data.data.loveArrowAdReqs[i].url,  
                     };
+                    if(data.data.loveArrowAdReqs[i].url){
+                        newabc1.img=window.IMAGEURL+data.data.loveArrowAdReqs[i].url
+                    }
                     newadv.push(newabc1);  
-                }   
-            }
-            this.ruleForm1.links= newadv 
+                } 
+                this.ruleForm1.links= newadv 
+            }  
             //规则设置
             if(data.data.followQrCode){
                 this.ruleForm2.code=window.IMAGEURL1+data.data.followQrCode
@@ -573,9 +612,9 @@ export default {
                     name2  : data.data.loveArrowPrizeReqs[i].prizeName, 
                     name3  : String(data.data.loveArrowPrizeReqs[i].num), 
                     name4  : String(data.data.loveArrowPrizeReqs[i].probabiliy), 
-                    name5  :[] 
-                };
-                
+                    name5  :[] ,
+                    cardsName  : data.data.loveArrowPrizeReqs[i].cardReceiveId,
+                }; 
                 if(newabc1.name0==4){
                     for(var j = 0; j < data.data.loveArrowPrizeReqs[i].loveArrowPrizeImgReqs.length; j++){
                         var imgarr={
@@ -584,9 +623,16 @@ export default {
                         newabc1.name5.push(imgarr.url)
                     }
                 }
+                if(newabc1.name0==7){
+                  newabc1.cardsName=data.data.loveArrowPrizeReqs[i].prizeName
+                  newabc1.name2=data.data.loveArrowPrizeReqs[i].cardReceiveId
+                }
+                
                newPraise.push(newabc1);  
+               console.log(newPraise,741);
             } 
             this.ruleForm4=newPraise 
+            console.log(this.ruleForm4,741147);
           } else {
               this.$message.error(data.msg);
           }
@@ -598,6 +644,7 @@ export default {
   mounted() {
     this.getPrizeTypeData()
     this.getActData()
+    this.getMemberTypeData()
   }
 };
 </script>

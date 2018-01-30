@@ -22,6 +22,9 @@ public class TreeCountActivityRes {
     @ApiModelProperty(value = "已结束活动总数")
     private Integer count4;
 
+    @ApiModelProperty(value = "已暂停活动总数")
+    private Integer count5;
+
 
     public Integer getCount1() {
         return count1;
@@ -53,5 +56,13 @@ public class TreeCountActivityRes {
 
     public void setCount4(Integer count4) {
         this.count4 = count4;
+    }
+
+    public Integer getCount5() {
+        return count5;
+    }
+
+    public void setCount5(Integer count5) {
+        this.count5 = count5;
     }
 }

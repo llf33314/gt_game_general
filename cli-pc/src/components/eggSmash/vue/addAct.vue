@@ -47,17 +47,17 @@
                 </div> 
 
                 <el-form-item label="活动说明：" prop="eggDescribe">
-                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.eggDescribe" :rows="3" placeholder="请输入活动说明"></el-input>
-                    <span class="el-upload__tip grey" >
+                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.eggDescribe" :rows="3" placeholder="描述活动详情，能让粉丝了解此次活动" :maxlength="100"></el-input>
+                    <!-- <span class="el-upload__tip grey" >
                         描述活动详情，能让粉丝了解此次活动
-                    </span>
+                    </span> -->
                 </el-form-item> 
 
                  <el-form-item label="活动未开始提示：" prop="eggBeforeTxt">
-                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.eggBeforeTxt" :rows="3" placeholder="如：活动尚未开始，敬请期待!"></el-input>
-                    <span class="el-upload__tip grey" >
+                    <el-input class="w_demo"  type="textarea" v-model="ruleForm1.eggBeforeTxt" :rows="3" placeholder="请控制字数在100以内，如：活动尚未开始，敬请期待!" :maxlength="100"></el-input>
+                    <!-- <span class="el-upload__tip grey" >
                         活动未开始提示限制在100个字数以内
-                    </span>
+                    </span> -->
                 </el-form-item>  
 
                  <el-form-item label="背景音乐：">
@@ -145,20 +145,20 @@
                 </el-table-column>
                 <el-table-column label="奖项数量" :width="200">
                   <template slot-scope="scope">
-                      <el-input class="w150"  type="number"  v-model="scope.row.eggPrizeNums" placeholder="数值应大于0"></el-input>
+                      <el-input class="w150"  type="number"  v-model.number="scope.row.eggPrizeNums" placeholder="数值应大于0"></el-input>
                   </template>
                 </el-table-column>
                 <el-table-column label="中奖概率(%)" :width="200">
                   <template slot-scope="scope">
-                      <el-input class="w160"  v-model="scope.row.eggPrizeChance" placeholder="0-100且保留两位小数"></el-input>
+                      <el-input class="w160" type="number"  v-model="scope.row.eggPrizeChance" placeholder="0-100且保留两位小数"></el-input>
                   </template>
                 </el-table-column>
-                <el-table-column label="中奖人"> 
+                <el-table-column label="中奖人" min-width="120"> 
                      <template slot-scope="scope">
                       {{scope.row.nickname}}
                     </template>
                 </el-table-column>
-                <el-table-column label="操作">
+                <el-table-column label="操作" min-width="250">
                   <template slot-scope="scope">
                       <el-button class="gt-button-normal blue" @click="assign(scope)">指定中奖人</el-button>
                       <el-button class="gt-button-normal"  v-if="scope.$index!=0"  @click="delForm4(scope.$index)">删除</el-button>
@@ -182,11 +182,10 @@
             <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步1</el-button> 
             <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
-            <el-button type="primary" @click="lastStep"        v-if="this.active==3">保存</el-button>   
-            <el-button type="primary" @click="submit">打印</el-button>   
+            <el-button type="primary" @click="lastStep"   :loading="loading"    v-if="this.active==3">保存</el-button>   
         </div> 
 
-        <gt-Fans-detail :visible.sync="dialogFans" v-on:getFansData="getFansData"></gt-Fans-detail>  
+        <gt-Fans-detail :visible.sync="dialogFans" :peopleNums="peopleNums"   v-on:getFansData="getFansData"></gt-Fans-detail>  
     </div>   
 </div>
 </section>
@@ -196,7 +195,9 @@ import api from "./../api/api";
 export default {
   data() {
     return {
+      loading: false,
       active: 0,
+      peopleNums: 1,
       ruleForm1: {
         eggName: "", // 活动名称
         date: [],
@@ -212,17 +213,8 @@ export default {
         eggBgm: "" // 背景音乐链接
       },
       rules1: {
-        eggName: [
-          { required: true, message: "活动名称不能为空", trigger: "blur" }
-        ],
-        date: [
-          {
-            required: true,
-            type: "array",
-            message: "开始时间不能为空",
-            trigger: "blur"
-          }
-        ]
+        eggName: [{ required: true, message: "活动名称不能为空", trigger: "blur" }],
+        date: [{required: true,type: "array",message: "开始时间不能为空",trigger: "blur"}]
       },
       ruleForm2: {
         eggCountOfDay: "",
@@ -262,39 +254,55 @@ export default {
       },
       ruleForm4: [
         {
+          eggPrizeType: 5,
+          eggPrizeLimit: "",
+          eggPrizeName: "",
+          eggPrizeNums: "",
+          eggPrizeChance: "",
+          nickname: "",
+          openId: ""
+        },
+        {
           eggPrizeType: "",
           eggPrizeLimit: "",
           eggPrizeName: "",
           eggPrizeNums: "",
           eggPrizeChance: "",
-          nickname: ""
+          nickname: "",
+          openId: ""
         }
       ],
       options: [],
       dialogFans: false,
-     
+      assignObj: {}
     };
   },
   methods: {
     assign(scope) {
-      //   this.active=5
+      if (!scope.row.eggPrizeNums) {
+        this.$message.info('请先输入奖项数量')
+        return
+      }
       this.dialogFans = true;
-    },
-    getMusic(e) {
-      this.ruleForm1.eggBgmName = e.music.name;
-      this.ruleForm1.eggBgm = e.music.url;
+      this.assignObj = scope.row;
+      this.peopleNums = scope.row.eggPrizeNums;
     },
     getFansData(e) {
       if (e.length) {
         let nickname = [];
         let openid = []
         e.forEach((item, index, arr) => {
-          nickname.push(item.nickname);
+          nickname.push(item.nickname) 
+          openid.push(item.openid) 
         });
-        this.assignObj.nickname = nickname.join("，");
-        this.assignObj.openid = openid ;
-        this.$set(this.ruleForm4, this.assignObj.$index, this.assignObj);
+        this.assignObj.nickname = nickname.join(",")
+        this.assignObj.openid = openid.join(",")
+      this.$set(this.ruleForm4, this.assignObj.$index, this.assignObj)
       }
+    },
+    getMusic(e) {
+      this.ruleForm1.eggBgmName = e.music.name;
+      this.ruleForm1.eggBgm = e.music.url;
     },
     test() {
       this.dialogFans = true;
@@ -327,13 +335,15 @@ export default {
       });
     },
     lastStep() {
+      let percentage = 0
       for (let i = 0; i < this.ruleForm4.length; i++) {
         var regu = /^[1-9]\d*$/;
         if (
           !this.ruleForm4[i].eggPrizeType ||
           !this.ruleForm4[i].eggPrizeLimit ||
           !this.ruleForm4[i].eggPrizeName ||
-          !this.ruleForm4[i].eggPrizeNums
+          !this.ruleForm4[i].eggPrizeNums ||
+          !this.ruleForm4[i].eggPrizeChance
         ) {
           this.$message.error("表单不能留空，请填写完整~");
           return false;
@@ -350,20 +360,16 @@ export default {
           this.$message.error("当奖品为实物时，请上传实物图片~");
           return false;
         }
+        percentage += Number(this.ruleForm4[i].eggPrizeChance) 
+      }
+      if (percentage != 100) {
+         this.$message.error("中奖概率之和加起来应为100%");
+         return false;
       }
       this.submit();
     },
     //表单提交--------------------------------------star
     submit() {
-      var newarr = [];
-      for (let i = 0; i < this.ruleForm4.length; i++) {
-        var arr = {
-          eggPrizeType: this.ruleForm4[i].eggPrizeType,
-          eggPrizeLimit: this.ruleForm4[i].eggPrizeLimit,
-          eggPrizeName: this.ruleForm4[i].eggPrizeName
-        };
-        newarr.push(arr);
-      }
       const data = {
         //基础设置
         eggName: this.ruleForm1.eggName, // 活动名称
@@ -389,23 +395,17 @@ export default {
         //奖项设置
         prizeSetList: this.ruleForm4
       };
-      console.log(data, 123);
+      this.loading = true
       api
         .addActivity(data)
-        .then(data => {
-          this.isSubmit = true;
-          if (data.code == 100) {
-            console.log(12336666);
+        .then(res => {
+          if (res.code == 100) {
             this.active = 5;
           } else {
-            this.isSubmit = false;
-            this.$message.error(data.msg + "错误码：[" + data.code + "]");
+            this.$message.error(res.msg || '保存失败');
           }
+          this.loading = false
         })
-        .catch(() => {
-          this.isSubmit = false;
-          this.$message({ type: "info", message: "网络问题，请刷新重试~" });
-        });
     },
     backUrl() {
       window.history.go(-1);
@@ -413,26 +413,14 @@ export default {
   },
   created() {
     // 获取奖品类型
-    api.getPrizeType().then(res => {
+    this.$api.getPrizeTypeThree().then(res => {
       if (res.code == 100) {
         this.options = res.data;
-        console.log(this.options, "获取奖品类型");
       } else {
         this.$message.error("获取奖品类型失败");
       }
     });
   },
-  //   mounted() {
-  //      // 获取奖品类型
-  //      api.getPrizeType().then(res=>{
-  //             if (res.code == 100) {
-  //             this.options=res.data
-  //                 console.log(this.options,'获取奖品类型');
-  //             } else {
-  //                 this.$message.error('获取奖品类型失败');
-  //             }
-  //         })
-  //   },
   filters: {
     prizeStatus(val) {
       if (val == 0) {

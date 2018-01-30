@@ -10,7 +10,7 @@
       </el-breadcrumb>
       <div class="gt-gray-region mb20">
         <span class="padding-left-md ml30 mb10">
-          <el-input placeholder="输入标题关键字查询" icon="search" v-model="keyWord" style="width:250px" :on-icon-click="getdata" @keyup.native.enter="getdata" @blur="getdata($event)">
+          <el-input placeholder="输入标题关键字查询" icon="search" v-model="keyWord" style="width:250px" :on-icon-click="getdata" @keyup.native.enter="getdata">
           </el-input>
         </span>
         <gt-video-btn videoId="22" class="gt-video-btn mr70"></gt-video-btn>
@@ -49,10 +49,10 @@
               <el-button class="gt-button-normal blue" v-if="scope.row.status!=0" @click="record(scope.row.id)">中奖纪录</el-button>
               <el-button class="gt-button-normal blue" @click="askPreview(scope.row.id)">预览链接</el-button>
               <!-- <el-button class="gt-button-normal blue" @click="impower(scope.row.id)">核销授权</el-button> -->
-              <el-button class="gt-button-normal blue" v-if="scope.row.status==3" @click="handleActive1(scope.row.id)">开始活动</el-button>
-              <el-button class="gt-button-normal blue" v-if="scope.row.status==1" @click="handleActive2(scope.row.id)">暂停活动</el-button>
-              <el-button class="gt-button-normal blue" v-if="scope.row.status==0" @click="editActive(scope.row.id)">编辑</el-button>
-              <el-button class="gt-button-normal" v-if="scope.row.status!=1" @click="delBtn(scope.row.id)">删除</el-button>
+              <el-button class="gt-button-normal blue" @click="stopBtn(scope.row.id)" v-if="scope.row.status == 1">暂停活动</el-button>    
+              <el-button class="gt-button-normal blue" @click="startBtn(scope.row.id)" v-if="scope.row.status == 3">开始活动</el-button> 
+              <el-button class="gt-button-normal blue"  @click="editActive(scope.row.id)" v-if="scope.row.status==0">编辑</el-button>
+              <el-button class="gt-button-normal" @click="delBtn(scope.row.id)" v-if="scope.row.status == 0 || scope.row.status == 2">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -94,11 +94,9 @@ export default {
       params.name = this.keyWord;
       params.current = this.current;
       params.size = 10;
-      console.log(params, 77)
       getActList(params).then(data => {
         if (data.code == 100) {
           this.tableData = data
-          console.log(data, '获取首页');
         } else {
           this.$message.errorthis.$message.error(data.msg);;
         }
@@ -109,10 +107,10 @@ export default {
     //获取数量--------------------------------------star
     getCount() {
       getActCount({ name: this.keyWord }).then(res => {
-        if (data.code == 100) {
+        if (res.code == 100) {
           this.countNum = res.data
         } else {
-          this.$message.error(data.msg);
+          this.$message.error(res.msg);
         }
       }).catch(() => {
         this.$message({ type: "info", message: "网络问题，请刷新重试~" });
@@ -122,10 +120,8 @@ export default {
     askPreview(mainId) {
       getMobileUrl({ mainId }).then(data => {
         if (data.code == 100) {
-          console.log(data, '连接')
           this.copeData.url = data.data.mobileUrl;
           getShortUrl(data.data.mobileUrl).then(res => {
-            console.log(res, '短链接')
             this.copeData.shortUrl = res;
           });
           this.copeData.copyUrlVisible = true;
@@ -154,7 +150,7 @@ export default {
       });
     },
     //开始按钮=======================================================
-    handleActive1(val) {
+    startBtn(val) {
       var params = {}
       params.id = val
       params.status = 1
@@ -171,7 +167,7 @@ export default {
       });
     },
     //暂停按钮=======================================================
-    handleActive2(val) {
+    stopBtn(val) {
       var params = {}
       params.id = val
       params.status = 2
@@ -224,7 +220,6 @@ export default {
       } else if (val == 3) {
         val = "已暂停";
       }
-
       return val;
     },
   }

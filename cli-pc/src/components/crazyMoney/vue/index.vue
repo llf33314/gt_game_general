@@ -52,7 +52,7 @@
               <!-- <el-button class="gt-button-normal blue" @click="impower(scope.row.id)">核销授权</el-button> -->
               <el-button class="gt-button-normal blue" @click="record(scope.row.id)">中奖纪录</el-button>
               <el-button class="gt-button-normal blue" @click="edit(scope.row.id)"  v-if="scope.row.status == 0">编辑</el-button>
-              <el-button class="gt-button-normal" @click="delOne(scope.row.id)">删除</el-button>
+              <el-button class="gt-button-normal" @click="delOne(scope.row.id)" v-if="scope.row.status == 0 || scope.row.status == 3">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -230,7 +230,7 @@ export default {
       let params = {
         current: this.currentPage,
         size: this.pageSize,
-        name: this.keyWord,
+        actName: this.keyWord,
         status: parseFloat(this.activeName)
       };
       Promise.all([
