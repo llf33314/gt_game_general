@@ -294,7 +294,7 @@ export default {
           prizeName: "",
           num: "",
           imgUrl: []
-        }],  
+        }] 
     };
   },
   methods: { 
@@ -358,7 +358,11 @@ export default {
     lastStep() {
       for (let i = 0; i < this.ruleForm4.length; i++) { 
         var regu =/^[1-9]\d*$/;
-        if(!this.ruleForm4[i].type||!this.ruleForm4[i].prizeUnit||!this.ruleForm4[i].prizeName||!this.ruleForm4[i].num){
+        if( !this.ruleForm4[i].type ||
+            !this.ruleForm4[i].prizeUnit ||
+            !this.ruleForm4[i].prizeName ||
+            !this.ruleForm4[i].num
+        ){
             this.$message.error("表单不能留空，请填写完整~");
             return false
         }else if (!regu.test(this.ruleForm4[i].prizeUnit)) {
