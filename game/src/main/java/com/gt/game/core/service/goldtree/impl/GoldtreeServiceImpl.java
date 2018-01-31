@@ -471,7 +471,7 @@ public class GoldtreeServiceImpl implements GoldtreeService {
             }
         }
         //广告轮播图
-        if(CommonUtil.isNotEmpty(GoldtreeSaveReq.getGoldtreeAdReqs())){
+        if(CommonUtil.isNotEmpty(GoldtreeSaveReq.getGoldtreeAdReqs()) && GoldtreeSaveReq.getGoldtreeAdReqs().size() > 0){
             for(GoldtreeAdReq GoldtreeAdReq :GoldtreeSaveReq.getGoldtreeAdReqs()){
                 GoldtreeAd GoldtreeAd = new GoldtreeAd();
                 BeanUtils.copyProperties(GoldtreeAdReq,GoldtreeAd);
@@ -480,9 +480,6 @@ public class GoldtreeServiceImpl implements GoldtreeService {
                         GoldtreeAd.getUrl().split("/upload")[1]:GoldtreeAd.getUrl());
                 goldtreeAdService.insert(GoldtreeAd);
             }
-        }
-        if(fenbi == 0.0 && num > 0.0){
-            throw new GoldtreeException(ResponseEnums.COMMON_HAS18);
         }
         if(fenbi == 0.0 && num > 0.0){
             throw new GoldtreeException(ResponseEnums.COMMON_HAS18);
