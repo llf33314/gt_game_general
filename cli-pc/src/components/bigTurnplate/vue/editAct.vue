@@ -2,21 +2,21 @@
 
 </style>
 <template>
+
   <section>
     <div class="hd-common turnPlate">
       <el-breadcrumb separator="/" class="gt-crumbs">
         <el-breadcrumb-item>互动游戏</el-breadcrumb-item>
         <el-breadcrumb-item :to="{ path:'/bigTurnplate/index' }">大转盘</el-breadcrumb-item>
-        <el-breadcrumb-item>创建活动</el-breadcrumb-item>
+        <el-breadcrumb-item>编辑</el-breadcrumb-item>
       </el-breadcrumb>
       <div class="gt-content">
-        <el-steps :active="active" :center="true" :align-center="true" class="bbtom pb20">
-          <el-step title="基础设置"></el-step>
-          <el-step title="规则设置"></el-step>
-          <el-step title="兑奖设置"></el-step>
-          <el-step title="奖项设置"></el-step>
-          <el-step title="新建完成"></el-step>
-        </el-steps>
+        <el-tabs v-model="active" type="card">
+          <el-tab-pane label="基础设置" name="0"></el-tab-pane>
+          <el-tab-pane label="规则设置" name="1"></el-tab-pane>
+          <el-tab-pane label="兑奖设置" name="2"></el-tab-pane>
+          <el-tab-pane label="奖项设置" name="3"></el-tab-pane>
+        </el-tabs>
         <!-- 基础设置 -->
         <div v-show="this.active==0" class="mt40">
           <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="145px" class="demo-ruleForm">
@@ -166,32 +166,21 @@
             </el-table-column>
           </el-table>
         </div>
-        <!-- 新建完成 -->
-        <div v-if="active==5" class="gt-content complete">
-          <div class="addOk">
-            <div class="el-icon-circle-check green" style="font-size:40px"></div>
-            <div class="complete-info">活动添加成功</div>
-            <el-button class="mt80" type="primary" @click="backUrl()">返回活动列表</el-button>
-          </div>
-        </div>
         <!-- 按钮 -->
         <div class="h80"></div>
         <div class="btnRow" v-if="this.active!=5">
-          <el-button @click="upStep()" v-if="this.active!=0">上一步</el-button>
-          <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步</el-button>
-          <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步</el-button>
-          <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步</el-button>
-          <el-button type="primary" @click="lastStep" :loading="loading" v-if="this.active==3">保存</el-button>
-          <!-- <el-button type="primary" @click="submit">打印</el-button> -->
+          <el-button @click="backUrl()">返回</el-button>
+          <el-button type="primary" @click="submit()" v-if="this.active==0||this.active==1">保存</el-button>
+          <el-button type="primary" @click="submit()" v-if="this.active==2">保存</el-button>
+          <el-button type="primary" @click="lastStep()" v-if="this.active==3">保存</el-button>
         </div>
-        <!-- 中奖人弹窗 -->
         <gt-Fans-detail :visible.sync="dialogFans" :peopleNums="peopleNums" v-on:getFansData="getFansData"></gt-Fans-detail>
       </div>
     </div>
   </section>
 </template>
 <script>
-import { saveAct, getPrizeType } from "./../api/api";
+import { saveAct, getPrizeType, modfiyScratch } from "./../api/api";
 export default {
   data() {
     let timeCode = (rule, value, callback) => {
