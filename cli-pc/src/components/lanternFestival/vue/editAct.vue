@@ -170,7 +170,15 @@
                 </el-table-column>
                 <el-table-column label="奖品名称" :width="240">
                 <template slot-scope="scope">
-                    <el-input class="w20_demo"  v-model="scope.row.name2" placeholder="请输入奖品名称" :maxlength="50"></el-input>
+                    <el-input class="w20_demo"  v-model="scope.row.name2" placeholder="请输入奖品名称" :maxlength="50" v-if="scope.row.name0 != 7"></el-input>
+                     <el-select v-model="scope.row.youhui" placeholder="请选择" v-else>
+                            <el-option
+                            v-for="item in options1"
+                            :key="item.id"
+                            :label="item.cardsName"
+                            :value="item.id">
+                            </el-option>
+                        </el-select>
                 </template>
                 </el-table-column>
                 <el-table-column label="奖项数量" :width="240">
