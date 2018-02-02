@@ -130,6 +130,7 @@
               <template slot-scope="scope">
                 <el-select v-model="scope.row.turPrizeType" placeholder="请选择" class="w160">
                   <el-option v-for="item in options" :key="item.value" :label="item.name" :value="item.value">
+                    <span>{{item.name}}</span>
                   </el-option>
                 </el-select>
               </template>
@@ -170,8 +171,8 @@
         <div class="h80"></div>
         <div class="btnRow" v-if="this.active!=5">
           <el-button @click="backUrl()">返回</el-button>
-          <el-button type="primary" @click="submit()" v-if="this.active==0||this.active==1">保存</el-button>
-          <el-button type="primary" @click="submit()" v-if="this.active==2">保存</el-button>
+          <el-button type="primary" @click="next()" v-if="this.active==0||this.active==1">保存</el-button>
+          <el-button type="primary" @click="next()" v-if="this.active==2">保存</el-button>
           <el-button type="primary" @click="lastStep()" v-if="this.active==3">保存</el-button>
         </div>
         <gt-Fans-detail :visible.sync="dialogFans" :peopleNums="peopleNums" v-on:getFansData="getFansData"></gt-Fans-detail>
@@ -534,8 +535,8 @@ export default {
         } else if (!regu.test(this.ruleForm4[i].turPrizeNums)) {
           this.$message.error("奖项数量填写有误，请填写大于0的正整数");
           return false;
-        } else if (!/^\d+(\.\d{1,2})?$/.test(this.ruleForm4[i].turPrizeChance)) {
-          this.$message.error("中奖概率填写有误，请输入正确的中奖概率");
+        } else if (!/(^[1-9]{1}[0-9]*$)|(^[0-9]*\.[0-9]{2}$)/.test(this.ruleForm4[i].turPrizeChance)) {
+          this.$message.error("中奖概率填写有误，请输入大于0的整数或者保留两位小数");
           return false;
         } else if (
           this.ruleForm4[i].turPrizeType == 4

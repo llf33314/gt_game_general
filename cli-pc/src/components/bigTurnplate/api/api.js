@@ -49,10 +49,9 @@ export const getMobileUrl = params => {
 export const getActList = params => {
   return axios.post(`${base}/getTurntableList`, params).then(res => res.data)
 }
-
 //获取奖品类型列表/
 export const getPrizeType = params => {
-  return axios.post(`${base}/getTurntablePrizeType`, params).then(res => res.data)
+  return axios.post(`${window.BASEDOMAIN}/app/prize/getPrizeTypeThree`, params).then(res => res.data)
 }
 
 //分页获取大转盘中奖记录列表/

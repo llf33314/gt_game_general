@@ -551,8 +551,8 @@ export default {
         } else if (!regu.test(this.ruleForm4[i].turPrizeNums)) {
           this.$message.error("奖项数量填写有误，请填写大于0的正整数");
           return false;
-        } else if (!/^\d+(\.\d{1,2})?$/.test(this.ruleForm4[i].turPrizeChance)) {
-          this.$message.error("中奖概率填写有误，请输入正确的中奖概率");
+        } else if (!/(^[1-9]{1}[0-9]*$)&&(^[0-9]*\.[0-9]{2}$)/.test(this.ruleForm4[i].turPrizeChance)) {
+          this.$message.error("中奖概率填写有误，请输入大于0的整数或者保留两位小数");
           return false;
         } else if (
           this.ruleForm4[i].turPrizeType == 4
