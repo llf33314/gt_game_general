@@ -61,9 +61,8 @@ export const getWinningList = params => {
 }
 //编辑大转盘活动设置/
 export const modfiyScratch = params => {
-  return axios.post(`${base}/getWinningList`, params).then(res => res.data)
+  return axios.post(`${base}/modfiyTurntable`, params).then(res => res.data)
 }
-
 
 //大转盘活动暂停/开始活动
 export const stopLuck = params => {
