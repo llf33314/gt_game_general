@@ -208,7 +208,7 @@ export function prizeType (val) {
     case 6 :
       return '积分';
       break;
-    case 7 :
+    default:
       return '优惠券';
       break;
   }
@@ -223,9 +223,8 @@ export function prizeStatus (val) {
     case 2 :
       return '已兑奖';
       break;
-    case 3 :
+    default:
       return '已提交';
-      break;
   }
 }
 
@@ -238,9 +237,8 @@ export function drawingMethod(val) {
     case 2 :
       return '邮寄';
       break;
-    case 3 :
+    default:
       return '直接兑奖';
-      break;
   }
 
 }
@@ -257,9 +255,8 @@ export function activityStatus(val) {
     case 2 :
       return '已暂停';
       break;
-    case 3 :
+    default :
       return '已结束';
-      break;
   }
 
 }
