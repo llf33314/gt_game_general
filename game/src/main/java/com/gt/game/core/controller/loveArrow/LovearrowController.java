@@ -14,6 +14,7 @@ import com.gt.game.core.util.CommonUtil;
 import io.swagger.annotations.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -214,8 +215,9 @@ public class LovearrowController extends BaseController {
     @ApiOperation(value = "保存活动", notes = "保存活动")
     @RequestMapping(value = "/saveLoveArrow", method = RequestMethod.POST)
     protected ResponseDTO getLoveArrow(
-            @RequestBody @ApiParam("请求参数") LoveArrowSaveReq LoveArrowSaveReq,
+            @RequestBody @ApiParam("请求参数") LoveArrowSaveReq LoveArrowSaveReq,BindingResult result,
             HttpServletRequest request) {
+        InvalidParameter(result);
         try {
             BusUser busUser = CommonUtil.getLoginUser(request);
             ResponseDTO responseDTO = lovearrowService.saveLoveArrow(busUser, LoveArrowSaveReq);
