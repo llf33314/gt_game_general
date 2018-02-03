@@ -137,9 +137,19 @@
                                 <el-input class="w20_demo" type="number" v-model="scope.row.name1" placeholder="数值应大于0"></el-input>
                             </template>
                         </el-table-column>
-                        <el-table-column label="奖品名称">
+                        <!-- <el-table-column label="奖品名称">
                             <template slot-scope="scope">
                                 <el-input class="w20_demo" v-model="scope.row.name2" placeholder="请输入奖品名称"></el-input>
+                            </template>
+                        </el-table-column> -->
+                        <el-table-column label="奖品名称">
+                            <template slot-scope="scope">
+                                <el-select v-model="scope.row.name2" v-if="scope.row.name0==7" placeholder="请选择" @change="optionsData(scope.$index)">
+                                    <el-option v-for="item in memberOptions" :key="item.id" :value="item.id" :label="item.cardsName">
+                                        <span style="float:left">{{item.cardsName}}</span>
+                                    </el-option>
+                                </el-select>
+                                <el-input v-else class="w20_demo" v-model="scope.row.name2"></el-input>
                             </template>
                         </el-table-column>
                         <el-table-column label="奖项数量">
@@ -178,7 +188,7 @@
     </section>
 </template>
 <script>
-import { getPrizeType, getAct, getActivityById } from './../api/api'
+import { getPrizeType, getAct, getActivityById, getMemberType } from './../api/api'
 export default {
     data() {
         //联系电话===============================================
@@ -257,6 +267,7 @@ export default {
                 desc: [{ required: true, message: "兑奖说明不能为空", trigger: "blur" }],
             },
             options: [],
+            memberOptions: [],
             //第四步==========================
             ruleForm4: [{
                 name0: "",
@@ -264,7 +275,8 @@ export default {
                 name2: "",
                 name3: "",
                 name4: "",
-                name5: []
+                name5: [],
+                cardsName: ""
             },
             {
                 name0: "",
@@ -272,7 +284,8 @@ export default {
                 name2: "",
                 name3: "",
                 name4: "",
-                name5: []
+                name5: [],
+                cardsName: ""
             }],
             // 时间的筛选
             pickerOptions: {
@@ -331,6 +344,13 @@ export default {
             this.ruleForm1.bgmSp = e.music.name
             this.ruleForm1.musicUrl = e.music.url
         },
+        optionsData(val) {
+            for (var i = 0; i < this.memberOptions.length; i++) {
+                if (this.memberOptions[i].id == this.ruleForm4[val].name2 || this.ruleForm4[val].name2 == this.memberOptions[i].id) {
+                    this.ruleForm4[val].cardsName = this.memberOptions[i].cardsName
+                }
+            }
+        },
         // 添加实物图 ================================================
         addAwardImg(val) {
             JSON.parse(val.url).forEach(function (item, index, arr) {
@@ -360,7 +380,7 @@ export default {
         },
         //奖项设置--新增奖品-----------star=====================================
         addForm4() {
-            this.ruleForm4.push({ name0: "", name1: "", name2: "", name3: "", name4: "", name5: [] }, )
+            this.ruleForm4.push({ name0: "", name1: "", name2: "", name3: "", name4: "", name5: [], cardsName: "" }, )
         },
         //奖项设置--删除奖品-----------star=====================================
         delForm4(val) {
@@ -443,7 +463,12 @@ export default {
                         prizeName: this.ruleForm4[i].name2,//名称
                         num: Number(this.ruleForm4[i].name3),//数量
                         score: this.ruleForm4[i].name4,  //概率
+                        cardReceiveId: "",
                         imgUrl: []//图片
+                    }
+                    if (arr4.type == 7) {
+                        arr4.prizeName = this.ruleForm4[i].cardsName//名称 
+                        arr4.cardReceiveId = this.ruleForm4[i].name2//名称 
                     }
                     if (arr4.type == "粉币") {
                         arr4.type = 1
@@ -468,8 +493,6 @@ export default {
                     prizeSetList.push(arr4)
                 }
             }
-
-
             const data = {
                 id: this.$router.history.current.query.id,
                 //基础设置 
@@ -508,6 +531,18 @@ export default {
         //f返回===================================== 
         backUrl() {
             window.history.go(-1);
+        },
+        //获取优惠券名称-----------star
+        getMemberTypeData() {
+            getMemberType().then(data => {
+                if (data.code == 100) {
+                    this.memberOptions = data.data
+                } else {
+                    this.$message.error(data.msg);
+                }
+            }).catch(() => {
+                this.$message({ type: "info", message: "网络问题，请刷新重试~" });
+            });
         },
         //初始化获取-------------------
         getActData() {
@@ -564,22 +599,10 @@ export default {
                             name2: data.data.prizeSetList[i].prizeName,
                             name3: String(data.data.prizeSetList[i].num),
                             name4: data.data.prizeSetList[i].score,
-                            name5: []
+                            name5: [],
+                            cardsName: data.data.prizeSetList[i].cardReceiveId,
                         };
-                        if (newabc1.name0 == 1) {
-                            newabc1.name0 = "粉币";
-                        } else if (newabc1.name0 == 2) {
-                            newabc1.name0 = "手机流量";
-                        } else if (newabc1.name0 == 3) {
-                            newabc1.name0 = "手机话费";
-                        } else if (newabc1.name0 == 4) {
-                            newabc1.name0 = "实体物品";
-                        } else if (newabc1.name0 == 6) {
-                            newabc1.name0 = "积分";
-                        } else if (newabc1.name0 == 7) {
-                            newabc1.name0 = "优惠券";
-                        }
-                        if (newabc1.name0 == "实体物品") {
+                        if (newabc1.name0 == 4) {
                             for (var j = 0; j < data.data.prizeSetList[i].imgUrl.length; j++) {
                                 var imgarr = {
                                     url: data.data.prizeSetList[i].imgUrl[j]
@@ -587,9 +610,12 @@ export default {
                                 newabc1.name5.push(imgarr.url)
                             }
                         }
+                        if (newabc1.name0 == 7) {
+                            newabc1.cardsName = data.data.prizeSetList[i].prizeName
+                            newabc1.name2 = data.data.prizeSetList[i].cardReceiveId
+                        }
                         newPraise.push(newabc1);
                     }
-                    this.ruleForm4 = newPraise
                 } else {
                     this.$message.error(data.msg);
                 }
@@ -601,6 +627,7 @@ export default {
     mounted() {
         this.getPrizeTypeData()
         this.getActData()
+        this.getMemberTypeData()
     }
 };
 </script>
