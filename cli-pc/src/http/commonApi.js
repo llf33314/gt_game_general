@@ -1,6 +1,7 @@
 import axios from './index'
 
 let base = window.BASEDOMAIN
+// let base = 'http://192.168.3.68:8080'
 
 function post(url, params) {
   return axios.post(url, params)

@@ -114,7 +114,7 @@
                     <template slot-scope="scope">
                        <el-input class="w20_demo" v-if="scope.row.type != 7"  v-model="scope.row.prizeName" placeholder="请输入奖品名称" :maxlength="50"></el-input>
                        
-                       <el-select v-model="scope.row.youhui" placeholder="请选择" v-else>
+                       <el-select v-model.number="scope.row.cardReceiveId" placeholder="请选择" v-else>
                             <el-option
                             v-for="item in options1"
                             :key="item.id"
@@ -245,7 +245,7 @@ export default {
           num: "",
           probabiliy: "",
           imgUrl :[],
-          youhui: ''
+          cardReceiveId: ''
         },
         { 
           type: "",
@@ -254,7 +254,7 @@ export default {
           num: "",
           probabiliy: "",
           imgUrl : [],
-          youhui: ''
+          cardReceiveId: ''
         }],  
     };
   },
@@ -409,6 +409,9 @@ export default {
     // 获取优惠券
     this.$api.getCardReceviceList().then(res => {
          if (res.code == 100) {
+             res.data.forEach((item, index, arr) => {
+                 item.id = parseInt(item.id)
+             })
             this.options1 = res.data
          } else {
             this.$message.error( res.msg || '获取优惠券列表失败');
