@@ -24,10 +24,10 @@
               <el-input class="w_demo" placeholder="请输入活动名称" v-model="ruleForm1.actName"></el-input>
             </el-form-item>
             <el-form-item label="开始时间：" prop="actBeginTime">
-              <el-date-picker class="w_demo" v-model="ruleForm1.actBeginTime" type="date" placeholder="请选择开始时间" :picker-options="pickerOptions"></el-date-picker>
+              <el-date-picker class="w_demo" v-model="ruleForm1.actBeginTime" type="date" placeholder="请选择开始时间"></el-date-picker>
             </el-form-item>
             <el-form-item label="结束时间：" prop="actEndTime">
-              <el-date-picker class="w_demo" v-model="ruleForm1.actEndTime" type="date" placeholder="请选择开始时间" :picker-options="pickerOptions"></el-date-picker>
+              <el-date-picker class="w_demo" v-model="ruleForm1.actEndTime" type="date" placeholder="请选择结束时间"></el-date-picker>
             </el-form-item>
             <el-form-item label="结束说明：" prop="actOverdescribe">
               <el-input class="w_demo" type="textarea" v-model="ruleForm1.actOverdescribe" :rows="3" placeholder="请输入活动结束说明"></el-input>
@@ -129,7 +129,8 @@
             <el-table-column label="奖品类型" :width="200">
               <template slot-scope="scope">
                 <el-select v-model="scope.row.turPrizeType" placeholder="请选择" class="w160">
-                  <el-option v-for="item in options" :key="item.value" :label="item.name" :value="item.value" v-if="item.value != 4">
+                  <el-option v-for="item in options" :key="item.value" :label="item.name" :value="item.value">
+                    <span>{{item.name}}</span>
                   </el-option>
                 </el-select>
               </template>
@@ -170,8 +171,8 @@
         <div class="h80"></div>
         <div class="btnRow" v-if="this.active!=5">
           <el-button @click="backUrl()">返回</el-button>
-          <el-button type="primary" @click="submit()" v-if="this.active==0||this.active==1">保存</el-button>
-          <el-button type="primary" @click="submit()" v-if="this.active==2">保存</el-button>
+          <el-button type="primary" @click="next()" v-if="this.active==0||this.active==1">保存</el-button>
+          <el-button type="primary" @click="next()" v-if="this.active==2">保存</el-button>
           <el-button type="primary" @click="lastStep()" v-if="this.active==3">保存</el-button>
         </div>
         <gt-Fans-detail :visible.sync="dialogFans" :peopleNums="peopleNums" v-on:getFansData="getFansData"></gt-Fans-detail>
@@ -180,7 +181,7 @@
   </section>
 </template>
 <script>
-import { saveAct, getPrizeType, modfiyScratch } from "./../api/api";
+import { getPrizeType, modfiyScratch, getActivityById } from "./../api/api";
 export default {
   data() {
     let timeCode = (rule, value, callback) => {
@@ -198,17 +199,12 @@ export default {
       loading: false,
       active: 0,
       peopleNums: 1,
-      // 时间的筛选
-      pickerOptions: {
-        disabledDate(time) {
-          return time.getTime() < Date.now() - 8.64e7;
-        }
-      },
+
       //第一步-----------------------------------
       ruleForm1: {
         actName: "", // 活动名称
         actBeginTime: "", // 活动开始时间
-        scrEndTime: "", // 活动结束时间
+        actEndTime: "", // 活动结束时间
         actPartaker: 1, // 1.所有粉丝 2.仅会员(持有会员卡的粉丝)
         actPway: 0, // 参与方式
         actMan: "", // 可参加抽奖的会员积分
@@ -539,8 +535,8 @@ export default {
         } else if (!regu.test(this.ruleForm4[i].turPrizeNums)) {
           this.$message.error("奖项数量填写有误，请填写大于0的正整数");
           return false;
-        } else if (!/^\d+(\.\d{1,2})?$/.test(this.ruleForm4[i].turPrizeChance)) {
-          this.$message.error("中奖概率填写有误，请输入正确的中奖概率");
+        } else if (!/(^[1-9]{1}[0-9]*$)|(^[0-9]*\.[0-9]{2}$)/.test(this.ruleForm4[i].turPrizeChance)) {
+          this.$message.error("中奖概率填写有误，请输入大于0的整数或者保留两位小数");
           return false;
         } else if (
           this.ruleForm4[i].turPrizeType == 4
@@ -559,6 +555,7 @@ export default {
     //表单提交--------------------------------------star
     submit() {
       const data = {
+        id: this.$router.history.current.query.id,
         //基础设置
         actName: this.ruleForm1.actName, // 活动名称
         actBeginTime: this.ruleForm1.actBeginTime, // 活动开始时间
@@ -583,15 +580,16 @@ export default {
         //奖项设置
         prizeSetList: this.ruleForm4
       };
-      this.loading = true;
-      saveAct(data).then(res => {
+      console.log(data, 5555555)
+      // this.loading = true;
+      modfiyScratch(data).then(res => {
+        console.log(data, 66666666)
         if (res.code == 100) {
-          this.active = 5;
-          this.$message.success(res.msg || '保存成功');
+          console.log(res, 7777777)
+          this.$message({ message: "保存成功", type: "success" });
         } else {
-          this.$message.error(res.msg || '保存失败');
+          this.$message.error(res.msg);
         }
-        this.loading = false
       }).catch(() => {
         this.$message({ type: "info", message: "网络问题，请刷新重试~" });
       });
@@ -599,6 +597,42 @@ export default {
     //返回=====================
     backUrl() {
       window.history.go(-1);
+    },
+    //初始化获取-------------------
+    getActData() {
+      var id = this.$router.history.current.query.id
+      getActivityById({ id }).then(data => {
+        if (data.code == 100) {
+          console.log(data, 88552223333)
+          //基础设置
+          this.ruleForm1.actName = data.data.actName // 活动名称
+          this.ruleForm1.actBeginTime = data.data.actBeginTime // 活动开始时间
+          this.ruleForm1.actEndTime = data.data.actEndTime  // 活动结束时间
+          this.ruleForm1.actPartaker = data.data.actPartaker // 1.所有粉丝 2.仅会员(持有会员卡的粉丝)
+          this.ruleForm1.actPway = data.data.actPway // 参与方式
+          this.ruleForm1.actMan = data.data.actMan// 可参加抽奖的会员积分
+          this.ruleForm1.actKou = data.data.actKou // 每次抽奖扣除积分
+          this.ruleForm1.actOverdescribe = data.data.actOverdescribe // 活动说明/描述
+          this.ruleForm1.actBgmName = data.data.actBgmName// 背景音乐名称
+          this.ruleForm1.actBgm = data.data.actBgm // 背景音乐链接
+          //规则设置
+          this.ruleForm2.actCountOfDay = data.data.actCountOfDay // 抽奖次数
+          this.ruleForm2.actTotalOfAct = data.data.actTotalOfAct // 抽奖总数
+          this.ruleForm2.actDescribe = data.data.actDescribe // 抽奖总数        
+          //兑奖设置
+          this.ruleForm3.actCashday = data.data.actCashday // 兑奖期限
+          this.ruleForm3.actAddress = data.data.actAddress // 兑奖地址
+          this.ruleForm3.actCashWay = data.data.actCashWay // 兑奖方式
+          this.ruleForm3.actCashtext = data.data.actCashtext // 兑奖提示
+          this.ruleForm3.actWinningNotice = data.data.actWinningNotice // 中奖须知
+          //奖项设置
+          this.ruleForm4 = data.data.prizeSetList
+        } else {
+          this.$message.error(data.msg);
+        }
+      }).catch(() => {
+        this.$message({ type: "info", message: "网络问题，请刷新重试~" });
+      });
     },
     //奖项数量切换----------------------------------star
     setting() {
@@ -610,18 +644,35 @@ export default {
         this.ruleForm4 = this.ruleForm41
       }
     },
+    //获取奖品类型-----------star=====================================
+    getPrizeTypeData() {
+      getPrizeType().then(data => {
+        if (data.code == 100) {
+          this.options = data.data
+        } else {
+          this.$message.error("获取奖品类型失败");
+        }
+      }).catch(() => {
+        this.$message({ type: "info", message: "网络问题，请刷新重试~" });
+      });
+    },
   },
-  created() {
-    this.ruleForm4 = this.ruleForm46;
-    // 获取奖品类型
-    getPrizeType().then(res => {
-      if (res.code == 100) {
-        this.options = res.data;
-        console.log(this.options, "获取奖品类型");
-      } else {
-        this.$message.error("获取奖品类型失败");
-      }
-    });
+
+  // created() {
+  //   this.ruleForm4 = this.ruleForm46;
+  //   // 获取奖品类型
+  //   getPrizeType().then(res => {
+  //     if (res.code == 100) {
+  //       this.options = res.data;
+  //       console.log(this.options, "获取奖品类型");
+  //     } else {
+  //       this.$message.error("获取奖品类型失败");
+  //     }
+  //   });
+  // },
+  mounted() {
+    this.getPrizeTypeData()
+    this.getActData()
   },
 };
 </script>

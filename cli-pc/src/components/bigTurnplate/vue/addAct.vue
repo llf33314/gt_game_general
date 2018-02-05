@@ -24,10 +24,10 @@
               <el-input class="w_demo" placeholder="请输入活动名称" v-model="ruleForm1.actName"></el-input>
             </el-form-item>
             <el-form-item label="开始时间：" prop="actBeginTime">
-              <el-date-picker class="w_demo" v-model="ruleForm1.actBeginTime" type="date" placeholder="请选择开始时间" :picker-options="pickerOptions"></el-date-picker>
+              <el-date-picker class="w_demo" v-model="ruleForm1.actBeginTime" type="date" placeholder="请选择开始时间"></el-date-picker>
             </el-form-item>
             <el-form-item label="结束时间：" prop="actEndTime">
-              <el-date-picker class="w_demo" v-model="ruleForm1.actEndTime" type="date" placeholder="请选择开始时间" :picker-options="pickerOptions"></el-date-picker>
+              <el-date-picker class="w_demo" v-model="ruleForm1.actEndTime" type="date" placeholder="请选择开始时间"></el-date-picker>
             </el-form-item>
             <el-form-item label="结束说明：" prop="actOverdescribe">
               <el-input class="w_demo" type="textarea" v-model="ruleForm1.actOverdescribe" :rows="3" placeholder="请输入活动结束说明"></el-input>
@@ -181,7 +181,8 @@
           <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步</el-button>
           <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步</el-button>
           <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步</el-button>
-          <el-button type="primary" @click="lastStep" :loading="loading" v-if="this.active==3">保存</el-button>
+          <el-button type="primary" @click="lastStep" v-if="this.active==3">保存</el-button>
+          <!-- <el-button type="primary" @click="lastStep" :loading="loading" v-if="this.active==3">保存</el-button> -->
           <!-- <el-button type="primary" @click="submit">打印</el-button> -->
         </div>
         <!-- 中奖人弹窗 -->
@@ -206,20 +207,20 @@ export default {
       }
     };
     return {
-      loading: false,
+      // loading: false,
       active: 0,
       peopleNums: 1,
-      // 时间的筛选
-      pickerOptions: {
-        disabledDate(time) {
-          return time.getTime() < Date.now() - 8.64e7;
-        }
-      },
+      // // 时间的筛选
+      // pickerOptions: {
+      //   disabledDate(time) {
+      //     return time.getTime() < Date.now() - 8.64e7;
+      //   }
+      // },
       //第一步-----------------------------------
       ruleForm1: {
         actName: "", // 活动名称
         actBeginTime: "", // 活动开始时间
-        scrEndTime: "", // 活动结束时间
+        actEndTime: "", // 活动结束时间
         actPartaker: 1, // 1.所有粉丝 2.仅会员(持有会员卡的粉丝)
         actPway: 0, // 参与方式
         actMan: "", // 可参加抽奖的会员积分
@@ -550,8 +551,8 @@ export default {
         } else if (!regu.test(this.ruleForm4[i].turPrizeNums)) {
           this.$message.error("奖项数量填写有误，请填写大于0的正整数");
           return false;
-        } else if (!/^\d+(\.\d{1,2})?$/.test(this.ruleForm4[i].turPrizeChance)) {
-          this.$message.error("中奖概率填写有误，请输入正确的中奖概率");
+        } else if (!/(^[1-9]{1}[0-9]*$)&&(^[0-9]*\.[0-9]{2}$)/.test(this.ruleForm4[i].turPrizeChance)) {
+          this.$message.error("中奖概率填写有误，请输入大于0的整数或者保留两位小数");
           return false;
         } else if (
           this.ruleForm4[i].turPrizeType == 4
@@ -594,7 +595,8 @@ export default {
         //奖项设置
         prizeSetList: this.ruleForm4
       };
-      this.loading = true;
+      // this.loading = true;
+      console.log(data, 887878787)
       saveAct(data).then(res => {
         if (res.code == 100) {
           this.active = 5;
@@ -602,7 +604,7 @@ export default {
         } else {
           this.$message.error(res.msg || '保存失败');
         }
-        this.loading = false
+        // this.loading = false
       }).catch(() => {
         this.$message({ type: "info", message: "网络问题，请刷新重试~" });
       });

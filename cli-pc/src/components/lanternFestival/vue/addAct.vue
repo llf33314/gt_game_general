@@ -100,7 +100,7 @@
                     <span style="margin-left:30px;color: #333;" ><span style="color:#ff4949;margin-right:3px">*</span>兑奖地址：</span>
                     <el-button  class="mb10"  type="primary" @click="addList()">添加</el-button>  
                     <el-form-item v-for="(item,index) in ruleForm3.addressList" :key="item.key"  :prop="'addressList.' + index + '.list'" :rules="{required:true,validator:addrPass,trigger: 'blur'}">
-                        <el-input class="w_demo mr10" prop="list" v-model="item.list" placeholder="请输入到店领取地址" :maxlength="100"></el-input> 
+                        <el-input class="w_demo mr10"  v-model="item.list" placeholder="请输入到店领取地址" :maxlength="100"></el-input> 
                         <span class="blueee"  @click="delList(index)" v-if="index!=0" >删除</span> 
                     </el-form-item>
                 </div>  
@@ -127,7 +127,7 @@
                  <p>当奖品为实物时，请上传实物图片，实物图片建议尺寸1160px*64px</p> 
             </div> 
             <div class="mt20 mb20">
-                <el-button   @click="addForm4()"  type="primary">新增奖品</el-button> 
+                <el-button   @click="addForm4"  type="primary">新增奖品</el-button> 
                 <span class="el-upload__tip grey ml10">下列奖品根据排名由上至下顺序分配</span> 
             </div> 
             <el-tooltip placement="top" effect="light">
@@ -186,7 +186,7 @@
             <div class="addOk"> 
                 <div class="el-icon-circle-check green" style="font-size:40px"></div>
                 <div class="complete-info">活动添加成功</div>
-                <el-button class="mt80" type="primary" @click="backUrl()">返回活动列表</el-button>  
+                <el-button class="mt80" type="primary" @click="backUrl">返回活动列表</el-button>  
             </div> 
         </div>
         <!-- 按钮 -->
@@ -196,7 +196,7 @@
             <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步1</el-button> 
             <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>   
-            <el-button type="primary" @click="lastStep()"        v-if="this.active==3">保存</el-button>   
+            <el-button type="primary" @click="lastStep"        v-if="this.active==3">保存</el-button>   
         </div> 
     </div>   
 </div>
@@ -267,7 +267,7 @@ export default {
       ruleForm3: {
         prizeDate:"",
         receiveTypeList: [], 
-        addressList:[{list:""},{list:""}],
+        addressList:[{list:""}],
         phone:"",
         cashPrizeInstruction:""
       },
@@ -294,7 +294,7 @@ export default {
           prizeName: "",
           num: "",
           imgUrl: []
-        }],  
+        }] 
     };
   },
   methods: { 
@@ -358,7 +358,11 @@ export default {
     lastStep() {
       for (let i = 0; i < this.ruleForm4.length; i++) { 
         var regu =/^[1-9]\d*$/;
-        if(!this.ruleForm4[i].type||!this.ruleForm4[i].prizeUnit||!this.ruleForm4[i].prizeName||!this.ruleForm4[i].num){
+        if( !this.ruleForm4[i].type ||
+            !this.ruleForm4[i].prizeUnit ||
+            !this.ruleForm4[i].prizeName ||
+            !this.ruleForm4[i].num
+        ){
             this.$message.error("表单不能留空，请填写完整~");
             return false
         }else if (!regu.test(this.ruleForm4[i].prizeUnit)) {
