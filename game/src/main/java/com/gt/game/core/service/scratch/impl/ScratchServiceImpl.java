@@ -22,6 +22,7 @@ import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.common.enums.ResponseEnums;
 import com.gt.game.core.bean.scratch.req.*;
 import com.gt.game.core.bean.scratch.res.*;
+import com.gt.game.core.bean.tree.res.TreeListRes;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 import com.gt.game.core.dao.scratch.ScratchWinningDAO;
@@ -120,25 +121,45 @@ public class ScratchServiceImpl implements ScratchService {
 
         List<ScratchListRes> scratchListResList = new ArrayList<>();
         for (ScratchMain scratchMain : scratchMainList) {
-            ScratchListRes scratchListRes = new ScratchListRes();
-            scratchListRes.setId(scratchMain.getId());
-            scratchListRes.setName(scratchMain.getScrName());
-            scratchListRes.setActivityBeginTime(scratchMain.getScrBeginTime());
-            scratchListRes.setActivityEndTime(scratchMain.getScrEndTime());
+            if(scratchListReq.getStatus() == -1 ||scratchListReq.getStatus()== 3) {   // TODO  全部
 
-            if(scratchMain.getScrStatus()==2){    //TODO   已暂停
-                scratchListRes.setStatus(3);
-            }else {
-                Date date = new Date();
-                if (scratchMain.getScrBeginTime().getTime() > date.getTime()) {
-                    scratchListRes.setStatus(0);
-                } else if (scratchMain.getScrBeginTime().getTime() <= date.getTime() && scratchMain.getScrEndTime().getTime() >= date.getTime()) {
-                    scratchListRes.setStatus(1);
-                } else if (scratchMain.getScrEndTime().getTime() < date.getTime()) {
-                    scratchListRes.setStatus(2);
+                ScratchListRes scratchListRes = new ScratchListRes();
+                scratchListRes.setId(scratchMain.getId());
+                scratchListRes.setName(scratchMain.getScrName());
+                scratchListRes.setActivityBeginTime(scratchMain.getScrBeginTime());
+                scratchListRes.setActivityEndTime(scratchMain.getScrEndTime());
+
+                if(scratchMain.getScrStatus()==2){    //TODO   已暂停
+                    scratchListRes.setStatus(3);
+                }else {
+                    Date date = new Date();
+                    if (scratchMain.getScrBeginTime().getTime() > date.getTime()) {
+                        scratchListRes.setStatus(0);
+                    } else if (scratchMain.getScrBeginTime().getTime() <= date.getTime() && scratchMain.getScrEndTime().getTime() >= date.getTime()) {
+                        scratchListRes.setStatus(1);
+                    } else if (scratchMain.getScrEndTime().getTime() < date.getTime()) {
+                        scratchListRes.setStatus(2);
+                    }
+                }
+                scratchListResList.add(scratchListRes);
+            } else {
+                if(scratchMain.getScrStatus()!=2) {
+                    ScratchListRes scratchListRes = new ScratchListRes();
+                    scratchListRes.setId(scratchMain.getId());
+                    scratchListRes.setName(scratchMain.getScrName());
+                    scratchListRes.setActivityBeginTime(scratchMain.getScrBeginTime());
+                    scratchListRes.setActivityEndTime(scratchMain.getScrEndTime());
+                    Date date = new Date();
+                    if (scratchMain.getScrBeginTime().getTime() > date.getTime()) {
+                        scratchListRes.setStatus(0);
+                    } else if (scratchMain.getScrBeginTime().getTime() <= date.getTime() && scratchMain.getScrEndTime().getTime() >= date.getTime()) {
+                        scratchListRes.setStatus(1);
+                    } else if (scratchMain.getScrEndTime().getTime() < date.getTime()) {
+                        scratchListRes.setStatus(2);
+                    }
+                    scratchListResList.add(scratchListRes);
                 }
             }
-            scratchListResList.add(scratchListRes);
         }
         PageDTO pageDTO = new PageDTO(page.getPages(), page.getTotal());
         return ResponseDTO.createBySuccessPage("分页获取刮刮乐活动列表成功", scratchListResList, pageDTO);

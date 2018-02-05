@@ -31,6 +31,9 @@ public class NinelatticePrizeSetReq {
 	@ApiModelProperty("中奖概率")
 	private double probabiliy;
 
+	@ApiModelProperty("优惠劵Id")
+	private Integer cardReceiveId;
+
 	@ApiModelProperty("选择图片")
 	private List<String> imgUrl;
 
@@ -80,5 +83,13 @@ public class NinelatticePrizeSetReq {
 
 	public void setImgUrl(List<String> imgUrl) {
 		this.imgUrl = imgUrl;
+	}
+
+	public Integer getCardReceiveId() {
+		return cardReceiveId;
+	}
+
+	public void setCardReceiveId(Integer cardReceiveId) {
+		this.cardReceiveId = cardReceiveId;
 	}
 }

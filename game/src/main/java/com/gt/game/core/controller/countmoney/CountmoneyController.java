@@ -59,8 +59,8 @@ public class CountmoneyController extends BaseController {
     @Override
     protected ResponseDTO getMobileUrl(@RequestBody @ApiParam(value = "请求参数") MobileUrlReq mobileUrlReq, HttpServletRequest request) {
         try {
-            BusUser busUser = CommonUtil.getLoginUser(request);
-            MobileUrlRes mobileUrlRes = countmoneyService.getMobileUrl(busUser, mobileUrlReq);
+            WxPublicUsers loginPbUser = CommonUtil.getLoginPbUser(request);
+            MobileUrlRes mobileUrlRes = countmoneyService.getMobileUrl(loginPbUser, mobileUrlReq);
             return ResponseDTO.createBySuccess("获取手机端链接成功", mobileUrlRes);
         } catch (CountmoneyException e){
             logger.error(e.getMessage(), e.fillInStackTrace());

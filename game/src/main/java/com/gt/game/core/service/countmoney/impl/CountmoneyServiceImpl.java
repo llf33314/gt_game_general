@@ -16,6 +16,7 @@ import com.gt.axis.content.AxisResult;
 import com.gt.axis.server.member.MemberServer;
 import com.gt.axis.server.wxmp.DictServer;
 import com.gt.axis.server.wxmp.FenbiflowServer;
+import com.gt.game.common.config.ApplyProperties;
 import com.gt.game.common.dto.PageDTO;
 import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.common.enums.ResponseEnums;
@@ -32,6 +33,7 @@ import com.gt.game.core.exception.countmoney.CountmoneyException;
 import com.gt.game.core.service.countmoney.*;
 import com.gt.game.core.util.CommonUtil;
 import com.gt.game.core.util.DateTimeKit;
+import com.sun.xml.internal.bind.v2.TODO;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -68,16 +70,21 @@ public class CountmoneyServiceImpl implements CountmoneyService {
     @Autowired
     CountmoneyRecordDAO countmoneyRecordDAO;
 
+    @Autowired
+    ApplyProperties applyProperties;
+
     /**
      * 获取手机端链接
      *
-     * @param busUser
+     * @param loginPbUser
      * @param mobileUrlReq
      * @return
      */
     @Override
-    public MobileUrlRes getMobileUrl(BusUser busUser, MobileUrlReq mobileUrlReq) {
-        return null;
+    public MobileUrlRes getMobileUrl(WxPublicUsers loginPbUser, MobileUrlReq mobileUrlReq) {
+
+        String url = applyProperties.getMobileBaseUrl() + "countMoney/"+loginPbUser.getId()+"/"+ mobileUrlReq.getMainId()+"/79B4DE7C/userGrant.do";
+        return new MobileUrlRes(url);
     }
 
     /**
@@ -235,7 +242,6 @@ public class CountmoneyServiceImpl implements CountmoneyService {
                 countmoneyDetail.setTurPrizeNums(countmoneyPrizeSetReq.getTurPrizeNums());
 
                 countmoneyDetailService.insert(countmoneyDetail);
-
             }
         }
 
@@ -362,12 +368,10 @@ public class CountmoneyServiceImpl implements CountmoneyService {
         countmoneyMain.setActScrBgmName(countmoneyModfiyReq.getActScrBgmName());
         countmoneyMain.setActScrBgmUrl(countmoneyModfiyReq.getActScrBgmUrl());
 
-
         //TODO  规则设置
         countmoneyMain.setActGameTime(countmoneyModfiyReq.getActGameTime());
         countmoneyMain.setActTotalOfAct(countmoneyModfiyReq.getActTotalOfAct());
         countmoneyMain.setActCountOfDay(countmoneyModfiyReq.getActCountOfDay());
-
 
         //TODO 兑奖设置
         countmoneyMain.setActAwardingTime(countmoneyModfiyReq.getActAwardingTime());

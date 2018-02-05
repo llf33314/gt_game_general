@@ -277,6 +277,10 @@ public class LanternServiceImpl implements LanternService {
                 lanternPrize.setPrizeName(lanternPrizeSetReq.getPrizeName());
                 lanternPrize.setNum(lanternPrizeSetReq.getNum());
 
+                if(lanternPrizeSetReq.getType()==7){   //TODO  添加优惠劵ID
+                    lanternPrize.setCardReceiveId(lanternPrizeSetReq.getCardReceiveId());
+                }
+
                 lanternPrizeService.insert(lanternPrize);
 
                 if(lanternPrizeSetReq.getImgUrl().size()>0){   ///TODO 添加图片
@@ -377,6 +381,10 @@ public class LanternServiceImpl implements LanternService {
             lanternPrizeSetReq.setPrizeUnit(lanternPrize.getPrizeUnit());
             lanternPrizeSetReq.setPrizeName(lanternPrize.getPrizeName());
             lanternPrizeSetReq.setNum(lanternPrize.getNum());
+
+            if(lanternPrize.getType()==7){   //TODO  优惠劵ID
+                lanternPrizeSetReq.setCardReceiveId(lanternPrize.getCardReceiveId());
+            }
 
             EntityWrapper<LanternPrizeImg> entityWrapper5 = new EntityWrapper();
             entityWrapper5.eq("prize_id",lanternPrize.getId());
@@ -507,6 +515,10 @@ public class LanternServiceImpl implements LanternService {
                 lanternPrize.setPrizeUnit(lanternPrizeSetReq.getPrizeUnit());
                 lanternPrize.setPrizeName(lanternPrizeSetReq.getPrizeName());
                 lanternPrize.setNum(lanternPrizeSetReq.getNum());
+
+                if(lanternPrizeSetReq.getType()==7){   //TODO  添加优惠劵ID
+                    lanternPrize.setCardReceiveId(lanternPrizeSetReq.getCardReceiveId());
+                }
 
                 lanternPrizeService.insert(lanternPrize);
 

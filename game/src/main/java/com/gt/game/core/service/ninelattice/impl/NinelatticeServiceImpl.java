@@ -254,6 +254,10 @@ public class NinelatticeServiceImpl implements NinelatticeService {
                 ninelatticePrize.setNum(ninelatticePrizeSetReq.getNum());
                 ninelatticePrize.setProbabiliy(ninelatticePrizeSetReq.getProbabiliy());
 
+                if(ninelatticePrizeSetReq.getType()==7){
+                     ninelatticePrize.setCardReceiveId(ninelatticePrizeSetReq.getCardReceiveId());  //TODO 添加优惠劵ID
+                }
+
                 ninelatticePrizeService.insert(ninelatticePrize);
 
                 if(ninelatticePrizeSetReq.getImgUrl().size()>0){   ///TODO 添加图片
@@ -340,6 +344,10 @@ public class NinelatticeServiceImpl implements NinelatticeService {
             ninelatticePrizeSetReq.setPrizeName(ninelatticePrize.getPrizeName());
             ninelatticePrizeSetReq.setNum(ninelatticePrize.getNum());
             ninelatticePrizeSetReq.setProbabiliy(ninelatticePrize.getProbabiliy());
+
+            if(ninelatticePrize.getType()==7){
+                ninelatticePrizeSetReq.setCardReceiveId(ninelatticePrize.getCardReceiveId());  //TODO  优惠劵ID
+            }
 
             EntityWrapper<NinelatticePrizeImg> entityWrapper5 = new EntityWrapper();
             entityWrapper5.eq("prize_id",ninelatticePrize.getId());
@@ -455,6 +463,10 @@ public class NinelatticeServiceImpl implements NinelatticeService {
                 ninelatticePrize.setPrizeName(ninelatticePrizeSetReq.getPrizeName());
                 ninelatticePrize.setNum(ninelatticePrizeSetReq.getNum());
                 ninelatticePrize.setProbabiliy(ninelatticePrizeSetReq.getProbabiliy());
+
+                if(ninelatticePrizeSetReq.getType()==7){
+                    ninelatticePrize.setCardReceiveId(ninelatticePrizeSetReq.getCardReceiveId());  //TODO 添加优惠劵ID
+                }
 
                 ninelatticePrizeService.insert(ninelatticePrize);
 

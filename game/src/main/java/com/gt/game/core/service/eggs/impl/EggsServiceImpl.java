@@ -22,6 +22,7 @@ import com.gt.game.common.dto.ResponseDTO;
 import com.gt.game.common.enums.ResponseEnums;
 import com.gt.game.core.bean.eggs.req.*;
 import com.gt.game.core.bean.eggs.res.*;
+import com.gt.game.core.bean.tree.res.TreeListRes;
 import com.gt.game.core.bean.url.MobileUrlReq;
 import com.gt.game.core.bean.url.MobileUrlRes;
 import com.gt.game.core.dao.eggs.EggsWinningDAO;
@@ -124,27 +125,44 @@ public class EggsServiceImpl implements EggsService {
 
         List<EggsListRes> eggsListResList = new ArrayList<>();
         for (EggsMain eggsMain : eggsMainList) {
-            EggsListRes eggsListRes = new EggsListRes();
-            eggsListRes.setId(eggsMain.getId());
-            eggsListRes.setName(eggsMain.getEggName());
-            eggsListRes.setActivityBeginTime(eggsMain.getEggBeginTime());
-            eggsListRes.setActivityEndTime(eggsMain.getEggEndTime());
+            if(eggsListReq.getStatus() == -1 ||eggsListReq.getStatus()== 3){   // TODO  全部
+                EggsListRes eggsListRes = new EggsListRes();
+                eggsListRes.setId(eggsMain.getId());
+                eggsListRes.setName(eggsMain.getEggName());
+                eggsListRes.setActivityBeginTime(eggsMain.getEggBeginTime());
+                eggsListRes.setActivityEndTime(eggsMain.getEggEndTime());
 
-            if(eggsMain.getEggStatus()==2){    //TODO  已暂停
-                eggsListRes.setStatus(3);
-            }else {
-                Date date = new Date();
-                if (eggsMain.getEggBeginTime().getTime() > date.getTime()) {
-                    eggsListRes.setStatus(0);
-                } else if (eggsMain.getEggBeginTime().getTime() <= date.getTime() && eggsMain.getEggEndTime().getTime() >= date.getTime()) {
-                    eggsListRes.setStatus(1);
-                } else if (eggsMain.getEggEndTime().getTime() < date.getTime()) {
-                    eggsListRes.setStatus(2);
+                if(eggsMain.getEggStatus()==2){    //TODO  已暂停
+                    eggsListRes.setStatus(3);
+                }else {
+                    Date date = new Date();
+                    if (eggsMain.getEggBeginTime().getTime() > date.getTime()) {
+                        eggsListRes.setStatus(0);
+                    } else if (eggsMain.getEggBeginTime().getTime() <= date.getTime() && eggsMain.getEggEndTime().getTime() >= date.getTime()) {
+                        eggsListRes.setStatus(1);
+                    } else if (eggsMain.getEggEndTime().getTime() < date.getTime()) {
+                        eggsListRes.setStatus(2);
+                    }
+                }
+                eggsListResList.add(eggsListRes);
+            } else {
+                if(eggsMain.getEggStatus()!=2){
+                    EggsListRes eggsListRes = new EggsListRes();
+                    eggsListRes.setId(eggsMain.getId());
+                    eggsListRes.setName(eggsMain.getEggName());
+                    eggsListRes.setActivityBeginTime(eggsMain.getEggBeginTime());
+                    eggsListRes.setActivityEndTime(eggsMain.getEggEndTime());
+                    Date date = new Date();
+                    if (eggsMain.getEggBeginTime().getTime() > date.getTime()) {
+                        eggsListRes.setStatus(0);
+                    } else if (eggsMain.getEggBeginTime().getTime() <= date.getTime() && eggsMain.getEggEndTime().getTime() >= date.getTime()) {
+                        eggsListRes.setStatus(1);
+                    } else if (eggsMain.getEggEndTime().getTime() < date.getTime()) {
+                        eggsListRes.setStatus(2);
+                    }
+                    eggsListResList.add(eggsListRes);
                 }
             }
-
-
-            eggsListResList.add(eggsListRes);
         }
         PageDTO pageDTO = new PageDTO(page.getPages(), page.getTotal());
         return ResponseDTO.createBySuccessPage("分页获取砸金蛋活动列表成功", eggsListResList, pageDTO);
@@ -255,6 +273,7 @@ public class EggsServiceImpl implements EggsService {
             eggsDetail.setEggPrizeName(eggsPrizeSetReq.getEggPrizeName());
             eggsDetail.setEggPrizeNums(eggsPrizeSetReq.getEggPrizeNums());
             eggsDetail.setEggPrizeChance(eggsPrizeSetReq.getEggPrizeChance());
+            eggsDetail.setOpenid(eggsPrizeSetReq.getOpenId());
             eggsDetail.setNickname(eggsPrizeSetReq.getNickname());
 
             eggsDetailService.insert(eggsDetail);
@@ -336,6 +355,7 @@ public class EggsServiceImpl implements EggsService {
             eggsPrizeSetReq.setEggPrizeName(EggsDetail.getEggPrizeName());
             eggsPrizeSetReq.setEggPrizeNums(EggsDetail.getEggPrizeNums());
             eggsPrizeSetReq.setEggPrizeChance(EggsDetail.getEggPrizeChance());
+            eggsPrizeSetReq.setOpenId(EggsDetail.getOpenid());
             eggsPrizeSetReq.setNickname(EggsDetail.getNickname());
             list.add(eggsPrizeSetReq);
         }
@@ -429,6 +449,7 @@ public class EggsServiceImpl implements EggsService {
                 eggsDetail.setEggPrizeName(eggsPrizeSetReq.getEggPrizeName());
                 eggsDetail.setEggPrizeNums(eggsPrizeSetReq.getEggPrizeNums());
                 eggsDetail.setEggPrizeChance(eggsPrizeSetReq.getEggPrizeChance());
+                eggsDetail.setOpenid(eggsPrizeSetReq.getOpenId());
                 eggsDetail.setNickname(eggsPrizeSetReq.getNickname());
 
                 eggsDetailService.insert(eggsDetail);

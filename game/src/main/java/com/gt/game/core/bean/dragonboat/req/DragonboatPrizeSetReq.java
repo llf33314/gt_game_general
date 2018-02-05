@@ -34,6 +34,11 @@ public class DragonboatPrizeSetReq {
 	@ApiModelProperty("选择图片")
 	private List<String> imgUrl;
 
+	@ApiModelProperty("优惠劵Id")
+	private Integer cardReceiveId;
+
+
+
 	public Integer getType() {
 		return type;
 	}
@@ -80,5 +85,13 @@ public class DragonboatPrizeSetReq {
 
 	public void setScore(Integer score) {
 		this.score = score;
+	}
+
+	public Integer getCardReceiveId() {
+		return cardReceiveId;
+	}
+
+	public void setCardReceiveId(Integer cardReceiveId) {
+		this.cardReceiveId = cardReceiveId;
 	}
 }

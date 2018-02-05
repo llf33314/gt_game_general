@@ -27,11 +27,11 @@ public interface CountmoneyService {
 
     /**
      * 获取手机端链接
-     * @param busUser
+     * @param loginPbUser
      * @param mobileUrlReq
      * @return
      */
-    MobileUrlRes getMobileUrl(BusUser busUser, MobileUrlReq mobileUrlReq);
+    MobileUrlRes getMobileUrl(WxPublicUsers loginPbUser, MobileUrlReq mobileUrlReq);
 
     /**
      * 分页获取疯狂数钱活动列表

@@ -120,25 +120,45 @@ public class TurntableServiceImpl implements TurntableService {
 
         List<TurntableListRes> turntableListResList = new ArrayList<>();
         for (TurntableMain turntableMain : turntableMainList) {
-            TurntableListRes turntableListRes = new TurntableListRes();
-            turntableListRes.setId(turntableMain.getId());
-            turntableListRes.setName(turntableMain.getActName());
-            turntableListRes.setActivityBeginTime(turntableMain.getActBeginTime());
-            turntableListRes.setActivityEndTime(turntableMain.getActEndTime());
 
-            if (turntableMain.getActStatus() == 2) {    //TODO   已暂停
-                turntableListRes.setStatus(3);
-            } else {
-                Date date = new Date();
-                if (turntableMain.getActBeginTime().getTime() > date.getTime()) {
-                    turntableListRes.setStatus(0);
-                } else if (turntableMain.getActBeginTime().getTime() <= date.getTime() && turntableMain.getActEndTime().getTime() >= date.getTime()) {
-                    turntableListRes.setStatus(1);
-                } else if (turntableMain.getActEndTime().getTime() < date.getTime()) {
-                    turntableListRes.setStatus(2);
+            if(turntableListReq.getStatus() == -1 ||turntableListReq.getStatus()== 3) {   // TODO  全部
+                TurntableListRes turntableListRes = new TurntableListRes();
+                turntableListRes.setId(turntableMain.getId());
+                turntableListRes.setName(turntableMain.getActName());
+                turntableListRes.setActivityBeginTime(turntableMain.getActBeginTime());
+                turntableListRes.setActivityEndTime(turntableMain.getActEndTime());
+
+                if (turntableMain.getActStatus() == 2) {    //TODO   已暂停
+                    turntableListRes.setStatus(3);
+                } else {
+                    Date date = new Date();
+                    if (turntableMain.getActBeginTime().getTime() > date.getTime()) {
+                        turntableListRes.setStatus(0);
+                    } else if (turntableMain.getActBeginTime().getTime() <= date.getTime() && turntableMain.getActEndTime().getTime() >= date.getTime()) {
+                        turntableListRes.setStatus(1);
+                    } else if (turntableMain.getActEndTime().getTime() < date.getTime()) {
+                        turntableListRes.setStatus(2);
+                    }
+                }
+                   turntableListResList.add(turntableListRes);
+               } else {
+                if (turntableMain.getActStatus() != 2) {
+                    TurntableListRes turntableListRes = new TurntableListRes();
+                    turntableListRes.setId(turntableMain.getId());
+                    turntableListRes.setName(turntableMain.getActName());
+                    turntableListRes.setActivityBeginTime(turntableMain.getActBeginTime());
+                    turntableListRes.setActivityEndTime(turntableMain.getActEndTime());
+                    Date date = new Date();
+                    if (turntableMain.getActBeginTime().getTime() > date.getTime()) {
+                        turntableListRes.setStatus(0);
+                    } else if (turntableMain.getActBeginTime().getTime() <= date.getTime() && turntableMain.getActEndTime().getTime() >= date.getTime()) {
+                        turntableListRes.setStatus(1);
+                    } else if (turntableMain.getActEndTime().getTime() < date.getTime()) {
+                        turntableListRes.setStatus(2);
+                    }
+                    turntableListResList.add(turntableListRes);
                 }
             }
-            turntableListResList.add(turntableListRes);
         }
         PageDTO pageDTO = new PageDTO(page.getPages(), page.getTotal());
         return ResponseDTO.createBySuccessPage("分页获取大转盘活动列表成功", turntableListResList, pageDTO);
