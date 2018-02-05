@@ -5,7 +5,7 @@
 <section>
 <div class="hd-common">
     <el-breadcrumb separator="/" class="gt-crumbs">
-      <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
+      <el-breadcrumb-item @click.native="$util.ClickApply">互动游戏</el-breadcrumb-item> 
       <el-breadcrumb-item :to="{ path:'/robIngots/index' }">欢乐抢元宝</el-breadcrumb-item>  
       <el-breadcrumb-item>创建活动</el-breadcrumb-item>   
     </el-breadcrumb> 

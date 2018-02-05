@@ -175,6 +175,13 @@ export default {
     });
     return addressObj;
   },
+
+    // 点击互动游戏按钮 触发的事件
+    ClickApply() {
+      console.log(1)
+      parent.window.postMessage("reFreshpage()", "*");
+    }, 
+
   // 获取短信链接  
   getShortUrl(url) {
     return axios.get(window.BASEDOMAIN + '/app/link/getShorUrl?url=' + url)

@@ -2,7 +2,7 @@
 <section>
 <div class="hd-common">
     <el-breadcrumb separator="/" class="gt-crumbs">
-      <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
+      <el-breadcrumb-item @click.native="$util.ClickApply">互动游戏</el-breadcrumb-item> 
       <el-breadcrumb-item>端午赛龙舟</el-breadcrumb-item>  
     </el-breadcrumb>
    <div class="gt-gray-region mb20"> 
