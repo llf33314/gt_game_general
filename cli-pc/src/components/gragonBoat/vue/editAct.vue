@@ -460,7 +460,7 @@ export default {
                         imgInstruction: "",
                         type: this.ruleForm4[i].name0,//类型
                         prizeUnit: Number(this.ruleForm4[i].name1),//单位
-                        prizeName: this.ruleForm4[i].name2,//名称
+                        prizeName: this.ruleForm4[i].name2,//名称 
                         num: Number(this.ruleForm4[i].name3),//数量
                         score: this.ruleForm4[i].name4,  //概率
                         cardReceiveId: "",
@@ -470,29 +470,46 @@ export default {
                         arr4.prizeName = this.ruleForm4[i].cardsName//名称 
                         arr4.cardReceiveId = this.ruleForm4[i].name2//名称 
                     }
-                    if (arr4.type == "粉币") {
-                        arr4.type = 1
-                    } else if (arr4.type == "手机流量") {
-                        arr4.type = 2
-                    } else if (arr4.type == "手机话费") {
-                        arr4.type = 3
-                    } else if (arr4.type == "实体物品") {
-                        arr4.type = 4
-                    }
-                    else if (arr4.type == "积分") {
-                        arr4.type = 6
-                    }
-                    else if (arr4.type == "优惠券") {
-                        arr4.type = 7
-                    }
+                    console.log(arr4.prizeName, 888888)
                     if (arr4.type == 4) {
                         for (var j = 0; j < this.ruleForm4[i].name5.length; j++) {
                             arr4.imgUrl.push(this.ruleForm4[i].name5[j])
                         }
                     }
                     prizeSetList.push(arr4)
+
                 }
             }
+            // //奖品
+            // var prizeSetList = [];
+            // if (this.ruleForm4) {
+            //     for (let i = 0; i < this.ruleForm4.length; i++) {
+            //         var arr4 = {
+            //             imgInstruction: "",
+            //             type: this.ruleForm4[i].name0,//类型
+            //             prizeUnit: Number(this.ruleForm4[i].name1),//单位
+            //             prizeName: this.ruleForm4[i].name2,//名称 
+            //             num: Number(this.ruleForm4[i].name3),//数量
+            //             score: this.ruleForm4[i].name4,  //概率
+            //             cardReceiveId: "",
+            //             imgUrl: []//图片
+            //         }
+            //         if (arr4.type == 7) {
+            //             arr4.prizeName = this.ruleForm4[i].cardsName//名称 
+            //             arr4.cardReceiveId = this.ruleForm4[i].name2//名称 
+            //         }
+            //         if (arr4.type == 4) {
+            //             for (var j = 0; j < this.ruleForm4[i].name5.length; j++) {
+            //                 var imgarr = {
+            //                     imgUrl: this.ruleForm4[i].name5[j]
+            //                 }
+            //                 arr4.imgUrl.push(imgarr)
+            //             }
+            //         }
+            //         prizeSetList.push(arr4)
+            //     }
+            // }
+
             const data = {
                 id: this.$router.history.current.query.id,
                 //基础设置 
@@ -611,11 +628,12 @@ export default {
                             }
                         }
                         if (newabc1.name0 == 7) {
-                            newabc1.cardsName = data.data.prizeSetList[i].prizeName
-                            newabc1.name2 = data.data.prizeSetList[i].cardReceiveId
+                            newabc1.cardsName = data.data.prizeSetList[i].cardReceiveId
+                            newabc1.name2 = data.data.prizeSetList[i].prizeName
                         }
                         newPraise.push(newabc1);
                     }
+                    this.ruleForm4 = newPraise
                 } else {
                     this.$message.error(data.msg);
                 }
