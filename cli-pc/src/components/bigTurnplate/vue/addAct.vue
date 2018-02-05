@@ -5,7 +5,7 @@
   <section>
     <div class="hd-common turnPlate">
       <el-breadcrumb separator="/" class="gt-crumbs">
-        <el-breadcrumb-item>互动游戏</el-breadcrumb-item>
+        <el-breadcrumb-item @click.native="$util.ClickApply">互动游戏</el-breadcrumb-item>
         <el-breadcrumb-item :to="{ path:'/bigTurnplate/index' }">大转盘</el-breadcrumb-item>
         <el-breadcrumb-item>创建活动</el-breadcrumb-item>
       </el-breadcrumb>
@@ -24,10 +24,10 @@
               <el-input class="w_demo" placeholder="请输入活动名称" v-model="ruleForm1.actName"></el-input>
             </el-form-item>
             <el-form-item label="开始时间：" prop="actBeginTime">
-              <el-date-picker class="w_demo" v-model="ruleForm1.actBeginTime" type="date" placeholder="请选择开始时间" :picker-options="pickerOptions"></el-date-picker>
+              <el-date-picker class="w_demo" v-model="ruleForm1.actBeginTime" type="date" placeholder="请选择开始时间"></el-date-picker>
             </el-form-item>
             <el-form-item label="结束时间：" prop="actEndTime">
-              <el-date-picker class="w_demo" v-model="ruleForm1.actEndTime" type="date" placeholder="请选择开始时间" :picker-options="pickerOptions"></el-date-picker>
+              <el-date-picker class="w_demo" v-model="ruleForm1.actEndTime" type="date" placeholder="请选择开始时间"></el-date-picker>
             </el-form-item>
             <el-form-item label="结束说明：" prop="actOverdescribe">
               <el-input class="w_demo" type="textarea" v-model="ruleForm1.actOverdescribe" :rows="3" placeholder="请输入活动结束说明"></el-input>
@@ -178,11 +178,12 @@
         <div class="h80"></div>
         <div class="btnRow" v-if="this.active!=5">
           <el-button @click="upStep()" v-if="this.active!=0">上一步</el-button>
-          <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步1</el-button>
-          <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步2</el-button>
-          <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步3</el-button>
-          <el-button type="primary" @click="lastStep" :loading="loading" v-if="this.active==3">保存</el-button>
-          <el-button type="primary" @click="submit">打印</el-button>
+          <el-button type="primary" @click="next('ruleForm1')" v-if="this.active==0">下一步</el-button>
+          <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步</el-button>
+          <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步</el-button>
+          <el-button type="primary" @click="lastStep" v-if="this.active==3">保存</el-button>
+          <!-- <el-button type="primary" @click="lastStep" :loading="loading" v-if="this.active==3">保存</el-button> -->
+          <!-- <el-button type="primary" @click="submit">打印</el-button> -->
         </div>
         <!-- 中奖人弹窗 -->
         <gt-Fans-detail :visible.sync="dialogFans" :peopleNums="peopleNums" v-on:getFansData="getFansData"></gt-Fans-detail>
@@ -194,47 +195,37 @@
 import { saveAct, getPrizeType } from "./../api/api";
 export default {
   data() {
-    let numPass = (rule, value, callback) => {
-      if (this.ruleForm1.luckPway == 2 && this.ruleForm1.name1 == '') {
-        callback(new Error("不能为空"));
-      } else if (this.ruleForm1.luckPway == 2 && this.ruleForm1.name1 < 0) {
-        callback(new Error("请输入大于0的整数"));
-      } else if (this.ruleForm1.luckPway == 3 && this.ruleForm1.name2 == '') {
-        callback(new Error("不能为空"));
-      } else if (this.ruleForm1.luckPway == 3 && this.ruleForm1.name2 < 0) {
-        callback(new Error("请输入大于0的整数"));
-      } else if ((this.ruleForm1.luckPway == 4 && this.ruleForm1.name3 == '') || (this.ruleForm1.luckPway == 4 && this.ruleForm1.name4 == '')) {
-        callback(new Error("不能为空"));
-      } else if (this.ruleForm1.luckPway == 4 && this.ruleForm1.name3 < 0) {
-        callback(new Error("请输入大于0的整数"));
-      } else if (this.ruleForm1.luckPway == 4 && this.ruleForm1.name4 < 0) {
-        callback(new Error("请输入大于0的整数"));
+    let timeCode = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error("兑奖期限不能为空"));
+      }
+      if (!/^[1-9]\d*$/.test(value)) {
+        //如果输入正确做什么处理，这里根据实际情况可修改
+        callback(new Error('请输入正整数'));
       } else {
         callback();
       }
     };
     return {
-      loading: false,
-      active: 3,
+      // loading: false,
+      active: 0,
       peopleNums: 1,
-      // 时间的筛选
-      pickerOptions: {
-        disabledDate(time) {
-          return time.getTime() < Date.now() - 8.64e7;
-        }
-      },
+      // // 时间的筛选
+      // pickerOptions: {
+      //   disabledDate(time) {
+      //     return time.getTime() < Date.now() - 8.64e7;
+      //   }
+      // },
       //第一步-----------------------------------
       ruleForm1: {
         actName: "", // 活动名称
-        // date: [],
         actBeginTime: "", // 活动开始时间
-        scrEndTime: "", // 活动结束时间
+        actEndTime: "", // 活动结束时间
         actPartaker: 1, // 1.所有粉丝 2.仅会员(持有会员卡的粉丝)
         actPway: 0, // 参与方式
         actMan: "", // 可参加抽奖的会员积分
         actKou: "", // 每次抽奖扣除积分
         actOverdescribe: "", // 结束说明/描述
-        // scrBeforeTxt: "", // 活动未开始提示
         actBgmName: "暂无上传音乐", // 背景音乐名称
         actBgm: "" // 背景音乐链接
       },
@@ -283,7 +274,7 @@ export default {
       },
       rules3: {
         actCashday: [
-          { required: true, message: "兑奖期限不能为空", trigger: "blur" }
+          { required: true, validator: timeCode, trigger: "blur" }
         ],
         actAddress: [
           { required: true, message: "兑奖地址不能为空", trigger: "blur" }
@@ -291,16 +282,7 @@ export default {
       },
       //第4步-----------------------------------
       awardKey: 0,
-      ruleForm4: [
-        {
-          turPrizeType: "",  // 奖品类型
-          turPrizeLimit: "", // 奖品数额
-          turPrizeName: "",  // 奖项名称
-          turPrizeNums: "",  // 奖项数量
-          turPrizeChance: "",// 中奖概率
-          nickname: ""       // 中奖人
-        }
-      ],
+      ruleForm4: [],
       ruleForm46: [
         {
           turPrizeType: "",  // 奖品类型
@@ -513,9 +495,7 @@ export default {
       }
       this.dialogFans = true;
       this.assignObj = scope.row;
-      // this.peopleNums = scope.row.turPrizeNums;
       this.peopleNums = Number(scope.row.turPrizeNums);
-      // alert(typeof this.peopleNums)
     },
     //中奖人弹窗
     getFansData(e) {
@@ -566,19 +546,17 @@ export default {
           this.$message.error("表单不能留空，请填写完整~");
           return false;
         } else if (!regu.test(this.ruleForm4[i].turPrizeLimit)) {
-          this.$message.error("奖品单位填写有误，请重新填写~");
+          this.$message.error("奖品数额填写有误，请填写大于0的正整数");
           return false;
         } else if (!regu.test(this.ruleForm4[i].turPrizeNums)) {
-          this.$message.error("奖项数量填写有误，请重新填写~");
+          this.$message.error("奖项数量填写有误，请填写大于0的正整数");
+          return false;
+        } else if (!/(^[1-9]{1}[0-9]*$)&&(^[0-9]*\.[0-9]{2}$)/.test(this.ruleForm4[i].turPrizeChance)) {
+          this.$message.error("中奖概率填写有误，请输入大于0的整数或者保留两位小数");
           return false;
         } else if (
           this.ruleForm4[i].turPrizeType == 4
-          // this.ruleForm4[i].name5.length == 0
         )
-          // {
-          //   this.$message.error("当奖品为实物时，请上传实物图片~");
-          //   return false;
-          // }
           console.log(this.ruleForm4[i])
         percentage += parseFloat(this.ruleForm4[i].turPrizeChance)
       }
@@ -592,15 +570,6 @@ export default {
     },
     //表单提交--------------------------------------star
     submit() {
-      // var newarr = [];
-      // for (let i = 0; i < this.ruleForm4.length; i++) {
-      //   var arr = {
-      //     turPrizeType: this.ruleForm4[i].turPrizeType,
-      //     turPrizeLimit: this.ruleForm4[i].turPrizeLimit,
-      //     turPrizeName: this.ruleForm4[i].turPrizeName
-      //   };
-      //   newarr.push(arr);
-      // }
       const data = {
         //基础设置
         actName: this.ruleForm1.actName, // 活动名称
@@ -626,22 +595,17 @@ export default {
         //奖项设置
         prizeSetList: this.ruleForm4
       };
-      this.loading = true;
-      console.log(333333333333)
+      // this.loading = true;
+      console.log(data, 887878787)
       saveAct(data).then(res => {
-        console.log(11111)
-        // this.isSubmit = true;
         if (res.code == 100) {
           this.active = 5;
           this.$message.success(res.msg || '保存成功');
         } else {
-          // this.isSubmit = false;
           this.$message.error(res.msg || '保存失败');
         }
-        this.loading = false
+        // this.loading = false
       }).catch(() => {
-        console.log(222)
-        // this.isSubmit = false;
         this.$message({ type: "info", message: "网络问题，请刷新重试~" });
       });
     },

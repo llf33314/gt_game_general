@@ -1,7 +1,7 @@
 import axios from './../../../http' 
 let base = window.BASEDOMAIN + '/app/ninelattice' 
 
-// let base = 'http://192.168.3.68:8080'
+// let base = 'http://192.168.3.68:8080' + '/app/ninelattice'
 
 
 function post(url, params) {

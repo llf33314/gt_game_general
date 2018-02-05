@@ -21,7 +21,10 @@ public class EggsPrizeSetReq {
 	@ApiModelProperty("中奖概率")
 	private double eggPrizeChance;
 
-	@ApiModelProperty("中奖人")
+	@ApiModelProperty("中奖人Id")
+	private String openId;
+
+	@ApiModelProperty("中奖人昵称")
 	private String nickname;
 
 	public Integer getEggPrizeType() {
@@ -62,6 +65,14 @@ public class EggsPrizeSetReq {
 
 	public void setEggPrizeChance(double eggPrizeChance) {
 		this.eggPrizeChance = eggPrizeChance;
+	}
+
+	public String getOpenId() {
+		return openId;
+	}
+
+	public void setOpenId(String openId) {
+		this.openId = openId;
 	}
 
 	public String getNickname() {

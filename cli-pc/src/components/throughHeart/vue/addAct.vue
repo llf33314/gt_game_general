@@ -2,7 +2,7 @@
 <section>
 <div class="hd-common">
     <el-breadcrumb separator="/" class="gt-crumbs">
-      <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
+      <el-breadcrumb-item @click.native="$util.ClickApply">互动游戏</el-breadcrumb-item> 
       <el-breadcrumb-item :to="{ path:'/throughHeart/index' }">一箭穿心</el-breadcrumb-item>  
       <el-breadcrumb-item>创建活动</el-breadcrumb-item>   
     </el-breadcrumb> 
@@ -125,11 +125,11 @@
                 <span class="el-icon-warning" style="font-size:18px; margin-left:71%;z-index:11;position: absolute;margin-top: 12px; color:#ccc"></span> 
             </el-tooltip>
             <el-table ref="multipleTable" :data="ruleForm4" tooltip-effect="dark">
-                <el-table-column label="奖品类型">
+               <el-table-column label="奖品类型">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.name0" placeholder="请选择"> 
-                            <el-option v-for="item in options" :key="item.value" :label="item.name"  :value="item.id">
-                            </el-option>
+                                <el-option v-for="item in options" :key="item.value" :label="item.name"  :value="item.value">
+                                </el-option>
                         </el-select>
                     </template>
                 </el-table-column> 
@@ -138,10 +138,10 @@
                     <el-input class="w20_demo" type="number" v-model="scope.row.name1" placeholder="数值应大于0"></el-input>
                 </template>
                 </el-table-column>
-                <el-table-column label="奖品名称">
+               <el-table-column label="奖品名称">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.name2" v-if="scope.row.name0==7"   placeholder="请选择" @change="optionsData(scope.$index)"> 
-                            <el-option v-for="item in memberOptions" :key="item.id"  :label="item.name"  :value="item.id">
+                            <el-option v-for="item in memberOptions" :key="item.id"  :label="item.cardsName"  :value="item.id">
                             </el-option>
                         </el-select>  
                         <el-input v-else class="w20_demo"   v-model="scope.row.name2"></el-input> 

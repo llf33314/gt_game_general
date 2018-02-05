@@ -13,7 +13,7 @@ Object.keys(filters).forEach(key => {
 });
 //加载全局组件
 import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-default/index.css'
+import 'element-ui/lib/theme-chalk/index.css'
 Vue.use(ElementUI)
 const GtNullData = ()=>import('./components/PublicVue/null-data/nullData')
 const GtCopyUrl = ()=>import('./components/PublicVue/copy-url/copy-url')
@@ -29,7 +29,6 @@ const GtPrizeDetail = ()=>import('components/PublicVue/prizeDetail/prizeDetail')
 const GtFansData = ()=>import('components/PublicVue/fans-dialog/fans')//指定中奖人
 //加载全局样式 
 require('./assets/css/public.less')
-require('./assets/css/public.css')
 require('./assets/css/common.less')
 //加载全局阿里iconfont 
 require('./assets/iconfont/iconfont.css')

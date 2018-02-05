@@ -121,25 +121,43 @@ public class TreeServiceImpl implements TreeService {
 
         List<TreeListRes> treeListResList = new ArrayList<>();
         for (TreeMain treeMain : treeMainList) {
-            TreeListRes treeListResRes = new TreeListRes();
-            treeListResRes.setId(treeMain.getId());
-            treeListResRes.setName(treeMain.getTreeName());
-            treeListResRes.setActivityBeginTime(treeMain.getTreeBeginTime());
-            treeListResRes.setActivityEndTime(treeMain.getTreeEndTime());
-
-            if(treeMain.getTreeStatus()==2){    //TODO   已暂停
-                treeListResRes.setStatus(3);
-            }else {
-                Date date = new Date();
-                if (treeMain.getTreeBeginTime().getTime() > date.getTime()) {
-                    treeListResRes.setStatus(0);
-                } else if (treeMain.getTreeBeginTime().getTime() <= date.getTime() && treeMain.getTreeEndTime().getTime() >= date.getTime()) {
-                    treeListResRes.setStatus(1);
-                } else if (treeMain.getTreeEndTime().getTime() < date.getTime()) {
-                    treeListResRes.setStatus(2);
+            if(treeListReq.getStatus() == -1 ||treeListReq.getStatus()== 3){   // TODO  全部
+                TreeListRes treeListRes = new TreeListRes();
+                treeListRes.setId(treeMain.getId());
+                treeListRes.setName(treeMain.getTreeName());
+                treeListRes.setActivityBeginTime(treeMain.getTreeBeginTime());
+                treeListRes.setActivityEndTime(treeMain.getTreeEndTime());
+                if(treeMain.getTreeStatus()==2){    //TODO   已暂停
+                    treeListRes.setStatus(3);
+                }else {
+                    Date date = new Date();
+                    if (treeMain.getTreeBeginTime().getTime() > date.getTime()) {
+                        treeListRes.setStatus(0);
+                    } else if (treeMain.getTreeBeginTime().getTime() <= date.getTime() && treeMain.getTreeEndTime().getTime() >= date.getTime()) {
+                        treeListRes.setStatus(1);
+                    } else if (treeMain.getTreeEndTime().getTime() < date.getTime()) {
+                        treeListRes.setStatus(2);
+                    }
                 }
-            }
-            treeListResList.add(treeListResRes);
+                treeListResList.add(treeListRes);
+                }else {
+                    if(treeMain.getTreeStatus()!=2){
+                        TreeListRes treeListRes = new TreeListRes();
+                        treeListRes.setId(treeMain.getId());
+                        treeListRes.setName(treeMain.getTreeName());
+                        treeListRes.setActivityBeginTime(treeMain.getTreeBeginTime());
+                        treeListRes.setActivityEndTime(treeMain.getTreeEndTime());
+                        Date date = new Date();
+                        if (treeMain.getTreeBeginTime().getTime() > date.getTime()) {
+                            treeListRes.setStatus(0);
+                        } else if (treeMain.getTreeBeginTime().getTime() <= date.getTime() && treeMain.getTreeEndTime().getTime() >= date.getTime()) {
+                            treeListRes.setStatus(1);
+                        } else if (treeMain.getTreeEndTime().getTime() < date.getTime()) {
+                            treeListRes.setStatus(2);
+                        }
+                        treeListResList.add(treeListRes);
+                    }
+                }
         }
         PageDTO pageDTO = new PageDTO(page.getPages(), page.getTotal());
         return ResponseDTO.createBySuccessPage("分页获取圣诞大礼包活动列表成功", treeListResList, pageDTO);

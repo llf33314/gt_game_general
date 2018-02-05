@@ -273,6 +273,10 @@ public class DragonboatServiceImpl implements DragonboatService {
                 dragonboatracePrize.setNum(dragonboatPrizeSetReq.getNum());
                 dragonboatracePrize.setScore(dragonboatPrizeSetReq.getScore());
 
+                if(dragonboatPrizeSetReq.getType()==7){
+                    dragonboatracePrize.setCardReceiveId(dragonboatPrizeSetReq.getCardReceiveId());  //TODO  添加优惠劵ID
+                }
+
                 dragonboatracePrizeService.insert(dragonboatracePrize);
 
                 if (dragonboatPrizeSetReq.getImgUrl().size() > 0) {   ///TODO 添加图片
@@ -374,6 +378,10 @@ public class DragonboatServiceImpl implements DragonboatService {
             dragonboatPrizeSetReq.setPrizeName(dragonboatracePrize.getPrizeName());
             dragonboatPrizeSetReq.setNum(dragonboatracePrize.getNum());
             dragonboatPrizeSetReq.setScore(dragonboatracePrize.getScore());
+
+            if(dragonboatracePrize.getType()==7){
+                dragonboatPrizeSetReq.setCardReceiveId(dragonboatracePrize.getCardReceiveId()); // TODO   优惠劵ID
+            }
 
             EntityWrapper<DragonboatracePrizeImg> entityWrapper5 = new EntityWrapper();
             entityWrapper5.eq("prize_id",dragonboatracePrize.getId());
@@ -502,6 +510,11 @@ public class DragonboatServiceImpl implements DragonboatService {
                 dragonboatracePrize.setPrizeUnit(dragonboatPrizeSetReq.getPrizeUnit());
                 dragonboatracePrize.setPrizeName(dragonboatPrizeSetReq.getPrizeName());
                 dragonboatracePrize.setNum(dragonboatPrizeSetReq.getNum());
+                dragonboatracePrize.setScore(dragonboatPrizeSetReq.getScore());
+
+                if(dragonboatPrizeSetReq.getType()==7){
+                    dragonboatracePrize.setCardReceiveId(dragonboatPrizeSetReq.getCardReceiveId());  //TODO  添加优惠劵ID
+                }
 
                 dragonboatracePrizeService.insert(dragonboatracePrize);
 

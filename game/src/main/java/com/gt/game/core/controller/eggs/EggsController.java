@@ -33,42 +33,42 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <p>
- * 砸金蛋 前端控制器
- * </p>
- *
- * @author zwq
- * @since 2017-12-25
- */
-@Api(value = "/app/eggs", description = "砸金蛋商家后台")
-@RestController
-@RequestMapping(value = "/app/eggs")
-public class EggsController extends BaseController {
+     * <p>
+     * 砸金蛋 前端控制器
+     * </p>
+     *
+     * @author zwq
+     * @since 2017-12-25
+     */
+    @Api(value = "/app/eggs", description = "砸金蛋商家后台")
+    @RestController
+    @RequestMapping(value = "/app/eggs")
+    public class EggsController extends BaseController {
 
-     @Autowired
-     EggsService eggsService;
+        @Autowired
+        EggsService eggsService;
 
 
-    //TODO  获取手机端链接
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
-    })
-    @ApiOperation(value = "获取手机端链接", notes = "获取手机端链接")
-    @RequestMapping(value = "/getMobileUrl", method = RequestMethod.POST)
-    @Override
-    protected ResponseDTO getMobileUrl(@RequestBody @ApiParam(value = "请求参数") MobileUrlReq mobileUrlReq, HttpServletRequest request) {
-        try {
-            WxPublicUsers loginPbUser = CommonUtil.getLoginPbUser(request);
-            MobileUrlRes mobileUrlRes = eggsService.getMobileUrl(loginPbUser, mobileUrlReq);
-            return ResponseDTO.createBySuccess("获取手机端链接成功", mobileUrlRes);
-        } catch (EggsException e){
-            logger.error(e.getMessage(), e.fillInStackTrace());
-            return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
-        } catch (Exception e){
-            e.printStackTrace();
-            return ResponseDTO.createByError();
+        //TODO  获取手机端链接
+        @ApiResponses({
+                @ApiResponse(code = 0, message = "统一响应对象", response = ResponseDTO.class),
+        })
+        @ApiOperation(value = "获取手机端链接", notes = "获取手机端链接")
+        @RequestMapping(value = "/getMobileUrl", method = RequestMethod.POST)
+        @Override
+        protected ResponseDTO getMobileUrl(@RequestBody @ApiParam(value = "请求参数") MobileUrlReq mobileUrlReq, HttpServletRequest request) {
+            try {
+                WxPublicUsers loginPbUser = CommonUtil.getLoginPbUser(request);
+                MobileUrlRes mobileUrlRes = eggsService.getMobileUrl(loginPbUser, mobileUrlReq);
+                return ResponseDTO.createBySuccess("获取手机端链接成功", mobileUrlRes);
+            } catch (EggsException e){
+                logger.error(e.getMessage(), e.fillInStackTrace());
+                return ResponseDTO.createByErrorCodeMessage(e.getCode(), e.getMessage());
+            } catch (Exception e){
+                e.printStackTrace();
+                return ResponseDTO.createByError();
+            }
         }
-    }
 
 
     // TODO  分页获取砸金蛋活动列表

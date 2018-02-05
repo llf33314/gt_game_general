@@ -31,6 +31,9 @@ public class LanternPrizeSetReq {
 	@ApiModelProperty("选择图片")
 	private List<String> imgUrl;
 
+	@ApiModelProperty("优惠劵Id")
+	private Integer cardReceiveId;
+
 	public Integer getType() {
 		return type;
 	}
@@ -69,5 +72,13 @@ public class LanternPrizeSetReq {
 
 	public void setImgUrl(List<String> imgUrl) {
 		this.imgUrl = imgUrl;
+	}
+
+	public Integer getCardReceiveId() {
+		return cardReceiveId;
+	}
+
+	public void setCardReceiveId(Integer cardReceiveId) {
+		this.cardReceiveId = cardReceiveId;
 	}
 }

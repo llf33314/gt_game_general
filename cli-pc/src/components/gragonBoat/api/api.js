@@ -54,9 +54,13 @@ export const getDragonboatList = params => {
 
 /*获取奖品类型列表*/
 export const getPrizeType = params => {
-  return axios.post(`${base}/getDragonboatPrizeType`, params).then(res => res.data)
+  return axios.post(`${window.BASEDOMAIN}/app/prize/getPrizeTypeOne`, params).then(res => res.data)
 }
 
+/*获取优惠劵列表*/
+export const getMemberType = params => {
+  return axios.post(`${window.BASEDOMAIN}/app/member/getCardReceviceList`, params).then(res => res.data)
+}
 /*获取手机端链接*/
 export const getMobileUrl = params => {
   return axios.post(`${base}/getMobileUrl`, params).then(res => res.data)
