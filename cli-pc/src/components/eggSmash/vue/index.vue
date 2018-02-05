@@ -5,7 +5,7 @@
 <section>
 <div class="hd-common">
     <el-breadcrumb separator="/" class="gt-crumbs">
-      <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
+      <el-breadcrumb-item @click.native="$util.ClickApply">互动游戏</el-breadcrumb-item> 
       <el-breadcrumb-item>砸金蛋</el-breadcrumb-item>  
     </el-breadcrumb>
     <div class="gt-gray-region mb20"> 
@@ -33,7 +33,7 @@
          <el-table-column prop="name" label="活动名称" min-width="160" show-overflow-tooltip></el-table-column>
           <el-table-column prop="activityBeginTime" label="活动开始时间" min-width="200">
             <template slot-scope="scope" >
-              {{ scope.row.activityBeginTime | DateFormat('yyyy-MM-dd hh:mm:ss') }}
+              {{ scope.row.activityBeginTime | DateFormat('yyyy-MM-dd hh:mm') }}
             </template>
           </el-table-column>
           <el-table-column prop="activityEndTime" label="活动结束时间" min-width="200">

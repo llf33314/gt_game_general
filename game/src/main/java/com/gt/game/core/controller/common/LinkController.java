@@ -66,7 +66,7 @@ public class LinkController {
     @RequestMapping(value = "/getShorUrl", method = RequestMethod.GET)
     public String getShorUrl(HttpServletRequest request, HttpServletResponse response, @RequestParam @ApiParam("移动端链接") String url) throws UnsupportedEncodingException {
         String urls = AxisContent.getInstance().getServiceUrl()+ "service/rest/shortUrl/getNewShortUrl";
-        String s = ShortUtil.sendLongUrlToShortApi(urls, url);
+        String s = ShortUtil.newSendLongUrlToShortApi(urls, url);
         Map<String,Object> map = JsonUtils.json2Map(s);
         return CommonUtil.isNotEmpty(map.get("url"))?map.get("url").toString():"";
     }

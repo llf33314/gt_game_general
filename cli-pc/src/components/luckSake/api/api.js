@@ -5,8 +5,12 @@ let base = window.BASEDOMAIN + '/app/shakeluck'
 export const getShortUrl = params => { return axios.get(`${window.BASEDOMAIN}/app/link/getShorUrl?url=${params}`).then(res => res.data) }
 export const getMobileUrl= params => { return axios.post(`${base}/getMobileUrl`, params).then(res => res.data) }
 
+
 /*获取奖品类型*/
 export const getPrizeType    = params => { return axios.post(`${window.BASEDOMAIN}/app/prize/getPrizeTypeOne`, params).then(res => res.data) }
+/*获取优惠劵列表*/
+export const getMemberType    = params => { return axios.post(`${window.BASEDOMAIN}/app/member/getCardReceviceList`, params).then(res => res.data) }
+
 
 /*index*/
 export const getActList      = params => { return axios.post(`${base}/getShakeluckList`, params).then(res => res.data) }

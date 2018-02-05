@@ -7,7 +7,7 @@
 <section>
 <div class="hd-common">
     <el-breadcrumb separator="/" class="gt-crumbs">
-      <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
+      <el-breadcrumb-item @click.native="$util.ClickApply">互动游戏</el-breadcrumb-item> 
       <el-breadcrumb-item :to="{ path:'/openBox/index' }">拆礼盒</el-breadcrumb-item>  
       <el-breadcrumb-item>编辑活动</el-breadcrumb-item>   
     </el-breadcrumb> 
@@ -725,20 +725,7 @@ export default {
                     name4  : data.data.demolitionPrizeReqs[i].probabiliy, 
                     name5  :[] 
                 }; 
-                if (newabc1.name0 == 1) {
-                newabc1.name0  = "粉币";
-                }else if(newabc1.name0  == 2){
-                newabc1.name0  = "手机流量"; 
-                }else if(newabc1.name0  == 3){
-                newabc1.name0  = "手机话费"; 
-                }else if(newabc1.name0  == 4){
-                newabc1.name0  = "实体物品";
-                }  else if(newabc1.name0  == 6){
-                newabc1.name0  = "积分";
-                } else if(newabc1.name0  == 7){
-                newabc1.name0  = "优惠券";
-                } 
-                if(newabc1.name0=="实体物品"){
+                if(newabc1.name0==4){
                     for(var j = 0; j < data.data.demolitionPrizeReqs[i].demolitionPrizeImgReqs.length; j++){
                         var imgarr={
                              url:window.IMAGEURL+data.data.demolitionPrizeReqs[i].demolitionPrizeImgReqs[j].imgUrl

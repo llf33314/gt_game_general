@@ -33,11 +33,13 @@ public class GoldtreeSaveReq {
      * 活动开始时间
      */
 	@ApiModelProperty("活动开始时间")
+	@NotNull(message = "请选择活动时间")
 	private Date activityBeginTime;
     /**
      * 活动结束时间
      */
 	@ApiModelProperty("活动结束时间")
+	@NotNull(message = "请选择活动时间")
 	private Date activityEndTime;
 
 	@ApiModelProperty("关注二维码")
@@ -48,9 +50,11 @@ public class GoldtreeSaveReq {
 	private String actRule;
 
 	@ApiModelProperty("兑奖开始时间")
+	@NotNull(message = "请选择兑奖时间")
 	private Date cashPrizeBeginTime;
 
 	@ApiModelProperty("兑奖结束时间")
+	@NotNull(message = "请选择兑奖时间")
 	private Date cashPrizeEndTime;
 
 	@ApiModelProperty("兑奖方式（1，到店领取 2，邮寄）两个都有用 , 号隔开")
@@ -76,6 +80,7 @@ public class GoldtreeSaveReq {
 	private List<GoldtreeAdReq> goldtreeAdReqs;
 
 	@ApiModelProperty("奖品")
+	@NotNull(message = "请添加奖品")
 	private List<GoldtreePrizeReq> goldtreePrizeReqs;
 
 	@ApiModelProperty("免费次数")

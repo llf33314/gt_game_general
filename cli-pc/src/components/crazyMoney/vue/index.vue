@@ -5,7 +5,7 @@
   <section>
     <div class="hd-common">
       <el-breadcrumb separator="/" class="gt-crumbs">
-        <el-breadcrumb-item>互动游戏</el-breadcrumb-item>
+        <el-breadcrumb-item @click.native="$util.ClickApply">互动游戏</el-breadcrumb-item>
         <el-breadcrumb-item :to="{ path:'/crazyMoney/index' }">疯狂数钱</el-breadcrumb-item> 
       </el-breadcrumb>
 
@@ -230,7 +230,7 @@ export default {
       let params = {
         current: this.currentPage,
         size: this.pageSize,
-        name: this.keyWord,
+        actName: this.keyWord,
         status: parseFloat(this.activeName)
       };
       Promise.all([

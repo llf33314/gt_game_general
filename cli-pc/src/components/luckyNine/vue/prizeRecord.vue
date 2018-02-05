@@ -5,7 +5,7 @@
 <section>
 <div class="hd-common turnPlate">
     <el-breadcrumb separator="/" class="gt-crumbs">
-      <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
+      <el-breadcrumb-item @click.native="$util.ClickApply">互动游戏</el-breadcrumb-item> 
       <el-breadcrumb-item :to="{ path:'/luckyNine/index' }">幸运九宫格</el-breadcrumb-item>    
       <el-breadcrumb-item>中奖纪录</el-breadcrumb-item>   
     </el-breadcrumb> 

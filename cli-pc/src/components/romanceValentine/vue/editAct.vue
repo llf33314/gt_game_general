@@ -2,7 +2,7 @@
 <section>
 <div class="hd-common">
     <el-breadcrumb separator="/" class="gt-crumbs">
-      <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
+      <el-breadcrumb-item @click.native="$util.ClickApply">互动游戏</el-breadcrumb-item> 
       <el-breadcrumb-item :to="{ path:'/romanceValentine/index' }">浪漫七夕</el-breadcrumb-item>  
       <el-breadcrumb-item>创建活动</el-breadcrumb-item>   
     </el-breadcrumb> 
@@ -129,9 +129,13 @@
                 </template>
                 </el-table-column>
                 <el-table-column label="奖品名称">
-                <template slot-scope="scope">
-                    <el-input class="w20_demo"  v-model="scope.row.name2" placeholder="请输入奖品名称"></el-input>
-                </template>
+                    <template slot-scope="scope">
+                        <el-select v-model="scope.row.name2" v-if="scope.row.name0==7"   placeholder="请选择" @change="optionsData(scope.$index)"> 
+                            <el-option v-for="item in memberOptions" :key="item.id"  :label="item.cardsName"  :value="item.id">
+                            </el-option>
+                        </el-select>  
+                        <el-input v-else class="w20_demo"   v-model="scope.row.name2"></el-input> 
+                    </template>
                 </el-table-column>
                 <el-table-column label="奖项数量">
                 <template slot-scope="scope">
@@ -139,7 +143,7 @@
                 </template>
                 </el-table-column>
                 <el-table-column label="奖品图片">
-                    <template slot-scope="scope"  v-if="scope.row.name0==4||scope.row.name0=='实体物品'">  
+                    <template slot-scope="scope"  v-if="scope.row.name0==4">  
                         <gt-material v-for="(item,index) in scope.row.name5" :key="index" :prop="scope" :sonIndex="index" selectType="radio" :url="item" @getChangeUrl="getAwardImgList" width="50" height="50" class="mr10"></gt-material>
                         <gt-material :prop="scope" selectType="select"  @getChangeUrl="addAwardImg" width="50" height="50" class="uploadBtn"></gt-material>
                     </template>
@@ -174,7 +178,7 @@
 </template>
 <script>
 import { 
- saveAct,getPrizeType,getAct
+ saveAct,getPrizeType,getAct,getMemberType
 }from './../api/api'
 export default {
   data() {
@@ -240,7 +244,7 @@ export default {
         phone:"",
         desc:""
       },
-            // 时间的筛选
+      // 时间的筛选
       pickerOptions: {
           disabledDate(time) {
             return time.getTime() < Date.now() - 8.64e7;
@@ -254,26 +258,29 @@ export default {
         desc: [{ required: true,message: "兑奖说明不能为空", trigger: "blur" }], 
       },
       options: [],
+      memberOptions:[],
       ruleForm4: [{ 
           name0: "",
           name1: "",
           name2: "",
           name3: "",
-          name5:[]
+          name5:[],
+          cardsName :""
         },
         { 
           name0: "",
           name1: "",
           name2: "",
           name3: "",
-          name5: []
+          name5: [],
+          cardsName :""
         }],
-              // 时间的筛选
-      pickerOptions: {
+        // 时间的筛选
+        pickerOptions: {
           disabledDate(time) {
             return time.getTime() < Date.now() - 8.64e7;
           }
-      }, 
+        }, 
     };
   },
   methods: {    
@@ -329,8 +336,15 @@ export default {
         return
       }
     }, 
+    optionsData(val){
+        for(var i=0;i<this.memberOptions.length;i++){ 
+            if(this.memberOptions[i].id==this.ruleForm4[val].name2||this.ruleForm4[val].name2==this.memberOptions[i].id){
+                this.ruleForm4[val].cardsName=this.memberOptions[i].cardsName 
+            } 
+        } 
+    }, 
     addForm4(){ 
-        this.ruleForm4.push({name0: "", name1: "", name2: "", name3: "", name5: []},)
+        this.ruleForm4.push({ name0:"", name1: "", name2: "", name3: "", name4: "", name5: [],cardsName :""},)
     },
     delForm4(val){
         this.ruleForm4.splice(val, 1); 
@@ -344,8 +358,7 @@ export default {
         }
       });
     }, 
-    lastStep() {
-        console.log(this.ruleForm4,1243)
+    lastStep() { 
       for (let i = 0; i < this.ruleForm4.length; i++) { 
         var regu =/^[1-9]\d*$/;
         if(!this.ruleForm4[i].name0||!this.ruleForm4[i].name1||!this.ruleForm4[i].name2||!this.ruleForm4[i].name3){
@@ -399,9 +412,13 @@ export default {
                     prizeUnit :Number(this.ruleForm4[i].name1),//单位
                     prizeName :this.ruleForm4[i].name2,//名称
                     num :Number(this.ruleForm4[i].name3),//数量
-                    // probabiliy :this.ruleForm4[i].name4,  //概率
+                    cardReceiveId:"", 
                     qixiPrizeImgReqs :[]//图片
                 } 
+                if(arr4.type==7){  
+                    arr4.prizeName    =this.ruleForm4[i].cardsName//名称 
+                    arr4.cardReceiveId=this.ruleForm4[i].name2//名称 
+                }
                 if(arr4.type==4){
                     for(var j=0;j<this.ruleForm4[i].name5.length;j++){
                         var imgarr={
@@ -501,8 +518,13 @@ export default {
                     name1  : data.data.qixiPrizeReqs[i].prizeUnit, 
                     name2  : data.data.qixiPrizeReqs[i].prizeName, 
                     name3  : String(data.data.qixiPrizeReqs[i].num),  
-                    name5  :[] 
-                }; 
+                    name5  :[] ,
+                    cardsName  :data.data.qixiPrizeReqs[i].cardReceiveId, 
+                };  
+                 if(newabc1.name0==7){
+                  newabc1.cardsName=data.data.qixiPrizeReqs[i].prizeName
+                  newabc1.name2=data.data.qixiPrizeReqs[i].cardReceiveId
+                }
                 if(newabc1.name0==4){
                     for(var j = 0; j < data.data.qixiPrizeReqs[i].qixiPrizeImgReqs.length; j++){
                         var imgarr={
@@ -534,10 +556,24 @@ export default {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
         }); 
     }, 
+    //获取奖品名称-----------star
+    getMemberTypeData(){
+        getMemberType().then(data=>{
+          if (data.code == 100) { 
+            this.memberOptions=data.data 
+          } else {
+              this.$message.error(data.msg);
+          }
+        }).catch(() => {
+            this.$message({ type: "info", message: "网络问题，请刷新重试~" });
+        }); 
+    }, 
   },
   mounted() {
-    this.getPrizeTypeData()
     this.geteditData()
+    this.getPrizeTypeData()
+    this.getMemberTypeData()
+    
   }
 };
 </script>

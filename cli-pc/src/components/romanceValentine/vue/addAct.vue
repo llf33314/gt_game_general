@@ -2,11 +2,10 @@
 <section>
 <div class="hd-common">
     <el-breadcrumb separator="/" class="gt-crumbs">
-      <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
+      <el-breadcrumb-item @click.native="$util.ClickApply">互动游戏</el-breadcrumb-item> 
       <el-breadcrumb-item :to="{ path:'/romanceValentine/index' }">浪漫七夕</el-breadcrumb-item>  
       <el-breadcrumb-item>创建活动</el-breadcrumb-item>   
-    </el-breadcrumb> 
-
+    </el-breadcrumb>  
     <div class="gt-content">
         <el-steps :active="active" :center="true" :align-center="true" class="bbtom pb20">
             <el-step title="基础设置"></el-step>
@@ -130,9 +129,13 @@
                 </template>
                 </el-table-column>
                 <el-table-column label="奖品名称">
-                <template slot-scope="scope">
-                    <el-input class="w20_demo"  v-model="scope.row.name2" placeholder="请输入奖品名称"></el-input>
-                </template>
+                    <template slot-scope="scope">
+                        <el-select v-model="scope.row.name2" v-if="scope.row.name0==7"   placeholder="请选择" @change="optionsData(scope.$index)"> 
+                            <el-option v-for="item in memberOptions" :key="item.id"  :label="item.cardsName"  :value="item.id">
+                            </el-option>
+                        </el-select>  
+                        <el-input v-else class="w20_demo"   v-model="scope.row.name2"></el-input> 
+                    </template>
                 </el-table-column>
                 <el-table-column label="奖项数量">
                 <template slot-scope="scope">
@@ -168,7 +171,7 @@
             <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步</el-button>
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步</el-button>   
             <el-button type="primary" @click="lastStep()"    :disabled="isSubmit"       v-if="this.active==3">保存</el-button>   
-            <!-- <el-button type="primary" @click="submit()">打印</el-button>    -->
+            <el-button type="primary" @click="submit()">打印</el-button>   
         </div> 
     </div>   
 </div>
@@ -176,7 +179,7 @@
 </template>
 <script>
 import { 
- saveAct,getPrizeType
+ saveAct,getPrizeType,getMemberType
 }from './../api/api'
 export default {
   data() {
@@ -247,19 +250,24 @@ export default {
         desc: [{ required: true,message: "兑奖说明不能为空", trigger: "blur" }], 
       },
       options: [],
-      ruleForm4: [{ 
+      memberOptions:[],
+       ruleForm4: [{ 
           name0: "",
           name1: "",
           name2: "",
           name3: "",
-          name5:[]
+          name4: "",
+          name5:[] ,
+          cardsName :""
         },
         { 
           name0: "",
           name1: "",
           name2: "",
           name3: "",
-          name5: []
+          name4: "" ,
+          name5:[],
+          cardsName :""
         }], 
               // 时间的筛选
       pickerOptions: {
@@ -270,6 +278,13 @@ export default {
     };
   },
   methods: {    
+    optionsData(val){
+        for(var i=0;i<this.memberOptions.length;i++){
+            if(this.memberOptions[i].id==this.ruleForm4[val].name2){
+                this.ruleForm4[val].cardsName=this.memberOptions[i].cardsName
+            } 
+        } 
+    }  ,
     addrPass(rule, value, callback) {
       if (!value) {
        callback(new Error("到店领取地址不能为空"));
@@ -323,7 +338,7 @@ export default {
       }
     }, 
     addForm4(){ 
-        this.ruleForm4.push({name0: "", name1: "", name2: "", name3: "", name5: []},)
+        this.ruleForm4.push({name0: "", name1: "", name2: "", name3: "", name5: [], cardsName :""},)
     },
     delForm4(val){
         this.ruleForm4.splice(val, 1); 
@@ -361,7 +376,7 @@ export default {
         }  
       }
       this.submit(); 
-    }, 
+    },  
     //表单提交--------------------------------------star
     submit(){ 
         //广告
@@ -393,15 +408,19 @@ export default {
                     prizeUnit :Number(this.ruleForm4[i].name1),//单位
                     prizeName :this.ruleForm4[i].name2,//名称
                     num :Number(this.ruleForm4[i].name3),//数量
-                    // probabiliy :this.ruleForm4[i].name4,  //概率
+                    cardReceiveId:"",
                     qixiPrizeImgReqs :[]//图片
+                }
+                 if(arr4.type==7){
+                    arr4.cardReceiveId=this.ruleForm4[i].name2//id  
+                    arr4.prizeName=this.ruleForm4[i].cardsName//id  
                 }
                 if(arr4.type==4){
                     for(var j=0;j<this.ruleForm4[i].name5.length;j++){
                         var imgarr={
                             imgUrl:this.ruleForm4[i].name5[j]
                         }
-                    arr4.qixiPrizeImgReqs .push(imgarr)
+                    arr4.qixiPrizeImgReqs.push(imgarr)
                     } 
                 } 
                 newPrize.push(arr4)
@@ -430,6 +449,8 @@ export default {
             qixiPrizeReqs        :newPrize,   
         };
         console.log(data,123); 
+        console.log(data.qixiPrizeReqs,66666); 
+        // return false
         saveAct(data).then(data=>{
           this.isSubmit=true
           if (data.code == 100) {  
@@ -463,9 +484,23 @@ export default {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
         }); 
     }, 
+    //获取奖品名称-----------star
+    getMemberTypeData(){
+        getMemberType().then(data=>{
+          if (data.code == 100) { 
+            this.memberOptions=data.data 
+          } else {
+              this.$message.error(data.msg);
+          }
+        }).catch(() => {
+            this.$message({ type: "info", message: "网络问题，请刷新重试~" });
+        }); 
+    }, 
   },
   mounted() {
     this.getPrizeTypeData()
+    this.getMemberTypeData()
+    
   }
 };
 </script>

@@ -5,7 +5,7 @@
 <section>
 <div class="hd-common">
     <el-breadcrumb separator="/" class="gt-crumbs">
-      <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
+      <el-breadcrumb-item @click.native="$util.ClickApply">互动游戏</el-breadcrumb-item> 
       <el-breadcrumb-item :to="{ path:'/standStill/index' }">一站到底</el-breadcrumb-item>  
       <el-breadcrumb-item>创建活动</el-breadcrumb-item>   
     </el-breadcrumb> 
@@ -99,13 +99,7 @@
             </el-form> 
         </div>
         <!-- 奖项设置 -->
-        <div v-show="this.active==3" class="mt40">
-            <!-- <div>
-                <span style="color: #333; position:absolute;margin-top:0px;" >奖品说明：</span>
-                <el-input type="textarea" class="bw ml120"  :maxlength="300"  :rows="3" placeholder="请输入兑奖说明" v-model="explain">
-                </el-input>
-                <span class="el-upload__tip grey ml10">300字以内</span>
-            </div>  -->
+        <div v-show="this.active==3" class="mt40"> 
             <div class="gt-gray-region mt20" style="color:#666;line-height:20px">
                 <p>奖品类型：奖品的内容;奖品单位：奖品的数量货内容；奖项数量:该奖品的可领取次数</p>
                 <p>如：奖品类型：粉币；奖品数额：2；奖项名称：粉币；奖项数量：3；中奖概率：12</p> 
@@ -136,10 +130,10 @@
                     <el-input class="w20_demo" type="number" v-model="scope.row.name1" placeholder="数值应大于0"></el-input>
                 </template>
                 </el-table-column>
-                <el-table-column label="奖品名称">
-                <template slot-scope="scope">
-                    <el-input class="w20_demo"  v-model="scope.row.name2" placeholder="请输入奖品名称"></el-input>
-                </template>
+               <el-table-column label="奖品名称">
+                    <template slot-scope="scope"> 
+                        <el-input  class="w20_demo"   v-model="scope.row.name2"></el-input> 
+                    </template>
                 </el-table-column>
                 <el-table-column label="奖项数量">
                 <template slot-scope="scope">
@@ -183,7 +177,7 @@
 </template>
 <script>
 import { 
- saveAct,getQuesbank,getPrizeType
+ saveAct,getQuesbank,getPrizeType,getMemberType
 }from './../api/api'
 export default {
   data() {
@@ -258,20 +252,23 @@ export default {
             return time.getTime() < Date.now() - 8.64e7;
           }
       },
+      memberOptions:[],
       ruleForm4: [{ 
           name0: "",
           name1: "",
           name2: "",
           name3: "",
-          name5:[] 
+          name4: "",
+          name5:[] , 
         },
         { 
           name0: "",
           name1: "",
           name2: "",
           name3: "",
-          name5:[]
-        }],    
+          name4: "" ,
+          name5:[], 
+        }], 
     };
   },
   methods: {   
@@ -326,7 +323,7 @@ export default {
     }, 
     getChangeUrl2(e) { 
       this.ruleForm2.code=e.url
-    }, 
+    },  
    // 添加实物图 
     addAwardImg(val) {
          JSON.parse(val.url).forEach(function (item, index, arr) {
@@ -343,8 +340,8 @@ export default {
     getChangeUrl4(i,e) {   
       this.ruleForm4[i].name5=e.url
     }, 
-    addForm4(){ 
-        this.ruleForm4.push({ name0:"", name1: "", name2: "", name3: "", name5: []},)
+     addForm4(){ 
+        this.ruleForm4.push({ name0:"", name1: "", name2: "", name3: "", name4: "", name5: []},)
     },
     delForm4(val){
         this.ruleForm4.splice(val, 1); 
@@ -382,6 +379,7 @@ export default {
     }, 
     //表单提交--------------------------------------star
     submit(){ 
+        
         if(this.isSubmit){
              this.$message({type: "info", message: "请不要重复提交~" });
         }else{ 
@@ -403,11 +401,11 @@ export default {
                     imgInstruction :"",
                     type :this.ruleForm4[i].name0,//类型
                     prizeUnit :Number(this.ruleForm4[i].name1),//单位
-                    prizeName :this.ruleForm4[i].name2,//名称
+                    prizeName :this.ruleForm4[i].name2,//名称 
                     num :Number(this.ruleForm4[i].name3),//数量
-                    // probabiliy :this.ruleForm4[i].name4,  //概率
-                    standPrizeImgReqs :[]//图片
-                }
+                    probabiliy :this.ruleForm4[i].name4,  //概率 
+                    standPrizeImgReqs:[]//图片
+                } 
                 if(arr4.type==4){
                     for(var j=0;j<this.ruleForm4[i].name5.length;j++){
                         var imgarr={
@@ -417,7 +415,7 @@ export default {
                     } 
                 } 
                 newPrize.push(arr4)
-            } 
+            }  
         } 
         const data = {
             id:0, 
@@ -476,6 +474,18 @@ export default {
             this.$message({ type: "info", message: "网络问题，请刷新重试~" });
         }); 
     },
+    //获取奖品名称-----------star
+    getMemberTypeData(){
+        getMemberType().then(data=>{
+          if (data.code == 100) { 
+            this.memberOptions=data.data 
+          } else {
+              this.$message.error(data.msg);
+          }
+        }).catch(() => {
+            this.$message({ type: "info", message: "网络问题，请刷新重试~" });
+        }); 
+    }, 
     //获取题库-----------star
     getQuesbankData(){
         getQuesbank().then(data=>{
@@ -493,6 +503,7 @@ export default {
   mounted() {
     this.getPrizeTypeData()
     this.getQuesbankData()
+    this.getMemberTypeData()
   }
 };
 </script>

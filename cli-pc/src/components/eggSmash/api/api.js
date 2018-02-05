@@ -1,7 +1,7 @@
 import axios from './../../../http' 
-let base = window.BASEDOMAIN + '/app/eggs' 
+// let base = window.BASEDOMAIN + '/app/eggs' 
  
-// let base = 'http://192.168.3.68:8080' + '/app/eggs'
+let base = 'http://192.168.3.68:8080' + '/app/eggs'
 
 
 function post(url, params) {

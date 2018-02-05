@@ -5,7 +5,7 @@
   <section>
     <div class="hd-common turnPlate">
       <el-breadcrumb separator="/" class="gt-crumbs">
-        <el-breadcrumb-item>互动游戏</el-breadcrumb-item>
+        <el-breadcrumb-item @click.native="$util.ClickApply">互动游戏</el-breadcrumb-item>
         <el-breadcrumb-item :to="{ path:'/christmasGift/index' }">圣诞大礼包</el-breadcrumb-item>
         <el-breadcrumb-item>中奖纪录</el-breadcrumb-item>
       </el-breadcrumb>
@@ -87,25 +87,7 @@ export default {
       status: -1,
       type: -1,
 
-      tableData: [
-        {
-          address: "string",
-          addressName: "string",
-          cashTime: "1516341837149",
-          id: 0,
-          memberId: 0,
-          memberName: "string",
-          memberPhone: "string",
-          nickname: "string",
-          prizeName: "string",
-          prizeUnit: 0,
-          receiveType: 2,
-          score: 0,
-          snCode: "string",
-          status: 2,
-          type: 1
-        }
-      ],
+      tableData: [],
       options: {
         type: [
           { label: "全部", value: -1 },

@@ -2,7 +2,7 @@
     <section>
         <div class="hd-common">
             <el-breadcrumb separator="/" class="gt-crumbs">
-                <el-breadcrumb-item>互动游戏</el-breadcrumb-item>
+                <el-breadcrumb-item @click.native="$util.ClickApply">互动游戏</el-breadcrumb-item>
                 <el-breadcrumb-item :to="{ path:'/gragonBoat/index' }">端午赛龙舟</el-breadcrumb-item>
                 <el-breadcrumb-item>创建活动</el-breadcrumb-item>
             </el-breadcrumb>
@@ -139,9 +139,19 @@
                                 <el-input class="w20_demo" type="number" v-model="scope.row.name1" placeholder="数值应大于0"></el-input>
                             </template>
                         </el-table-column>
-                        <el-table-column label="奖品名称">
+                        <!-- <el-table-column label="奖品名称">
                             <template slot-scope="scope">
                                 <el-input class="w20_demo" v-model="scope.row.name2" placeholder="请输入奖品名称"></el-input>
+                            </template>
+                        </el-table-column> -->
+                        <el-table-column label="奖品名称">
+                            <template slot-scope="scope">
+                                <el-select v-model="scope.row.name2" v-if="scope.row.name0==7" placeholder="请选择" @change="optionsData(scope.$index)">
+                                    <el-option v-for="item in memberOptions" :key="item.id" :value="item.id" :label="item.cardsName">
+                                        <span style="float:left">{{item.cardsName}}</span>
+                                    </el-option>
+                                </el-select>
+                                <el-input v-else class="w20_demo" v-model="scope.row.name2"></el-input>
                             </template>
                         </el-table-column>
                         <el-table-column label="奖项数量">
@@ -191,7 +201,7 @@
     </section>
 </template>
 <script>
-import { saveAct, getPrizeType } from './../api/api'
+import { saveAct, getPrizeType, getMemberType } from './../api/api'
 export default {
     data() {
         //联系电话===============================================
@@ -271,6 +281,7 @@ export default {
                 desc: [{ required: true, message: "兑奖说明不能为空", trigger: "blur" }],
             },
             options: [],
+            memberOptions: [],
             //第四步==========================
             ruleForm4: [{
                 name0: "",
@@ -348,6 +359,13 @@ export default {
             console.log(e);
             this.ruleForm1.bgmSp = e.music.name
             this.ruleForm1.musicUrl = e.music.url
+        },
+        optionsData(val) {
+            for (var i = 0; i < this.memberOptions.length; i++) {
+                if (this.memberOptions[i].id == this.ruleForm4[val].name2 || this.ruleForm4[val].name2 == this.memberOptions[i].id) {
+                    this.ruleForm4[val].cardsName = this.memberOptions[i].cardsName
+                }
+            }
         },
         // 添加实物图 ================================================
         addAwardImg(val) {
@@ -487,7 +505,27 @@ export default {
                             prizeName: this.ruleForm4[i].name2,//名称
                             num: Number(this.ruleForm4[i].name3),//数量
                             score: this.ruleForm4[i].name4,  //概率
+                            cardReceiveId: "",
                             imgUrl: []//图片
+                        }
+                        if (arr4.type == 7) {
+                            arr4.prizeName = this.ruleForm4[i].cardsName//名称 
+                            arr4.cardReceiveId = this.ruleForm4[i].name2//名称 
+                        }
+                        if (arr4.type == "粉币") {
+                            arr4.type = 1
+                        } else if (arr4.type == "手机流量") {
+                            arr4.type = 2
+                        } else if (arr4.type == "手机话费") {
+                            arr4.type = 3
+                        } else if (arr4.type == "实体物品") {
+                            arr4.type = 4
+                        }
+                        else if (arr4.type == "积分") {
+                            arr4.type = 6
+                        }
+                        else if (arr4.type == "优惠券") {
+                            arr4.type = 7
                         }
                         if (arr4.type == 4) {
                             for (var j = 0; j < this.ruleForm4[i].name5.length; j++) {
@@ -540,9 +578,22 @@ export default {
         backUrl() {
             window.history.go(-1);
         },
+        //获取优惠券名称-----------star
+        getMemberTypeData() {
+            getMemberType().then(data => {
+                if (data.code == 100) {
+                    this.memberOptions = data.data
+                } else {
+                    this.$message.error(data.msg);
+                }
+            }).catch(() => {
+                this.$message({ type: "info", message: "网络问题，请刷新重试~" });
+            });
+        },
     },
     mounted() {
         this.getPrizeTypeData()
+        this.getMemberTypeData()
     }
 };
 </script>

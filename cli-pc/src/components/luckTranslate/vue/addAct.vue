@@ -2,7 +2,7 @@
 <section>
 <div class="hd-common turnPlate">
     <el-breadcrumb separator="/" class="gt-crumbs">
-      <el-breadcrumb-item>互动游戏</el-breadcrumb-item> 
+      <el-breadcrumb-item @click.native="$util.ClickApply">互动游戏</el-breadcrumb-item> 
       <el-breadcrumb-item  :to="{ path:'/luckTranslate/index' }">好运翻翻看</el-breadcrumb-item>  
       <el-breadcrumb-item>创建活动</el-breadcrumb-item>   
     </el-breadcrumb>  
@@ -151,7 +151,7 @@
                 </el-table-column>
                 <el-table-column label="操作">
                   <template slot-scope="scope">
-                      <el-button class="gt-button-normal blue" @click="shoeDialogFans(scope.$index)">指定中奖人</el-button>
+                      <el-button class="gt-button-normal blue" @click="shoeDialogFans(scope)">指定中奖人</el-button>
                       <el-button class="gt-button-normal"  v-if="scope.$index!=0"  @click="delForm4(scope.$index)">删除</el-button>
                   </template>
                 </el-table-column>
@@ -177,7 +177,7 @@
             <!-- <el-button type="primary" @click="submit()">打印</el-button>    -->
         </div> 
         <!-- 选择粉丝弹窗 --> 
-        <gt-Fans-detail  :visible.sync="dialogFans"   v-on:getFansData="getFansData"></gt-Fans-detail>  
+        <gt-Fans-detail  :visible.sync="dialogFans" :peopleNums="peopleNums"  v-on:getFansData="getFansData"></gt-Fans-detail>  
 </div>   
 </div>
 </section>
@@ -274,15 +274,20 @@ export default {
       ],
       dialogFans:false,
       key:0, 
+      peopleNums: 1,
       isSubmit:false,
     };
   },
-  methods: { 
-    shoeDialogFans(val){
-        this.key=val
-        this.dialogFans=true 
-        console.log(this.key);
-    }, 
+  methods: {  
+    shoeDialogFans(scope){
+      if (!scope.row.name3) {
+        this.$message.error('请先输入奖项数量')
+        return false
+      }
+      this.dialogFans = true;
+      this.key=scope.$index
+      this.peopleNums =Number(scope.row.name3)
+    },
     getFansData(e){ 
         console.log(e,'子组件的信息')
         this.dialogFans=false
