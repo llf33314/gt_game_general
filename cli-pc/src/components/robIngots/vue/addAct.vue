@@ -218,22 +218,11 @@ export default {
         gameTime:"",
         desc: "",   
       },
-      rules2: {
-        time: [ 
-          { required: true,validator: timePass,  trigger: "blur,change" }
-        ],  
-        manTotalChance: [
-          { required: true,  message: "请填写每人免费游戏次数", trigger: "blur" } 
-        ], 
-        manDayChance: [
-          { required: true,  message: "请填写每人每天免费游戏次数", trigger: "blur" } 
-        ], 
-        desc: [
-          { required: true,  message: "请填写活动规则", trigger: "blur" } 
-        ],
-        gameTime:[
-          { required: true,  message: "请填写游戏时间", trigger: "blur" } 
-        ], 
+      rules2: {  
+        manTotalChance: [{ required: true, validator: this.isInter,trigger: "blur" }], 
+        manDayChance: [{ required: true, validator: this.isInter,trigger: "blur" }], 
+        desc: [{ required: true,  message: "请填写活动规则", trigger: "blur" } ],
+        gameTime:[{ required: true, validator: this.isInter,trigger: "blur"  } ], 
       },
       ruleForm3: {
         date:"",
@@ -267,7 +256,16 @@ export default {
         }],  
     };
   },
-  methods: {    
+  methods: { 
+    isInter(rule, value, callback) {
+      if(!value){
+        callback(new Error("不能为空"));
+      }else if (value && !this.$util.isIntger(value)) {
+        callback(new Error("请输入正整数"));
+      }else {
+        callback();
+      }
+    },    
     addrPass(rule, value, callback) {
       if (!value) {
        callback(new Error("到店领取地址不能为空"));

@@ -257,7 +257,7 @@ export default {
       }
     }; 
     return {
-      active:3,
+      active:0,
       isSubmit:false,
       ruleForm1: {
         name: "",
@@ -282,32 +282,18 @@ export default {
         msgModel:"",
         msg:1
       },
-      rules2: {
-        time: [ 
-          { required: true,validator: timePass,  trigger: "blur,change" }
-        ], 
-        duihuan: [
-          { required: true,  message: "请填写元宝兑换金币比例", trigger: "blur" } 
-        ], 
-        manTotalChance: [
-          { required: true,  message: "请填写每人免费游戏次数", trigger: "blur" } 
-        ], 
-        manDayChance: [
-          { required: true,  message: "请填写每人每天免费游戏次数", trigger: "blur" } 
-        ],
-        fenbi: [
-          { required: true,  message: "请填写每天游戏小号的粉币或积分", trigger: "blur" } 
-        ],
+      rules2: {  
+        manTotalChance: [{ required: true, validator: this.isInter,trigger: "blur" }], 
+        manDayChance: [{ required: true, validator: this.isInter,trigger: "blur" }], 
         msg: [ 
           { required: true}
-        ], 
-        desc: [
-          { required: true,  message: "请填写活动规则", trigger: "blur" } 
-        ],
+        ],  
         msgModel: [
           { required: true, message: '请选择消息模块', } 
         ],
-         
+         desc: [
+          { required: true,  message: "请填写活动规则", trigger: "blur" } 
+        ], 
         
       },
             // 时间的筛选
@@ -363,7 +349,16 @@ export default {
       },
     };
   },
-  methods: {    
+  methods: { 
+    isInter(rule, value, callback) {
+      if(!value){
+        callback(new Error("不能为空"));
+      }else if (value && !this.$util.isIntger(value)) {
+        callback(new Error("请输入正整数"));
+      }else {
+        callback();
+      }
+    },   
     addrPass(rule, value, callback) {
       if (!value) {
        callback(new Error("到店领取地址不能为空"));

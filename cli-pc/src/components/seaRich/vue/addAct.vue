@@ -201,7 +201,7 @@ export default {
       }
     }; 
     return { 
-      active:0,
+      active:1,
       isSubmit:false,
       ruleForm1: {
         name: "",
@@ -234,27 +234,11 @@ export default {
       rules2: {
         time: [ 
           { required: true,validator: timePass,  trigger: "blur,change" }
-        ], 
-        duihuan: [
-          { required: true,  message: "请填写元宝兑换金币比例", trigger: "blur" } 
-        ], 
-        manTotalChance: [
-          { required: true,  message: "游戏总数不能为空", trigger: "blur" } 
-        ], 
-        manDayChance: [
-          { required: true,  message: "每天次数不能为空", trigger: "blur" } 
-        ],
-        fenbi: [
-          { required: true,  message: "请填写每天游戏小号的粉币或积分", trigger: "blur" } 
-        ],
-        msg: [ 
-          { required: true}
-        ], 
+        ],   
+        manTotalChance: [ { required: true, validator: this.isInter,trigger: "blur" } ], 
+        manDayChance: [ { required: true, validator: this.isInter,trigger: "blur" } ], 
         desc: [
           { required: true,  message: "请填写活动规则", trigger: "blur" } 
-        ],
-        msgModel: [
-          { required: true, type: 'string',  message: "请选择消息模块", trigger: "blur" } 
         ], 
       },
       ruleForm3: {
@@ -301,6 +285,15 @@ export default {
     
   },
   methods: {
+    isInter(rule, value, callback) {
+      if(!value){
+        callback(new Error("不能为空"));
+      }else if (value && !this.$util.isIntger(value)) {
+        callback(new Error("请输入正整数"));
+      }else {
+        callback();
+      }
+    },
     optionsData(val){
         for(var i=0;i<this.memberOptions.length;i++){
             if(this.memberOptions[i].id==this.ruleForm4[val].name2){

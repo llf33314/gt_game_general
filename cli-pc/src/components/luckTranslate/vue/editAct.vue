@@ -240,8 +240,8 @@ export default {
         luckCountOfAll: "" ,       
       },
       rules2: { 
-        luckCountOfDay:[{required: true,validator:numberPass,trigger: "blur" }],
-        luckCountOfAll:[{required: true,validator:numberPass,  trigger: "blur" }]
+        luckCountOfDay:[{required: true,validator: this.isInter,trigger: "blur" }],
+        luckCountOfAll:[{required: true,validator: this.isInter,  trigger: "blur" }]
       },
       ruleForm3: {
         luckCashDay:"",
@@ -269,6 +269,15 @@ export default {
     };
   },
   methods: { 
+    isInter(rule, value, callback) {
+      if(!value){
+        callback(new Error("不能为空"));
+      }else if (value && !this.$util.isIntger(value)) {
+        callback(new Error("请输入正整数"));
+      }else {
+        callback();
+      }
+    },
     shoeDialogFans(scope){
       if (!scope.row.name3) {
         this.$message.error('请先输入奖项数量')

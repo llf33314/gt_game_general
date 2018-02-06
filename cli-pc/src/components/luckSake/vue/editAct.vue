@@ -234,16 +234,12 @@ export default {
             return time.getTime() < Date.now() - 8.64e7;
         }
       },
-      rules2: { 
-        manTotalChance: [
-          { required: true,  message: "游戏总数不能为空", trigger: "blur" } 
-        ], 
-        manDayChance: [
-          { required: true,  message: "每天次数不能为空", trigger: "blur" } 
-        ],
+      rules2: {  
+        manTotalChance: [{required: true,validator: this.isInter,trigger: "blur" }], 
+        manDayChance: [{required: true,validator: this.isInter,trigger: "blur" }], 
         desc: [
           { required: true,  message: "请填写活动规则", trigger: "blur" } 
-        ],
+        ], 
       },
       ruleForm3: {
         date:"",
@@ -288,7 +284,16 @@ export default {
     };
     
   },
-  methods: {   
+  methods: {
+    isInter(rule, value, callback) {
+      if(!value){
+        callback(new Error("不能为空"));
+      }else if (value && !this.$util.isIntger(value)) {
+        callback(new Error("请输入正整数"));
+      }else {
+        callback();
+      }
+    },   
     getMusic(e) {
         console.log(e);
         this.ruleForm1.music = e.music.name

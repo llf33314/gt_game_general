@@ -331,32 +331,13 @@ export default {
         manDayChance:"",  
         actRule: "",  
       },
-      rules2: {
-        time: [ 
-          { required: true,validator: timePass,  trigger: "blur,change" }
-        ], 
-        duihuan: [
-          { required: true,  message: "请填写元宝兑换金币比例", trigger: "blur" } 
-        ], 
-        manTotalChance: [
-          { required: true,  message: "请填写每人免费游戏次数", trigger: "blur" } 
-        ], 
-        manDayChance: [
-          { required: true,  message: "请填写每人每天免费游戏次数", trigger: "blur" } 
-        ],
-        fenbi: [
-          { required: true,  message: "请填写每天游戏小号的粉币或积分", trigger: "blur" } 
-        ],
-        msg: [ 
-          { required: true}
-        ], 
+         rules2: { 
+        manTotalChance: [{ required: true, validator: this.isInter,trigger: "blur" }], 
+        manDayChance:  [{ required: true, validator: this.isInter,trigger: "blur" }],  
         actRule: [
           { required: true,  message: "请填写活动规则", trigger: "blur" } 
-        ],
-        msgModel: [
-          { required: true, type: 'string',  message: "请选择消息模块", trigger: "blur" } 
         ], 
-        },
+    },
         ruleForm3: {
             date:"",
             type: [], 
@@ -395,6 +376,15 @@ export default {
     };
   },
   methods: {
+    isInter(rule, value, callback) {
+      if(!value){
+        callback(new Error("不能为空"));
+      }else if (value && !this.$util.isIntger(value)) {
+        callback(new Error("请输入正整数"));
+      }else {
+        callback();
+      }
+    },
     boxMusic(val){
         var k=val
         if(this.ruleForm1.demolitionGiftBoxReqs[k].giftSound=="音乐一"){

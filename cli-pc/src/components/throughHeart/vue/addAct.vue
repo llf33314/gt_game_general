@@ -230,7 +230,7 @@ export default {
           {url:"",imgUrl:""}
         ]
       },
-            // 时间的筛选
+      // 时间的筛选
       pickerOptions: {
           disabledDate(time) {
             return time.getTime() < Date.now() - 8.64e7;
@@ -248,15 +248,14 @@ export default {
       },
       rules2: {
         manTotalChance: [
-          { required: true,  message: "请填写每人免费游戏次数", trigger: "blur" } 
+          { required: true, validator: this.isInter,trigger: "blur" } 
         ], 
         manDayChance: [
-          { required: true,  message: "请填写每人每天免费游戏次数", trigger: "blur" } 
+          { required: true,   validator: this.isInter, trigger: "blur" } 
         ],
         desc: [
           { required: true,  message: "请填写活动规则", trigger: "blur" } 
-        ],
-      
+        ],      
       },
       ruleForm3: {
         date:"",
@@ -301,13 +300,22 @@ export default {
     };
   },
   methods: {  
-      optionsData(val){
+    isInter(rule, value, callback) {
+      if(!value){
+        callback(new Error("不能为空"));
+      }else if (value && !this.$util.isIntger(value)) {
+        callback(new Error("请输入正整数"));
+      }else {
+        callback();
+      }
+    },
+    optionsData(val){
         for(var i=0;i<this.memberOptions.length;i++){
             if(this.memberOptions[i].id==this.ruleForm4[val].name2){
                 this.ruleForm4[val].cardsName=this.memberOptions[i].cardsName
             } 
         } 
-      }  ,
+    }  ,
     addrPass(rule, value, callback) {
       if (!value) {
        callback(new Error("到店领取地址不能为空"));

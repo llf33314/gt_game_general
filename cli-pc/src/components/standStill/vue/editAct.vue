@@ -209,18 +209,10 @@ export default {
         desc: "",  
       },
       rules2: {          
-        manTotalChance: [
-          { required: true,  message: "请填写每人免费游戏次数", trigger: "blur" } 
-        ], 
-        manDayChance: [
-          { required: true,  message: "请填写每人每天免费游戏次数", trigger: "blur" } 
-        ],
-        gametime: [ 
-          { required: true, message: "请填写答题时间",trigger: "blur" }
-        ], 
-        jifen: [
-          { required: true,  message: "请输入每道题奖励的积分", trigger: "blur" } 
-        ], 
+        manTotalChance: [ { required: true, validator: this.isInter,trigger: "blur" } ], 
+        manDayChance: [ { required: true, validator: this.isInter,trigger: "blur" } ],
+        gametime: [  { required: true, validator: this.isInter,trigger: "blur" } ], 
+        jifen: [ { required: true, validator: this.isInter,trigger: "blur" }  ], 
         desc: [
           { required: true,  message: "请填写活动规则", trigger: "blur" } 
         ] 
@@ -264,7 +256,16 @@ export default {
         }],    
     };
   },
-  methods: {   
+  methods: { 
+    isInter(rule, value, callback) {
+      if(!value){
+        callback(new Error("不能为空"));
+      }else if (value && !this.$util.isIntger(value)) {
+        callback(new Error("请输入正整数"));
+      }else {
+        callback();
+      }
+    },   
     getMusic(e) {
         console.log(e);
         this.ruleForm1.music = e.music.name
