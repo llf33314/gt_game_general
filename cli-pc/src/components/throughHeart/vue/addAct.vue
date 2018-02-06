@@ -186,7 +186,7 @@
             <el-button type="primary" @click="next('ruleForm2')" v-if="this.active==1">下一步</el-button>
             <el-button type="primary" @click="next('ruleForm3')" v-if="this.active==2">下一步</el-button>   
             <el-button type="primary" @click="lastStep()"   :disabled="this.isSubmit"   v-if="this.active==3">保存</el-button>   
-            <el-button type="primary" @click="submit1()">打印</el-button>   
+            <!-- <el-button type="primary" @click="submit1()">打印</el-button>    -->
         </div> 
     </div>   
 </div>
